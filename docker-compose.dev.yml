@@ -1,0 +1,37 @@
+services:
+  home-database:
+    image: mongo
+    ports:
+      - "27017:27017"
+  home-backend:
+    build: backend/
+    environment:
+      - PORT=3001
+      - DATABASE_URL=mongodb://host.docker.internal:27017/home
+    ports:
+      - "3001:3001"
+    depends_on:
+      - home-database
+    develop:
+      watch:
+        - action: sync
+          path: ./src
+          target: /app/src
+          ignore:
+            - node_modules/
+        - action: sync
+          path: ./dist
+          target: /app/dist
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: package.json
+  home-frontend:
+    build:
+      context: .
+      args:
+        VITE_BACKEND_URL: http://localhost:3001/api/v1
+    ports:
+      - "3000:3000"
+    depends_on:
+      - home-backend
