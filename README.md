@@ -53,7 +53,7 @@ A modern full-stack web application built with React, TypeScript, Node.js, Expre
 
 3. **Access the application**
    - Frontend: http://localhost:3000
-   - Backend API: http://localhost:3001
+   - Backend API: http://localhost:3000
    - MongoDB: localhost:27017
 
 ### Development Mode
@@ -115,7 +115,7 @@ Create a `.env` file in the `backend/` directory:
 # Server Configuration
 
 NODE_ENV=development
-PORT=3001
+PORT=3000
 
 # Database Configuration
 
@@ -139,7 +139,7 @@ LOG_LEVEL=info
 Environment variables are configured through Docker Compose build args:
 
 args:
-VITE_BACKEND_URL: http://localhost:3001/api/v1
+VITE_BACKEND_URL: http://localhost:3000/api/v1
 
 ## 📡 API Endpoints
 
@@ -265,7 +265,7 @@ npm start
 
 # Test backend health
 
-curl http://localhost:3001/api/v1/health
+curl http://localhost:3000/api/v1/health
 
 # Test frontend
 
@@ -275,7 +275,7 @@ curl http://localhost:3000
 
 # Get all projects
 
-curl http://localhost:3001/api/v1/projects
+curl http://localhost:3000/api/v1/projects
 
 ### Performance Optimization
 
@@ -293,7 +293,7 @@ curl http://localhost:3001/api/v1/projects
    # Check what's using the port
 
    lsof -i :3000
-   lsof -i :3001
+   lsof -i :3000
 
 2. **Database connection issues**
 
@@ -322,5 +322,3 @@ curl http://localhost:3001/api/v1/projects
    npm run typecheck
 
    # Regenerate types
-
-   npx react-router typegen

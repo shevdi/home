@@ -4,12 +4,12 @@ import type { Project } from "../types/project";
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "Home page" },
+    { title: "Projects page" },
     { name: "description", content: "shevdi projects" },
   ];
 }
 
-export default function Projects() {
+export default function ProjectsPage() {
   const [projects, setProjects]: [Project[], any] = useState([]);
 
   useEffect(() => {

@@ -5,10 +5,12 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
-  NavLink,
 } from "react-router";
 import type { Route } from "./+types/root";
+import { Provider } from "react-redux";
+import { Header } from "./components/Header";
 import "./app.css";
+import { store } from "./store/store";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -33,11 +35,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        <div>
-          <NavLink to="/">Main</NavLink> |&nbsp;
-          <NavLink to="/projects">Projects</NavLink>
-        </div>
-        {children}
+        <Provider store={store}>
+          <Header />
+          {children}
+        </Provider>
         <ScrollRestoration />
         <Scripts />
       </body>

@@ -4,19 +4,19 @@ services:
     ports:
       - "27017:27017"
   home-backend:
-    build: backend/
+    build: server/
     environment:
-      - PORT=3001
+      - PORT=3000
       - DATABASE_URL=mongodb://host.docker.internal:27017/home
     ports:
-      - "3001:3001"
+      - "3000:3000"
     depends_on:
       - home-database
     develop:
       watch:
         - action: sync
-          path: ./src
-          target: /app/src
+          path: ./client
+          target: /app/client
           ignore:
             - node_modules/
         - action: sync
@@ -28,10 +28,19 @@ services:
           path: package.json
   home-frontend:
     build:
-      context: .
+      context: ./client
       args:
-        VITE_BACKEND_URL: http://localhost:3001/api/v1
+        VITE_BACKEND_URL: http://localhost:3000/api/v1
     ports:
       - "3000:3000"
     depends_on:
       - home-backend
+    develop:
+      watch:
+        - action: sync
+          path: ./client
+          target: /app/client
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: package.json
