@@ -3,5 +3,4 @@
 
 /.react-router/
 /build/
-
-/my-app
+/client/dist

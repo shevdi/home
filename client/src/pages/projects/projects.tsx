@@ -1,19 +1,11 @@
-import type { Route } from "./+types/projects";
 import { useEffect, useState } from "react";
-import type { Project } from "../types/project";
-
-export function meta({}: Route.MetaArgs) {
-  return [
-    { title: "Projects page" },
-    { name: "description", content: "shevdi projects" },
-  ];
-}
+import type { Project } from "../../types/project";
 
 export default function ProjectsPage() {
   const [projects, setProjects]: [Project[], any] = useState([]);
 
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_BACKEND_URL}/projects`)
+    fetch(`${process.env.BACKEND_URL}/projects`)
       .then((resp) => resp.json())
       .then((resp) => {
         setProjects(resp);
