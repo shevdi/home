@@ -16,8 +16,8 @@ export function Welcome() {
   }, []);
 
   return (
-    <main>
+    <div>
       <h1>{title}</h1>
-    </main>
+    </div>
   );
 }
