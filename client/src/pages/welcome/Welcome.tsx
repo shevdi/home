@@ -1,23 +1,13 @@
-import { useEffect, useState } from "react";
+import { useGetWelcomePageQuery } from './store/welcomeSlice'
 
 export function Welcome() {
-  const [title, setTitle] = useState("");
+  const { data, error, isLoading } = useGetWelcomePageQuery()
+  if (error) {
+    return <div>Ошибка</div>
+  }
+  if (isLoading || !data) {
+    return <div>ждём</div>
+  }
 
-  useEffect(() => {
-    fetch(`${process.env.BACKEND_URL}/title`)
-      .then((resp) => resp.json())
-      .then((resp) => {
-        setTitle(resp.title);
-      })
-      .catch((error) => {
-        console.error("Failed to fetch title:", error);
-        // setTitle(`Failed to fetch title: ${error}`);
-      });
-  }, []);
-
-  return (
-    <div>
-      <h1>{title}</h1>
-    </div>
-  );
+  return <div>{<h1>{data.title}</h1>}</div>
 }

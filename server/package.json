@@ -1,5 +1,5 @@
 {
-  "name": "backend",
+  "name": "shevdi-home-server",
   "version": "1.0.0",
   "description": "Backend server with TypeScript",
   "type": "module",

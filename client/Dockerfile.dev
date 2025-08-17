@@ -2,18 +2,15 @@
 FROM node:22-alpine
 
 ARG BACKEND_URL=http://localhost:3001/api/v1
-ENV BACKEND_URL=http://localhost:3001/api/v1
 WORKDIR /app
 
-# Copy package files first for better caching
-COPY . .
+COPY ./package.json .
 
-# Install all dependencies (including devDependencies)
 RUN npm install
 
-# Expose ports (app + HMR)
+COPY . .
+
 EXPOSE 3000
 EXPOSE 8080 
 
-# Start development server with HMR
 CMD ["npm", "run", "dev"]

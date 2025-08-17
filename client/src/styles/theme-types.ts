@@ -1,5 +1,5 @@
-import theme from './theme.json'
+import lightTheme from './theme-light.json'
 
 export interface ThemeProps {
-  theme?: typeof theme;
+  theme?: typeof lightTheme;
 }
