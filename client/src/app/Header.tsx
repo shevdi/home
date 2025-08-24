@@ -6,6 +6,7 @@ import { ThemeProps } from '@/styles'
 const Head = styled.header`
   background-color: var(--nav-back-color);
   color: var(--nav-font-color);
+  z-index: 100;
 `
 
 const Nav = styled.nav<ThemeProps>`

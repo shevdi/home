@@ -8,7 +8,7 @@ import { changeTheme } from './store/themeSlice'
 
 const ThemeSwitchContainer = styled.div``
 
-export const ThemeSwitch = () => {
+export function ThemeSwitch() {
   const theme = useSelector(selectTheme)
   const dispatch = useAppDispatch()
   const onChange = () => {

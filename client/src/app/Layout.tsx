@@ -3,6 +3,9 @@ import styled from 'styled-components'
 import { Header } from './Header'
 import { Footer } from './Footer'
 import { Outlet } from 'react-router'
+import { useAppSelector } from '@/store/hooks'
+import { getPageError, getPending } from '@/store/selectors'
+import { Error, Loader } from '@/components'
 
 const LayoutContainer = styled.div`
   display: flex;
@@ -11,18 +14,35 @@ const LayoutContainer = styled.div`
 `
 
 const Main = styled.main`
-  max-width: 1024px;
+  position: relative;
+  width: 100%;
   flex-grow: 1;
-  margin: 0 auto;
-  padding: 0 1rem;
+  display: flex;
 `
 
-export const Layout = () => {
+const PageContainer = styled.div`
+  margin: 0 auto;
+  padding: 1rem;
+  max-width: 1024px;
+  flex-grow: 1;
+`
+
+export function Layout() {
+  const isPending = useAppSelector(getPending)
+  const error = useAppSelector(getPageError)
   return (
     <LayoutContainer>
       <Header />
       <Main>
-        <Outlet />
+        {error ? (
+          <Error title='Ошибка' message='Что-то пошло не так' />
+        ) : isPending ? (
+          <Loader />
+        ) : (
+          <PageContainer>
+            <Outlet />
+          </PageContainer>
+        )}
       </Main>
       <Footer />
     </LayoutContainer>

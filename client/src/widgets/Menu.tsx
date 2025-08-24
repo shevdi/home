@@ -1,8 +1,8 @@
 import React, { useState, useRef, ReactElement } from 'react'
 import styled from 'styled-components'
-import useOnClickOutside from '../hooks/useOnClickOutside'
+import { useOnClickOutside } from '@/hooks'
 import { ReactComponent as Gear } from './gear.svg'
-import { ThemeSwitch } from '../features/ThemeSwitch/ThemeSwitch'
+import { ThemeSwitch } from '@/features/ThemeSwitch/ThemeSwitch'
 
 const ModalContainer = styled.header``
 
@@ -76,7 +76,7 @@ const CloseButton = styled.button`
   }
 `
 
-export const Menu: React.FC = (): ReactElement => {
+export function Menu(): ReactElement {
   const [isModalOpen, setModalOpen] = useState(false)
   const modalRef = useRef<HTMLDivElement>(null)
 

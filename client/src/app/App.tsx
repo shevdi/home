@@ -15,12 +15,10 @@ function TP({ children }: React.PropsWithChildren) {
   )
 }
 
-function App({ children }: React.PropsWithChildren) {
+export function App({ children }: React.PropsWithChildren) {
   return (
     <Provider store={store}>
       <TP>{children}</TP>
     </Provider>
   )
 }
-
-export default App

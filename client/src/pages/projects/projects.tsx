@@ -1,29 +1,25 @@
-import { useEffect, useState } from 'react'
-import type { IProject } from '@/types/project'
+import { useGetProjectsListQuery, useGetProjectsPageQuery } from './store/projectsSlice'
+import { IProject } from '@/types/project'
+import { useQueries } from '@/hooks'
 
-export default function ProjectsPage() {
-  const [projects, setProjects]: [IProject[], any] = useState([])
-
-  useEffect(() => {
-    fetch(`${process.env.BACKEND_URL}/projects`)
-      .then((resp) => resp.json())
-      .then((resp) => {
-        setProjects(resp)
-      })
-      .catch((error) => {
-        console.error('Failed to fetch projects:', error)
-      })
-  }, [])
+export function ProjectsPage() {
+  const queries = useQueries([useGetProjectsListQuery, useGetProjectsPageQuery])
+  console.log('rrr', queries)
+  const {
+    data: [getProjectsListData, getProjectsPageData],
+  } = queries
   return (
     <div>
-      <h1>Список проектов</h1>
-      {projects.map((item) => (
-        <div>
-          <a target='_blank' href={item.url}>
-            {item.title}
-          </a>
-        </div>
-      ))}
+      <h1>{getProjectsPageData?.title}</h1>
+      <div></div>
+      {getProjectsListData &&
+        getProjectsListData.map((item: IProject) => (
+          <div>
+            <a target='_blank' href={item.url}>
+              {item.title}
+            </a>
+          </div>
+        ))}
     </div>
   )
 }

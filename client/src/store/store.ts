@@ -2,13 +2,11 @@ import type { Action, ThunkAction } from "@reduxjs/toolkit"
 import { combineSlices, configureStore } from "@reduxjs/toolkit"
 import { setupListeners } from "@reduxjs/toolkit/query"
 import themeSlice from "@/features/ThemeSwitch/store/themeSlice"
-import { welcomeApi } from '@/pages/welcome/store/welcomeSlice'
-
-console.log('welcomeApi', welcomeApi)
+import { apiSlice } from "./api"
 
 const rootReducer = combineSlices({
   config: themeSlice,
-  [welcomeApi.reducerPath]: welcomeApi.reducer
+  [apiSlice.reducerPath]: apiSlice.reducer
 })
 export type RootState = ReturnType<typeof rootReducer>
 
@@ -17,7 +15,7 @@ export const makeStore = (preloadedState?: Partial<RootState>) => {
     reducer: rootReducer,
     preloadedState,
     middleware: (getDefaultMiddleware) =>
-      getDefaultMiddleware().concat(welcomeApi.middleware),
+      getDefaultMiddleware().concat(apiSlice.middleware),
   })
   setupListeners(store.dispatch)
   return store

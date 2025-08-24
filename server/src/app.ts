@@ -54,9 +54,15 @@ app.get(`${apiVersion}/`, (req: Request, res: Response) => {
   });
 });
 
-app.get(`${apiVersion}/title`, (req: Request, res: Response) => {
+app.get(`${apiVersion}/pages/welcome`, (req: Request, res: Response) => {
   res.json({
-    title: "Home page",
+    title: "Заглавная страница",
+  });
+});
+
+app.get(`${apiVersion}/pages/projects`, (req: Request, res: Response) => {
+  res.json({
+    title: "Список проектов",
   });
 });
 

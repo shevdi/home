@@ -1,12 +1,13 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { IWelcome } from '@/types/welcome'
+import { IPage } from '@/types/page'
+import { apiSlice } from '@/store/api'
 
-export const welcomeApi = createApi({
-  reducerPath: 'welcomeApi',
-  baseQuery: fetchBaseQuery({ baseUrl: `${process.env.BACKEND_URL}` }),
+export const welcomeApi = apiSlice.injectEndpoints({
   endpoints: (build) => ({
-    getWelcomePage: build.query<IWelcome, void>({
-      query: () => 'title',
+    getWelcomePage: build.query<IPage, void>({
+      query: () => `pages/welcome`,
+      providesTags() {
+        return [{ type: 'Page' as never, id: 'welcomePage' }]
+      }
     }),
   }),
 })
