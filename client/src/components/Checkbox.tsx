@@ -52,10 +52,6 @@ export const Checkbox: React.FC<CheckboxProps> = ({
   )
 }
 
-const CheckWrapper = styled.div`
-  width: 20px;
-  height: 20px;
-`
 const CheckboxContainer = styled.label<{ $disabled: boolean }>`
   display: inline-flex;
   align-items: center;
@@ -113,15 +109,15 @@ const StyledCheckbox = styled.span<{
   }
 `
 
-const Checkmark = styled.span<{
-  $color?: string
-}>`
-  background-color: ${({ $color = '#000000' }) => `2px solid ${$color}`};
-  /* width: 20px;
-  height: 20px;
-  border-color: ${({ $color = '#000000' }) => `2px solid ${$color}`};
-  border-radius: 50%; */
-`
+// const Checkmark = styled.span<{
+//   $color?: string
+// }>`
+//   background-color: ${({ $color = '#000000' }) => `2px solid ${$color}`};
+//   width: 20px;
+//   height: 20px;
+//   border-color: ${({ $color = '#000000' }) => `2px solid ${$color}`};
+//   border-radius: 50%;
+// `
 
 // const Checkmark = styled.svg`
 //   fill: none;

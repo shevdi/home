@@ -1,9 +1,8 @@
-import React from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router'
 import { ProjectsPage, WelcomePage } from '@/pages'
 import { Layout } from '@/app/Layout'
 
-export default () => {
+export function RoutesList() {
   return (
     <BrowserRouter>
       <Routes>

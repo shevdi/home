@@ -1,4 +1,3 @@
-import React from 'react'
 import styled from 'styled-components'
 import { Checkbox } from '@/components/Checkbox'
 import { selectTheme } from './store/selectors'

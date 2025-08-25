@@ -1,4 +1,4 @@
-import React, { useState, useRef, ReactElement } from 'react'
+import { useState, useRef, ReactElement } from 'react'
 import styled from 'styled-components'
 import { useOnClickOutside } from '@/hooks'
 import { ReactComponent as Gear } from './gear.svg'
@@ -61,20 +61,20 @@ const ModalContent = styled.div`
   }
 `
 
-const CloseButton = styled.button`
-  background-color: #dc3545;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  padding: 0.5rem 1rem;
-  cursor: pointer;
-  width: 100%;
-  transition: background-color 0.2s ease-in-out;
+// const CloseButton = styled.button`
+//   background-color: #dc3545;
+//   color: white;
+//   border: none;
+//   border-radius: 4px;
+//   padding: 0.5rem 1rem;
+//   cursor: pointer;
+//   width: 100%;
+//   transition: background-color 0.2s ease-in-out;
 
-  &:hover {
-    background-color: #c82333;
-  }
-`
+//   &:hover {
+//     background-color: #c82333;
+//   }
+// `
 
 export function Menu(): ReactElement {
   const [isModalOpen, setModalOpen] = useState(false)

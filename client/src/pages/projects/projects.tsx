@@ -14,8 +14,8 @@ export function ProjectsPage() {
       <div></div>
       {getProjectsListData &&
         getProjectsListData.map((item: IProject) => (
-          <div>
-            <a target='_blank' href={item.url}>
+          <div key={item._id}>
+            <a target='_blank' rel='noreferrer' href={item.url}>
               {item.title}
             </a>
           </div>

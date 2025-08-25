@@ -8,6 +8,7 @@
     "dev": "concurrently \"npm run dev --prefix server\" \"npm run dev --prefix client\"",
     "start": "concurrently \"npm run start --prefix server\" \"npm run start --prefix client\"",
     "typecheck": "react-router typegen && tsc",
+    "lint": "docker-compose exec home-frontend npm run lint",
     "docker:build": "docker compose build",
     "docker:up:dev": "docker compose -f docker-compose.dev.yml up --build",
     "docker:up": "docker compose up --build",

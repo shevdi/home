@@ -6,9 +6,6 @@ export function useOnClickOutside<T extends HTMLElement = HTMLElement>(
   ref: RefObject<T | null>,
   handler: (event: AnyEvent) => void,
 ): void {
-  if (!ref) {
-    return
-  }
   useEffect(() => {
     const listener = (event: AnyEvent) => {
       const el = ref.current;
