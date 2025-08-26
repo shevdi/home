@@ -1,4 +1,4 @@
-export interface IProject {
+export interface ILink {
   _id: string;
   title: string;
   description?: string;
@@ -6,3 +6,4 @@ export interface IProject {
   createdAt?: string;
   updatedAt?: string;
 }
+

@@ -3,6 +3,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 
 import { projectsRoutes } from './routes/projects.ts'
+import { pagesRoutes } from './routes/pages.ts'
 
 const apiVersion = '/api/v1'
 
@@ -35,6 +36,7 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 projectsRoutes(app)
+pagesRoutes(app)
 
 app.get(`${apiVersion}/health`, (req: Request, res: Response) => {
   res.status(200).json({
@@ -51,12 +53,6 @@ app.get(`${apiVersion}/`, (req: Request, res: Response) => {
     timestamp: new Date().toISOString(),
     environment: process.env.NODE_ENV || 'development',
     version: '1.0.0'
-  });
-});
-
-app.get(`${apiVersion}/pages/welcome`, (req: Request, res: Response) => {
-  res.json({
-    title: "Заглавная страница",
   });
 });
 

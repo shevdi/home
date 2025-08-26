@@ -1,7 +1,5 @@
-import { useGetWelcomePageQuery } from './store/welcomeSlice'
+import { Page } from '@/features'
 
 export function WelcomePage() {
-  const { data } = useGetWelcomePageQuery()
-
-  return <div>{<h1>{data?.title}</h1>}</div>
+  return <Page url='welcome' />
 }
