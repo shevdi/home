@@ -4,3 +4,4 @@
 /.react-router/
 /build/
 /client/dist
+/docker-compose.dev.yml

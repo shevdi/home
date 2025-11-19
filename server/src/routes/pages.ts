@@ -1,16 +1,22 @@
-import type { Application, Request, Response } from 'express';
+import type { Request, Response } from 'express';
+import express from 'express'
 import {
   getPage,
-} from '../services/page.ts'
+} from '../db/services/pages.ts'
+import { verifyJWT } from '../middlewares/verifyJWT'
 
-export function pagesRoutes(app: Application) {
-  app.get('/api/v1/pages/:id', async (req: Request, res: Response): Promise<any> => {
-    try {
-      const page = await getPage(req.params.id)
-      return res.json(page)
-    } catch (err) {
-      console.error('error listing posts', err)
-      return res.status(500).end()
-    }
-  })
-}
+const router = express.Router()
+
+
+router.get(`/:id`, async (req: Request, res: Response): Promise<any> => {
+  try {
+    const page = await getPage(req.params.id)
+    return res.json(page)
+  } catch (err) {
+    return res.status(500).end()
+  }
+})
+
+router.use(verifyJWT)
+
+export default router

@@ -8,7 +8,7 @@ export const LightGlobalStyle = createGlobalStyle`
   body {
     background-color: #fbfbff;
     margin: 0;
-    h1, h2, h3, h4, h5, h6 {
+    h1, h2, h3, h4, h5, h6, div {
       color: #000;
     }
     a {

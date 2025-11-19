@@ -1,0 +1,51 @@
+services:
+  home-database:
+    image: mongo
+    ports:
+      - '27017:27017'
+  home-backend:
+    build:
+      context: ./server
+      dockerfile: Dockerfile.dev
+    environment:
+      - PORT=3001
+      - DATABASE_URL=mongodb://host.docker.internal:27017/home
+      - ACCESS_TOKEN_SECRET=dev-access-secret
+      - REFRESH_TOKEN_SECRET=dev-refresh-secret
+    ports:
+      - '3001:3001'
+    depends_on:
+      - home-database
+    develop:
+      watch:
+        - action: sync
+          path: ./server
+          target: /app
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: package.json
+  home-frontend:
+    build:
+      context: ./client
+      dockerfile: Dockerfile.dev
+      args:
+        BACKEND_URL: http://localhost:3001/api/v1
+    environment:
+      - BACKEND_URL=http://localhost:3001/api/v1
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true # Important for file watching in Docker
+    ports:
+      - '3000:3000'
+      - '8080:8080'
+    depends_on:
+      - home-backend
+    develop:
+      watch:
+        - action: sync
+          path: ./client
+          target: /app
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: package.json

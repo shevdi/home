@@ -1,33 +1,21 @@
-import type { Action, ThunkAction } from "@reduxjs/toolkit"
-import { combineSlices, configureStore } from "@reduxjs/toolkit"
-import { setupListeners } from "@reduxjs/toolkit/query"
-import themeSlice from "@/features/ThemeSwitch/store/themeSlice"
-import { apiSlice } from "./api"
+import { configureStore } from "@reduxjs/toolkit";
+import themeSlice from "../features/ThemeSwitch/store/themeSlice";
+import formReducer from '../features/form/formSlice';
+import { pagesSlice } from "../features/Page/store/pageSlice";
+import { authSlice } from "@/features/Auth/store/authSlice";
+import { authApiSlice } from "@/features/Auth/store/authApiSlice";
 
-const rootReducer = combineSlices({
-  config: themeSlice,
-  [apiSlice.reducerPath]: apiSlice.reducer
-})
-export type RootState = ReturnType<typeof rootReducer>
+export const store = configureStore({
+  reducer: {
+    config: themeSlice,
+    form: formReducer,
+    page: pagesSlice.reducer,
+    auth: authSlice.reducer,
+    [authApiSlice.reducerPath]: authApiSlice.reducer,
+  },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(authApiSlice.middleware),
+});
 
-export const makeStore = (preloadedState?: Partial<RootState>) => {
-  const store = configureStore({
-    reducer: rootReducer,
-    preloadedState,
-    middleware: (getDefaultMiddleware) =>
-      getDefaultMiddleware().concat(apiSlice.middleware),
-  })
-  setupListeners(store.dispatch)
-  return store
-}
-
-export const store = makeStore()
-
-export type AppStore = typeof store
-export type AppDispatch = AppStore["dispatch"]
-export type AppThunk<ThunkReturnType = void> = ThunkAction<
-  ThunkReturnType,
-  RootState,
-  unknown,
-  Action
->
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;

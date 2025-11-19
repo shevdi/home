@@ -1,9 +1,10 @@
 import express, { type Application, type Request, type Response } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
+import cookieParser from 'cookie-parser'
 
-import { projectsRoutes } from './routes/projects.ts'
-import { pagesRoutes } from './routes/pages.ts'
+import authRouter from './routes/auth.ts'
+import pagesRouter from './routes/pages.ts'
 
 const apiVersion = '/api/v1'
 
@@ -20,23 +21,20 @@ var whitelist = [
 ]
 
 app.use(helmet());
-app.use(cors())
-// app.use(cors({
-//   origin: function (origin = '', callback) {
-//     console.log(origin)
-//     if (whitelist.indexOf(origin) !== -1) {
-//       callback(null, true)
-//     } else {
-//       callback(new Error('Not allowed by CORS'))
-//     }
-//   },
-//   credentials: false
-// }));
+app.use(cors({
+  origin: ["http://localhost:3000"],
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  optionsSuccessStatus: 200,
+}));
+
 app.use(express.json({ limit: '10mb' }));
+app.use(cookieParser())
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-projectsRoutes(app)
-pagesRoutes(app)
+app.use(`${apiVersion}/pages`, pagesRouter)
+app.use(`${apiVersion}/auth`, authRouter)
 
 app.get(`${apiVersion}/health`, (req: Request, res: Response) => {
   res.status(200).json({
@@ -56,14 +54,13 @@ app.get(`${apiVersion}/`, (req: Request, res: Response) => {
   });
 });
 
-app.get(`${apiVersion}/pages/projects`, (req: Request, res: Response) => {
-  res.json({
-    title: "Список проектов",
-  });
-});
+app.all('*', (req: Request, res: Response) => {
+  res.status(404)
+    .json({ title: '404' })
+})
 
 // Error handling middleware
-// app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+// app.use((err: Error, req: Request, res: Response) => {
 //   console.error(err.stack);
 //   res.status(500).json({
 //     error: 'Something went wrong!',

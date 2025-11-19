@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router'
-import { ProjectsPage, WelcomePage } from '@/pages'
+import { ProjectsPage, WelcomePage, LoginPage } from '@/pages'
 import { Layout } from '@/app/Layout'
 
 export function RoutesList() {
@@ -13,6 +13,9 @@ export function RoutesList() {
           </Route>
           <Route path='projects'>
             <Route index element={<ProjectsPage />} />
+          </Route>
+          <Route path='login'>
+            <Route index element={<LoginPage />} />
           </Route>
         </Route>
       </Routes>

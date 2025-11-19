@@ -17,7 +17,6 @@ const fadeIn = keyframes`
   }
 `
 
-// Styled Components
 const ErrorWrapper = styled.div`
   animation: ${fadeIn} 0.3s ease-out;
   background-color: #fff0f0;

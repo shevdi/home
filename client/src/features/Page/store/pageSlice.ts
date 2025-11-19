@@ -1,7 +1,7 @@
 import { apiSlice } from '@/store/api'
 import { IPage } from '@/types/page'
 
-export const projectsApi = apiSlice.injectEndpoints({
+export const pagesSlice = apiSlice.injectEndpoints({
   endpoints: (build) => ({
     getPage: build.query<IPage, string>({
       query: (name) => `pages/${name}`,
@@ -12,4 +12,4 @@ export const projectsApi = apiSlice.injectEndpoints({
   }),
 })
 
-export const { useGetPageQuery } = projectsApi
+export const { useGetPageQuery } = pagesSlice

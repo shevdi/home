@@ -4,7 +4,7 @@ dotenv.config();
 import { app } from "./app.ts";
 import { initDatabase } from "./db/init.ts";
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 
 async function startServer(): Promise<void> {
   try {

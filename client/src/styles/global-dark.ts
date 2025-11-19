@@ -10,7 +10,7 @@ export const DarkGlobalStyle = createGlobalStyle`
   body {
     background-color: #1c1c2cff;
     margin: 0;
-    h1, h2, h3, h4, h5, h6 {
+    h1, h2, h3, h4, h5, h6, div {
       color: #fff;
     }
     a {

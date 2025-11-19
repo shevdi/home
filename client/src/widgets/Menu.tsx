@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { useOnClickOutside } from '@/hooks'
 import { ReactComponent as Gear } from './gear.svg'
 import { ThemeSwitch } from '@/features/ThemeSwitch/ThemeSwitch'
+import { Auth } from '@/features/Auth/Auth'
 
 const ModalContainer = styled.header``
 
@@ -50,7 +51,6 @@ const ModalContent = styled.div`
   h3 {
     color: #555;
     margin-top: 0;
-    margin-bottom: 1rem;
     font-size: 1.1rem;
   }
 
@@ -58,6 +58,10 @@ const ModalContent = styled.div`
     margin-bottom: 1.5rem;
     font-size: 0.9rem;
     color: #555;
+  }
+
+  > div {
+    margin-top: 1rem;
   }
 `
 
@@ -99,6 +103,7 @@ export function Menu(): ReactElement {
             <h3>Настройки</h3>
             <ThemeSwitch />
             {/* <CloseButton onClick={toggleModal}>Закрыть</CloseButton> */}
+            <Auth />
           </ModalContent>
         </ModalOverlay>
       )}

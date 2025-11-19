@@ -1,8 +1,8 @@
-import { Page } from '../db/models/pages';
+import { Project } from '../models/project'
 
-export async function getPage(url: string) {
+export async function listAllProjects() {
   try {
-    return await Page.findOne({ url })
+    return await Project.find({})
   } catch (error) {
     console.error('Error fetching projects:', error);
     throw new Error('Failed to fetch projects');

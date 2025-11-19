@@ -17,3 +17,5 @@ export const getPageError = (state: RootState) => Object.entries(state.api.queri
     return true
   }
 })
+
+export const selectAuth = (state: RootState) => state.auth
