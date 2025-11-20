@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router'
-import { ProjectsPage, WelcomePage, LoginPage, EditWelcomePage } from '@/pages'
+import { ProjectsPage, WelcomePage, LoginPage, EditWelcomePage, NotFoundPage } from '@/pages'
 import { Layout } from '@/app/Layout'
 import { PersistLogin } from './features/Auth/PersistLogin'
 
@@ -21,6 +21,7 @@ export function RoutesList() {
               <Route index element={<LoginPage />} />
             </Route>
           </Route>
+          <Route path='*' element={<NotFoundPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
