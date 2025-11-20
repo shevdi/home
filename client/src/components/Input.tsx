@@ -41,18 +41,34 @@ const StyledLabel = styled.label`
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string
   focus?: boolean
+  onOutsideClick?: () => void
 }
 
-export const Input: React.FC<InputProps> = ({ label, focus, ...props }) => {
+export const Input: React.FC<InputProps> = ({ label, focus, onOutsideClick, ...props }) => {
+  const wrapperRef = useRef<HTMLDivElement>(null)
   const userRef = useRef<HTMLInputElement>(null)
   const dispatch = useAppDispatch()
   const inputValue = useAppSelector(selectInputValue)
 
   useEffect(() => {
     if (focus) {
-      userRef?.current?.focus()
+      userRef.current?.focus()
     }
-  }, [])
+  }, [focus])
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (!onOutsideClick) return
+      if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
+        onOutsideClick()
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [onOutsideClick])
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     // Dispatch the action to update the value in the Redux store
@@ -60,7 +76,7 @@ export const Input: React.FC<InputProps> = ({ label, focus, ...props }) => {
   }
 
   return (
-    <InputWrapper>
+    <InputWrapper ref={wrapperRef}>
       <StyledLabel htmlFor={props.id || props.name}>{label}</StyledLabel>
       <StyledInput value={inputValue} ref={userRef} onChange={handleChange} {...props} />
     </InputWrapper>

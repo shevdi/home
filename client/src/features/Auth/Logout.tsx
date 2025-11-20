@@ -1,24 +1,12 @@
-import styled from 'styled-components'
 import { useSendLogoutMutation } from './store/authApiSlice'
-
-const LogoutButton = styled.button`
-  background-color: #dc3545;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  padding: 0.5rem 1rem;
-  cursor: pointer;
-  width: 100%;
-  margin-top: 1rem;
-  transition: background-color 0.2s ease-in-out;
-
-  &:hover {
-    background-color: #c82333;
-  }
-`
+import { Button } from '@/components'
 
 export function Logout() {
   const [sendLogout] = useSendLogoutMutation()
 
-  return <LogoutButton onClick={sendLogout}>Logout</LogoutButton>
+  return (
+    <Button margin='1rem 0 0 0' onClick={sendLogout}>
+      Выйти
+    </Button>
+  )
 }

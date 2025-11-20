@@ -9,7 +9,15 @@ export const pagesSlice = apiSlice.injectEndpoints({
         return [{ type: 'Page' as never, id: 'getPage' }]
       }
     }),
+    changePage: build.mutation<IPage, { name: string; data: Partial<IPage> }>({
+      query: ({ name, data }) => ({
+        url: `pages/${name}`,
+        method: 'PUT',
+        body: data
+      }),
+      invalidatesTags: [{ type: 'Page' as never, id: 'getPage' }]
+    })
   }),
 })
 
-export const { useGetPageQuery } = pagesSlice
+export const { useGetPageQuery, useChangePageMutation } = pagesSlice

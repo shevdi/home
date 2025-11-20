@@ -1,10 +1,10 @@
+import styled from 'styled-components'
 import { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router'
 import { setCredentials } from './store/authSlice'
 import { useLoginMutation } from './store/authApiSlice'
-import { Input } from '@/components'
-import styled from 'styled-components'
+import { Button, Input } from '@/components'
 import { Loader } from '@/components'
 
 const Section = styled.section`
@@ -14,22 +14,6 @@ const Section = styled.section`
 
 const Head = styled.h1`
   text-align: center;
-`
-
-const LoginButton = styled.button`
-  background-color: #dc3545;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  padding: 0.5rem 1rem;
-  cursor: pointer;
-  width: 100%;
-  margin-top: 1rem;
-  transition: background-color 0.2s ease-in-out;
-
-  &:hover {
-    background-color: #c82333;
-  }
 `
 
 const ErrMassege = styled.div`
@@ -93,7 +77,9 @@ export function Login() {
       <form className='form' onSubmit={handleSubmit}>
         <Input label='Имя пользователя' value={username} focus required onChange={handleUserInput} />
         <Input label='Пароль' value={password} type='password' required onChange={handlePwdInput} />
-        <LoginButton>Войти</LoginButton>
+        <Button display='block' margin='1rem auto'>
+          Войти
+        </Button>
       </form>
     </Section>
   )
