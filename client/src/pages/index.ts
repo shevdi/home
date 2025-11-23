@@ -1,5 +1,6 @@
 export { WelcomePage } from './Welcome/Welcome'
 export { ProjectsPage } from './Projects/Projects'
 export { EditWelcomePage } from './Welcome/EditWelcome'
+export { EditProjectsPage } from './Projects/EditProjects'
 export { LoginPage } from './Login/Login'
 export { NotFoundPage } from './NotFound/NotFound'

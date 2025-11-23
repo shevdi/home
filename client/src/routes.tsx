@@ -1,7 +1,8 @@
 import { BrowserRouter, Routes, Route } from 'react-router'
-import { ProjectsPage, WelcomePage, LoginPage, EditWelcomePage, NotFoundPage } from '@/pages'
+import { ProjectsPage, WelcomePage, LoginPage, EditWelcomePage, NotFoundPage, EditProjectsPage } from '@/pages'
 import { Layout } from '@/app/Layout'
 import { PersistLogin } from './features/Auth/PersistLogin'
+import RequireAuth from './features/Auth/RequireAuth'
 
 export function RoutesList() {
   return (
@@ -12,10 +13,15 @@ export function RoutesList() {
             <Route index element={<WelcomePage />} />
             <Route path='home'>
               <Route index element={<div>homeage</div>} />
-              <Route path='edit' element={<EditWelcomePage />} />
+              <Route element={<RequireAuth allowedRoles={['admin']} />}>
+                <Route path='edit' element={<EditWelcomePage />} />
+              </Route>
             </Route>
             <Route path='projects'>
               <Route index element={<ProjectsPage />} />
+              <Route element={<RequireAuth allowedRoles={['admin']} />}>
+                <Route path='edit' element={<EditProjectsPage />} />
+              </Route>
             </Route>
             <Route path='login'>
               <Route index element={<LoginPage />} />

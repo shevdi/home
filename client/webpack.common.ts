@@ -6,6 +6,7 @@ const commonConfig: Configuration = {
   entry: path.resolve(__dirname, "src", "index.tsx"),
   output: {
     filename: "[name].[contenthash].js",
+    publicPath: '/',
   },
   plugins: [
     new webpack.EnvironmentPlugin({
