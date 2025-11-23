@@ -12,6 +12,7 @@ export function ThemeSwitch() {
   const dispatch = useAppDispatch()
   const onChange = () => {
     dispatch(changeTheme())
+    localStorage.setItem('config', JSON.stringify({ theme: 'dark' }))
   }
   return (
     <ThemeSwitchContainer>

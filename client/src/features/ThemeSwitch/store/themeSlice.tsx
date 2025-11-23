@@ -1,16 +1,21 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-import { IConfig } from '../../../types/config'
+const storageConfig = localStorage.getItem('config')
 
-const initialState: IConfig = { theme: 'light' }
+const initialState = storageConfig
+  ? JSON.parse(storageConfig)
+  : {
+      theme: 'light',
+    }
 
 const themetSlice = createSlice({
   name: 'theme',
   initialState,
   reducers: {
     changeTheme: (state) => {
+      const theme = state.theme === 'dark' ? 'light' : 'dark'
       return {
-        theme: state.theme === 'dark' ? 'light' : 'dark',
+        theme,
       }
     },
   },
