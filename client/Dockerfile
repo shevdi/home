@@ -1,16 +1,29 @@
-# Development Dockerfile for Webpack with HMR
-FROM node:22-alpine
+# Stage-1 & spacify a name 'builder'
+FROM  node:latest AS builder
 
-ARG BACKEND_URL=http://localhost:3001/api/v1
+# Create a directory  and go to directory 
 WORKDIR /app
 
-COPY ./package.json .
+# Copy the package.json file to my current directory for install necessary dependence  
+COPY package.json .
 
+# Install the dependence
 RUN npm install
 
+# Copy other file to my current directory
 COPY . .
 
-EXPOSE 3000
-EXPOSE 8080 
+# Build optimise static file
+RUN npm run dist
 
-CMD ["npm", "run", "start"]
+# Stage-2
+FROM nginx:1.25.2-alpine-slim
+
+# Copy static file to my nignx folder for serve static contain
+COPY --from=builder /app/build /usr/share/nginx/html
+
+# Open the port for react
+EXPOSE 80
+
+# Run nginx in foreground
+CMD ["nginx", "-g", "daemon off;"]

@@ -5,13 +5,14 @@ import { app } from "./app.ts";
 import { initDatabase } from "./db/init.ts";
 
 const PORT = process.env.PORT || 3001;
+const DATABASE_URL = process.env.DATABASE_URL || 'localhost'
 
 async function startServer(): Promise<void> {
   try {
     await initDatabase();
 
     app.listen(PORT, () => {
-      console.info(`Express server running on http://localhost:${PORT}`);
+      console.info(`Express server running on http://${DATABASE_URL}:${PORT}`);
       console.info(`Environment: ${process.env.NODE_ENV || 'development'}`);
     });
   } catch (err) {
