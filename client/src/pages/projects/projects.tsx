@@ -1,6 +1,6 @@
 import { Page } from '@/features'
-import { useTitle } from '@/hooks'
-import { useAuth } from '@/hooks/useAuth'
+import { useTitle } from '@/shared/hooks'
+import { useAuth } from '@/shared/hooks/useAuth'
 import { Link } from 'react-router'
 import styled from 'styled-components'
 

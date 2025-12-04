@@ -1,8 +1,8 @@
 import styled from 'styled-components'
 import { Page } from '@/features'
-import { useTitle } from '@/hooks'
+import { useTitle } from '@/shared/hooks'
 import { Link } from 'react-router'
-import { useAuth } from '@/hooks/useAuth'
+import { useAuth } from '@/shared/hooks/useAuth'
 
 const LinkWrapper = styled.div`
   text-align: right;

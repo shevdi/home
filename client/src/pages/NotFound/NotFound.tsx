@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import { Link } from 'react-router'
-import { useTitle } from '@/hooks'
+import { useTitle } from '@/shared/hooks'
 
 const Container = styled.div`
   display: flex;

@@ -1,0 +1,2 @@
+export { ThemeSwitch } from './ThemeSwitch'
+

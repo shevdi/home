@@ -1,5 +1,5 @@
 import { EditPage } from '@/features'
-import { useTitle } from '@/hooks'
+import { useTitle } from '@/shared/hooks'
 
 export function EditWelcomePage() {
   useTitle('Редактирование главной страницы')

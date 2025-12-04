@@ -1,5 +1,5 @@
-import { Login } from '@/features/Auth/Login'
-import { useTitle } from '@/hooks'
+import { Login } from '@/features/Auth'
+import { useTitle } from '@/shared/hooks'
 
 export function LoginPage() {
   useTitle('Логин')
