@@ -1,3 +1,2 @@
-export * from './page';
-export * from './links';
+export * from './common';
 export * from './config'

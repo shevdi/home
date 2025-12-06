@@ -12,8 +12,19 @@
     "docker:build": "docker compose build",
     "docker:up:dev": "docker compose -f docker-compose.dev.yml up --build",
     "docker:up": "docker compose up --build",
-    "docker:down": "docker compose down"
+    "docker:down": "docker compose down",
+    "copy:types": "node scripts/copyFiles.cjs"
   },
+  "copyFiles": [
+    {
+      "src": "../shared/types",
+      "dest": "../client/src/shared/types/common"
+    },
+    {
+      "src": "../shared/types",
+      "dest": "../server/src/types/common"
+    }
+  ],
   "keywords": [
     "nodejs",
     "express",
@@ -23,10 +34,14 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.10",
     "concurrently": "^9.2.0",
     "dotenv-webpack": "^8.1.1",
     "nodemon": "^3.0.2",
     "typescript": "^5.8.3",
     "webpack": "^5.101.0"
+  },
+  "dependencies": {
+    "fs-extra": "^11.3.2"
   }
 }

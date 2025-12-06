@@ -1,16 +1,7 @@
 import { useSelector } from 'react-redux'
-import { jwtDecode, JwtPayload } from 'jwt-decode'
+import { jwtDecode } from 'jwt-decode'
 import { selectCurrentToken } from '@/features/Auth'
-
-type Roles = 'user' | 'admin'
-
-interface Decoded extends JwtPayload {
-  UserInfo: {
-    username: string;
-    roles: Array<Roles>
-  }
-}
-
+import { DecodedJwtPayload } from '../types'
 
 export const useAuth = () => {
   const token = useSelector(selectCurrentToken)
@@ -19,7 +10,7 @@ export const useAuth = () => {
   let status = ''
 
   if (token) {
-    const decoded: Decoded = jwtDecode(token)
+    const decoded = jwtDecode<DecodedJwtPayload>(token)
     const { username, roles } = decoded.UserInfo
 
     isUser = roles.includes('user')
