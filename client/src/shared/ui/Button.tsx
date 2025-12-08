@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 
-export const Button = styled.button<{ margin?: string; display?: string; width?: string }>`
-  background-color: #dc3545;
+export const Button = styled.button<{ margin?: string; display?: string; width?: string; disabled?: boolean }>`
+  background-color: ${({ disabled }) => (disabled ? 'grey' : '#dc3545')};
   color: white;
   display: ${({ display = 'initial' }) => display};
   border: none;
@@ -13,6 +13,6 @@ export const Button = styled.button<{ margin?: string; display?: string; width?:
   transition: background-color 0.2s ease-in-out;
 
   &:hover {
-    background-color: #c82333;
+    background-color: ${({ disabled }) => (disabled ? 'grey' : '#c82333')};
   }
 `

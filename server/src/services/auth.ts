@@ -7,8 +7,7 @@ import {
 
 export const login = async (req: Request, res: Response) => {
   const { username, password } = req.body
-  const hashedPwd = await bcrypt.hash(password, 10)
-  console.log('hashedPwd', hashedPwd)
+  // const hashedPwd = await bcrypt.hash(password, 10)
 
   if (!username || !password) {
     return res.status(400).json({ message: 'Все поля обязательны' })
@@ -17,14 +16,13 @@ export const login = async (req: Request, res: Response) => {
   const foundUser = await getUserByName(username)
 
   if (!foundUser || !foundUser.active) {
-    return res.status(401).json({ message: 'Не авторизован' })
+    return res.status(401).json({ message: 'Неверный логин или пароль' })
   }
 
   const match = await bcrypt.compare(password, foundUser.password)
 
-  if (!match) return res.status(401).json({ message: 'Неверный пароль' })
+  if (!match) return res.status(401).json({ message: 'Неверный логин или пароль' })
 
-  console.log('process.env.ACCESS_TOKEN_SECRET', process.env.ACCESS_TOKEN_SECRET)
   const accessToken = jwt.sign(
     {
       "UserInfo": {

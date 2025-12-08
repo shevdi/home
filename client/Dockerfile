@@ -14,7 +14,7 @@ RUN npm install
 COPY . .
 
 # Build optimise static file
-RUN npm run dist
+RUN npm run build
 
 # Stage-2
 FROM nginx:1.25.2-alpine-slim

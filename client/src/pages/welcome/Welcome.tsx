@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import { Page } from '@/features'
 import { useTitle } from '@/shared/hooks'
-import { Link } from 'react-router'
+import { Link, useLocation } from 'react-router'
 import { useAuth } from '@/shared/hooks/useAuth'
 
 const LinkWrapper = styled.div`
@@ -10,12 +10,13 @@ const LinkWrapper = styled.div`
 
 export function WelcomePage() {
   useTitle('Главная')
+  const location = useLocation()
   const { isAdmin } = useAuth()
   return (
     <>
       {isAdmin && (
         <LinkWrapper>
-          <Link to='home/edit'>Редактировать</Link>
+          <Link to={location.pathname.length === 1 ? 'home/edit' : 'edit'}>Редактировать</Link>
         </LinkWrapper>
       )}
       <Page url='welcome' />

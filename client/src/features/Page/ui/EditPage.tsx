@@ -1,8 +1,11 @@
 import styled from 'styled-components'
 import { useChangePageMutation, useGetPageQuery } from '../model/pageSlice'
 import { useLocation, useNavigate } from 'react-router'
-import { Button, Input } from '@/shared/ui'
-import { useEffect, useState } from 'react'
+import { Button, ErrMessage, Input } from '@/shared/ui'
+import { useState } from 'react'
+import z from 'zod'
+import { SubmitHandler, useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 
 interface IPageProps {
   url?: string
@@ -18,78 +21,81 @@ const PageText = styled.div`
   text-align: center;
 `
 
+const schema = z.object({
+  title: z.string(),
+  text: z.string(),
+})
+
+type FormFields = z.infer<typeof schema>
+
 export function EditPage({ url }: IPageProps) {
   const location = useLocation()
   const navigate = useNavigate()
+
   const pageName = url || location.pathname.split('/')[1]
 
   const { data } = useGetPageQuery(pageName)
   const [changePage] = useChangePageMutation()
 
-  const [title, setTitle] = useState('')
-  const [text, setText] = useState('')
   const [isTitleEdited, setIsTitleEdited] = useState(false)
   const [isTextEdited, setIsTextEdited] = useState(false)
 
-  const switchTitleEdited = (value: boolean = false) => {
-    setIsTitleEdited(value)
-  }
+  const switchTitleEdited = (value: boolean = false) => setIsTitleEdited(value)
   const switchTextEdited = (value: boolean = false) => setIsTextEdited(value)
 
   const startTitleEdited = () => {
     switchTitleEdited(true)
-    switchTextEdited()
+    switchTextEdited(false)
   }
 
   const startTextEdited = () => {
-    switchTitleEdited()
     switchTextEdited(true)
+    switchTitleEdited(false)
   }
 
-  useEffect(() => {
-    if (data?.title) {
-      setTitle(data.title)
-    }
-    if (data?.text) {
-      setText(data.text)
-    }
-  }, [data?.title, data?.text])
+  const {
+    register,
+    handleSubmit,
+    setError,
+    getValues,
+    formState: { isSubmitting, errors },
+  } = useForm<FormFields>({
+    resolver: zodResolver(schema),
+    defaultValues: data,
+  })
 
-  const handleTitleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setTitle(event.target.value)
-  }
+  const { title, text } = getValues()
 
-  const handleTextInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setText(event.target.value)
-  }
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
+  const onSubmit: SubmitHandler<FormFields> = async ({ title, text }) => {
     try {
       await changePage({
         name: pageName,
         data: { title, text },
       }).unwrap()
-      navigate('/')
-    } catch (err) {
-      console.error('Failed to update page', err)
+      navigate(location.pathname.replace('/edit', ''))
+      /* eslint @typescript-eslint/no-explicit-any: "off" */
+    } catch (error: any) {
+      setError('root', {
+        message: error?.data?.message,
+      })
     }
   }
 
   return (
     <PageContainer>
-      <form className='form' onSubmit={handleSubmit}>
+      <form className='form' onSubmit={handleSubmit(onSubmit)}>
         {isTitleEdited ? (
-          <Input onOutsideClick={switchTextEdited} label='' value={title} required onChange={handleTitleInput} />
+          <Input label='' onOutsideClick={switchTitleEdited} {...register('title')} />
         ) : (
           <PageHeader onClick={startTitleEdited}>{title}</PageHeader>
         )}
         {isTextEdited ? (
-          <Input label='' onOutsideClick={switchTextEdited} value={text} required onChange={handleTextInput} />
+          <Input label='' onOutsideClick={switchTextEdited} {...register('text')} />
         ) : (
           <PageText onClick={startTextEdited}>{text}</PageText>
         )}
-        <Button display='block' margin='1rem auto'>
+        <ErrMessage>{errors.root?.message}</ErrMessage>
+        <Button display='block' margin='1rem auto' disabled={isSubmitting}>
           Сохранить
         </Button>
       </form>

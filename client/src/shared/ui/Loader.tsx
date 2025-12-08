@@ -2,6 +2,7 @@ import styled, { keyframes } from 'styled-components'
 
 interface LoaderProps {
   message?: string
+  inline?: boolean
 }
 
 const spin = keyframes`
@@ -27,12 +28,13 @@ const LoaderWrapper = styled.div`
   border-radius: inherit;
 `
 
-const Spinner = styled.div`
+const Spinner = styled.div<{ $inline?: boolean }>`
   border: 4px solid rgba(0, 123, 255, 0.2);
   border-top: 4px solid #007bff;
   border-radius: 50%;
-  width: 40px;
-  height: 40px;
+  width: ${({ $inline }) => ($inline ? '20px' : '40px')};
+  height: ${({ $inline }) => ($inline ? '20px' : '40px')};
+  margin: ${({ $inline }) => ($inline ? '0 auto' : 'initial')};
   animation: ${spin} 0.8s linear infinite;
 `
 
@@ -43,11 +45,9 @@ const LoadingMessage = styled.p`
   color: #333;
 `
 
-export function Loader({ message }: LoaderProps) {
-  return (
-    <LoaderWrapper>
-      <Spinner />
-      {message && <LoadingMessage>{message}</LoadingMessage>}
-    </LoaderWrapper>
-  )
+export function Loader({ message, inline }: LoaderProps) {
+  if (inline) {
+    return <Spinner $inline={inline} />
+  }
+  return <LoaderWrapper>{message && <LoadingMessage>{message}</LoadingMessage>}</LoaderWrapper>
 }

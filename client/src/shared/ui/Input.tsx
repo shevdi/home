@@ -1,7 +1,5 @@
 import React, { useEffect, useRef } from 'react'
 import styled from 'styled-components'
-import { useAppDispatch, useAppSelector } from '@/app/store/hooks'
-import { selectInputValue, setInputValue } from '@/features/form'
 
 const InputWrapper = styled.div`
   position: relative;
@@ -26,29 +24,35 @@ const StyledInput = styled.input`
   }
 
   &:disabled {
-    background-color: #f8f9fa;
+    background-color: #708090;
     cursor: not-allowed;
   }
 `
 
 const StyledLabel = styled.label`
   display: block;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.8rem;
   font-weight: 500;
   color: #555;
+`
+
+const ErrorText = styled.div`
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  color: var(--error-color);
+  min-height: 1rem;
 `
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string
   focus?: boolean
+  error?: string
   onOutsideClick?: () => void
 }
 
-export const Input: React.FC<InputProps> = ({ label, focus, onOutsideClick, ...props }) => {
+export const Input: React.FC<InputProps> = ({ label, focus, error, onOutsideClick, ...props }) => {
   const wrapperRef = useRef<HTMLDivElement>(null)
   const userRef = useRef<HTMLInputElement>(null)
-  const dispatch = useAppDispatch()
-  const inputValue = useAppSelector(selectInputValue)
 
   useEffect(() => {
     if (focus) {
@@ -70,15 +74,11 @@ export const Input: React.FC<InputProps> = ({ label, focus, onOutsideClick, ...p
     }
   }, [onOutsideClick])
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    // Dispatch the action to update the value in the Redux store
-    dispatch(setInputValue(event.target.value))
-  }
-
   return (
     <InputWrapper ref={wrapperRef}>
       <StyledLabel htmlFor={props.id || props.name}>{label}</StyledLabel>
-      <StyledInput value={inputValue} ref={userRef} onChange={handleChange} {...props} />
+      <StyledInput ref={userRef} {...props} />
+      <ErrorText>{error}</ErrorText>
     </InputWrapper>
   )
 }

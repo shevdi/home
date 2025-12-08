@@ -11,7 +11,7 @@ export function RoutesList() {
           <Route element={<PersistLogin />}>
             <Route index element={<WelcomePage />} />
             <Route path='home'>
-              <Route index element={<div>homeage</div>} />
+              <Route index element={<WelcomePage />} />
               <Route element={<RequireAuth allowedRoles={['admin']} />}>
                 <Route path='edit' element={<EditWelcomePage />} />
               </Route>

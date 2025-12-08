@@ -12,7 +12,7 @@ async function startServer(): Promise<void> {
     await initDatabase();
 
     app.listen(PORT, () => {
-      console.info(`Express server running on http://${DATABASE_URL}:${PORT}`);
+      console.info(`Express server running on ${DATABASE_URL}`);
       console.info(`Environment: ${process.env.NODE_ENV || 'development'}`);
     });
   } catch (err) {
