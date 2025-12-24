@@ -83,7 +83,7 @@ export function EditPage({ url }: IPageProps) {
 
   return (
     <PageContainer>
-      <form className='form' onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         {isTitleEdited ? (
           <Input label='' onOutsideClick={switchTitleEdited} {...register('title')} />
         ) : (

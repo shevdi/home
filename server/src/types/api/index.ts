@@ -30,3 +30,5 @@ export interface DatabaseConfig {
     useUnifiedTopology?: boolean;
   };
 }
+
+export * from './drime'

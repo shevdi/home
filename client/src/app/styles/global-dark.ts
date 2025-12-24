@@ -6,6 +6,8 @@ export const DarkGlobalStyle = createGlobalStyle`
     --modal-back-color: #cfcfcf9d;
     --nav-font-color: #000;
     --link-color: #333;
+    --input-color: #cacede;
+    --input-disabled-color: #606473;
   }
   body {
     background-color: #1c1c2cff;

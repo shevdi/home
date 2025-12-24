@@ -4,6 +4,8 @@ export const LightGlobalStyle = createGlobalStyle`
   :root {
     --nav-back-color: #333;
     --nav-font-color: #fff;
+    --input-color: #f1f4fb;
+    --input-disabled-color: #cacede;
   }
   body {
     background-color: #fbfbff;

@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser'
 
 import authRouter from './routes/auth.ts'
 import pagesRouter from './routes/pages.ts'
+import photosRouter from './routes/photos.ts'
 
 const apiVersion = '/api/v1'
 
@@ -35,6 +36,7 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 app.use(`${apiVersion}/pages`, pagesRouter)
 app.use(`${apiVersion}/auth`, authRouter)
+app.use(`${apiVersion}/photos`, photosRouter)
 
 app.get(`${apiVersion}/health`, (req: Request, res: Response) => {
   res.status(200).json({

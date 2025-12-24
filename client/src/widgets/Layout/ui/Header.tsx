@@ -53,6 +53,9 @@ export function Header() {
             <NavLink to='/projects'>Projects</NavLink> &nbsp;
           </NavItem>
           <NavItem>
+            <NavLink to='/photos'>Photos</NavLink> &nbsp;
+          </NavItem>
+          <NavItem>
             <Menu />
           </NavItem>
         </NavList>

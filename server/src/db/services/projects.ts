@@ -1,4 +1,4 @@
-import { Project } from '../models/project'
+import { Project } from '../models/link'
 
 export async function listAllProjects() {
   try {

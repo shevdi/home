@@ -1,18 +1,22 @@
 import React, { useEffect, useRef } from 'react'
 import styled from 'styled-components'
+import { UploadLabel } from './UploadLabel'
 
 const InputWrapper = styled.div`
   position: relative;
   margin-bottom: 1rem;
 `
 
-const StyledInput = styled.input`
+const StyledInput = styled.input<{
+  type?: string
+}>`
   width: 100%;
   padding: 12px 15px;
   border: 1px solid #ccc;
   border-radius: 6px;
   font-size: 1rem;
   color: #333;
+  display: ${({ type }) => (type === 'file' ? 'none' : 'initial')};
   transition:
     border-color 0.2s ease-in-out,
     box-shadow 0.2s ease-in-out;
@@ -45,20 +49,27 @@ const ErrorText = styled.div`
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string
+  type?: string
   focus?: boolean
   error?: string
+  disabled?: boolean
   onOutsideClick?: () => void
 }
 
-export const Input: React.FC<InputProps> = ({ label, focus, error, onOutsideClick, ...props }) => {
+export const Input: React.FC<InputProps> = ({ label, type, focus, error, disabled, onOutsideClick, ...props }) => {
   const wrapperRef = useRef<HTMLDivElement>(null)
-  const userRef = useRef<HTMLInputElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
+  const labelRef = useRef<HTMLLabelElement>(null)
 
   useEffect(() => {
     if (focus) {
-      userRef.current?.focus()
+      inputRef.current?.focus()
     }
   }, [focus])
+
+  const onClick = () => {
+    inputRef.current?.click()
+  }
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -76,8 +87,16 @@ export const Input: React.FC<InputProps> = ({ label, focus, error, onOutsideClic
 
   return (
     <InputWrapper ref={wrapperRef}>
-      <StyledLabel htmlFor={props.id || props.name}>{label}</StyledLabel>
-      <StyledInput ref={userRef} {...props} />
+      {type === 'file' ? (
+        <UploadLabel ref={labelRef} htmlFor={props.id || props.name} disabled={disabled} onClick={onClick}>
+          {label}
+        </UploadLabel>
+      ) : (
+        <StyledLabel ref={labelRef} htmlFor={props.id || props.name} onClick={onClick}>
+          {label}
+        </StyledLabel>
+      )}
+      <StyledInput ref={inputRef} type={type} disabled={disabled} {...props} />
       <ErrorText>{error}</ErrorText>
     </InputWrapper>
   )

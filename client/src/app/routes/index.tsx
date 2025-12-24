@@ -1,5 +1,16 @@
 import { BrowserRouter, Routes, Route } from 'react-router'
-import { ProjectsPage, WelcomePage, LoginPage, EditWelcomePage, NotFoundPage, EditProjectsPage } from '@/pages'
+import {
+  ProjectsPage,
+  WelcomePage,
+  LoginPage,
+  EditWelcomePage,
+  NotFoundPage,
+  EditProjectsPage,
+  PhotosPage,
+  PhotoPage,
+  EditPhotoPage,
+  UploadPhotoPage,
+} from '@/pages'
 import { Layout } from '@/widgets/Layout'
 import { PersistLogin, RequireAuth } from '@/features/Auth'
 
@@ -20,6 +31,16 @@ export function RoutesList() {
               <Route index element={<ProjectsPage />} />
               <Route element={<RequireAuth allowedRoles={['admin']} />}>
                 <Route path='edit' element={<EditProjectsPage />} />
+              </Route>
+            </Route>
+            <Route path='photos'>
+              <Route index element={<PhotosPage />} />
+              <Route path=':id'>
+                <Route index element={<PhotoPage />} />
+                <Route path='edit' element={<EditPhotoPage />} />
+              </Route>
+              <Route element={<RequireAuth allowedRoles={['admin']} />}>
+                <Route path='photo/new' element={<UploadPhotoPage />} />
               </Route>
             </Route>
             <Route path='login'>
