@@ -26,7 +26,7 @@ export const photosApiSlice = apiSlice.injectEndpoints({
         body: formData,
       }),
     }),
-    changePhoto: builder.mutation<UploadResponse, { id: string; data: { title: string } }>({
+    changePhoto: builder.mutation<ILink, { id: string; data: { title: string, priority?: number } }>({
       query: ({ id, data }) => ({
         url: `photos/${id}`,
         method: "PUT",

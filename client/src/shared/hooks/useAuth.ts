@@ -18,7 +18,6 @@ export const useAuth = () => {
 
     if (isUser) status = 'user'
     if (isAdmin) status = 'admin'
-    console.log({ username, roles, status, isUser, isAdmin })
 
     return { username, roles, status, isUser, isAdmin }
   }

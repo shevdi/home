@@ -14,9 +14,6 @@ const drime = axios.create({
 
 axios.interceptors.response.use(
   response => {
-    console.log('^^^^^^^^^^^^^^^^^')
-    console.log(response)
-    console.log('^^^^^^^^^^^^^^^^^')
     return response
   },
   error => {
@@ -38,7 +35,6 @@ export const cropPhotoAndUpload = async (file: Express.Multer.File, token: strin
     mimetype: file.mimetype,
     folder
   })
-  console.log('response', photoData)
   const { url } = await getEntries(`/file-entries/${photoData.id}`, token);
   return { url, photoData }
 }
@@ -60,7 +56,6 @@ export async function getEntries(
   url: string = '',
   token?: string
 ): Promise<{ url: string }> {
-  console.log('url', url)
   try {
     const response = await drime<{ url: string, token: string }, DrimeTokenApiResponse>({
       method: 'get',
@@ -82,7 +77,6 @@ export async function updateEntry(
   token: string,
   data: DrimeFileEntry
 ): Promise<{ url: string }> {
-  console.log('url', url)
   try {
     const response = await drime<{ url: string, token: string }, DrimeTokenApiResponse>({
       method: 'put',
@@ -136,8 +130,6 @@ export async function uploadPhotos(
       accept: 'application/json'
     }
   })
-
-  console.log('response.data', response.data)
 
   return response.data.fileEntry;
 }

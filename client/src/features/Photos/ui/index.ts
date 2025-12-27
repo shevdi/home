@@ -1,5 +1,6 @@
 export { PhotoGallery } from './PhotoGallery'
 export { UploadPhoto } from './UploadPhoto'
 export { Photo } from './Photo'
+export { PhotoLink } from './PhotoLink'
 export { EditPhoto } from './EditPhoto'
 export { DeletePhoto } from './DeletePhoto'

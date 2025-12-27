@@ -21,7 +21,6 @@ export const verifyJWT = (req: Request & Partial<IUserInfo>, res: Response, next
     process.env.ACCESS_TOKEN_SECRET as string,
     ((err, decoded: DecodedJwtPayload) => {
       if (err) return res.status(403).json({ message: 'Forbidden' })
-      console.log('decoded', decoded)
       req.username = decoded?.UserInfo?.username
       req.roles = decoded?.UserInfo?.roles
       next()

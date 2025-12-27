@@ -12,6 +12,7 @@ const linkSchema = new Schema(
     smSizeEntryId: { type: String },
     mdSizeEntryId: { type: String },
     fullSizeEntryId: { type: String },
+    priority: { type: Number },
     createdAt: { type: String },
     updatedAt: { type: String },
   },

@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { useDeletePhotoMutation, useGetPhotoQuery } from '../model'
+import { useDeletePhotoMutation } from '../model'
 import { useNavigate, useLocation } from 'react-router'
 import { EmptyObject, SubmitHandler, useForm } from 'react-hook-form'
 import { Button, ErrMessage } from '@/shared/ui'
@@ -10,7 +10,6 @@ export function DeletePhoto() {
   const location = useLocation()
   const navigate = useNavigate()
   const photoId = location.pathname.split('/')[2]
-  const { data } = useGetPhotoQuery(photoId)
   const [deletePhoto] = useDeletePhotoMutation()
 
   const {
@@ -19,8 +18,6 @@ export function DeletePhoto() {
     // getValues,
     formState: { isSubmitting, errors },
   } = useForm<EmptyObject>()
-
-  console.log(data)
 
   const onSubmit: SubmitHandler<EmptyObject> = async () => {
     try {

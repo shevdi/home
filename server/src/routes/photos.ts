@@ -18,11 +18,16 @@ router.get(`/`, async (req: Request, res: Response): Promise<any> => {
     const authResult = await getToken();
     const results = await Promise.all(photos
       .map(async (item) => {
-        const { url } = await getEntries(`/file-entries/${item.smSizeEntryId}`, authResult?.user?.access_token)
+        const { url: smSizeUrl } = await getEntries(`/file-entries/${item.smSizeEntryId}`, authResult?.user?.access_token)
+        const { url: mdSizeUrl } = await getEntries(`/file-entries/${item.mdSizeEntryId}`, authResult?.user?.access_token)
         return {
           _id: item._id,
           name: item.name,
-          url
+          title: item.title,
+          priority: item.priority,
+          smSizeUrl,
+          mdSizeUrl,
+          url: smSizeUrl
         }
       })
     )

@@ -1,10 +1,7 @@
 import styled from 'styled-components'
 
 export const Button = styled.button<{ margin?: string; display?: string; width?: string; disabled?: boolean }>`
-  background-color: ${({ disabled }) => {
-    console.log('disabled', disabled)
-    return disabled ? 'grey' : '#dc3545'
-  }};
+  background-color: ${({ disabled }) => (disabled ? 'grey' : '#dc3545')};
   color: white;
   display: ${({ display = 'initial' }) => display};
   border: none;

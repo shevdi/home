@@ -1,4 +1,4 @@
-import { JwtPayload } from 'jsonwebtoken'
+import { type JwtPayload } from 'jsonwebtoken'
 
 export type Roles = 'user' | 'admin'
 export interface IUserInfo {

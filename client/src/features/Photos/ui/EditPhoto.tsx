@@ -18,6 +18,7 @@ const Image = styled.img`
 
 const schema = z.object({
   title: z.string(),
+  priority: z.number().optional(),
 })
 
 type FormFields = z.infer<typeof schema>
@@ -38,15 +39,15 @@ export function EditPhoto() {
     resolver: zodResolver(schema),
     defaultValues: {
       title: data?.title,
+      priority: 0,
     },
   })
-  console.log(data)
 
-  const onSubmit: SubmitHandler<FormFields> = async ({ title }) => {
+  const onSubmit: SubmitHandler<FormFields> = async (data) => {
     try {
       await changePhoto({
         id: photoId,
-        data: { title },
+        data,
       }).unwrap()
       /* eslint @typescript-eslint/no-explicit-any: "off" */
     } catch (error: any) {
@@ -62,6 +63,13 @@ export function EditPhoto() {
       <ErrMessage>{errors.root?.message}</ErrMessage>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Input label='Заголовок' {...register('title')} />
+        <Input
+          label='Приоритет'
+          {...register('priority', {
+            valueAsNumber: true,
+          })}
+          type='number'
+        />
         <Button display='block' margin='1rem auto' disabled={isSubmitting}>
           Сохранить
         </Button>
