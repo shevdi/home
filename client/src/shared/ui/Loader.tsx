@@ -49,5 +49,7 @@ export function Loader({ message, inline }: LoaderProps) {
   if (inline) {
     return <Spinner $inline={inline} />
   }
-  return <LoaderWrapper>{message && <LoadingMessage>{message}</LoadingMessage>}</LoaderWrapper>
+  return (
+    <LoaderWrapper>{message ? <LoadingMessage>{message}</LoadingMessage> : <Spinner $inline={inline} />}</LoaderWrapper>
+  )
 }

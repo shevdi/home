@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 import { useGetPhotosQuery } from '../model'
 import { PhotoLink } from './PhotoLink'
+import { Loader } from '@/shared/ui'
 
 const PageContainer = styled.div``
 
@@ -17,17 +18,21 @@ const PhotoContainer = styled.div`
 `
 
 export function PhotoGallery() {
-  const { data } = useGetPhotosQuery(undefined, {
-    refetchOnMountOrArgChange: 360,
+  const { data, isLoading } = useGetPhotosQuery(undefined, {
+    // refetc,hOnMountOrArgChange: 360,
   })
   return (
     <PageContainer>
       <PageHeader>Фотки</PageHeader>
-      <PhotoContainer>
-        {data?.map((item) => (
-          <PhotoLink key={item._id} photo={item} />
-        ))}
-      </PhotoContainer>
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <PhotoContainer>
+          {data?.map((item) => (
+            <PhotoLink key={item._id} photo={item} />
+          ))}
+        </PhotoContainer>
+      )}
     </PageContainer>
   )
 }

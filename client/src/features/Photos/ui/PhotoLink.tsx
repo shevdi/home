@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import { ILink } from '@/shared/types'
+import { Link } from 'react-router'
 
 const Image = styled.img`
   display: block;
@@ -33,12 +34,12 @@ const Figcaption = styled.figcaption`
 export function PhotoLink({ photo }: { photo: ILink }) {
   return (
     <Figure key={photo._id} featured={photo.priority ? photo.priority > 1 : false}>
-      <a href={`/photos/${photo._id}`}>
+      <Link to={`/photos/${photo._id}`}>
         <Image
           src={(photo.priority ? photo.priority > 1 : false) ? photo.mdSizeUrl : photo.smSizeUrl}
           alt={photo.title}
         />
-      </a>
+      </Link>
       {photo.title && <Figcaption>{photo.title}</Figcaption>}
     </Figure>
   )

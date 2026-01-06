@@ -20,6 +20,7 @@ router.get(`/`, async (req: Request, res: Response): Promise<any> => {
       .map(async (item) => {
         const { url: smSizeUrl } = await getEntries(`/file-entries/${item.smSizeEntryId}`, authResult?.user?.access_token)
         const { url: mdSizeUrl } = await getEntries(`/file-entries/${item.mdSizeEntryId}`, authResult?.user?.access_token)
+        const { url: fullSizeUrl } = await getEntries(`/file-entries/${item.fullSizeEntryId}`, authResult?.user?.access_token)
         return {
           _id: item._id,
           name: item.name,
@@ -27,11 +28,11 @@ router.get(`/`, async (req: Request, res: Response): Promise<any> => {
           priority: item.priority,
           smSizeUrl,
           mdSizeUrl,
-          url: smSizeUrl
+          fullSizeUrl
         }
       })
     )
-    return res.json(results.filter(item => item.url))
+    return res.json(results.filter(item => item.fullSizeUrl))
   } catch (err) {
     console.error(err);
     throw err

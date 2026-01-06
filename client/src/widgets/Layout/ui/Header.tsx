@@ -47,13 +47,13 @@ export function Header() {
         <Logo>shevdi</Logo>
         <NavList>
           <NavItem>
-            <NavLink to='/'>Main</NavLink> &nbsp;
+            <NavLink to='/'>Главная</NavLink> &nbsp;
           </NavItem>
           <NavItem>
-            <NavLink to='/projects'>Projects</NavLink> &nbsp;
+            <NavLink to='/projects'>Проекты</NavLink> &nbsp;
           </NavItem>
           <NavItem>
-            <NavLink to='/photos'>Photos</NavLink> &nbsp;
+            <NavLink to='/photos'>Фото</NavLink> &nbsp;
           </NavItem>
           <NavItem>
             <Menu />
