@@ -19,6 +19,41 @@ export const photosApiSlice = apiSlice.injectEndpoints({
         return [{ type: 'Photos' as never, id: 'getPhoto' }]
       }
     }),
+    getInfinitePhotoWithMax: builder.infiniteQuery<
+      { photos: ILink[], pagination: { currentPage: number, totalPages: number, totalCount: number, pageSize: number } },
+      void,
+      number
+    >({
+      infiniteQueryOptions: {
+        // Must provide a default initial page param value
+        initialPageParam: 1,
+        // Optionally limit the number of cached pages
+        maxPages: 3,
+        // Must provide a `getNextPageParam` function
+        getNextPageParam: (
+          lastPage,
+          allPages,
+          lastPageParam,
+        ) => {
+          // Use pagination metadata to determine if there are more pages
+          if (lastPage.pagination && lastPageParam < lastPage.pagination.totalPages) {
+            return lastPageParam + 1
+          }
+          return undefined
+        },
+        // Optionally provide a `getPreviousPageParam` function
+        getPreviousPageParam: (
+          firstPage,
+          allPages,
+          firstPageParam,
+        ) => {
+          return firstPageParam > 0 ? firstPageParam - 1 : undefined
+        },
+      },
+      query({ pageParam }) {
+        return `/photos?page=${pageParam}`
+      },
+    }),
     uploadPhotos: builder.mutation<UploadResponse, FormData>({
       query: (formData) => ({
         url: "photos/upload",
@@ -48,4 +83,4 @@ export const photosApiSlice = apiSlice.injectEndpoints({
   }),
 })
 
-export const { useGetPhotoQuery, useGetPhotosQuery, useGetGalleryTokensQuery, useChangePhotoMutation, useDeletePhotoMutation, useUploadPhotosMutation } = photosApiSlice
+export const { useGetPhotoQuery, useGetPhotosQuery, useGetInfinitePhotoWithMaxInfiniteQuery, useGetGalleryTokensQuery, useChangePhotoMutation, useDeletePhotoMutation, useUploadPhotosMutation } = photosApiSlice

@@ -1,5 +1,6 @@
+import { useEffect, useRef, useCallback } from 'react'
 import styled from 'styled-components'
-import { useGetPhotosQuery } from '../model'
+import { useGetInfinitePhotoWithMaxInfiniteQuery } from '../model'
 import { PhotoLink } from './PhotoLink'
 import { Loader } from '@/shared/ui'
 
@@ -17,21 +18,87 @@ const PhotoContainer = styled.div`
   grid-auto-flow: dense;
 `
 
+const Sentinel = styled.div`
+  height: 1px;
+  width: 100%;
+`
+
+const LoaderContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  padding: 1rem;
+`
+
 export function PhotoGallery() {
-  const { data, isLoading } = useGetPhotosQuery(undefined, {
-    // refetc,hOnMountOrArgChange: 360,
-  })
+  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useGetInfinitePhotoWithMaxInfiniteQuery(
+    undefined,
+    {
+      // refetc,hOnMountOrArgChange: 360,
+    },
+  )
+  const allResults = data?.pages.flatMap((page) => page.photos) ?? []
+  const sentinelRef = useRef<HTMLDivElement>(null)
+  const isLoadingRef = useRef(false)
+
+  // Ensure sequential loading - prevent multiple simultaneous requests
+  const handleLoadMore = useCallback(async () => {
+    if (isLoadingRef.current || isLoading || isFetchingNextPage || !hasNextPage) {
+      return
+    }
+
+    isLoadingRef.current = true
+    try {
+      await fetchNextPage()
+    } finally {
+      isLoadingRef.current = false
+    }
+  }, [fetchNextPage, hasNextPage, isLoading, isFetchingNextPage])
+
+  useEffect(() => {
+    const sentinel = sentinelRef.current
+    if (!sentinel || !hasNextPage) {
+      return
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries
+        if (entry.isIntersecting && !isLoadingRef.current && !isLoading && !isFetchingNextPage) {
+          handleLoadMore()
+        }
+      },
+      {
+        rootMargin: '100px', // Start loading 100px before the sentinel is visible
+        threshold: 0.1,
+      },
+    )
+
+    observer.observe(sentinel)
+
+    return () => {
+      observer.disconnect()
+    }
+  }, [handleLoadMore, hasNextPage, isLoading, isFetchingNextPage])
+
   return (
     <PageContainer>
       <PageHeader>Фотки</PageHeader>
-      {isLoading ? (
+      {isLoading && allResults.length === 0 ? (
         <Loader />
       ) : (
-        <PhotoContainer>
-          {data?.map((item) => (
-            <PhotoLink key={item._id} photo={item} />
-          ))}
-        </PhotoContainer>
+        <>
+          <PhotoContainer>
+            {allResults?.map((item) => (
+              <PhotoLink key={item._id} photo={item} />
+            ))}
+          </PhotoContainer>
+          {hasNextPage && <Sentinel ref={sentinelRef} />}
+          {isFetchingNextPage && (
+            <LoaderContainer>
+              <Loader inline />
+            </LoaderContainer>
+          )}
+        </>
       )}
     </PageContainer>
   )

@@ -10,6 +10,29 @@ export async function getAllPhotos() {
   }
 }
 
+export async function getPhotosPaginated(page: number = 1, limit: number = 20) {
+  try {
+    const skip = (page - 1) * limit
+    return await Photo.find({})
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
+      .lean()
+  } catch (error) {
+    // console.error('Error fetching photos:', error);
+    throw new Error('Failed to fetch photos');
+  }
+}
+
+export async function getPhotosCount() {
+  try {
+    return await Photo.countDocuments({})
+  } catch (error) {
+    // console.error('Error counting photos:', error);
+    throw new Error('Failed to count photos');
+  }
+}
+
 export async function getPhotoById(_id: string) {
   try {
     const photo = await Photo.findOne({ _id }).lean()

@@ -5,6 +5,8 @@ import {
   addNewPhoto,
   deletePhotoById,
   getAllPhotos,
+  getPhotosPaginated,
+  getPhotosCount,
   getPhotoById,
   updatePhotoById,
 } from '../db/services/photos.ts'
@@ -14,25 +16,68 @@ const router = express.Router()
 
 router.get(`/`, async (req: Request, res: Response): Promise<any> => {
   try {
-    const photos = await getAllPhotos()
-    const authResult = await getToken();
-    const results = await Promise.all(photos
-      .map(async (item) => {
-        const { url: smSizeUrl } = await getEntries(`/file-entries/${item.smSizeEntryId}`, authResult?.user?.access_token)
-        const { url: mdSizeUrl } = await getEntries(`/file-entries/${item.mdSizeEntryId}`, authResult?.user?.access_token)
-        const { url: fullSizeUrl } = await getEntries(`/file-entries/${item.fullSizeEntryId}`, authResult?.user?.access_token)
-        return {
-          _id: item._id,
-          name: item.name,
-          title: item.title,
-          priority: item.priority,
-          smSizeUrl,
-          mdSizeUrl,
-          fullSizeUrl
+    const pageParam = req.query.page as string | undefined
+    const pageSize = 5 // Number of photos per page
+
+    if (pageParam) {
+      // Paginated response
+      const page = parseInt(pageParam) || 1
+      const [photos, totalCount] = await Promise.all([
+        getPhotosPaginated(page, pageSize),
+        getPhotosCount()
+      ])
+
+      const authResult = await getToken();
+      const results = await Promise.all(photos
+        .map(async (item) => {
+          const { url: smSizeUrl } = await getEntries(`/file-entries/${item.smSizeEntryId}`, authResult?.user?.access_token)
+          const { url: mdSizeUrl } = await getEntries(`/file-entries/${item.mdSizeEntryId}`, authResult?.user?.access_token)
+          const { url: fullSizeUrl } = await getEntries(`/file-entries/${item.fullSizeEntryId}`, authResult?.user?.access_token)
+          return {
+            _id: item._id,
+            name: item.name,
+            title: item.title,
+            priority: item.priority,
+            smSizeUrl,
+            mdSizeUrl,
+            fullSizeUrl
+          }
+        })
+      )
+      const filteredResults = results.filter(item => item.fullSizeUrl)
+      const totalPages = Math.ceil(totalCount / pageSize)
+
+      return res.json({
+        photos: filteredResults,
+        pagination: {
+          currentPage: page,
+          totalPages,
+          totalCount,
+          pageSize
         }
       })
-    )
-    return res.json(results.filter(item => item.fullSizeUrl))
+    } else {
+      // Non-paginated response (backward compatibility)
+      const photos = await getAllPhotos()
+      const authResult = await getToken();
+      const results = await Promise.all(photos
+        .map(async (item) => {
+          const { url: smSizeUrl } = await getEntries(`/file-entries/${item.smSizeEntryId}`, authResult?.user?.access_token)
+          const { url: mdSizeUrl } = await getEntries(`/file-entries/${item.mdSizeEntryId}`, authResult?.user?.access_token)
+          const { url: fullSizeUrl } = await getEntries(`/file-entries/${item.fullSizeEntryId}`, authResult?.user?.access_token)
+          return {
+            _id: item._id,
+            name: item.name,
+            title: item.title,
+            priority: item.priority,
+            smSizeUrl,
+            mdSizeUrl,
+            fullSizeUrl
+          }
+        })
+      )
+      return res.json(results.filter(item => item.fullSizeUrl))
+    }
   } catch (err) {
     console.error(err);
     throw err

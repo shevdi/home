@@ -41,6 +41,7 @@ export const cropPhotoAndUpload = async (file: Express.Multer.File, token: strin
 
 export async function getToken() {
   const url = '/auth/login'
+
   const body = { email: process.env.DRIME_EMAIL, password: process.env.DRIME_PASS, token_name: token };
   const response = await drime.post<null, DrimeTokenApiResponse>(url, body, {
     headers: {
