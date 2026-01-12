@@ -90,28 +90,53 @@ const upload = multer({
   storage: multer.memoryStorage()
 });
 
-router.post(`/upload`, upload.single("file"), async (req: Request, res: Response): Promise<any> => {
+router.post(`/upload`, upload.array("files", 50), async (req: Request, res: Response): Promise<any> => {
   try {
     const authResult = await getToken() || '';
     const token = authResult?.user?.access_token
-    const file = req.file!;
+    const files = req.files as Express.Multer.File[];
 
-    const { url: fullSizeUrl, photoData: fullSizePhoto } = await cropPhotoAndUpload(file, token)
-    const { url: smSizeUrl, photoData: smSizePhoto } = await cropPhotoAndUpload(file, token, 300)
-    const { url: mdSizeUrl, photoData: mdSizePhoto } = await cropPhotoAndUpload(file, token, 1024)
+    if (!files || files.length === 0) {
+      return res.status(400).json({ ok: false, error: 'No files provided' })
+    }
 
-    await addNewPhoto({
-      smSizeUrl,
-      mdSizeUrl,
-      fullSizeUrl,
-      smSizeEntryId: smSizePhoto.id.toString(),
-      mdSizeEntryId: mdSizePhoto.id.toString(),
-      fullSizeEntryId: fullSizePhoto.id.toString(),
-      name: fullSizePhoto.name
+    // Process files sequentially
+    const results = []
+    for (const file of files) {
+      try {
+        const { url: fullSizeUrl, photoData: fullSizePhoto } = await cropPhotoAndUpload(file, token)
+        const { url: smSizeUrl, photoData: smSizePhoto } = await cropPhotoAndUpload(file, token, 300)
+        const { url: mdSizeUrl, photoData: mdSizePhoto } = await cropPhotoAndUpload(file, token, 1024)
+
+        await addNewPhoto({
+          smSizeUrl,
+          mdSizeUrl,
+          fullSizeUrl,
+          smSizeEntryId: smSizePhoto.id.toString(),
+          mdSizeEntryId: mdSizePhoto.id.toString(),
+          fullSizeEntryId: fullSizePhoto.id.toString(),
+          name: fullSizePhoto.name
+        })
+        results.push({ ok: true, fileName: file.originalname })
+      } catch (err) {
+        console.error(`Error uploading file ${file.originalname}:`, err);
+        results.push({ ok: false, fileName: file.originalname, error: err instanceof Error ? err.message : 'Unknown error' })
+      }
+    }
+
+    const successCount = results.filter(r => r.ok).length
+    const fileCount = results.filter(r => !r.ok).length
+
+    res.json({
+      ok: successCount > 0,
+      successCount,
+      fileCount,
+      totalCount: files.length,
+      results
     })
-    res.json({ ok: true })
   } catch (err) {
     console.error(err);
+    res.status(500).json({ ok: false, error: err instanceof Error ? err.message : 'Unknown error' })
   }
 })
 

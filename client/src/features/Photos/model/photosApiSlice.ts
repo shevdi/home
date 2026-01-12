@@ -3,6 +3,11 @@ import { ILink } from '@/shared/types'
 
 interface UploadResponse {
   ok: boolean
+  successCount?: number
+  fileCount?: number
+  totalCount?: number
+  results?: Array<{ ok: boolean; fileName: string; error?: string }>
+  error?: string
 }
 
 export const photosApiSlice = apiSlice.injectEndpoints({
@@ -60,6 +65,7 @@ export const photosApiSlice = apiSlice.injectEndpoints({
         method: "POST",
         body: formData,
       }),
+      invalidatesTags: [{ type: 'Photos' as never, id: 'getPhotos' }],
     }),
     changePhoto: builder.mutation<ILink, { id: string; data: { title: string, priority?: number } }>({
       query: ({ id, data }) => ({

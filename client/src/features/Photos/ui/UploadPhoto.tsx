@@ -9,34 +9,74 @@ const PageHeader = styled.h1`
   text-align: center;
 `
 
+const FileList = styled.div`
+  margin: 1rem 0;
+  padding: 1rem;
+  background-color: #f5f5f5;
+  border-radius: 6px;
+  max-height: 200px;
+  overflow-y: auto;
+`
+
+const FileItem = styled.div`
+  padding: 0.5rem 0;
+  font-size: 0.9rem;
+  color: #333;
+`
+
 export function UploadPhoto() {
-  const [file, setFile] = useState<File | null>(null)
+  const [files, setFiles] = useState<File[]>([])
 
   const [uploadPhoto, { isLoading }] = useUploadPhotosMutation()
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const selected = e.target.files?.[0] || null
-    setFile(selected)
+    const selected = Array.from(e.target.files || [])
+    setFiles(selected)
   }
 
   const handleUpload = async () => {
-    if (!file) return alert('Please select a file')
+    if (!files || files.length === 0) return alert('Пожалуйста, выберите файлы')
 
     const formData = new FormData()
-    formData.append('file', file)
+    files.forEach((file) => {
+      formData.append('files', file)
+    })
 
     const response = await uploadPhoto(formData)
     if (response?.data?.ok) {
-      setFile(null)
+      setFiles([])
+      // Reset file input
+      const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement
+      if (fileInput) {
+        fileInput.value = ''
+      }
+    }
+
+    if (response?.data) {
+      const { successCount, fileCount, totalCount } = response.data
+      if (fileCount && fileCount > 0) {
+        alert(`Загружено: ${successCount} из ${totalCount}. Ошибок: ${fileCount}`)
+      }
     }
   }
+
+  const fileLabel =
+    files.length > 0
+      ? `${files.length} ${files.length === 1 ? 'файл выбран' : files.length < 5 ? 'файла выбрано' : 'файлов выбрано'}`
+      : 'Загрузить фото'
 
   return (
     <PageContainer>
       <PageHeader>Добавить фото</PageHeader>
-      <Input label={file?.name || 'Загрузить фото'} type='file' disabled={isLoading} onChange={handleFileChange} />
-
-      <Button onClick={handleUpload} disabled={isLoading}>
-        {isLoading ? 'Загружается...' : 'Загрузить фото'}
+      <Input label={fileLabel} type='file' disabled={isLoading} onChange={handleFileChange} multiple />
+      {files.length > 0 && (
+        <FileList>
+          {files.map((file, index) => (
+            <FileItem key={index}>{file.name}</FileItem>
+          ))}
+        </FileList>
+      )}
+      <Button onClick={handleUpload} disabled={isLoading || files.length === 0}>
+        {isLoading ? 'Загружается...' : `Загрузить ${files.length > 0 ? `${files.length} ` : ''}фото`}
       </Button>
     </PageContainer>
   )
