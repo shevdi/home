@@ -11,19 +11,15 @@ const apiVersion = '/api/v1'
 
 const app: Application = express();
 
-var whitelist = [
+const whitelist = [
   'https://shevdi.ru',
-  'http://localhost:5173',
+  'https://home-front-shevdi.amvera.io',
   'http://localhost:3000',
-  'http://localhost:3000',
-  'https://localhost:5173',
-  'https://localhost:3000',
-  'https://localhost:3000'
 ]
 
 app.use(helmet());
 app.use(cors({
-  origin: ["http://localhost:3000"],
+  origin: whitelist,
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
   allowedHeaders: ["Content-Type", "Authorization"],
