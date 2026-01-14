@@ -1,9 +1,11 @@
 import styled from 'styled-components'
+import { useSelector } from 'react-redux'
 import { useGetPhotosQuery } from '../model'
 import { Link, useLocation } from 'react-router'
 import { getNeighbours } from '@/shared/utils'
 import { useMemo } from 'react'
 import { Loader } from '@/shared/ui'
+import { RootState } from '@/app/store'
 
 const PageContainer = styled.div``
 
@@ -24,8 +26,9 @@ const Image = styled.img`
 export function Photo() {
   const location = useLocation()
   const photoId = location.pathname.split('/')[2]
+  const privateFilter = useSelector((state: RootState) => state.photos.filter.private)
   // const { data } = useGetPhotoQuery(photoId)
-  const { data, isLoading } = useGetPhotosQuery()
+  const { data, isLoading } = useGetPhotosQuery({ private: privateFilter })
   const photo = useMemo(() => data?.find((item) => item._id === photoId), [data, photoId])
   const neighbours = getNeighbours(data, photoId, (x) => x._id)
 

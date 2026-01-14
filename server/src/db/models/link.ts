@@ -15,6 +15,7 @@ const linkSchema = new Schema(
     priority: { type: Number },
     createdAt: { type: String },
     updatedAt: { type: String },
+    private: { type: Boolean },
   },
   {
     timestamps: true

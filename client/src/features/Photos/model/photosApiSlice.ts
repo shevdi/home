@@ -10,10 +10,21 @@ interface UploadResponse {
   error?: string
 }
 
+interface PhotosFilter {
+  private?: boolean
+}
+
 export const photosApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    getPhotos: builder.query<ILink[], void>({
-      query: () => `photos`,
+    getPhotos: builder.query<ILink[], PhotosFilter | void>({
+      query: (filter) => {
+        const params = new URLSearchParams()
+        if (filter?.private !== undefined) {
+          params.append('private', filter.private.toString())
+        }
+        const queryString = params.toString()
+        return `photos${queryString ? `?${queryString}` : ''}`
+      },
       providesTags() {
         return [{ type: 'Photos' as never, id: 'getPhotos' }]
       }
@@ -26,7 +37,7 @@ export const photosApiSlice = apiSlice.injectEndpoints({
     }),
     getInfinitePhotoWithMax: builder.infiniteQuery<
       { photos: ILink[], pagination: { currentPage: number, totalPages: number, totalCount: number, pageSize: number } },
-      void,
+      PhotosFilter | void,
       number
     >({
       infiniteQueryOptions: {
@@ -51,8 +62,14 @@ export const photosApiSlice = apiSlice.injectEndpoints({
           return firstPageParam > 0 ? firstPageParam - 1 : undefined
         },
       },
-      query({ pageParam }) {
-        return `/photos?page=${pageParam}`
+      query(arg: { queryArg: PhotosFilter | void; pageParam: number }) {
+        const { queryArg: filter, pageParam } = arg
+        const params = new URLSearchParams()
+        params.append('page', pageParam.toString())
+        if (filter?.private !== undefined) {
+          params.append('private', filter.private.toString())
+        }
+        return `/photos?${params.toString()}`
       },
     }),
     uploadPhotos: builder.mutation<UploadResponse, FormData>({

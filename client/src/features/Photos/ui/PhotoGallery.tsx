@@ -1,8 +1,11 @@
 import { useEffect, useRef, useCallback } from 'react'
 import styled from 'styled-components'
+import { useSelector } from 'react-redux'
 import { useGetInfinitePhotoWithMaxInfiniteQuery } from '../model'
 import { PhotoLink } from './PhotoLink'
 import { Loader } from '@/shared/ui'
+import { Filter } from './Filter'
+import { RootState } from '@/app/store'
 
 const PageContainer = styled.div``
 
@@ -30,7 +33,10 @@ const LoaderContainer = styled.div`
 `
 
 export function PhotoGallery() {
-  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useGetInfinitePhotoWithMaxInfiniteQuery()
+  const privateFilter = useSelector((state: RootState) => state.photos.filter.private)
+  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useGetInfinitePhotoWithMaxInfiniteQuery({
+    private: privateFilter,
+  })
   const allResults = data?.pages.flatMap((page) => page.photos) ?? []
   const sentinelRef = useRef<HTMLDivElement>(null)
   const isLoadingRef = useRef(false)
@@ -82,6 +88,7 @@ export function PhotoGallery() {
         <Loader />
       ) : (
         <>
+          <Filter />
           <PhotoContainer>
             {allResults?.map((item) => (
               <PhotoLink key={item._id} photo={item} />
