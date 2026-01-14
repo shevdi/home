@@ -6,6 +6,7 @@ const Image = styled.img`
   display: block;
   width: 100%;
   height: 100%;
+  object-fit: cover;
 `
 
 const Figure = styled.figure<{ featured: boolean }>`
@@ -14,6 +15,7 @@ const Figure = styled.figure<{ featured: boolean }>`
   margin: 0;
   overflow: hidden;
   border-radius: 4px;
+  ${({ featured }) => (featured ? 'height: 410px;' : 'height: 200px;')};
   ${({ featured }) => (featured ? 'grid-row: span 2;' : '')};
   ${({ featured }) => (featured ? 'grid-column: span 2' : '')};
 `

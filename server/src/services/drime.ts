@@ -24,6 +24,7 @@ axios.interceptors.response.use(
 export const cropPhotoAndUpload = async (file: Express.Multer.File, token: string, size?: number) => {
   const folder = size ? (size < 500 ? photoFolderNames.sm : photoFolderNames.md) : photoFolderNames.full
   const cropped = !size ? file.buffer : await sharp(file.buffer)
+    .rotate() // Auto-rotate based on EXIF orientation and remove orientation tag
     .resize(size, null, {
       fit: "cover",
       position: "center"

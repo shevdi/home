@@ -30,12 +30,7 @@ const LoaderContainer = styled.div`
 `
 
 export function PhotoGallery() {
-  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useGetInfinitePhotoWithMaxInfiniteQuery(
-    undefined,
-    {
-      // refetc,hOnMountOrArgChange: 360,
-    },
-  )
+  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useGetInfinitePhotoWithMaxInfiniteQuery()
   const allResults = data?.pages.flatMap((page) => page.photos) ?? []
   const sentinelRef = useRef<HTMLDivElement>(null)
   const isLoadingRef = useRef(false)
@@ -68,7 +63,7 @@ export function PhotoGallery() {
         }
       },
       {
-        rootMargin: '100px', // Start loading 100px before the sentinel is visible
+        rootMargin: '500px',
         threshold: 0.1,
       },
     )

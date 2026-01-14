@@ -30,11 +30,7 @@ export const photosApiSlice = apiSlice.injectEndpoints({
       number
     >({
       infiniteQueryOptions: {
-        // Must provide a default initial page param value
         initialPageParam: 1,
-        // Optionally limit the number of cached pages
-        maxPages: 3,
-        // Must provide a `getNextPageParam` function
         getNextPageParam: (
           lastPage,
           allPages,
