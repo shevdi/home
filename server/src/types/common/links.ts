@@ -12,6 +12,7 @@ export interface ILink {
   mdSizeEntryId?: string;
   fullSizeEntryId?: string;
   priority?: number;
+  private?: boolean;
   createdAt?: string;
   updatedAt?: string;
 }

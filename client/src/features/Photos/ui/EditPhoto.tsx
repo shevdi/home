@@ -4,7 +4,10 @@ import { useLocation } from 'react-router'
 import z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { SubmitHandler, useForm } from 'react-hook-form'
-import { Button, ErrMessage, Input } from '@/shared/ui'
+import { useDispatch, useSelector } from 'react-redux'
+import { Button, Checkbox, ErrMessage, Input } from '@/shared/ui'
+import { RootState } from '@/app/store'
+import { setPrivateFilter } from '../model/photosSlice'
 
 const PageContainer = styled.div``
 
@@ -19,6 +22,7 @@ const Image = styled.img`
 const schema = z.object({
   title: z.string(),
   priority: z.number().optional(),
+  private: z.boolean().optional(),
 })
 
 type FormFields = z.infer<typeof schema>
@@ -28,6 +32,10 @@ export function EditPhoto() {
   const photoId = location.pathname.split('/')[2]
   const { data } = useGetPhotoQuery(photoId)
   const [changePhoto] = useChangePhotoMutation()
+  const dispatch = useDispatch()
+  const privateFilter = useSelector((state: RootState) => state.photos.filter.private)
+
+  // const photoPrivate = (data as (ILink & { private?: boolean }) | undefined)?.private
 
   const {
     register,
@@ -39,7 +47,8 @@ export function EditPhoto() {
     resolver: zodResolver(schema),
     defaultValues: {
       title: data?.title,
-      priority: 0,
+      priority: data?.priority || 0,
+      private: privateFilter,
     },
   })
 
@@ -69,6 +78,11 @@ export function EditPhoto() {
             valueAsNumber: true,
           })}
           type='number'
+        />
+        <Checkbox
+          checked={privateFilter}
+          onChange={(checked) => dispatch(setPrivateFilter(checked))}
+          label='Приватная'
         />
         <Button display='block' margin='1rem auto' disabled={isSubmitting}>
           Сохранить

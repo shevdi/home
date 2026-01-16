@@ -14,9 +14,19 @@ interface PhotosFilter {
   private?: boolean
 }
 
+interface PhotosResponse {
+  photos: ILink[]
+  pagination: {
+    currentPage: number
+    totalPages: number
+    totalCount: number
+    pageSize: number
+  }
+}
+
 export const photosApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    getPhotos: builder.query<ILink[], PhotosFilter | void>({
+    getPhotos: builder.query<PhotosResponse, PhotosFilter | void>({
       query: (filter) => {
         const params = new URLSearchParams()
         if (filter?.private !== undefined) {
@@ -80,7 +90,7 @@ export const photosApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: [{ type: 'Photos' as never, id: 'getPhotos' }],
     }),
-    changePhoto: builder.mutation<ILink, { id: string; data: { title: string, priority?: number } }>({
+    changePhoto: builder.mutation<ILink, { id: string; data: { title: string, priority?: number, private?: boolean } }>({
       query: ({ id, data }) => ({
         url: `photos/${id}`,
         method: "PUT",
