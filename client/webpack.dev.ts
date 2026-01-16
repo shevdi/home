@@ -14,10 +14,11 @@ const devConfig: CustomConfiguration = merge(commonConfig, {
   },
   devtool: 'inline-source-map',
   devServer: {
-    hot: true,
+    hot: 'only',
+    liveReload: false,
     host: '0.0.0.0',  // Important for Docker
     devMiddleware: {
-      writeToDisk: true,  // Optional: write files to disk for better debugging
+      writeToDisk: false,
     },
     watchFiles: {
       paths: ['src/**/*'],  // Watch these files for changes
