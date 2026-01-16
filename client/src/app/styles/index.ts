@@ -8,10 +8,10 @@ export { GlobalStyle } from './global-common'
 
 export const darkTheme = {
   ...commonThemeInitial,
-  darkThemeInitial
+  ...darkThemeInitial,
 }
 
 export const lightTheme = {
   ...commonThemeInitial,
-  lightThemeInitial
+  ...lightThemeInitial
 }

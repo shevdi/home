@@ -134,7 +134,7 @@ const CheckboxLabel = styled.span<{
 }>`
   ${({ $position }) => ($position === 'left' ? 'margin-right: 8px;' : 'margin-left: 8px;')}
 
-  color: ${({ $color = '#000000' }) => $color};
+  color: var(--input-color);
   font-size: ${({ $size }) => {
     switch ($size) {
       case 'sm':

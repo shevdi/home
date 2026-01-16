@@ -9,4 +9,5 @@ export interface IPhotos {
 
 export interface IPhotoFilters {
   private?: boolean;
+  $nor?: IPhotoFilters;
 }

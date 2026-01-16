@@ -1,11 +1,14 @@
-import React from 'react'
 import styled from 'styled-components'
 import { useDispatch, useSelector } from 'react-redux'
 import { Checkbox } from '@/shared/ui'
 import { setPrivateFilter } from '../model/photosSlice'
 import { RootState } from '@/app/store'
 
-export const Filter: React.FC = () => {
+interface IProps {
+  isHiddenFilters?: boolean
+}
+
+export const Filter = ({ isHiddenFilters }: IProps) => {
   const dispatch = useDispatch()
   const privateFilter = useSelector((state: RootState) => state.photos.filter.private)
 
@@ -15,7 +18,7 @@ export const Filter: React.FC = () => {
 
   return (
     <FilterContainer>
-      <Checkbox checked={privateFilter} onChange={handlePrivateChange} label='Private' />
+      {!isHiddenFilters && <Checkbox checked={privateFilter} onChange={handlePrivateChange} label='Private' />}
     </FilterContainer>
   )
 }

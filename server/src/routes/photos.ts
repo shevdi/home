@@ -10,22 +10,26 @@ import {
   getPhotoById,
   updatePhotoById,
 } from '../db/services/photos.ts'
-import { cropPhotoAndUpload, getEntries, getToken, updateEntry, uploadPhotos } from '../services/drime.ts';
+import { cropPhotoAndUpload, getEntries, getToken } from '../services/drime.ts';
 import { parseBoolean } from '../utils';
-import { IPhotoFilters } from '@/types/index.ts';
+import { IPhotoFilters, IUserInfo } from '@/types/index.ts';
+import { optionalAuth } from '../middlewares/optionalAuth';
+import { FilterQuery } from 'mongoose'
 
 const router = express.Router()
 
-router.get(`/`, async (req: Request, res: Response): Promise<any> => {
+router.get(`/`, optionalAuth, async (req: Request & Partial<IUserInfo>, res: Response): Promise<any> => {
   try {
     const pageParam = req.query.page as string | undefined
     const privateParam = req.query.private as string | undefined
     const pageSize = pageParam ? 5 : 100// Number of photos per page
     const privateFilter = parseBoolean(privateParam)
-    const filters: IPhotoFilters = {}
+    const filters: FilterQuery<IPhotoFilters> = {}
 
-    if (privateFilter) {
+    if (privateFilter && req.roles && req.roles.includes('admin')) {
       filters.private = privateFilter
+    } else {
+      filters.$nor = [{ private: true }]
     }
 
     const page = pageParam ? parseInt(pageParam) : 1
@@ -125,7 +129,7 @@ router.post(`/upload`, upload.array("files", 50), async (req: Request, res: Resp
   }
 })
 
-router.get(`/:id`, async (req: Request, res: Response): Promise<any> => {
+router.get(`/:id`, optionalAuth, async (req: Request, res: Response): Promise<any> => {
   try {
     const authResult = await getToken() || '';
     const token = authResult?.user?.access_token

@@ -18,7 +18,7 @@ export function PhotosPage() {
           <Link to='photo/new'>Добавить фото</Link>
         </LinkWrapper>
       )}
-      <PhotoGallery />
+      <PhotoGallery isHiddenFilters={!isAdmin} />
     </>
   )
 }

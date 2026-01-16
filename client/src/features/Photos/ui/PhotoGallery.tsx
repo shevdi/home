@@ -7,6 +7,10 @@ import { Loader } from '@/shared/ui'
 import { Filter } from './Filter'
 import { RootState } from '@/app/store'
 
+interface IProps {
+  isHiddenFilters?: boolean
+}
+
 const PageContainer = styled.div``
 
 const PageHeader = styled.h1`
@@ -32,7 +36,7 @@ const LoaderContainer = styled.div`
   padding: 1rem;
 `
 
-export function PhotoGallery() {
+export function PhotoGallery({ isHiddenFilters }: IProps) {
   const privateFilter = useSelector((state: RootState) => state.photos.filter.private)
   const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useGetInfinitePhotoWithMaxInfiniteQuery({
     private: privateFilter,
@@ -88,7 +92,7 @@ export function PhotoGallery() {
         <Loader />
       ) : (
         <>
-          <Filter />
+          <Filter isHiddenFilters={isHiddenFilters} />
           <PhotoContainer>
             {allResults?.map((item) => (
               <PhotoLink key={item._id} photo={item} />

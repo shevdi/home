@@ -1,7 +1,8 @@
 import { ILink, IPhotoFilters } from '@/types';
 import { Photo } from '../models/link'
+import { FilterQuery } from 'mongoose';
 
-export async function getAllPhotos(filters: IPhotoFilters) {
+export async function getAllPhotos(filters: FilterQuery<IPhotoFilters>) {
   try {
     return await Photo.find({ ...filters })
   } catch (error) {
@@ -10,7 +11,7 @@ export async function getAllPhotos(filters: IPhotoFilters) {
   }
 }
 
-export async function getPhotosPaginated(page: number = 1, limit: number = 20, filters: IPhotoFilters) {
+export async function getPhotosPaginated(page: number = 1, limit: number = 20, filters: FilterQuery<IPhotoFilters>) {
   try {
     const skip = (page - 1) * limit
     return await Photo.find({ ...filters })
@@ -24,7 +25,7 @@ export async function getPhotosPaginated(page: number = 1, limit: number = 20, f
   }
 }
 
-export async function getPhotosCount(query: IPhotoFilters) {
+export async function getPhotosCount(query: FilterQuery<IPhotoFilters>) {
   try {
     return await Photo.countDocuments(query)
   } catch (error) {
