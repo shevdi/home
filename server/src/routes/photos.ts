@@ -1,4 +1,5 @@
 import type { Request, Response } from 'express';
+import axios from 'axios';
 import express from 'express'
 import multer from 'multer';
 import {
@@ -17,6 +18,13 @@ import { optionalAuth } from '../middlewares/optionalAuth';
 import { FilterQuery } from 'mongoose'
 
 const router = express.Router()
+
+const getErrorStatus = (err: unknown): number | undefined => {
+  if (axios.isAxiosError(err)) {
+    return err.response?.status;
+  }
+  return (err as { status?: number })?.status;
+}
 
 router.get(`/`, optionalAuth, async (req: Request & Partial<IUserInfo>, res: Response): Promise<any> => {
   try {
@@ -68,8 +76,12 @@ router.get(`/`, optionalAuth, async (req: Request & Partial<IUserInfo>, res: Res
       }
     })
   } catch (err) {
+    const status = getErrorStatus(err);
+    if (status === 429) {
+      return res.status(429).json({ message: 'Too Many Attempts' })
+    }
     console.error(err);
-    throw err
+    return res.status(500).json({ message: 'Failed to load photos' })
   }
 
 })
@@ -84,6 +96,7 @@ router.post(`/upload`, upload.array("files", 50), async (req: Request, res: Resp
     const authResult = await getToken() || '';
     const token = authResult?.user?.access_token
     const files = req.files as Express.Multer.File[];
+    const isPrivate = parseBoolean(req.body?.private as string | undefined)
 
     if (!files || files.length === 0) {
       return res.status(400).json({ ok: false, error: 'No files provided' })
@@ -104,7 +117,8 @@ router.post(`/upload`, upload.array("files", 50), async (req: Request, res: Resp
           smSizeEntryId: smSizePhoto.id.toString(),
           mdSizeEntryId: mdSizePhoto.id.toString(),
           fullSizeEntryId: fullSizePhoto.id.toString(),
-          name: fullSizePhoto.name
+          name: fullSizePhoto.name,
+          private: isPrivate
         })
         results.push({ ok: true, fileName: file.originalname })
       } catch (err) {
@@ -124,8 +138,12 @@ router.post(`/upload`, upload.array("files", 50), async (req: Request, res: Resp
       results
     })
   } catch (err) {
+    const status = getErrorStatus(err);
+    if (status === 429) {
+      return res.status(429).json({ ok: false, error: 'Too Many Attempts' })
+    }
     console.error(err);
-    res.status(500).json({ ok: false, error: err instanceof Error ? err.message : 'Unknown error' })
+    return res.status(500).json({ ok: false, error: err instanceof Error ? err.message : 'Unknown error' })
   }
 })
 
@@ -145,7 +163,12 @@ router.get(`/:id`, optionalAuth, async (req: Request, res: Response): Promise<an
       url
     })
   } catch (err) {
+    const status = getErrorStatus(err);
+    if (status === 429) {
+      return res.status(429).json({ message: 'Too Many Attempts' })
+    }
     console.error(err);
+    return res.status(500).json({ message: 'Failed to load photo' })
   }
 })
 
@@ -165,7 +188,12 @@ router.put(`/:id`, async (req: Request, res: Response): Promise<any> => {
       url
     })
   } catch (err) {
+    const status = getErrorStatus(err);
+    if (status === 429) {
+      return res.status(429).json({ message: 'Too Many Attempts' })
+    }
     console.error(err);
+    return res.status(500).json({ message: 'Failed to update photo' })
   }
 })
 
@@ -177,7 +205,12 @@ router.delete(`/:id`, async (req: Request, res: Response): Promise<any> => {
       ok: true
     })
   } catch (err) {
+    const status = getErrorStatus(err);
+    if (status === 429) {
+      return res.status(429).json({ message: 'Too Many Attempts' })
+    }
     console.error(err);
+    return res.status(500).json({ message: 'Failed to delete photo' })
   }
 })
 

@@ -18,7 +18,7 @@ export const Filter = ({ isHiddenFilters }: IProps) => {
 
   return (
     <FilterContainer>
-      {!isHiddenFilters && <Checkbox checked={privateFilter} onChange={handlePrivateChange} label='Приватная' />}
+      {!isHiddenFilters && <Checkbox checked={privateFilter} onChange={handlePrivateChange} label='Приватные' />}
     </FilterContainer>
   )
 }

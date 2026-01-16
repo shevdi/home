@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import { useUploadPhotosMutation } from '../model'
 import { ChangeEvent, useState } from 'react'
-import { Button, Input } from '@/shared/ui'
+import { Button, Checkbox, Input } from '@/shared/ui'
 
 const PageContainer = styled.div``
 
@@ -24,8 +24,13 @@ const FileItem = styled.div`
   color: #333;
 `
 
+const CheckboxContainer = styled.div`
+  margin: 0.75rem 0;
+`
+
 export function UploadPhoto() {
   const [files, setFiles] = useState<File[]>([])
+  const [isPrivate, setIsPrivate] = useState(false)
 
   const [uploadPhoto, { isLoading }] = useUploadPhotosMutation()
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -37,6 +42,7 @@ export function UploadPhoto() {
     if (!files || files.length === 0) return alert('Пожалуйста, выберите файлы')
 
     const formData = new FormData()
+    formData.append('private', isPrivate.toString())
     files.forEach((file) => {
       formData.append('files', file)
     })
@@ -68,6 +74,9 @@ export function UploadPhoto() {
     <PageContainer>
       <PageHeader>Добавить фото</PageHeader>
       <Input label={fileLabel} type='file' disabled={isLoading} onChange={handleFileChange} multiple />
+      <CheckboxContainer>
+        <Checkbox checked={isPrivate} onChange={setIsPrivate} label='Приватные' />
+      </CheckboxContainer>
       {files.length > 0 && (
         <FileList>
           {files.map((file, index) => (

@@ -22,7 +22,7 @@ const Image = styled.img`
 const schema = z.object({
   title: z.string(),
   priority: z.number().optional(),
-  private: z.boolean().optional(),
+  private: z.boolean(),
 })
 
 type FormFields = z.infer<typeof schema>
@@ -54,9 +54,20 @@ export function EditPhoto() {
 
   const onSubmit: SubmitHandler<FormFields> = async (data) => {
     try {
+      const parsedData = schema.safeParse({
+        ...data,
+        private: privateFilter,
+      })
+      if (!parsedData.success) {
+        setError('root', {
+          message: 'Некорректное значение приватности.',
+        })
+        return
+      }
+
       await changePhoto({
         id: photoId,
-        data,
+        data: parsedData.data,
       }).unwrap()
       /* eslint @typescript-eslint/no-explicit-any: "off" */
     } catch (error: any) {
@@ -82,7 +93,7 @@ export function EditPhoto() {
         <Checkbox
           checked={privateFilter}
           onChange={(checked) => dispatch(setPrivateFilter(checked))}
-          label='Приватная'
+          label='Приватные'
         />
         <Button display='block' margin='1rem auto' disabled={isSubmitting}>
           Сохранить

@@ -81,6 +81,9 @@ export const photosApiSlice = apiSlice.injectEndpoints({
         }
         return `/photos?${params.toString()}`
       },
+      providesTags() {
+        return [{ type: 'Photos' as never, id: 'getInfinitePhotos' }]
+      },
     }),
     uploadPhotos: builder.mutation<UploadResponse, FormData>({
       query: (formData) => ({
@@ -96,6 +99,7 @@ export const photosApiSlice = apiSlice.injectEndpoints({
         method: "PUT",
         body: data,
       }),
+      invalidatesTags: [{ type: 'Photos' as never, id: 'getInfinitePhotos' }],
     }),
     deletePhoto: builder.mutation<UploadResponse, { id: string }>({
       query: ({ id }) => ({
