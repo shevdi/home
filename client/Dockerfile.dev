@@ -4,7 +4,7 @@ FROM node:22-alpine
 ARG BACKEND_URL=http://localhost:3001/api/v1
 WORKDIR /app
 
-COPY ./package.json .
+COPY ./package.json ./package-lock.json ./
 
 RUN npm install
 

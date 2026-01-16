@@ -2,12 +2,13 @@ import { createGlobalStyle } from 'styled-components'
 
 export const DarkGlobalStyle = createGlobalStyle`
   :root {
-    --nav-back-color: #cfcfcf;
     --modal-back-color: #cfcfcf9d;
+    --nav-back-color: #cfcfcf;
     --nav-font-color: #000;
     --link-color: #333;
     --input-color: #cacede;
     --input-disabled-color: #606473;
+    --text-color: #eee;
   }
   body {
     background-color: #1c1c2cff;

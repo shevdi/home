@@ -16,6 +16,7 @@ interface CheckboxProps {
   label?: string
   /** Position of the label relative to the checkbox */
   labelPosition?: 'left' | 'right'
+  textColor?: string
 }
 
 export const Checkbox: React.FC<CheckboxProps> = ({
@@ -26,6 +27,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
   color = '#4caf50',
   label,
   labelPosition = 'right',
+  textColor,
 }) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange(e.target.checked)
@@ -34,7 +36,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
   return (
     <CheckboxContainer $disabled={disabled}>
       {label && labelPosition === 'left' && (
-        <CheckboxLabel $position='left' $size={size}>
+        <CheckboxLabel $color={textColor} $position='left' $size={size}>
           {label}
         </CheckboxLabel>
       )}
@@ -44,7 +46,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
       <StyledCheckbox $checked={checked} $disabled={disabled} $color={color} $size={size} />
 
       {label && labelPosition === 'right' && (
-        <CheckboxLabel $position='right' $size={size}>
+        <CheckboxLabel $color={textColor} $position='right' $size={size}>
           {label}
         </CheckboxLabel>
       )}
@@ -78,7 +80,7 @@ const StyledCheckbox = styled.span<{
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: 2px solid ${({ $checked, $color }) => ($checked ? $color : '#ccc')};
+  border: 2px solid ${({ $checked, $color }) => ($checked ? $color : '#4caf50')};
   background: ${({ $checked, $color }) => ($checked ? $color : 'transparent')};
   transition: all 0.2s ease;
   border-radius: 50%;
@@ -134,7 +136,7 @@ const CheckboxLabel = styled.span<{
 }>`
   ${({ $position }) => ($position === 'left' ? 'margin-right: 8px;' : 'margin-left: 8px;')}
 
-  color: var(--input-color);
+  color: ${({ $color = 'var(--text-color)' }) => $color};
   font-size: ${({ $size }) => {
     switch ($size) {
       case 'sm':

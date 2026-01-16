@@ -17,7 +17,7 @@ export function ThemeSwitch() {
   }
   return (
     <ThemeSwitchContainer>
-      <Checkbox checked={theme === 'dark'} onChange={onChange} label='Тёмная тема'></Checkbox>
+      <Checkbox checked={theme === 'dark'} textColor='#333' onChange={onChange} label='Тёмная тема'></Checkbox>
     </ThemeSwitchContainer>
   )
 }
