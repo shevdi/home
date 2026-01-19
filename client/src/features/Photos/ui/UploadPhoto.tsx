@@ -5,6 +5,7 @@ import { Button, Checkbox, ErrMessage, Input } from '@/shared/ui'
 import { SubmitHandler, useForm, Controller } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
+import exifr from 'exifr'
 
 const PageContainer = styled.div``
 
@@ -31,6 +32,12 @@ const CheckboxContainer = styled.div`
   margin: 0.75rem 0;
 `
 
+const UploadMessage = styled.div`
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: #2e7d32;
+`
+
 const schema = z.object({
   files: z.array(z.instanceof(File)).min(1, 'Пожалуйста, выберите файлы'),
   private: z.boolean(),
@@ -45,12 +52,21 @@ type FileMeta = {
   lastModified: number
   width?: number
   height?: number
+  make?: string
+  model?: string
+  takenAt?: string
+  gps?: {
+    lat: number
+    lon: number
+    alt?: number
+  }
 }
 
 export function UploadPhoto() {
   const [uploadPhoto, { isLoading }] = useUploadPhotosMutation()
   const [fileInputKey, setFileInputKey] = useState(0)
   const [fileMeta, setFileMeta] = useState<FileMeta[]>([])
+  const [uploadMessage, setUploadMessage] = useState('')
 
   const {
     control,
@@ -85,6 +101,21 @@ export function UploadPhoto() {
     return `${value.toFixed(value >= 10 || index === 0 ? 0 : 1)} ${sizes[index]}`
   }
 
+  const formatGps = (gps?: FileMeta['gps']) => {
+    if (!gps) return ''
+    const lat = Number.isFinite(gps.lat) ? gps.lat.toFixed(6) : ''
+    const lon = Number.isFinite(gps.lon) ? gps.lon.toFixed(6) : ''
+    if (!lat || !lon) return ''
+    return `${lat}, ${lon}${Number.isFinite(gps.alt) ? ` · ${gps.alt}m` : ''}`
+  }
+
+  const formatDate = (value?: string) => {
+    if (!value) return ''
+    const date = new Date(value)
+    if (Number.isNaN(date.getTime())) return value
+    return date.toLocaleString()
+  }
+
   const getImageDimensions = (file: File) =>
     new Promise<{ width: number; height: number } | undefined>((resolve) => {
       if (!file.type.startsWith('image/')) {
@@ -106,6 +137,41 @@ export function UploadPhoto() {
       img.src = url
     })
 
+  const getExifMeta = async (file: File) => {
+    if (!file.type.startsWith('image/')) return {}
+    try {
+      const [gps, exif] = await Promise.all([
+        exifr.gps(file).catch(() => null),
+        exifr.parse(file, true).catch(() => null),
+      ])
+
+      const safeExif = (exif || {}) as Record<string, unknown>
+      const make = typeof safeExif.Make === 'string' ? safeExif.Make : undefined
+      const model = typeof safeExif.Model === 'string' ? safeExif.Model : undefined
+      const takenAtValue = safeExif.DateTimeOriginal || safeExif.CreateDate || safeExif.ModifyDate
+      const takenAt =
+        takenAtValue instanceof Date
+          ? takenAtValue.toISOString()
+          : typeof takenAtValue === 'string'
+            ? takenAtValue
+            : undefined
+
+      const safeGps = (gps || {}) as { latitude?: number; longitude?: number; altitude?: number }
+      const lat = typeof safeGps.latitude === 'number' ? safeGps.latitude : undefined
+      const lon = typeof safeGps.longitude === 'number' ? safeGps.longitude : undefined
+      const alt = typeof safeGps.altitude === 'number' ? safeGps.altitude : undefined
+
+      return {
+        make,
+        model,
+        takenAt,
+        gps: lat !== undefined && lon !== undefined ? { lat, lon, alt } : undefined,
+      }
+    } catch {
+      return {}
+    }
+  }
+
   const buildMeta = async (selected: File[]) => {
     const baseMeta = selected.map((file) => ({
       name: file.name,
@@ -114,11 +180,15 @@ export function UploadPhoto() {
       lastModified: file.lastModified,
     }))
 
-    const dimensions = await Promise.all(selected.map((file) => getImageDimensions(file)))
+    const [dimensions, exifMeta] = await Promise.all([
+      Promise.all(selected.map((file) => getImageDimensions(file))),
+      Promise.all(selected.map((file) => getExifMeta(file))),
+    ])
     return baseMeta.map((meta, index) => ({
       ...meta,
       width: dimensions[index]?.width,
       height: dimensions[index]?.height,
+      ...exifMeta[index],
     }))
   }
 
@@ -131,8 +201,27 @@ export function UploadPhoto() {
       return
     }
 
+    const metaForSubmit =
+      fileMeta.length === parsedData.data.files.length ? fileMeta : await buildMeta(parsedData.data.files)
+    if (metaForSubmit.length !== fileMeta.length) {
+      setFileMeta(metaForSubmit)
+    }
+
     const formData = new FormData()
     formData.append('private', parsedData.data.private.toString())
+    formData.append(
+      'meta',
+      JSON.stringify(
+        metaForSubmit.map((meta) => ({
+          gpsLatitude: meta.gps?.lat,
+          gpsLongitude: meta.gps?.lon,
+          gpsAltitude: meta.gps?.alt,
+          make: meta.make,
+          model: meta.model,
+          takenAt: meta.takenAt,
+        })),
+      ),
+    )
     parsedData.data.files.forEach((file) => {
       formData.append('files', file)
     })
@@ -147,8 +236,8 @@ export function UploadPhoto() {
 
       if (response?.data) {
         const { successCount, fileCount, totalCount } = response.data
-        if (fileCount && fileCount > 0) {
-          alert(`Загружено: ${successCount} из ${totalCount}. Ошибок: ${fileCount}`)
+        if (typeof successCount === 'number' && typeof totalCount === 'number' && typeof fileCount === 'number') {
+          setUploadMessage(`Загружено: ${successCount} из ${totalCount}. Ошибок: ${fileCount}`)
         }
       }
       /* eslint @typescript-eslint/no-explicit-any: "off" */
@@ -178,6 +267,7 @@ export function UploadPhoto() {
                 const selected = Array.from(event.target.files || [])
                 field.onChange(selected)
                 setFileMeta(selected.length ? await buildMeta(selected) : [])
+                setUploadMessage('')
               }}
               onBlur={field.onBlur}
               multiple
@@ -185,6 +275,7 @@ export function UploadPhoto() {
             />
           )}
         />
+        {uploadMessage && <UploadMessage>{uploadMessage}</UploadMessage>}
         <CheckboxContainer>
           <Controller
             control={control}
@@ -193,7 +284,7 @@ export function UploadPhoto() {
               <Checkbox
                 checked={field.value}
                 onChange={field.onChange}
-                label='Скрытые'
+                label='Скрыть'
                 disabled={isLoading || isSubmitting}
               />
             )}
@@ -211,6 +302,9 @@ export function UploadPhoto() {
                       &nbsp;|&nbsp;
                       {meta.type} · {formatBytes(meta.size)}
                       {meta.width && meta.height ? ` · ${meta.width} x ${meta.height}` : ''}
+                      {meta.make || meta.model ? ` · ${[meta.make, meta.model].filter(Boolean).join(' ')}` : ''}
+                      {meta.takenAt ? ` · ${formatDate(meta.takenAt)}` : ''}
+                      {formatGps(meta.gps) ? ` · ${formatGps(meta.gps)}` : ''}
                     </>
                   )}
                 </FileItem>

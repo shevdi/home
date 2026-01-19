@@ -18,6 +18,9 @@ export interface ILink {
   gpsLatitude?: number;
   gpsLongitude?: number;
   gpsAltitude?: number;
+  make?: string;
+  model?: string;
+  takenAt?: string;
   priority?: number;
   private?: boolean;
   createdAt?: string;
