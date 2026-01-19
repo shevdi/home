@@ -11,6 +11,13 @@ export interface ILink {
   smSizeEntryId?: string;
   mdSizeEntryId?: string;
   fullSizeEntryId?: string;
+  mimeType?: string;
+  size?: number;
+  width?: number;
+  height?: number;
+  gpsLatitude?: number;
+  gpsLongitude?: number;
+  gpsAltitude?: number;
   priority?: number;
   private?: boolean;
   createdAt?: string;
