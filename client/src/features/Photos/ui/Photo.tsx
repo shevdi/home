@@ -29,7 +29,7 @@ export function Photo() {
   const privateFilter = useSelector((state: RootState) => state.photos.filter.private)
   // const { data } = useGetPhotoQuery(photoId)
   const { data, isLoading } = useGetPhotosQuery({ private: privateFilter })
-  const photos = data?.photos ?? []
+  const photos = useMemo(() => data?.photos ?? [], [data?.photos])
   const photo = useMemo(() => photos.find((item) => item._id === photoId), [photos, photoId])
   const neighbours = getNeighbours(photos, photoId, (x) => x._id)
 

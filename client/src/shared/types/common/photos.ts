@@ -6,3 +6,8 @@ export interface IPhotos {
   src: string;
   links: ILink[]
 }
+
+export interface IPhotoFilters {
+  private?: boolean;
+  $nor?: IPhotoFilters;
+}

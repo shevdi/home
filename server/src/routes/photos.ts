@@ -2,6 +2,7 @@ import type { Request, Response } from 'express';
 import axios from 'axios';
 import express from 'express'
 import multer from 'multer';
+import sharp from 'sharp';
 import {
   addNewPhoto,
   deletePhotoById,
@@ -55,11 +56,13 @@ router.get(`/`, optionalAuth, async (req: Request & Partial<IUserInfo>, res: Res
         return {
           _id: item._id,
           name: item.name,
+          fileName: item.fileName,
           title: item.title,
           priority: item.priority,
           smSizeUrl,
           mdSizeUrl,
-          fullSizeUrl
+          fullSizeUrl,
+          meta: item.meta
         }
       })
     )
@@ -97,6 +100,18 @@ router.post(`/upload`, upload.array("files", 50), async (req: Request, res: Resp
     const token = authResult?.user?.access_token
     const files = req.files as Express.Multer.File[];
     const isPrivate = parseBoolean(req.body?.private as string | undefined)
+    const meta = req.body?.meta
+    const metaRaw = req.body?.meta as string | undefined
+    const metaList = metaRaw
+      ? (JSON.parse(metaRaw) as Array<{
+        gpsLatitude?: number
+        gpsLongitude?: number
+        gpsAltitude?: number
+        make?: string
+        model?: string
+        takenAt?: string
+      }>)
+      : []
 
     if (!files || files.length === 0) {
       return res.status(400).json({ ok: false, error: 'No files provided' })
@@ -106,6 +121,8 @@ router.post(`/upload`, upload.array("files", 50), async (req: Request, res: Resp
     const results = []
     for (const file of files) {
       try {
+        const metadata = await sharp(file.buffer).metadata()
+        const gpsMeta = metaList[results.length]
         const { url: fullSizeUrl, photoData: fullSizePhoto } = await cropPhotoAndUpload(file, token)
         const { url: smSizeUrl, photoData: smSizePhoto } = await cropPhotoAndUpload(file, token, 300)
         const { url: mdSizeUrl, photoData: mdSizePhoto } = await cropPhotoAndUpload(file, token, 1024)
@@ -118,7 +135,12 @@ router.post(`/upload`, upload.array("files", 50), async (req: Request, res: Resp
           mdSizeEntryId: mdSizePhoto.id.toString(),
           fullSizeEntryId: fullSizePhoto.id.toString(),
           name: fullSizePhoto.name,
-          private: isPrivate
+          fileName: file.originalname,
+          private: isPrivate,
+          meta: {
+            ...metadata,
+            ...gpsMeta
+          },
         })
         results.push({ ok: true, fileName: file.originalname })
       } catch (err) {

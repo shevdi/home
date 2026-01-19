@@ -1,3 +1,15 @@
+export interface IMeta {
+  mimeType?: string;
+  size?: number;
+  width?: number;
+  height?: number;
+  gpsLatitude?: number;
+  gpsLongitude?: number;
+  gpsAltitude?: number;
+  make?: string;
+  model?: string;
+}
+
 export interface ILink {
   _id?: string;
   url?: string;
@@ -11,19 +23,11 @@ export interface ILink {
   smSizeEntryId?: string;
   mdSizeEntryId?: string;
   fullSizeEntryId?: string;
-  mimeType?: string;
-  size?: number;
-  width?: number;
-  height?: number;
-  gpsLatitude?: number;
-  gpsLongitude?: number;
-  gpsAltitude?: number;
-  make?: string;
-  model?: string;
   takenAt?: string;
   priority?: number;
   private?: boolean;
   createdAt?: string;
   updatedAt?: string;
+  meta?: IMeta;
 }
 
