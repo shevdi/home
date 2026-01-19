@@ -38,9 +38,19 @@ const schema = z.object({
 
 type FormFields = z.infer<typeof schema>
 
+type FileMeta = {
+  name: string
+  size: number
+  type: string
+  lastModified: number
+  width?: number
+  height?: number
+}
+
 export function UploadPhoto() {
   const [uploadPhoto, { isLoading }] = useUploadPhotosMutation()
   const [fileInputKey, setFileInputKey] = useState(0)
+  const [fileMeta, setFileMeta] = useState<FileMeta[]>([])
 
   const {
     control,
@@ -67,6 +77,51 @@ export function UploadPhoto() {
     return `${files.length} файлов выбрано`
   }, [files.length])
 
+  const formatBytes = (bytes: number) => {
+    if (!bytes) return '0 B'
+    const sizes = ['B', 'KB', 'MB', 'GB']
+    const index = Math.min(Math.floor(Math.log(bytes) / Math.log(1024)), sizes.length - 1)
+    const value = bytes / Math.pow(1024, index)
+    return `${value.toFixed(value >= 10 || index === 0 ? 0 : 1)} ${sizes[index]}`
+  }
+
+  const getImageDimensions = (file: File) =>
+    new Promise<{ width: number; height: number } | undefined>((resolve) => {
+      if (!file.type.startsWith('image/')) {
+        resolve(undefined)
+        return
+      }
+
+      const url = URL.createObjectURL(file)
+      const img = new Image()
+      img.onload = () => {
+        const result = { width: img.width, height: img.height }
+        URL.revokeObjectURL(url)
+        resolve(result)
+      }
+      img.onerror = () => {
+        URL.revokeObjectURL(url)
+        resolve(undefined)
+      }
+      img.src = url
+    })
+
+  const buildMeta = async (selected: File[]) => {
+    const baseMeta = selected.map((file) => ({
+      name: file.name,
+      size: file.size,
+      type: file.type || 'unknown',
+      lastModified: file.lastModified,
+    }))
+
+    const dimensions = await Promise.all(selected.map((file) => getImageDimensions(file)))
+    return baseMeta.map((meta, index) => ({
+      ...meta,
+      width: dimensions[index]?.width,
+      height: dimensions[index]?.height,
+    }))
+  }
+
   const onSubmit: SubmitHandler<FormFields> = async (data) => {
     const parsedData = schema.safeParse(data)
     if (!parsedData.success) {
@@ -87,6 +142,7 @@ export function UploadPhoto() {
       if (response?.data?.ok) {
         reset({ files: [], private: parsedData.data.private })
         setFileInputKey((prev) => prev + 1)
+        setFileMeta([])
       }
 
       if (response?.data) {
@@ -118,9 +174,10 @@ export function UploadPhoto() {
               type='file'
               name={field.name}
               disabled={isLoading || isSubmitting}
-              onChange={(event) => {
+              onChange={async (event) => {
                 const selected = Array.from(event.target.files || [])
                 field.onChange(selected)
+                setFileMeta(selected.length ? await buildMeta(selected) : [])
               }}
               onBlur={field.onBlur}
               multiple
@@ -144,9 +201,21 @@ export function UploadPhoto() {
         </CheckboxContainer>
         {files.length > 0 && (
           <FileList>
-            {files.map((file, index) => (
-              <FileItem key={`${file.name}-${index}`}>{file.name}</FileItem>
-            ))}
+            {files.map((file, index) => {
+              const meta = fileMeta[index]
+              return (
+                <FileItem key={`${file.name}-${index}`}>
+                  {file.name}
+                  {meta && (
+                    <>
+                      &nbsp;|&nbsp;
+                      {meta.type} · {formatBytes(meta.size)}
+                      {meta.width && meta.height ? ` · ${meta.width} x ${meta.height}` : ''}
+                    </>
+                  )}
+                </FileItem>
+              )
+            })}
           </FileList>
         )}
         <Button type='submit' disabled={isLoading || isSubmitting || files.length === 0}>
