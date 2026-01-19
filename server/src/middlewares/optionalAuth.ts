@@ -16,7 +16,6 @@ export const optionalAuth = (req: Request & Partial<IUserInfo>, res: Response, n
   }
 
   const token = authHeader.split(' ')[1]
-  // next()
   jwt.verify(
     token,
     process.env.ACCESS_TOKEN_SECRET as string,
