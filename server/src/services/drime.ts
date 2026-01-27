@@ -4,6 +4,10 @@ import { DrimeFileEntry, DrimeTokenApiResponse } from '../types/api';
 import axios from 'axios';
 
 const token = process.env.DRIME_TOKEN as string
+const TOKEN_TTL_MS = 5 * 60 * 1000
+let cachedToken: DrimeTokenApiResponse | null = null
+let cachedTokenExpiresAt = 0
+let tokenRequestInFlight: Promise<DrimeTokenApiResponse> | null = null
 
 const drime = axios.create({
   baseURL: process.env.DRIME_URL,
@@ -41,17 +45,40 @@ export const cropPhotoAndUpload = async (file: Express.Multer.File, token: strin
 }
 
 export async function getToken() {
+  const now = Date.now()
+  if (cachedToken && cachedTokenExpiresAt > now) {
+    return cachedToken
+  }
+
+  if (tokenRequestInFlight) {
+    return tokenRequestInFlight
+  }
+
   const url = '/auth/login'
-
   const body = { email: process.env.DRIME_EMAIL, password: process.env.DRIME_PASS, token_name: token };
-  const response = await drime.post<null, DrimeTokenApiResponse>(url, body, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json"
-    }
-  })
 
-  return response.data;
+  tokenRequestInFlight = (async () => {
+    const response = await drime.post<null, DrimeTokenApiResponse>(url, body, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json"
+      }
+    })
+
+    cachedToken = response.data
+    cachedTokenExpiresAt = Date.now() + TOKEN_TTL_MS
+    return response.data
+  })()
+
+  try {
+    return await tokenRequestInFlight
+  } catch (err) {
+    cachedToken = null
+    cachedTokenExpiresAt = 0
+    throw err
+  } finally {
+    tokenRequestInFlight = null
+  }
 }
 
 export async function getEntries(

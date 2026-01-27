@@ -99,7 +99,7 @@ export function EditPhoto() {
           Сохранить
         </Button>
       </form>
-      <Image src={data?.url} />
+      <Image src={data?.mdSizeUrl} />
     </PageContainer>
   )
 }

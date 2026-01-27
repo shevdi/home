@@ -1,43 +1,38 @@
 import styled from 'styled-components'
 import { useSelector } from 'react-redux'
-import { useGetPhotosQuery } from '../model'
-import { Link, useLocation } from 'react-router'
+import { useGetInfinitePhotoWithMaxInfiniteQuery, useGetPhotoQuery } from '../model'
+import { Link, useLocation, useSearchParams } from 'react-router'
 import { getNeighbours } from '@/shared/utils'
 import { useMemo } from 'react'
 import { Loader } from '@/shared/ui'
 import { RootState } from '@/app/store'
 
-const PageContainer = styled.div`
-  position: relative;
-  height: 100%;
-`
 
-const PageHeader = styled.h1`
-  text-align: center;
-`
-
-const PhotosNavigation = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin: 1rem 0;
-`
-
-const Image = styled.img`
-  width: 100%;
-`
 const usePhoto = () => {
   const location = useLocation()
+  const [searchParams] = useSearchParams()
+  const page = searchParams.get('page')
+  const initialPage = page ? Number(page) || 1 : 1
   const photoId = location.pathname.split('/')[2]
   const privateFilter = useSelector((state: RootState) => state.photos.filter.private)
-  // const { data } = useGetPhotoQuery(photoId)
-  const { data, isLoading } = useGetPhotosQuery({ private: privateFilter })
-  const photos = useMemo(() => data?.photos ?? [], [data?.photos])
-  const photo = useMemo(() => photos.find((item) => item._id === photoId), [photos, photoId])
+  const shouldUseInfinite = Boolean(page)
+  const { data: photo, isLoading: isPhotoLoading } = useGetPhotoQuery(photoId, {
+    skip: shouldUseInfinite
+  })
+  const { data, isLoading: isInfiniteLoading } = useGetInfinitePhotoWithMaxInfiniteQuery(
+    { private: privateFilter },
+    {
+      initialPageParam: initialPage,
+      skip: !shouldUseInfinite
+    }
+  )
+  const photos = useMemo(() => data?.pages.flatMap((pageItem) => pageItem.photos) ?? [], [data?.pages])
+  const foundPhoto = useMemo(() => photos.find((item) => item._id === photoId), [photos, photoId])
   const neighbours = getNeighbours(photos, photoId, (x) => x._id)
   return {
-    photo,
+    photo: shouldUseInfinite ? foundPhoto : photo,
     neighbours,
-    isLoading
+    isLoading: shouldUseInfinite ? isInfiniteLoading : isPhotoLoading
   }
 } 
 
@@ -65,3 +60,22 @@ export function Photo() {
     </PageContainer>
   )
 }
+
+const PageContainer = styled.div`
+  position: relative;
+  height: 100%;
+`
+
+const PageHeader = styled.h1`
+  text-align: center;
+`
+
+const PhotosNavigation = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin: 1rem 0;
+`
+
+const Image = styled.img`
+  width: 100%;
+`

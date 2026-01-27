@@ -16,6 +16,7 @@ import { cropPhotoAndUpload, getEntries, getToken } from '../services/drime.ts';
 import { parseBoolean } from '../utils';
 import { IPhotoFilters, IUserInfo } from '@/types/index.ts';
 import { optionalAuth } from '../middlewares/optionalAuth';
+import { verifyJWT } from '../middlewares/verifyJWT';
 import { FilterQuery } from 'mongoose'
 
 const router = express.Router()
@@ -62,6 +63,7 @@ router.get(`/`, optionalAuth, async (req: Request & Partial<IUserInfo>, res: Res
           smSizeUrl,
           mdSizeUrl,
           fullSizeUrl,
+          page,
           meta: item.meta
         }
       })
@@ -97,7 +99,7 @@ const upload = multer({
 router.post(`/upload`, upload.array("files", 50), async (req: Request, res: Response): Promise<any> => {
   try {
     const authResult = await getToken() || '';
-    const token = authResult?.user?.access_token
+    const token = authResult?.user?.access_token || ''
     const files = req.files as Express.Multer.File[];
     const isPrivate = parseBoolean(req.body?.private as string | undefined)
     const meta = req.body?.meta
@@ -169,20 +171,24 @@ router.post(`/upload`, upload.array("files", 50), async (req: Request, res: Resp
   }
 })
 
-router.get(`/:id`, optionalAuth, async (req: Request, res: Response): Promise<any> => {
+router.get(`/:id`, optionalAuth, async (req: Request & Partial<IUserInfo>, res: Response): Promise<any> => {
   try {
     const authResult = await getToken() || '';
     const token = authResult?.user?.access_token
     const photo = await getPhotoById(req.params.id)
 
     if (!photo) {
-      return res.status(404)
+      return res.status(404).json({ message: 'Photo not found' })
     }
-
-    const { url } = await getEntries(`/file-entries/${photo.mdSizeEntryId}`, token)
-    res.json({
+    if (photo.private && (!req.roles || !req.roles.includes('admin'))) {
+      return res.status(403).json({ message: 'Forbidden' })
+    }
+    const { url: mdSizeUrl } = await getEntries(`/file-entries/${photo.mdSizeEntryId}`, token)
+    const { url: fullSizeUrl } = await getEntries(`/file-entries/${photo.fullSizeEntryId}`, token)
+    return res.json({
       ...photo,
-      url
+      mdSizeUrl,
+      fullSizeUrl
     })
   } catch (err) {
     const status = getErrorStatus(err);
@@ -194,7 +200,7 @@ router.get(`/:id`, optionalAuth, async (req: Request, res: Response): Promise<an
   }
 })
 
-router.put(`/:id`, async (req: Request, res: Response): Promise<any> => {
+router.put(`/:id`, verifyJWT, async (req: Request, res: Response): Promise<any> => {
   try {
     const authResult = await getToken() || '';
     const token = authResult?.user?.access_token
@@ -219,7 +225,7 @@ router.put(`/:id`, async (req: Request, res: Response): Promise<any> => {
   }
 })
 
-router.delete(`/:id`, async (req: Request, res: Response): Promise<any> => {
+router.delete(`/:id`, verifyJWT, async (req: Request, res: Response): Promise<any> => {
   try {
     const photo = await deletePhotoById(req.params.id)
 
