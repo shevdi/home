@@ -150,12 +150,12 @@ router.post(`/upload`, upload.array("files", 50), async (req: Request, res: Resp
     }
 
     const successCount = results.filter(r => r.ok).length
-    const fileCount = results.filter(r => !r.ok).length
+    const errorsCount = results.filter(r => !r.ok).length
 
     res.json({
       ok: successCount > 0,
       successCount,
-      fileCount,
+      errorsCount,
       totalCount: files.length,
       results
     })

@@ -7,7 +7,10 @@ import { useMemo } from 'react'
 import { Loader } from '@/shared/ui'
 import { RootState } from '@/app/store'
 
-const PageContainer = styled.div``
+const PageContainer = styled.div`
+  position: relative;
+  height: 100%;
+`
 
 const PageHeader = styled.h1`
   text-align: center;
@@ -22,8 +25,7 @@ const PhotosNavigation = styled.div`
 const Image = styled.img`
   width: 100%;
 `
-
-export function Photo() {
+const usePhoto = () => {
   const location = useLocation()
   const photoId = location.pathname.split('/')[2]
   const privateFilter = useSelector((state: RootState) => state.photos.filter.private)
@@ -32,7 +34,19 @@ export function Photo() {
   const photos = useMemo(() => data?.photos ?? [], [data?.photos])
   const photo = useMemo(() => photos.find((item) => item._id === photoId), [photos, photoId])
   const neighbours = getNeighbours(photos, photoId, (x) => x._id)
+  return {
+    photo,
+    neighbours,
+    isLoading
+  }
+} 
 
+export function Photo() {
+  const {
+    photo,
+    neighbours,
+    isLoading
+  } = usePhoto()
   return (
     <PageContainer>
       <PhotosNavigation>

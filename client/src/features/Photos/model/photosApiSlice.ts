@@ -1,10 +1,10 @@
 import { apiSlice } from '@/app/store/api'
 import { ILink } from '@/shared/types'
 
-interface UploadResponse {
+export interface UploadResponse {
   ok: boolean
   successCount?: number
-  fileCount?: number
+  errorsCount?: number
   totalCount?: number
   results?: Array<{ ok: boolean; fileName: string; error?: string }>
   error?: string

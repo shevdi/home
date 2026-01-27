@@ -34,6 +34,7 @@ const LoaderContainer = styled.div`
   display: flex;
   justify-content: center;
   padding: 1rem;
+  position: relative;
 `
 
 export function PhotoGallery({ isHiddenFilters }: IProps) {
@@ -88,9 +89,6 @@ export function PhotoGallery({ isHiddenFilters }: IProps) {
   return (
     <PageContainer>
       <PageHeader>Фотки</PageHeader>
-      {isLoading && allResults.length === 0 ? (
-        <Loader />
-      ) : (
         <>
           <Filter isHiddenFilters={isHiddenFilters} />
           <PhotoContainer>
@@ -99,13 +97,12 @@ export function PhotoGallery({ isHiddenFilters }: IProps) {
             ))}
           </PhotoContainer>
           {hasNextPage && <Sentinel ref={sentinelRef} />}
-          {isFetchingNextPage && (
+          {(isLoading || isFetchingNextPage) && (
             <LoaderContainer>
               <Loader inline />
             </LoaderContainer>
           )}
         </>
-      )}
     </PageContainer>
   )
 }

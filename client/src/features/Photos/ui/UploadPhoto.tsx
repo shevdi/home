@@ -1,42 +1,63 @@
+import { ChangeEvent, Dispatch, SetStateAction, useMemo, useState } from 'react'
 import styled from 'styled-components'
-import { useUploadPhotosMutation } from '../model'
-import { buildMeta, FileMeta, formatBytes, formatDate, formatGps } from '../utils/uploadPhotoMeta'
-import { useMemo, useState } from 'react'
-import { Button, Checkbox, ErrMessage, Input } from '@/shared/ui'
-import { SubmitHandler, useForm, Controller } from 'react-hook-form'
 import { z } from 'zod'
+import { SubmitHandler, useForm, Controller } from 'react-hook-form'
+import { Button, Checkbox, ErrMessage, Input } from '@/shared/ui'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { UploadResponse, useUploadPhotosMutation } from '../model'
+import { buildMeta, FileMeta } from '../utils/uploadPhotoMeta'
+import { FileData } from './FileData'
 
-const PageContainer = styled.div``
+const getFileLabel = (count: number) => {
+  if (count === 0) return 'Загрузить фото'
+  if (count === 1) return '1 файл выбран'
+  if (count < 5) return `${count} файла выбрано`
+  return `${count} файлов выбрано`
+}
 
-const PageHeader = styled.h1`
-  text-align: center;
-`
+const buildMetaPayload = ({ gps, make, model, takenAt }: FileMeta) => ({
+  gpsLatitude: gps?.lat,
+  gpsLongitude: gps?.lon,
+  gpsAltitude: gps?.alt,
+  make,
+  model,
+  takenAt,
+})
 
-const FileList = styled.div`
-  margin: 1rem 0;
-  padding: 1rem;
-  background-color: #f5f5f5;
-  border-radius: 6px;
-  max-height: 200px;
-  overflow-y: auto;
-`
+const buildUploadFormData = (files: File[], isPrivate: boolean, meta: FileMeta[]) => {
+  const formData = new FormData()
+  formData.append('private', isPrivate.toString())
+  formData.append('meta', JSON.stringify(meta.map(buildMetaPayload)))
+  files.forEach((file) => {
+    formData.append('files', file)
+  })
+  return formData
+}
 
-const FileItem = styled.div`
-  padding: 0.5rem 0;
-  font-size: 0.9rem;
-  color: #333;
-`
+const getUploadMessage = (response?: { data?: UploadResponse}) => {
+  const data = response?.data
+  if (!data) return ''
+  const { successCount, errorsCount, totalCount } = data
+  if ([successCount, errorsCount, totalCount].some((value) => typeof value !== 'number')) return ''
+  return `Загружено: ${successCount} из ${totalCount}. Ошибок: ${errorsCount}`
+}
 
-const CheckboxContainer = styled.div`
-  margin: 0.75rem 0;
-`
+const getSubmitLabel = (count: number, isProcessed: boolean) => {
+  if (isProcessed) return 'Загружается...'
+  return `Загрузить ${count > 0 ? `${count} ` : ''}фото`
+}
 
-const UploadMessage = styled.div`
-  margin-top: 0.5rem;
-  font-size: 0.85rem;
-  color: #2e7d32;
-`
+const handleFileInputChange = async (
+  event: ChangeEvent<HTMLInputElement>,
+  onChange: (value: File[]) => void,
+  setFileMeta: Dispatch<SetStateAction<FileMeta[]>>,
+  setUploadMessage: Dispatch<SetStateAction<string>>,
+) => {
+  const selected = Array.from(event.target.files || [])
+  onChange(selected)
+  setFileMeta(selected.length ? await buildMeta(selected) : [])
+  setUploadMessage('')
+}
 
 const schema = z.object({
   files: z.array(z.instanceof(File)).min(1, 'Пожалуйста, выберите файлы'),
@@ -47,7 +68,6 @@ type FormFields = z.infer<typeof schema>
 
 export function UploadPhoto() {
   const [uploadPhoto, { isLoading }] = useUploadPhotosMutation()
-  const [fileInputKey, setFileInputKey] = useState(0)
   const [fileMeta, setFileMeta] = useState<FileMeta[]>([])
   const [uploadMessage, setUploadMessage] = useState('')
 
@@ -67,62 +87,35 @@ export function UploadPhoto() {
   })
 
   const files = watch('files') || []
+  const isProcessed = isLoading || isSubmitting
 
   const fileLabel = useMemo(() => {
-    if (files.length === 0) return 'Загрузить фото'
-
-    if (files.length === 1) return '1 файл выбран'
-    if (files.length < 5) return `${files.length} файла выбрано`
-    return `${files.length} файлов выбрано`
+    return getFileLabel(files.length)
   }, [files.length])
 
-  const onSubmit: SubmitHandler<FormFields> = async (data) => {
-    const parsedData = schema.safeParse(data)
-    if (!parsedData.success) {
+  const onSubmit: SubmitHandler<FormFields> = async (submitData) => {
+    const { success, data } = schema.safeParse(submitData)
+    if (!success) {
       setError('files', {
         message: 'Пожалуйста, выберите файлы',
       })
       return
     }
 
-    const metaForSubmit =
-      fileMeta.length === parsedData.data.files.length ? fileMeta : await buildMeta(parsedData.data.files)
-    if (metaForSubmit.length !== fileMeta.length) {
-      setFileMeta(metaForSubmit)
-    }
-
-    const formData = new FormData()
-    formData.append('private', parsedData.data.private.toString())
-    formData.append(
-      'meta',
-      JSON.stringify(
-        metaForSubmit.map((meta) => ({
-          gpsLatitude: meta.gps?.lat,
-          gpsLongitude: meta.gps?.lon,
-          gpsAltitude: meta.gps?.alt,
-          make: meta.make,
-          model: meta.model,
-          takenAt: meta.takenAt,
-        })),
-      ),
-    )
-    parsedData.data.files.forEach((file) => {
-      formData.append('files', file)
-    })
+    const metaForSubmit = await buildMeta(data.files)
+    setFileMeta(metaForSubmit)
+    const formData = buildUploadFormData(data.files, data.private, metaForSubmit)
 
     try {
       const response = await uploadPhoto(formData)
       if (response?.data?.ok) {
-        reset({ files: [], private: parsedData.data.private })
-        setFileInputKey((prev) => prev + 1)
+        reset({ files: [], private: data.private })
         setFileMeta([])
       }
 
-      if (response?.data) {
-        const { successCount, fileCount, totalCount } = response.data
-        if (typeof successCount === 'number' && typeof totalCount === 'number' && typeof fileCount === 'number') {
-          setUploadMessage(`Загружено: ${successCount} из ${totalCount}. Ошибок: ${fileCount}`)
-        }
+      const nextMessage = getUploadMessage(response)
+      if (nextMessage) {
+        setUploadMessage(nextMessage)
       }
       /* eslint @typescript-eslint/no-explicit-any: "off" */
     } catch (error: any) {
@@ -142,16 +135,12 @@ export function UploadPhoto() {
           name='files'
           render={({ field }) => (
             <Input
-              key={fileInputKey}
               label={fileLabel}
               type='file'
               name={field.name}
-              disabled={isLoading || isSubmitting}
-              onChange={async (event) => {
-                const selected = Array.from(event.target.files || [])
-                field.onChange(selected)
-                setFileMeta(selected.length ? await buildMeta(selected) : [])
-                setUploadMessage('')
+              disabled={isProcessed}
+              onChange={(event) => {
+                void handleFileInputChange(event, field.onChange, setFileMeta, setUploadMessage)
               }}
               onBlur={field.onBlur}
               multiple
@@ -169,7 +158,7 @@ export function UploadPhoto() {
                 checked={field.value}
                 onChange={field.onChange}
                 label='Скрыть'
-                disabled={isLoading || isSubmitting}
+                disabled={isProcessed}
               />
             )}
           />
@@ -179,27 +168,40 @@ export function UploadPhoto() {
             {files.map((file, index) => {
               const meta = fileMeta[index]
               return (
-                <FileItem key={`${file.name}-${index}`}>
-                  {file.name}
-                  {meta && (
-                    <>
-                      &nbsp;|&nbsp;
-                      {meta.type} · {formatBytes(meta.size)}
-                      {meta.width && meta.height ? ` · ${meta.width} x ${meta.height}` : ''}
-                      {meta.make || meta.model ? ` · ${[meta.make, meta.model].filter(Boolean).join(' ')}` : ''}
-                      {meta.takenAt ? ` · ${formatDate(meta.takenAt)}` : ''}
-                      {formatGps(meta.gps) ? ` · ${formatGps(meta.gps)}` : ''}
-                    </>
-                  )}
-                </FileItem>
+                <FileData key={`${file.name}-${index}`} file={file} meta={meta} />
               )
             })}
           </FileList>
         )}
-        <Button type='submit' disabled={isLoading || isSubmitting || files.length === 0}>
-          {isLoading || isSubmitting ? 'Загружается...' : `Загрузить ${files.length > 0 ? `${files.length} ` : ''}фото`}
+        <Button type='submit' disabled={isProcessed || files.length === 0}>
+          {getSubmitLabel(files.length, isProcessed)}
         </Button>
       </form>
     </PageContainer>
   )
 }
+
+const PageContainer = styled.div``
+
+const PageHeader = styled.h1`
+  text-align: center;
+`
+
+const FileList = styled.div`
+  margin: 1rem 0;
+  padding: 1rem;
+  background-color: #f5f5f5;
+  border-radius: 6px;
+  max-height: 200px;
+  overflow-y: auto;
+`
+
+const CheckboxContainer = styled.div`
+  margin: 0.75rem 0;
+`
+
+const UploadMessage = styled.div`
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: #2e7d32;
+`
