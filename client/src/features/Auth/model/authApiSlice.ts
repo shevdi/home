@@ -1,5 +1,6 @@
 import { apiSlice } from "@/app/store/api"
 import { logOut, setCredentials } from "./authSlice"
+import { getErrorMessage } from "@/shared/utils"
 
 export const authApiSlice = apiSlice.injectEndpoints({
   endpoints: builder => ({
@@ -23,7 +24,7 @@ export const authApiSlice = apiSlice.injectEndpoints({
             dispatch(apiSlice.util.resetApiState())
           }, 1000)
         } catch (err) {
-          console.log(err)
+          console.log(getErrorMessage(err))
         }
       }
     }),
@@ -37,7 +38,7 @@ export const authApiSlice = apiSlice.injectEndpoints({
           const { data: { accessToken } } = await queryFulfilled
           dispatch(setCredentials({ accessToken }))
         } catch (err) {
-          console.log(err)
+          console.log(getErrorMessage(err))
         }
       }
     }),

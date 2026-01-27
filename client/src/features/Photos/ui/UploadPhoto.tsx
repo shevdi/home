@@ -7,6 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { UploadResponse, useUploadPhotosMutation } from '../model'
 import { buildMeta, FileMeta } from '../utils/uploadPhotoMeta'
 import { FileData } from './FileData'
+import { getErrorMessage } from '@/shared/utils'
 
 const getFileLabel = (count: number) => {
   if (count === 0) return 'Загрузить фото'
@@ -117,10 +118,10 @@ export function UploadPhoto() {
       if (nextMessage) {
         setUploadMessage(nextMessage)
       }
-      /* eslint @typescript-eslint/no-explicit-any: "off" */
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const message = getErrorMessage(error)
       setError('root', {
-        message: error?.data?.message || 'Не удалось загрузить файлы',
+        message: message || 'Не удалось загрузить файлы',
       })
     }
   }

@@ -7,6 +7,7 @@ import { Button, ErrMessage, Input } from '@/shared/ui'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { getErrorMessage } from '@/shared/utils'
 
 const Section = styled.section`
   max-width: 300px;
@@ -43,10 +44,10 @@ export function Login() {
       const { accessToken } = await login({ username, password }).unwrap()
       dispatch(setCredentials({ accessToken }))
       navigate('/')
-      /* eslint @typescript-eslint/no-explicit-any: "off" */
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const message = getErrorMessage(error)
       setError('root', {
-        message: error?.data?.message,
+        message,
       })
     }
   }

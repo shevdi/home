@@ -2,6 +2,20 @@ import styled from 'styled-components'
 import { ILink } from '@/shared/types'
 import { Link } from 'react-router'
 
+export function PhotoLink({ photo }: { photo: ILink }) {
+  return (
+    <Figure key={photo._id} featured={photo.priority ? photo.priority > 1 : false}>
+      <Link to={`/photos/${photo._id}${photo.page ? `?page=${photo.page}` : ''}`}>
+        <Image
+          src={(photo.priority ? photo.priority > 1 : false) ? photo.mdSizeUrl : photo.smSizeUrl}
+          alt={photo.title}
+        />
+      </Link>
+      {photo.title && <Figcaption>{photo.title}</Figcaption>}
+    </Figure>
+  )
+}
+
 const Image = styled.img`
   display: block;
   width: 100%;
@@ -32,17 +46,3 @@ const Figcaption = styled.figcaption`
   font-size: 0.9rem;
   text-align: center;
 `
-
-export function PhotoLink({ photo }: { photo: ILink }) {
-  return (
-    <Figure key={photo._id} featured={photo.priority ? photo.priority > 1 : false}>
-      <Link to={`/photos/${photo._id}${photo.page ? `?page=${photo.page}` : ''}`}>
-        <Image
-          src={(photo.priority ? photo.priority > 1 : false) ? photo.mdSizeUrl : photo.smSizeUrl}
-          alt={photo.title}
-        />
-      </Link>
-      {photo.title && <Figcaption>{photo.title}</Figcaption>}
-    </Figure>
-  )
-}

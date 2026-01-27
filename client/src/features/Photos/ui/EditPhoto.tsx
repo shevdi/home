@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Button, Checkbox, ErrMessage, Input } from '@/shared/ui'
 import { RootState } from '@/app/store'
 import { setPrivateFilter } from '../model/photosSlice'
+import { getErrorMessage } from '@/shared/utils'
 
 const PageContainer = styled.div``
 
@@ -69,10 +70,10 @@ export function EditPhoto() {
         id: photoId,
         data: parsedData.data,
       }).unwrap()
-      /* eslint @typescript-eslint/no-explicit-any: "off" */
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const message = getErrorMessage(error)
       setError('root', {
-        message: error?.data?.message,
+        message,
       })
     }
   }

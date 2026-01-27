@@ -6,6 +6,7 @@ import { useState } from 'react'
 import z from 'zod'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { getErrorMessage } from '@/shared/utils'
 
 interface IPageProps {
   url?: string
@@ -74,9 +75,10 @@ export function EditPage({ url }: IPageProps) {
       }).unwrap()
       navigate(location.pathname.replace('/edit', ''))
       /* eslint @typescript-eslint/no-explicit-any: "off" */
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const message = getErrorMessage(error)
       setError('root', {
-        message: error?.data?.message,
+        message,
       })
     }
   }

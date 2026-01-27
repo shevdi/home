@@ -3,6 +3,7 @@ import { useDeletePhotoMutation } from '../model'
 import { useNavigate, useLocation } from 'react-router'
 import { EmptyObject, SubmitHandler, useForm } from 'react-hook-form'
 import { Button, ErrMessage } from '@/shared/ui'
+import { getErrorMessage } from '@/shared/utils'
 
 const PageContainer = styled.div``
 
@@ -25,10 +26,10 @@ export function DeletePhoto() {
         id: photoId,
       }).unwrap()
       navigate('/photos')
-      /* eslint @typescript-eslint/no-explicit-any: "off" */
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const message = getErrorMessage(error)
       setError('root', {
-        message: error?.data?.message,
+        message,
       })
     }
   }

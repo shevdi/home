@@ -11,32 +11,6 @@ interface IProps {
   isHiddenFilters?: boolean
 }
 
-const PageContainer = styled.div``
-
-const PageHeader = styled.h1`
-  text-align: center;
-`
-
-const PhotoContainer = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  grid-auto-rows: 1fr;
-  gap: 0.5rem;
-  grid-auto-flow: dense;
-`
-
-const Sentinel = styled.div`
-  height: 1px;
-  width: 100%;
-`
-
-const LoaderContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  padding: 1rem;
-  position: relative;
-`
-
 export function PhotoGallery({ isHiddenFilters }: IProps) {
   const privateFilter = useSelector((state: RootState) => state.photos.filter.private)
   const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useGetInfinitePhotoWithMaxInfiniteQuery({
@@ -106,3 +80,29 @@ export function PhotoGallery({ isHiddenFilters }: IProps) {
     </PageContainer>
   )
 }
+
+const PageContainer = styled.div``
+
+const PageHeader = styled.h1`
+  text-align: center;
+`
+
+const PhotoContainer = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-auto-rows: 1fr;
+  gap: 0.5rem;
+  grid-auto-flow: dense;
+`
+
+const Sentinel = styled.div`
+  height: 1px;
+  width: 100%;
+`
+
+const LoaderContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  padding: 1rem;
+  position: relative;
+`
