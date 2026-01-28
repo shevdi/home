@@ -7,7 +7,7 @@ export function PhotoLink({ photo }: { photo: ILink }) {
     <Figure key={photo._id} featured={photo.priority ? photo.priority > 1 : false}>
       <Link to={`/photos/${photo._id}${photo.page ? `?page=${photo.page}` : ''}`}>
         <Image
-          src={(photo.priority ? photo.priority > 1 : false) ? photo.mdSizeUrl : photo.smSizeUrl}
+          src={((photo.priority ? photo.priority > 1 : false) ? photo.mdSizeUrl : photo.smSizeUrl) || photo.mdSizeUrl}
           alt={photo.title}
         />
       </Link>
