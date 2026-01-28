@@ -6,13 +6,12 @@ import sharp from 'sharp';
 import {
   addNewPhoto,
   deletePhotoById,
-  getAllPhotos,
   getPhotosPaginated,
   getPhotosCount,
   getPhotoById,
   updatePhotoById,
 } from '../db/services/photos.ts'
-import { cropPhotoAndUpload, getEntries, getToken } from '../services/drime.ts';
+import drime from '../services/drime.ts';
 import { parseBoolean } from '../utils';
 import { IPhotoFilters, IUserInfo } from '@/types/index.ts';
 import { optionalAuth } from '../middlewares/optionalAuth';
@@ -48,12 +47,11 @@ router.get(`/`, optionalAuth, async (req: Request & Partial<IUserInfo>, res: Res
       getPhotosCount(filters)
     ])
 
-    const authResult = await getToken();
     const results = await Promise.all(photos
       .map(async (item) => {
-        const { url: smSizeUrl } = await getEntries(`/file-entries/${item.smSizeEntryId}`, authResult?.user?.access_token)
-        const { url: mdSizeUrl } = await getEntries(`/file-entries/${item.mdSizeEntryId}`, authResult?.user?.access_token)
-        const { url: fullSizeUrl } = await getEntries(`/file-entries/${item.fullSizeEntryId}`, authResult?.user?.access_token)
+        const { url: smSizeUrl } = await drime.getEntries(`/file-entries/${item.smSizeEntryId}`)
+        const { url: mdSizeUrl } = await drime.getEntries(`/file-entries/${item.mdSizeEntryId}`)
+        const { url: fullSizeUrl } = await drime.getEntries(`/file-entries/${item.fullSizeEntryId}`)
         return {
           _id: item._id,
           name: item.name,
@@ -98,8 +96,6 @@ const upload = multer({
 
 router.post(`/upload`, upload.array("files", 50), async (req: Request, res: Response): Promise<any> => {
   try {
-    const authResult = await getToken() || '';
-    const token = authResult?.user?.access_token || ''
     const files = req.files as Express.Multer.File[];
     const isPrivate = parseBoolean(req.body?.private as string | undefined)
     const meta = req.body?.meta
@@ -125,9 +121,9 @@ router.post(`/upload`, upload.array("files", 50), async (req: Request, res: Resp
       try {
         const metadata = await sharp(file.buffer).metadata()
         const gpsMeta = metaList[results.length]
-        const { url: fullSizeUrl, photoData: fullSizePhoto } = await cropPhotoAndUpload(file, token)
-        const { url: smSizeUrl, photoData: smSizePhoto } = await cropPhotoAndUpload(file, token, 300)
-        const { url: mdSizeUrl, photoData: mdSizePhoto } = await cropPhotoAndUpload(file, token, 1024)
+        const { url: fullSizeUrl, photoData: fullSizePhoto } = await drime.cropPhotoAndUpload(file)
+        const { url: smSizeUrl, photoData: smSizePhoto } = await drime.cropPhotoAndUpload(file, 300)
+        const { url: mdSizeUrl, photoData: mdSizePhoto } = await drime.cropPhotoAndUpload(file, 1024)
 
         await addNewPhoto({
           smSizeUrl,
@@ -173,8 +169,6 @@ router.post(`/upload`, upload.array("files", 50), async (req: Request, res: Resp
 
 router.get(`/:id`, optionalAuth, async (req: Request & Partial<IUserInfo>, res: Response): Promise<any> => {
   try {
-    const authResult = await getToken() || '';
-    const token = authResult?.user?.access_token
     const photo = await getPhotoById(req.params.id)
 
     if (!photo) {
@@ -183,8 +177,8 @@ router.get(`/:id`, optionalAuth, async (req: Request & Partial<IUserInfo>, res: 
     if (photo.private && (!req.roles || !req.roles.includes('admin'))) {
       return res.status(403).json({ message: 'Forbidden' })
     }
-    const { url: mdSizeUrl } = await getEntries(`/file-entries/${photo.mdSizeEntryId}`, token)
-    const { url: fullSizeUrl } = await getEntries(`/file-entries/${photo.fullSizeEntryId}`, token)
+    const { url: mdSizeUrl } = await drime.getEntries(`/file-entries/${photo.mdSizeEntryId}`)
+    const { url: fullSizeUrl } = await drime.getEntries(`/file-entries/${photo.fullSizeEntryId}`)
     return res.json({
       ...photo,
       mdSizeUrl,
@@ -202,15 +196,13 @@ router.get(`/:id`, optionalAuth, async (req: Request & Partial<IUserInfo>, res: 
 
 router.put(`/:id`, verifyJWT, async (req: Request, res: Response): Promise<any> => {
   try {
-    const authResult = await getToken() || '';
-    const token = authResult?.user?.access_token
     const photo = await updatePhotoById(req.params.id, req.body)
 
     if (!photo) {
       return res.status(404)
     }
 
-    const { url } = await getEntries(`/file-entries/${photo.mdSizeEntryId}`, token)
+    const { url } = await drime.getEntries(`/file-entries/${photo.mdSizeEntryId}`)
     res.json({
       ...photo,
       url
@@ -227,7 +219,7 @@ router.put(`/:id`, verifyJWT, async (req: Request, res: Response): Promise<any> 
 
 router.delete(`/:id`, verifyJWT, async (req: Request, res: Response): Promise<any> => {
   try {
-    const photo = await deletePhotoById(req.params.id)
+    await deletePhotoById(req.params.id)
 
     res.json({
       ok: true
