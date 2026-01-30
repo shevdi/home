@@ -29,16 +29,31 @@ const getErrorStatus = (err: unknown): number | undefined => {
 
 router.get(`/`, optionalAuth, async (req: Request & Partial<IUserInfo>, res: Response): Promise<any> => {
   try {
-    const pageParam = req.query.page as string | undefined
-    const privateParam = req.query.private as string | undefined
-    const pageSize = pageParam ? 5 : 100// Number of photos per page
+    const pageParam = <string>req.query.page
+    const privateParam = <string>req.query.private
+    const dateFromParam = <string>req.query.dateFrom
+    const dateToParam = <string>req.query.dateTo
+    const pageSize = req.query.page ? 5 : 100// Number of photos per page
     const privateFilter = parseBoolean(privateParam)
-    const filters: FilterQuery<IPhotoFilters> = {}
+    const filters: FilterQuery<IPhotoFilters> & Record<string, unknown> = {}
 
     if (privateFilter && req.roles && req.roles.includes('admin')) {
       filters.private = privateFilter
     } else {
       filters.$nor = [{ private: true }]
+    }
+
+    const dateFrom = dateFromParam?.trim() || undefined
+    const dateTo = dateToParam?.trim() || undefined
+    if (dateFrom || dateTo) {
+      const takenAtFilter: Record<string, string> = {}
+      if (dateFrom) {
+        takenAtFilter.$gte = dateFrom
+      }
+      if (dateTo) {
+        takenAtFilter.$lte = dateTo
+      }
+      filters['meta.takenAt'] = takenAtFilter
     }
 
     const page = pageParam ? parseInt(pageParam) : 1

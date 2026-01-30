@@ -14,13 +14,13 @@ const usePhoto = () => {
   const page = searchParams.get('page')
   const initialPage = page ? Number(page) || 1 : 1
   const photoId = location.pathname.split('/')[2]
-  const privateFilter = useSelector((state: RootState) => state.photos.filter.private)
+  const filter = useSelector((state: RootState) => state.photos.filter)
   const shouldUseInfinite = Boolean(page)
   const { data: photo, isLoading: isPhotoLoading } = useGetPhotoQuery(photoId, {
     skip: shouldUseInfinite
   })
   const { data, isLoading: isInfiniteLoading } = useGetInfinitePhotoWithMaxInfiniteQuery(
-    { private: privateFilter },
+    { ...filter },
     {
       initialPageParam: initialPage,
       skip: !shouldUseInfinite

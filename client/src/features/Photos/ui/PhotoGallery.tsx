@@ -1,20 +1,19 @@
 import { useEffect, useRef, useCallback } from 'react'
 import styled from 'styled-components'
 import { useSelector } from 'react-redux'
-import { useGetInfinitePhotoWithMaxInfiniteQuery } from '../model'
+import { selectFilters, useGetInfinitePhotoWithMaxInfiniteQuery } from '../model'
 import { PhotoLink } from './PhotoLink'
 import { Loader } from '@/shared/ui'
 import { Filter } from './Filter'
-import { RootState } from '@/app/store'
 
 interface IProps {
   isHiddenFilters?: boolean
 }
 
 export function PhotoGallery({ isHiddenFilters }: IProps) {
-  const privateFilter = useSelector((state: RootState) => state.photos.filter.private)
+  const filter = useSelector(selectFilters)
   const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useGetInfinitePhotoWithMaxInfiniteQuery({
-    private: privateFilter,
+    ...filter,
   })
   const allResults = data?.pages.flatMap((page) => page.photos) ?? []
   const sentinelRef = useRef<HTMLDivElement>(null)

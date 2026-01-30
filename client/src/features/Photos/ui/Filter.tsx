@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import { useDispatch, useSelector } from 'react-redux'
-import { Checkbox } from '@/shared/ui'
-import { setPrivateFilter } from '../model/photosSlice'
+import { Checkbox, Input } from '@/shared/ui'
+import { setPrivateFilter, setDateFromFilter, setDateToFilter } from '../model/photosSlice'
 import { RootState } from '@/app/store'
 
 interface IProps {
@@ -10,21 +10,53 @@ interface IProps {
 
 export const Filter = ({ isHiddenFilters }: IProps) => {
   const dispatch = useDispatch()
-  const privateFilter = useSelector((state: RootState) => state.photos.filter.private)
+  const { private: privateFilter, dateFrom, dateTo } = useSelector((state: RootState) => state.photos.filter)
 
   const handlePrivateChange = (checked: boolean) => {
     dispatch(setPrivateFilter(checked))
   }
 
+  const handleDateFromChange = (value: string) => {
+    dispatch(setDateFromFilter(value.trim() ? value : null))
+  }
+
+  const handleDateToChange = (value: string) => {
+    dispatch(setDateToFilter(value.trim() ? value : null))
+  }
+
   return (
     <FilterContainer>
-      {!isHiddenFilters && <Checkbox checked={privateFilter} onChange={handlePrivateChange} label='Приватные' />}
+      {!isHiddenFilters && (
+        <>
+          <Checkbox checked={privateFilter} onChange={handlePrivateChange} label='Приватные' />
+          <DateInputs>
+            <Input
+              label='Дата с'
+              type='date'
+              value={dateFrom ?? ''}
+              onChange={(event) => handleDateFromChange(event.target.value)}
+            />
+            <Input
+              label='Дата по'
+              type='date'
+              value={dateTo ?? ''}
+              onChange={(event) => handleDateToChange(event.target.value)}
+            />
+          </DateInputs>
+        </>
+      )}
     </FilterContainer>
   )
 }
 
 const FilterContainer = styled.div`
-  display: flex;
-  align-items: center;
   padding: 1rem;
+`
+
+const DateInputs = styled.div`
+  margin-top: 2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.75rem;
+  width: min(480px, 100%);
 `

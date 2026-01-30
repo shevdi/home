@@ -12,6 +12,8 @@ export interface UploadResponse {
 
 interface PhotosFilter {
   private?: boolean
+  dateFrom?: string | null
+  dateTo?: string | null
 }
 
 interface PhotosResponse {
@@ -31,6 +33,12 @@ export const photosApiSlice = apiSlice.injectEndpoints({
         const params = new URLSearchParams()
         if (filter?.private !== undefined) {
           params.append('private', filter.private.toString())
+        }
+        if (filter?.dateFrom) {
+          params.append('dateFrom', filter.dateFrom)
+        }
+        if (filter?.dateTo) {
+          params.append('dateTo', filter.dateTo)
         }
         const queryString = params.toString()
         return `photos${queryString ? `?${queryString}` : ''}`
@@ -78,6 +86,12 @@ export const photosApiSlice = apiSlice.injectEndpoints({
         params.append('page', pageParam.toString())
         if (filter?.private !== undefined) {
           params.append('private', filter.private.toString())
+        }
+        if (filter?.dateFrom) {
+          params.append('dateFrom', filter.dateFrom)
+        }
+        if (filter?.dateTo) {
+          params.append('dateTo', filter.dateTo)
         }
         return `/photos?${params.toString()}`
       },
