@@ -1,11 +1,11 @@
 import styled from 'styled-components'
 import { useSelector } from 'react-redux'
-import { useGetInfinitePhotoWithMaxInfiniteQuery, useGetPhotoQuery } from '../model'
+import { selectFilters, useGetInfinitePhotoWithMaxInfiniteQuery, useGetPhotoQuery } from '../model'
 import { Link, useLocation, useSearchParams } from 'react-router'
 import { getNeighbours } from '@/shared/utils'
 import { useMemo } from 'react'
 import { Loader } from '@/shared/ui'
-import { RootState } from '@/app/store'
+import { formatDate } from '../utils/uploadPhotoMeta'
 
 
 const usePhoto = () => {
@@ -14,7 +14,7 @@ const usePhoto = () => {
   const page = searchParams.get('page')
   const initialPage = page ? Number(page) || 1 : 1
   const photoId = location.pathname.split('/')[2]
-  const filter = useSelector((state: RootState) => state.photos.filter)
+  const filter = useSelector(selectFilters)
   const shouldUseInfinite = Boolean(page)
   const { data: photo, isLoading: isPhotoLoading } = useGetPhotoQuery(photoId, {
     skip: shouldUseInfinite
@@ -42,6 +42,9 @@ export function Photo() {
     neighbours,
     isLoading
   } = usePhoto()
+
+  const takenAt = photo?.meta?.takenAt
+
   return (
     <PageContainer>
       <PhotosNavigation>
@@ -57,6 +60,7 @@ export function Photo() {
       </PhotosNavigation>
       {isLoading ? <Loader /> : <Image key={photo?._id} src={photo?.mdSizeUrl} />}
       <PageHeader>{photo?.title}</PageHeader>
+      {takenAt && <PhotoMeta>{formatDate(takenAt)}</PhotoMeta>}
     </PageContainer>
   )
 }
@@ -68,6 +72,13 @@ const PageContainer = styled.div`
 
 const PageHeader = styled.h1`
   text-align: center;
+`
+
+const PhotoMeta = styled.div`
+  text-align: right;
+  color: #555;
+  font-size: 0.9rem;
+  margin-top: 0.25rem;
 `
 
 const PhotosNavigation = styled.div`

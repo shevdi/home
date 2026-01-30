@@ -1,8 +1,11 @@
 import styled from 'styled-components'
 import { ILink } from '@/shared/types'
 import { Link } from 'react-router'
+import { formatDate } from '../utils/uploadPhotoMeta'
 
 export function PhotoLink({ photo }: { photo: ILink }) {
+  const takenAtLabel = photo.meta?.takenAt ? formatDate(photo.meta.takenAt) : ''
+
   return (
     <Figure key={photo._id} featured={photo.priority ? photo.priority > 1 : false}>
       <Link to={`/photos/${photo._id}${photo.page ? `?page=${photo.page}` : ''}`}>
@@ -11,6 +14,7 @@ export function PhotoLink({ photo }: { photo: ILink }) {
           alt={photo.title}
         />
       </Link>
+      {takenAtLabel && <DateCaption>{takenAtLabel}</DateCaption>}
       {photo.title && <Figcaption>{photo.title}</Figcaption>}
     </Figure>
   )
@@ -23,6 +27,21 @@ const Image = styled.img`
   object-fit: cover;
 `
 
+const DateCaption = styled.figcaption`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  font-size: 0.85rem;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+`
+
 const Figure = styled.figure<{ featured: boolean }>`
   position: relative;
   display: inline-block;
@@ -32,6 +51,11 @@ const Figure = styled.figure<{ featured: boolean }>`
   ${({ featured }) => (featured ? 'height: 410px;' : 'height: 200px;')};
   ${({ featured }) => (featured ? 'grid-row: span 2;' : '')};
   ${({ featured }) => (featured ? 'grid-column: span 2' : '')};
+
+  &:hover ${DateCaption},
+  &:focus-within ${DateCaption} {
+    opacity: 1;
+  }
 `
 
 const Figcaption = styled.figcaption`

@@ -8,6 +8,7 @@ export interface IMeta {
   gpsAltitude?: number;
   make?: string;
   model?: string;
+  takenAt?: string;
 }
 
 export interface ILink {
