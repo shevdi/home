@@ -62,20 +62,20 @@ export function PhotoGallery({ isHiddenFilters }: IProps) {
   return (
     <PageContainer>
       <PageHeader>Фотки</PageHeader>
-        <>
-          <Filter isHiddenFilters={isHiddenFilters} />
-          <PhotoContainer>
-            {allResults?.map((item) => (
-              <PhotoLink key={item._id} photo={item} />
-            ))}
-          </PhotoContainer>
-          {hasNextPage && <Sentinel ref={sentinelRef} />}
-          {(isLoading || isFetchingNextPage) && (
-            <LoaderContainer>
-              <Loader inline />
-            </LoaderContainer>
-          )}
-        </>
+      <>
+        <Filter isHiddenFilters={isHiddenFilters} />
+        <PhotoContainer>
+          {allResults?.map((item) => (
+            <PhotoLink key={item._id} photo={item} />
+          ))}
+        </PhotoContainer>
+        {hasNextPage && <Sentinel ref={sentinelRef} />}
+        {(isLoading || isFetchingNextPage) && (
+          <LoaderContainer>
+            <Loader inline />
+          </LoaderContainer>
+        )}
+      </>
     </PageContainer>
   )
 }

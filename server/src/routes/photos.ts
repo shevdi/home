@@ -16,7 +16,7 @@ import { parseBoolean } from '../utils';
 import { IPhotoFilters, IUserInfo } from '@/types/index.ts';
 import { optionalAuth } from '../middlewares/optionalAuth';
 import { verifyJWT } from '../middlewares/verifyJWT';
-import { FilterQuery } from 'mongoose'
+import { FilterQuery, SortOrder } from 'mongoose'
 
 const router = express.Router()
 
@@ -33,6 +33,7 @@ router.get(`/`, optionalAuth, async (req: Request & Partial<IUserInfo>, res: Res
     const privateParam = <string>req.query.private
     const dateFromParam = <string>req.query.dateFrom
     const dateToParam = <string>req.query.dateTo
+    const orderParam = <string>req.query.order
     const pageSize = req.query.page ? 5 : 100// Number of photos per page
     const privateFilter = parseBoolean(privateParam)
     const filters: FilterQuery<IPhotoFilters> & Record<string, unknown> = {}
@@ -57,8 +58,17 @@ router.get(`/`, optionalAuth, async (req: Request & Partial<IUserInfo>, res: Res
     }
 
     const page = pageParam ? parseInt(pageParam) : 1
+    const sort: Record<string, SortOrder> =
+      orderParam === 'orderDownByTakenAt' || orderParam === 'orderDownBtTakerAt'
+        ? { 'meta.takenAt': -1 as SortOrder, _id: -1 as SortOrder }
+        : orderParam === 'orderUpByTakenAt'
+          ? { 'meta.takenAt': 1 as SortOrder, _id: -1 as SortOrder }
+          : orderParam === 'orderDownByEdited'
+            ? { updatedAt: -1 as SortOrder, _id: -1 as SortOrder }
+            : { createdAt: -1 as SortOrder, _id: -1 as SortOrder }
+
     const [photos, totalCount] = await Promise.all([
-      getPhotosPaginated(page, pageSize, filters),
+      getPhotosPaginated(page, pageSize, filters, sort),
       getPhotosCount(filters)
     ])
 

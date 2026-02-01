@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import { useDispatch, useSelector } from 'react-redux'
-import { Checkbox, Input } from '@/shared/ui'
-import { setPrivateFilter, setDateFromFilter, setDateToFilter } from '../model/photosSlice'
+import { Checkbox, Dropdown, Input } from '@/shared/ui'
+import { setPrivateFilter, setDateFromFilter, setDateToFilter, setOrderFilter } from '../model/photosSlice'
 import { RootState } from '@/app/store'
 
 interface IProps {
@@ -10,7 +10,7 @@ interface IProps {
 
 export const Filter = ({ isHiddenFilters }: IProps) => {
   const dispatch = useDispatch()
-  const { private: privateFilter, dateFrom, dateTo } = useSelector((state: RootState) => state.photos.filter)
+  const { private: privateFilter, dateFrom, dateTo, order } = useSelector((state: RootState) => state.photos.filter)
 
   const handlePrivateChange = (checked: boolean) => {
     dispatch(setPrivateFilter(checked))
@@ -29,6 +29,23 @@ export const Filter = ({ isHiddenFilters }: IProps) => {
       {!isHiddenFilters && (
         <>
           <Checkbox checked={privateFilter} onChange={handlePrivateChange} label='Приватные' />
+          <Dropdown
+            label='Сортировать'
+            name='photo-sort-order'
+            value={order}
+            onChange={(event) =>
+              dispatch(
+                setOrderFilter(
+                  event.target.value as 'orderDownByTakenAt' | 'orderUpByTakenAt' | 'orderDownByEdited',
+                ),
+              )
+            }
+            options={[
+              { value: 'orderDownByTakenAt', label: 'Вначале новые' },
+              { value: 'orderUpByTakenAt', label: 'Вначале старые' },
+              { value: 'orderDownByEdited', label: 'Последние загруженные' },
+            ]}
+          />
           <DateInputs>
             <Input
               label='Дата с'

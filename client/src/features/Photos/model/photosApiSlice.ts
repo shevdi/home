@@ -14,6 +14,7 @@ interface PhotosFilter {
   private?: boolean
   dateFrom?: string | null
   dateTo?: string | null
+  order?: 'orderDownByTakenAt' | 'orderUpByTakenAt' | 'orderDownByEdited'
 }
 
 interface PhotosResponse {
@@ -39,6 +40,9 @@ export const photosApiSlice = apiSlice.injectEndpoints({
         }
         if (filter?.dateTo) {
           params.append('dateTo', filter.dateTo)
+        }
+        if (filter?.order) {
+          params.append('order', filter.order)
         }
         const queryString = params.toString()
         return `photos${queryString ? `?${queryString}` : ''}`
@@ -92,6 +96,9 @@ export const photosApiSlice = apiSlice.injectEndpoints({
         }
         if (filter?.dateTo) {
           params.append('dateTo', filter.dateTo)
+        }
+        if (filter?.order) {
+          params.append('order', filter.order)
         }
         return `/photos?${params.toString()}`
       },

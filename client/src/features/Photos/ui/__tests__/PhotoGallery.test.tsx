@@ -64,7 +64,12 @@ const basePhotos = [
 
 describe('PhotoGallery', () => {
   it('renders header, filter, and photo links', () => {
-    mockUseSelector.mockReturnValue(false)
+    mockUseSelector.mockReturnValue({
+      private: false,
+      dateFrom: null,
+      dateTo: null,
+      order: 'orderDownByTakenAt',
+    })
     mockUseGetInfinitePhotoWithMaxInfiniteQuery.mockReturnValue({
       data: { pages: [{ photos: basePhotos }] },
       isLoading: false,
@@ -81,7 +86,12 @@ describe('PhotoGallery', () => {
   })
 
   it('shows loader when fetching', () => {
-    mockUseSelector.mockReturnValue(false)
+    mockUseSelector.mockReturnValue({
+      private: false,
+      dateFrom: null,
+      dateTo: null,
+      order: 'orderDownByTakenAt',
+    })
     mockUseGetInfinitePhotoWithMaxInfiniteQuery.mockReturnValue({
       data: { pages: [{ photos: basePhotos }] },
       isLoading: true,
@@ -97,7 +107,12 @@ describe('PhotoGallery', () => {
 
   it('observes sentinel and loads more when intersecting', async () => {
     const fetchNextPage = jest.fn().mockResolvedValue(undefined)
-    mockUseSelector.mockReturnValue(false)
+    mockUseSelector.mockReturnValue({
+      private: false,
+      dateFrom: null,
+      dateTo: null,
+      order: 'orderDownByTakenAt',
+    })
     mockUseGetInfinitePhotoWithMaxInfiniteQuery.mockReturnValue({
       data: { pages: [{ photos: basePhotos }] },
       isLoading: false,
