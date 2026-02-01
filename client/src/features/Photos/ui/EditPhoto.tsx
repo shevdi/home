@@ -6,10 +6,11 @@ import z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
-import { Button, Checkbox, ErrMessage, Input } from '@/shared/ui'
+import { Button, Checkbox, ErrMessage, Input, Loader, TagList } from '@/shared/ui'
 import { RootState } from '@/app/store'
 import { setPrivateFilter } from '../model/photosSlice'
 import { getErrorMessage } from '@/shared/utils'
+import { DeletePhoto } from './DeletePhoto'
 
 
 const schema = z.object({
@@ -17,6 +18,7 @@ const schema = z.object({
   priority: z.number().optional(),
   private: z.boolean(),
   tags: z.array(z.string()).optional(),
+  tagsInput: z.string().optional(),
 })
 
 type FormFields = z.infer<typeof schema>
@@ -24,7 +26,7 @@ type FormFields = z.infer<typeof schema>
 export function EditPhoto() {
   const location = useLocation()
   const photoId = location.pathname.split('/')[2]
-  const { data } = useGetPhotoQuery(photoId)
+  const { data, isLoading } = useGetPhotoQuery(photoId)
   const [changePhoto] = useChangePhotoMutation()
   const dispatch = useDispatch()
   const privateFilter = useSelector((state: RootState) => state.photos.filter.private)
@@ -34,7 +36,7 @@ export function EditPhoto() {
     handleSubmit,
     setError,
     setValue,
-    // getValues,
+    watch,
     formState: { isSubmitting, errors },
   } = useForm<FormFields>({
     resolver: zodResolver(schema),
@@ -43,12 +45,13 @@ export function EditPhoto() {
       priority: data?.priority || 0,
       private: privateFilter,
       tags: data?.tags || [],
+      tagsInput: '',
     },
   })
 
-  const [tagInput, setTagInput] = useState('')
   const [tags, setTags] = useState<string[]>([])
   const [tagsInitialized, setTagsInitialized] = useState(false)
+  const tagInput = watch('tagsInput') ?? ''
 
   useEffect(() => {
     if (tagsInitialized || !data) return
@@ -62,13 +65,13 @@ export function EditPhoto() {
     const trimmed = tagInput.trim()
     if (!trimmed) return
     if (tags.includes(trimmed)) {
-      setTagInput('')
+      setValue('tagsInput', '')
       return
     }
     const nextTags = [...tags, trimmed]
     setTags(nextTags)
     setValue('tags', nextTags, { shouldValidate: true, shouldDirty: true })
-    setTagInput('')
+    setValue('tagsInput', '')
   }
 
   const removeTag = (tagToRemove: string) => {
@@ -91,12 +94,13 @@ export function EditPhoto() {
         return
       }
 
-      const { tags: parsedTags, ...rest } = parsedData.data
+      const { tags: parsedTags, title, priority } = parsedData.data
 
       await changePhoto({
         id: photoId,
         data: {
-          ...rest,
+          title,
+          priority,
           private: privateFilter,
           tags: parsedTags,
         },
@@ -113,48 +117,42 @@ export function EditPhoto() {
     <PageContainer>
       <PageHeader>Редактировать фото</PageHeader>
       <ErrMessage>{errors.root?.message}</ErrMessage>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Input label='Заголовок' {...register('title')} />
-        <Input
-          label='Приоритет'
-          {...register('priority', {
-            valueAsNumber: true,
-          })}
-          type='number'
-        />
-        <Checkbox
-          checked={privateFilter}
-          onChange={(checked) => dispatch(setPrivateFilter(checked))}
-          label='Приватные'
-        />
-        <Input
-          label='Теги'
-          name='tagsInput'
-          placeholder='Введите тег и нажмите Enter'
-          value={tagInput}
-          onChange={(event) => setTagInput(event.target.value)}
-          onKeyDown={(event) => {
-            if (event.key === 'Enter') {
-              event.preventDefault()
-              addTag()
-            }
-          }}
-        />
-        <TagList>
-          {tags.map((tag) => (
-            <TagChip key={tag}>
-              {tag}
-              <TagRemoveButton type='button' onClick={() => removeTag(tag)} aria-label={`Удалить тег ${tag}`}>
-                x
-              </TagRemoveButton>
-            </TagChip>
-          ))}
-        </TagList>
-        <Button display='block' margin='1rem auto' disabled={isSubmitting}>
-          Сохранить
-        </Button>
-      </form>
-      <Image src={data?.mdSizeUrl} />
+      {isLoading ? <Loader /> : (
+        <>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <Checkbox
+              checked={privateFilter}
+              onChange={(checked) => dispatch(setPrivateFilter(checked))}
+              label='Приватное'
+            />
+            <Input label='Заголовок' {...register('title')} />
+            <Input
+              label='Приоритет'
+              {...register('priority', {
+                valueAsNumber: true,
+              })}
+              type='number'
+            />
+            <Input
+              label='Теги'
+              placeholder='Введите тег и нажмите Enter'
+              {...register('tagsInput')}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter') {
+                  event.preventDefault()
+                  addTag()
+                }
+              }}
+            />
+            <TagList tags={tags} onClick={removeTag} />
+            <Button display='block' margin='1rem auto' disabled={isSubmitting}>
+              Сохранить
+            </Button>
+          </form>
+          <Image src={data?.mdSizeUrl} />
+          <DeletePhoto />
+        </>
+      )}
     </PageContainer>
   )
 }
@@ -167,36 +165,4 @@ const PageHeader = styled.h1`
 
 const Image = styled.img`
   width: 100%;
-`
-
-const TagList = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin: 0.5rem 0 1rem;
-`
-
-const TagChip = styled.div`
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.3rem 0.6rem;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  background: #f5f5f5;
-  color: #333;
-  font-size: 0.9rem;
-`
-
-const TagRemoveButton = styled.button`
-  border: none;
-  background: transparent;
-  color: #666;
-  font-size: 0.9rem;
-  cursor: pointer;
-  padding: 0;
-
-  &:hover {
-    color: #000;
-  }
 `

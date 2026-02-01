@@ -111,24 +111,6 @@ const StyledCheckbox = styled.span<{
   }
 `
 
-// const Checkmark = styled.span<{
-//   $color?: string
-// }>`
-//   background-color: ${({ $color = '#000000' }) => `2px solid ${$color}`};
-//   width: 20px;
-//   height: 20px;
-//   border-color: ${({ $color = '#000000' }) => `2px solid ${$color}`};
-//   border-radius: 50%;
-// `
-
-// const Checkmark = styled.svg`
-//   fill: none;
-//   stroke: white;
-//   stroke-width: 3px;
-//   width: 100%;
-//   height: 100%;
-// `;
-
 const CheckboxLabel = styled.span<{
   $position: 'left' | 'right'
   $size: 'sm' | 'md' | 'lg'

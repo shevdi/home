@@ -1,9 +1,10 @@
-import { useEffect, useRef, useCallback } from 'react'
+import { useEffect, useRef, useCallback, useMemo } from 'react'
 import styled from 'styled-components'
 import { useSelector } from 'react-redux'
-import { selectFilters, useGetInfinitePhotoWithMaxInfiniteQuery } from '../model'
+import { selectFilter, selectSearch, useGetInfinitePhotoWithMaxInfiniteQuery } from '../model'
 import { PhotoLink } from './PhotoLink'
 import { Loader } from '@/shared/ui'
+import { Search } from './Search'
 import { Filter } from './Filter'
 
 interface IProps {
@@ -11,11 +12,14 @@ interface IProps {
 }
 
 export function PhotoGallery({ isHiddenFilters }: IProps) {
-  const filter = useSelector(selectFilters)
+  const filters = useSelector(selectFilter)
+  const search = useSelector(selectSearch)
   const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useGetInfinitePhotoWithMaxInfiniteQuery({
-    ...filter,
+    ...search,
   })
-  const allResults = data?.pages.flatMap((page) => page.photos) ?? []
+  const allResults = useMemo(() => {
+    return data?.pages.flatMap((page) => page.photos).filter(item => filters.private ? item.private : true) ?? []
+  }, [data, filters.private])
   const sentinelRef = useRef<HTMLDivElement>(null)
   const isLoadingRef = useRef(false)
 
@@ -64,6 +68,7 @@ export function PhotoGallery({ isHiddenFilters }: IProps) {
       <PageHeader>Фотки</PageHeader>
       <>
         <Filter isHiddenFilters={isHiddenFilters} />
+        <Search />
         <PhotoContainer>
           {allResults?.map((item) => (
             <PhotoLink key={item._id} photo={item} />

@@ -1,8 +1,9 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { useDispatch, useSelector } from 'react-redux'
-import { Filter } from '../Filter'
-import { setOrderFilter } from '../../model/photosSlice'
+import { Search } from '@/features/Photos/ui/Search'
+import { selectFilter, selectSearch } from '../../model'
+import { setOrderSearch } from '../../model/photosSlice'
 
 jest.mock('react-redux', () => ({
   useDispatch: jest.fn(),
@@ -46,14 +47,21 @@ jest.mock('@/shared/ui', () => {
 const mockUseDispatch = useDispatch as unknown as jest.Mock
 const mockUseSelector = useSelector as unknown as jest.Mock
 
-describe('Filter', () => {
+describe('Search', () => {
   beforeEach(() => {
-    mockUseSelector.mockReturnValue({
-      private: false,
-      dateFrom: null,
-      dateTo: null,
-      order: 'orderDownByTakenAt',
-      tags: [],
+    mockUseSelector.mockImplementation((selector) => {
+      if (selector === selectFilter) {
+        return { private: false }
+      }
+      if (selector === selectSearch) {
+        return {
+          dateFrom: null,
+          dateTo: null,
+          order: 'orderDownByTakenAt',
+          tags: [],
+        }
+      }
+      return undefined
     })
   })
 
@@ -65,21 +73,11 @@ describe('Filter', () => {
     const dispatch = jest.fn()
     mockUseDispatch.mockReturnValue(dispatch)
 
-    render(<Filter />)
+    render(<Search />)
 
     const select = screen.getByLabelText('Сортировать') as HTMLSelectElement
     await userEvent.selectOptions(select, 'orderUpByTakenAt')
 
-    expect(dispatch).toHaveBeenCalledWith(setOrderFilter('orderUpByTakenAt'))
-  })
-
-  it('hides controls when filters are hidden', () => {
-    const dispatch = jest.fn()
-    mockUseDispatch.mockReturnValue(dispatch)
-
-    render(<Filter isHiddenFilters />)
-
-    expect(screen.queryByLabelText('Сортировать')).not.toBeInTheDocument()
-    expect(screen.queryByText('Приватные')).not.toBeInTheDocument()
+    expect(dispatch).toHaveBeenCalledWith(setOrderSearch('orderUpByTakenAt'))
   })
 })

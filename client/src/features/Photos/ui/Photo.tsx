@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import { useSelector } from 'react-redux'
-import { selectFilters, useGetInfinitePhotoWithMaxInfiniteQuery, useGetPhotoQuery } from '../model'
+import { selectSearch, useGetInfinitePhotoWithMaxInfiniteQuery, useGetPhotoQuery } from '../model'
 import { Link, useLocation, useSearchParams } from 'react-router'
 import { getNeighbours } from '@/shared/utils'
 import { useMemo } from 'react'
@@ -14,13 +14,13 @@ const usePhoto = () => {
   const page = searchParams.get('page')
   const initialPage = page ? Number(page) || 1 : 1
   const photoId = location.pathname.split('/')[2]
-  const filter = useSelector(selectFilters)
+  const search = useSelector(selectSearch)
   const shouldUseInfinite = Boolean(page)
   const { data: photo, isLoading: isPhotoLoading } = useGetPhotoQuery(photoId, {
     skip: shouldUseInfinite
   })
   const { data, isLoading: isInfiniteLoading } = useGetInfinitePhotoWithMaxInfiniteQuery(
-    { ...filter },
+    { ...search },
     {
       initialPageParam: initialPage,
       skip: !shouldUseInfinite

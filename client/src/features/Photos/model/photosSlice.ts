@@ -3,6 +3,8 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 interface PhotosState {
   filter: {
     private: boolean
+  }
+  search: {
     dateFrom: string | null
     dateTo: string | null
     order: 'orderDownByTakenAt' | 'orderUpByTakenAt' | 'orderDownByEdited'
@@ -13,6 +15,8 @@ interface PhotosState {
 const initialState: PhotosState = {
   filter: {
     private: false,
+  },
+  search: {
     dateFrom: null,
     dateTo: null,
     order: 'orderDownByTakenAt',
@@ -27,23 +31,23 @@ const photosSlice = createSlice({
     setPrivateFilter: (state, action: PayloadAction<boolean>) => {
       state.filter.private = action.payload
     },
-    setDateFromFilter: (state, action: PayloadAction<string | null>) => {
-      state.filter.dateFrom = action.payload
+    setDateFromSearch: (state, action: PayloadAction<string | null>) => {
+      state.search.dateFrom = action.payload
     },
-    setDateToFilter: (state, action: PayloadAction<string | null>) => {
-      state.filter.dateTo = action.payload
+    setDateToSearch: (state, action: PayloadAction<string | null>) => {
+      state.search.dateTo = action.payload
     },
-    setOrderFilter: (
+    setOrderSearch: (
       state,
       action: PayloadAction<'orderDownByTakenAt' | 'orderUpByTakenAt' | 'orderDownByEdited'>,
     ) => {
-      state.filter.order = action.payload
+      state.search.order = action.payload
     },
-    setTagsFilter: (state, action: PayloadAction<string[]>) => {
-      state.filter.tags = action.payload
+    setTagsSearch: (state, action: PayloadAction<string[]>) => {
+      state.search.tags = action.payload
     },
   },
 })
 
-export const { setPrivateFilter, setDateFromFilter, setDateToFilter, setOrderFilter, setTagsFilter } = photosSlice.actions
+export const { setPrivateFilter, setDateFromSearch, setDateToSearch, setOrderSearch, setTagsSearch } = photosSlice.actions
 export default photosSlice.reducer

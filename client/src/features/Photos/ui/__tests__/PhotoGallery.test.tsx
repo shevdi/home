@@ -1,13 +1,15 @@
 import { act, render, screen } from '@testing-library/react'
 import { PhotoGallery } from '../PhotoGallery'
 import { useSelector } from 'react-redux'
-import { useGetInfinitePhotoWithMaxInfiniteQuery } from '../../model'
+import { selectFilter, selectSearch, useGetInfinitePhotoWithMaxInfiniteQuery } from '../../model'
 
 jest.mock('react-redux', () => ({
   useSelector: jest.fn(),
 }))
 
 jest.mock('../../model', () => ({
+  selectFilter: jest.fn(),
+  selectSearch: jest.fn(),
   useGetInfinitePhotoWithMaxInfiniteQuery: jest.fn(),
 }))
 
@@ -17,10 +19,16 @@ jest.mock('../PhotoLink', () => ({
   ),
 }))
 
+const mockFilter = jest.fn(({ isHiddenFilters }: { isHiddenFilters?: boolean }) => (
+  <div data-testid="filter">{isHiddenFilters ? 'hidden' : 'visible'}</div>
+))
+
 jest.mock('../Filter', () => ({
-  Filter: ({ isHiddenFilters }: { isHiddenFilters?: boolean }) => (
-    <div data-testid="filter">{isHiddenFilters ? 'hidden' : 'visible'}</div>
-  ),
+  Filter: (props: { isHiddenFilters?: boolean }) => mockFilter(props),
+}))
+
+jest.mock('../Search', () => ({
+  Search: () => <div data-testid="search">search</div>,
 }))
 
 jest.mock('@/shared/ui', () => ({
@@ -51,24 +59,35 @@ beforeEach(() => {
   observerCallback = null
   MockIntersectionObserver.lastInstance = null
   global.IntersectionObserver = MockIntersectionObserver as unknown as typeof IntersectionObserver
+  mockFilter.mockClear()
 })
 
 afterEach(() => {
   jest.clearAllMocks()
 })
 
+const baseSearch = {
+  dateFrom: null,
+  dateTo: null,
+  order: 'orderDownByTakenAt',
+  tags: [],
+}
+
 const basePhotos = [
-  { _id: 'photo-1', title: 'Photo One' },
-  { _id: 'photo-2', title: 'Photo Two' },
+  { _id: 'photo-1', title: 'Photo One', private: false },
+  { _id: 'photo-2', title: 'Photo Two', private: true },
 ]
 
 describe('PhotoGallery', () => {
-  it('renders header, filter, and photo links', () => {
-    mockUseSelector.mockReturnValue({
-      private: false,
-      dateFrom: null,
-      dateTo: null,
-      order: 'orderDownByTakenAt',
+  it('renders header, filter, search, and photo links', () => {
+    mockUseSelector.mockImplementation((selector) => {
+      if (selector === selectFilter) {
+        return { private: false }
+      }
+      if (selector === selectSearch) {
+        return baseSearch
+      }
+      return undefined
     })
     mockUseGetInfinitePhotoWithMaxInfiniteQuery.mockReturnValue({
       data: { pages: [{ photos: basePhotos }] },
@@ -82,15 +101,67 @@ describe('PhotoGallery', () => {
 
     expect(screen.getByText('Фотки')).toBeInTheDocument()
     expect(screen.getByTestId('filter')).toHaveTextContent('visible')
+    expect(screen.getByTestId('search')).toBeInTheDocument()
     expect(screen.getAllByTestId('photo-link')).toHaveLength(2)
   })
 
+  it('passes isHiddenFilters to Filter', () => {
+    mockUseSelector.mockImplementation((selector) => {
+      if (selector === selectFilter) {
+        return { private: false }
+      }
+      if (selector === selectSearch) {
+        return baseSearch
+      }
+      return undefined
+    })
+    mockUseGetInfinitePhotoWithMaxInfiniteQuery.mockReturnValue({
+      data: { pages: [{ photos: basePhotos }] },
+      isLoading: false,
+      fetchNextPage: jest.fn(),
+      hasNextPage: false,
+      isFetchingNextPage: false,
+    })
+
+    render(<PhotoGallery isHiddenFilters />)
+
+    expect(mockFilter).toHaveBeenCalledWith({ isHiddenFilters: true })
+    expect(screen.getByTestId('filter')).toHaveTextContent('hidden')
+  })
+
+  it('filters out non-private photos when private filter enabled', () => {
+    mockUseSelector.mockImplementation((selector) => {
+      if (selector === selectFilter) {
+        return { private: true }
+      }
+      if (selector === selectSearch) {
+        return baseSearch
+      }
+      return undefined
+    })
+    mockUseGetInfinitePhotoWithMaxInfiniteQuery.mockReturnValue({
+      data: { pages: [{ photos: basePhotos }] },
+      isLoading: false,
+      fetchNextPage: jest.fn(),
+      hasNextPage: false,
+      isFetchingNextPage: false,
+    })
+
+    render(<PhotoGallery />)
+
+    expect(screen.getAllByTestId('photo-link')).toHaveLength(1)
+    expect(screen.getByText('Photo Two')).toBeInTheDocument()
+  })
+
   it('shows loader when fetching', () => {
-    mockUseSelector.mockReturnValue({
-      private: false,
-      dateFrom: null,
-      dateTo: null,
-      order: 'orderDownByTakenAt',
+    mockUseSelector.mockImplementation((selector) => {
+      if (selector === selectFilter) {
+        return { private: false }
+      }
+      if (selector === selectSearch) {
+        return baseSearch
+      }
+      return undefined
     })
     mockUseGetInfinitePhotoWithMaxInfiniteQuery.mockReturnValue({
       data: { pages: [{ photos: basePhotos }] },
@@ -107,11 +178,14 @@ describe('PhotoGallery', () => {
 
   it('observes sentinel and loads more when intersecting', async () => {
     const fetchNextPage = jest.fn().mockResolvedValue(undefined)
-    mockUseSelector.mockReturnValue({
-      private: false,
-      dateFrom: null,
-      dateTo: null,
-      order: 'orderDownByTakenAt',
+    mockUseSelector.mockImplementation((selector) => {
+      if (selector === selectFilter) {
+        return { private: false }
+      }
+      if (selector === selectSearch) {
+        return baseSearch
+      }
+      return undefined
     })
     mockUseGetInfinitePhotoWithMaxInfiniteQuery.mockReturnValue({
       data: { pages: [{ photos: basePhotos }] },

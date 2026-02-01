@@ -10,8 +10,7 @@ export interface UploadResponse {
   error?: string
 }
 
-interface PhotosFilter {
-  private?: boolean
+interface PhotoSearch {
   dateFrom?: string | null
   dateTo?: string | null
   order?: 'orderDownByTakenAt' | 'orderUpByTakenAt' | 'orderDownByEdited'
@@ -30,23 +29,20 @@ interface PhotosResponse {
 
 export const photosApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    getPhotos: builder.query<PhotosResponse, PhotosFilter | void>({
-      query: (filter) => {
+    getPhotos: builder.query<PhotosResponse, PhotoSearch | void>({
+      query: (search) => {
         const params = new URLSearchParams()
-        if (filter?.private !== undefined) {
-          params.append('private', filter.private.toString())
+        if (search?.dateFrom) {
+          params.append('dateFrom', search.dateFrom)
         }
-        if (filter?.dateFrom) {
-          params.append('dateFrom', filter.dateFrom)
+        if (search?.dateTo) {
+          params.append('dateTo', search.dateTo)
         }
-        if (filter?.dateTo) {
-          params.append('dateTo', filter.dateTo)
+        if (search?.order) {
+          params.append('order', search.order)
         }
-        if (filter?.order) {
-          params.append('order', filter.order)
-        }
-        if (filter?.tags && filter.tags.length > 0) {
-          params.append('tags', filter.tags.join(','))
+        if (search?.tags && search.tags.length > 0) {
+          params.append('tags', search.tags.join(','))
         }
         const queryString = params.toString()
         return `photos${queryString ? `?${queryString}` : ''}`
@@ -63,7 +59,7 @@ export const photosApiSlice = apiSlice.injectEndpoints({
     }),
     getInfinitePhotoWithMax: builder.infiniteQuery<
       { photos: ILink[], pagination: { currentPage: number, totalPages: number, totalCount: number, pageSize: number } },
-      PhotosFilter | void,
+      PhotoSearch | void,
       number
     >({
       infiniteQueryOptions: {
@@ -88,24 +84,21 @@ export const photosApiSlice = apiSlice.injectEndpoints({
           return firstPageParam > 0 ? firstPageParam - 1 : undefined
         },
       },
-      query(arg: { queryArg: PhotosFilter | void; pageParam: number }) {
-        const { queryArg: filter, pageParam } = arg
+      query(arg: { queryArg: PhotoSearch | void; pageParam: number }) {
+        const { queryArg: search, pageParam } = arg
         const params = new URLSearchParams()
         params.append('page', pageParam.toString())
-        if (filter?.private !== undefined) {
-          params.append('private', filter.private.toString())
+        if (search?.dateFrom) {
+          params.append('dateFrom', search.dateFrom)
         }
-        if (filter?.dateFrom) {
-          params.append('dateFrom', filter.dateFrom)
+        if (search?.dateTo) {
+          params.append('dateTo', search.dateTo)
         }
-        if (filter?.dateTo) {
-          params.append('dateTo', filter.dateTo)
+        if (search?.order) {
+          params.append('order', search.order)
         }
-        if (filter?.order) {
-          params.append('order', filter.order)
-        }
-        if (filter?.tags && filter.tags.length > 0) {
-          params.append('tags', filter.tags.join(','))
+        if (search?.tags && search.tags.length > 0) {
+          params.append('tags', search.tags.join(','))
         }
         return `/photos?${params.toString()}`
       },

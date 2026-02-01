@@ -7,8 +7,8 @@ export interface IPhotos {
   links: ILink[]
 }
 
-export interface IPhotoFilters {
+export interface IPhotoSearch {
   private?: boolean;
   tags?: string[];
-  $nor?: IPhotoFilters;
+  $nor?: IPhotoSearch;
 }

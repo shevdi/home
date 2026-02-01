@@ -6,6 +6,21 @@ interface ErrorProps {
   onRetry?: () => void
 }
 
+export function Error({ title, message, onRetry }: ErrorProps) {
+  return (
+    <ErrorWrapper>
+      <ErrorIcon>
+        <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
+          <path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z' />
+        </svg>
+      </ErrorIcon>
+      <ErrorTitle>{title}</ErrorTitle>
+      <ErrorMessage>{message}</ErrorMessage>
+      {onRetry && <RetryButton onClick={onRetry}>Try Again</RetryButton>}
+    </ErrorWrapper>
+  )
+}
+
 const fadeIn = keyframes`
   from {
     opacity: 0;
@@ -78,18 +93,3 @@ const RetryButton = styled.button`
     transform: scale(0.98);
   }
 `
-
-export function Error({ title, message, onRetry }: ErrorProps) {
-  return (
-    <ErrorWrapper>
-      <ErrorIcon>
-        <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
-          <path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z' />
-        </svg>
-      </ErrorIcon>
-      <ErrorTitle>{title}</ErrorTitle>
-      <ErrorMessage>{message}</ErrorMessage>
-      {onRetry && <RetryButton onClick={onRetry}>Try Again</RetryButton>}
-    </ErrorWrapper>
-  )
-}

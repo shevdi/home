@@ -1,4 +1,4 @@
-import { DeletePhoto, EditPhoto } from '@/features/Photos'
+import { EditPhoto } from '@/features/Photos'
 import { useTitle } from '@/shared/hooks'
 
 export function EditPhotoPage() {
@@ -6,7 +6,6 @@ export function EditPhotoPage() {
   return (
     <>
       <EditPhoto />
-      <DeletePhoto />
     </>
   )
 }

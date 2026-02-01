@@ -13,7 +13,7 @@ import {
 } from '../db/services/photos.ts'
 import drime from '../services/drime.ts';
 import { normalizeTags, parseBoolean } from '../utils';
-import { IPhotoFilters, IUserInfo } from '@/types/index.ts';
+import { IPhotoSearch, IUserInfo } from '@/types/index.ts';
 import { optionalAuth } from '../middlewares/optionalAuth';
 import { verifyJWT } from '../middlewares/verifyJWT';
 import { FilterQuery, SortOrder } from 'mongoose'
@@ -37,30 +37,28 @@ router.get(`/`, optionalAuth, async (req: Request & Partial<IUserInfo>, res: Res
     const tagsParam = req.query.tags
     const pageSize = req.query.page ? 5 : 100// Number of photos per page
     const privateFilter = parseBoolean(privateParam)
-    const filters: FilterQuery<IPhotoFilters> & Record<string, unknown> = {}
+    const search: FilterQuery<IPhotoSearch> & Record<string, unknown> = {}
 
-    if (privateFilter && req.roles && req.roles.includes('admin')) {
-      filters.private = privateFilter
-    } else {
-      filters.$nor = [{ private: true }]
+    if (!req.roles || !req.roles.includes('admin')) {
+      search.$nor = [{ private: true }]
     }
 
     const dateFrom = dateFromParam?.trim() || undefined
     const dateTo = dateToParam?.trim() || undefined
     if (dateFrom || dateTo) {
-      const takenAtFilter: Record<string, string> = {}
+      const takenAt: Record<string, string> = {}
       if (dateFrom) {
-        takenAtFilter.$gte = dateFrom
+        takenAt.$gte = dateFrom
       }
       if (dateTo) {
-        takenAtFilter.$lte = dateTo
+        takenAt.$lte = dateTo
       }
-      filters['meta.takenAt'] = takenAtFilter
+      search['meta.takenAt'] = takenAt
     }
 
     const tags = normalizeTags(tagsParam)
     if (tags && tags.length > 0) {
-      filters.tags = { $all: tags }
+      search.tags = { $all: tags }
     }
 
     const page = pageParam ? parseInt(pageParam) : 1
@@ -74,8 +72,8 @@ router.get(`/`, optionalAuth, async (req: Request & Partial<IUserInfo>, res: Res
             : { createdAt: -1 as SortOrder, _id: -1 as SortOrder }
 
     const [photos, totalCount] = await Promise.all([
-      getPhotosPaginated(page, pageSize, filters, sort),
-      getPhotosCount(filters)
+      getPhotosPaginated(page, pageSize, search, sort),
+      getPhotosCount(search)
     ])
 
     const results = await Promise.all(photos
@@ -89,6 +87,7 @@ router.get(`/`, optionalAuth, async (req: Request & Partial<IUserInfo>, res: Res
           fileName: item.fileName,
           title: item.title,
           priority: item.priority,
+          private: item.private,
           tags: item.tags,
           smSizeUrl,
           mdSizeUrl,
