@@ -6,6 +6,7 @@ interface PhotosState {
     dateFrom: string | null
     dateTo: string | null
     order: 'orderDownByTakenAt' | 'orderUpByTakenAt' | 'orderDownByEdited'
+    tags: string[]
   }
 }
 
@@ -15,6 +16,7 @@ const initialState: PhotosState = {
     dateFrom: null,
     dateTo: null,
     order: 'orderDownByTakenAt',
+    tags: [],
   },
 }
 
@@ -37,8 +39,11 @@ const photosSlice = createSlice({
     ) => {
       state.filter.order = action.payload
     },
+    setTagsFilter: (state, action: PayloadAction<string[]>) => {
+      state.filter.tags = action.payload
+    },
   },
 })
 
-export const { setPrivateFilter, setDateFromFilter, setDateToFilter, setOrderFilter } = photosSlice.actions
+export const { setPrivateFilter, setDateFromFilter, setDateToFilter, setOrderFilter, setTagsFilter } = photosSlice.actions
 export default photosSlice.reducer

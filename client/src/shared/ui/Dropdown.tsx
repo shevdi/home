@@ -61,4 +61,8 @@ const StyledSelect = styled.select`
     background-color: #708090;
     cursor: not-allowed;
   }
+
+  &:hover {
+    cursor: pointer;
+  }
 `

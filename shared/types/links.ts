@@ -27,6 +27,7 @@ export interface ILink {
   takenAt?: string;
   page?: number;
   priority?: number;
+  tags?: string[];
   private?: boolean;
   createdAt?: string;
   updatedAt?: string;

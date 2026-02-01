@@ -15,6 +15,7 @@ interface PhotosFilter {
   dateFrom?: string | null
   dateTo?: string | null
   order?: 'orderDownByTakenAt' | 'orderUpByTakenAt' | 'orderDownByEdited'
+  tags?: string[]
 }
 
 interface PhotosResponse {
@@ -43,6 +44,9 @@ export const photosApiSlice = apiSlice.injectEndpoints({
         }
         if (filter?.order) {
           params.append('order', filter.order)
+        }
+        if (filter?.tags && filter.tags.length > 0) {
+          params.append('tags', filter.tags.join(','))
         }
         const queryString = params.toString()
         return `photos${queryString ? `?${queryString}` : ''}`
@@ -100,6 +104,9 @@ export const photosApiSlice = apiSlice.injectEndpoints({
         if (filter?.order) {
           params.append('order', filter.order)
         }
+        if (filter?.tags && filter.tags.length > 0) {
+          params.append('tags', filter.tags.join(','))
+        }
         return `/photos?${params.toString()}`
       },
       providesTags() {
@@ -114,7 +121,7 @@ export const photosApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: [{ type: 'Photos' as never, id: 'getPhotos' }],
     }),
-    changePhoto: builder.mutation<ILink, { id: string; data: { title: string, priority?: number, private?: boolean } }>({
+    changePhoto: builder.mutation<ILink, { id: string; data: { title: string, priority?: number, private?: boolean, tags?: string[] } }>({
       query: ({ id, data }) => ({
         url: `photos/${id}`,
         method: "PUT",

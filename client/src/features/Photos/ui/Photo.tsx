@@ -60,6 +60,13 @@ export function Photo() {
       </PhotosNavigation>
       {isLoading ? <Loader /> : <Image key={photo?._id} src={photo?.mdSizeUrl} />}
       <PageHeader>{photo?.title}</PageHeader>
+      {photo?.tags && photo.tags.length > 0 && (
+        <TagList>
+          {photo.tags.map((tag) => (
+            <TagChip key={tag}>{tag}</TagChip>
+          ))}
+        </TagList>
+      )}
       {takenAt && <PhotoMeta>{formatDate(takenAt)}</PhotoMeta>}
     </PageContainer>
   )
@@ -79,6 +86,25 @@ const PhotoMeta = styled.div`
   color: #555;
   font-size: 0.9rem;
   margin-top: 0.25rem;
+`
+
+const TagList = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-top: 0.5rem;
+`
+
+const TagChip = styled.div`
+  display: inline-flex;
+  align-items: center;
+  padding: 0.3rem 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #f5f5f5;
+  color: #333;
+  font-size: 0.9rem;
 `
 
 const PhotosNavigation = styled.div`

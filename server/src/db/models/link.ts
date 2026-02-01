@@ -13,6 +13,7 @@ const linkSchema = new Schema(
     mdSizeEntryId: { type: String },
     fullSizeEntryId: { type: String },
     priority: { type: Number },
+    tags: [{ type: String }],
     createdAt: { type: String },
     updatedAt: { type: String },
     private: { type: Boolean },

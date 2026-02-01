@@ -7,6 +7,7 @@ import { setOrderFilter } from '../../model/photosSlice'
 jest.mock('react-redux', () => ({
   useDispatch: jest.fn(),
   useSelector: jest.fn(),
+  useStore: jest.fn(),
 }))
 
 jest.mock('@/shared/ui', () => {
@@ -52,6 +53,7 @@ describe('Filter', () => {
       dateFrom: null,
       dateTo: null,
       order: 'orderDownByTakenAt',
+      tags: [],
     })
   })
 

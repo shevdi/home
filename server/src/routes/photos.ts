@@ -12,7 +12,7 @@ import {
   updatePhotoById,
 } from '../db/services/photos.ts'
 import drime from '../services/drime.ts';
-import { parseBoolean } from '../utils';
+import { normalizeTags, parseBoolean } from '../utils';
 import { IPhotoFilters, IUserInfo } from '@/types/index.ts';
 import { optionalAuth } from '../middlewares/optionalAuth';
 import { verifyJWT } from '../middlewares/verifyJWT';
@@ -34,6 +34,7 @@ router.get(`/`, optionalAuth, async (req: Request & Partial<IUserInfo>, res: Res
     const dateFromParam = <string>req.query.dateFrom
     const dateToParam = <string>req.query.dateTo
     const orderParam = <string>req.query.order
+    const tagsParam = req.query.tags
     const pageSize = req.query.page ? 5 : 100// Number of photos per page
     const privateFilter = parseBoolean(privateParam)
     const filters: FilterQuery<IPhotoFilters> & Record<string, unknown> = {}
@@ -55,6 +56,11 @@ router.get(`/`, optionalAuth, async (req: Request & Partial<IUserInfo>, res: Res
         takenAtFilter.$lte = dateTo
       }
       filters['meta.takenAt'] = takenAtFilter
+    }
+
+    const tags = normalizeTags(tagsParam)
+    if (tags && tags.length > 0) {
+      filters.tags = { $all: tags }
     }
 
     const page = pageParam ? parseInt(pageParam) : 1
@@ -83,6 +89,7 @@ router.get(`/`, optionalAuth, async (req: Request & Partial<IUserInfo>, res: Res
           fileName: item.fileName,
           title: item.title,
           priority: item.priority,
+          tags: item.tags,
           smSizeUrl,
           mdSizeUrl,
           fullSizeUrl,
@@ -123,6 +130,7 @@ router.post(`/upload`, upload.array("files", 50), async (req: Request, res: Resp
   try {
     const files = req.files as Express.Multer.File[];
     const isPrivate = parseBoolean(req.body?.private as string | undefined)
+    const tags = normalizeTags(req.body?.tags)
     const meta = req.body?.meta
     const metaRaw = req.body?.meta as string | undefined
     const metaList = metaRaw
@@ -160,6 +168,7 @@ router.post(`/upload`, upload.array("files", 50), async (req: Request, res: Resp
           name: fullSizePhoto.name,
           fileName: file.originalname,
           private: isPrivate,
+          tags,
           meta: {
             ...metadata,
             ...gpsMeta
@@ -221,7 +230,9 @@ router.get(`/:id`, optionalAuth, async (req: Request & Partial<IUserInfo>, res: 
 
 router.put(`/:id`, verifyJWT, async (req: Request, res: Response): Promise<any> => {
   try {
-    const photo = await updatePhotoById(req.params.id, req.body)
+    const normalizedTags = normalizeTags(req.body?.tags)
+    const updateData = normalizedTags === undefined ? req.body : { ...req.body, tags: normalizedTags }
+    const photo = await updatePhotoById(req.params.id, updateData)
 
     if (!photo) {
       return res.status(404)
