@@ -1,9 +1,13 @@
 import styled from 'styled-components'
 import { useSelector } from 'react-redux'
-import { photosApiSlice, selectSearch, useGetInfinitePhotoWithMaxInfiniteQuery, useGetPhotoQuery } from '../model'
+import {
+  selectIsInitializedInfiniteQuery,
+  selectSearch,
+  useGetInfinitePhotoWithMaxInfiniteQuery,
+  useGetPhotoQuery,
+} from '../model'
 import { Link, useLocation } from 'react-router'
 import { getNeighbours } from '@/shared/utils'
-import { useMemo } from 'react'
 import { Loader, MapEmbed } from '@/shared/ui'
 import { formatDate } from '../utils/uploadPhotoMeta'
 
@@ -11,23 +15,33 @@ const usePhoto = () => {
   const location = useLocation()
   const photoId = location.pathname.split('/')[2]
   const search = useSelector(selectSearch)
-  const infiniteQueryState = useSelector(photosApiSlice.endpoints.getInfinitePhotoWithMax.select(search))
-  const shouldUseInfinite = infiniteQueryState?.status !== 'uninitialized'
+  // if photo is opened by direct link, show just photo. Otherwise, show also neighbours links
+  const shouldUseInfinite = useSelector(selectIsInitializedInfiniteQuery)
   const { data: photo, isLoading: isPhotoLoading } = useGetPhotoQuery(photoId, {
     skip: shouldUseInfinite,
   })
-  const { data, isLoading: isInfiniteLoading } = useGetInfinitePhotoWithMaxInfiniteQuery(
+  const {
+    data: { infinityPhoto, neighbours },
+    isLoading: isInfiniteLoading,
+  } = useGetInfinitePhotoWithMaxInfiniteQuery(
     { ...search },
     {
       initialPageParam: 1,
       skip: !shouldUseInfinite,
+      selectFromResult: ({ data, ...rest }) => {
+        const photos = data?.pages.flatMap((pageItem) => pageItem.photos) ?? []
+        return {
+          data: {
+            infinityPhoto: photos.find((item) => item._id === photoId),
+            neighbours: getNeighbours(photos, photoId, (x) => x._id),
+          },
+          ...rest,
+        }
+      },
     },
   )
-  const photos = useMemo(() => data?.pages.flatMap((pageItem) => pageItem.photos) ?? [], [data?.pages])
-  const foundPhoto = useMemo(() => photos.find((item) => item._id === photoId), [photos, photoId])
-  const neighbours = getNeighbours(photos, photoId, (x) => x._id)
   return {
-    photo: shouldUseInfinite ? foundPhoto : photo,
+    photo: shouldUseInfinite ? infinityPhoto : photo,
     neighbours,
     isLoading: shouldUseInfinite ? isInfiniteLoading : isPhotoLoading,
   }
@@ -64,7 +78,7 @@ export function Photo() {
         </TagList>
       )}
       {takenAt && <PhotoMeta>{formatDate(takenAt)}</PhotoMeta>}
-      {hasGps && gpsLat && gpsLon && <MapEmbed label='Место съемки' lat={gpsLat} lon={gpsLon} />}
+      {hasGps && gpsLat && gpsLon && <MapEmbed lat={gpsLat} lon={gpsLon} />}
     </PageContainer>
   )
 }

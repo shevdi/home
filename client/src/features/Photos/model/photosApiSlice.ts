@@ -1,5 +1,5 @@
 import { apiSlice } from '@/app/store/api'
-import { ILink } from '@/shared/types'
+import { ILink, PhotoOrder } from '@/shared/types'
 
 export interface UploadResponse {
   ok: boolean
@@ -13,7 +13,7 @@ export interface UploadResponse {
 interface PhotoSearch {
   dateFrom?: string | null
   dateTo?: string | null
-  order?: 'orderDownByTakenAt' | 'orderUpByTakenAt' | 'orderDownByEdited'
+  order?: PhotoOrder
   tags?: string[]
 }
 
@@ -27,24 +27,31 @@ interface PhotosResponse {
   }
 }
 
+const buildPhotoSearchParams = (search?: PhotoSearch | void, pageParam?: number) => {
+  const params = new URLSearchParams()
+  if (pageParam !== undefined) {
+    params.append('page', pageParam.toString())
+  }
+  if (search?.dateFrom) {
+    params.append('dateFrom', search.dateFrom)
+  }
+  if (search?.dateTo) {
+    params.append('dateTo', search.dateTo)
+  }
+  if (search?.order) {
+    params.append('order', search.order)
+  }
+  if (search?.tags && search.tags.length > 0) {
+    params.append('tags', search.tags.join(','))
+  }
+  return params.toString()
+}
+
 export const photosApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getPhotos: builder.query<PhotosResponse, PhotoSearch | void>({
       query: (search) => {
-        const params = new URLSearchParams()
-        if (search?.dateFrom) {
-          params.append('dateFrom', search.dateFrom)
-        }
-        if (search?.dateTo) {
-          params.append('dateTo', search.dateTo)
-        }
-        if (search?.order) {
-          params.append('order', search.order)
-        }
-        if (search?.tags && search.tags.length > 0) {
-          params.append('tags', search.tags.join(','))
-        }
-        const queryString = params.toString()
+        const queryString = buildPhotoSearchParams(search)
         return `photos${queryString ? `?${queryString}` : ''}`
       },
       providesTags() {
@@ -86,21 +93,8 @@ export const photosApiSlice = apiSlice.injectEndpoints({
       },
       query(arg: { queryArg: PhotoSearch | void; pageParam: number }) {
         const { queryArg: search, pageParam } = arg
-        const params = new URLSearchParams()
-        params.append('page', pageParam.toString())
-        if (search?.dateFrom) {
-          params.append('dateFrom', search.dateFrom)
-        }
-        if (search?.dateTo) {
-          params.append('dateTo', search.dateTo)
-        }
-        if (search?.order) {
-          params.append('order', search.order)
-        }
-        if (search?.tags && search.tags.length > 0) {
-          params.append('tags', search.tags.join(','))
-        }
-        return `/photos?${params.toString()}`
+        const queryString = buildPhotoSearchParams(search, pageParam)
+        return `/photos?${queryString}`
       },
       providesTags() {
         return [{ type: 'Photos' as never, id: 'getInfinitePhotos' }]

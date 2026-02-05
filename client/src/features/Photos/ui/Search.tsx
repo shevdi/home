@@ -3,12 +3,13 @@ import { useForm } from 'react-hook-form'
 import styled from 'styled-components'
 import { useDispatch, useSelector } from 'react-redux'
 import { Dropdown, Input, TagList } from '@/shared/ui'
+import { PhotoOrder } from '@/shared/types'
 import { setOrderSearch, setDateFromSearch, setDateToSearch, setTagsSearch } from '../model/photosSlice'
 import { selectSearch } from '../model'
 import { usePhotoSearchParams } from '@/shared/hooks'
 
 type FormFields = {
-  order: 'orderDownByTakenAt' | 'orderUpByTakenAt' | 'orderDownByEdited' | ''
+  order: PhotoOrder
   dateFrom: string
   dateTo: string
   tagInput: string
@@ -19,7 +20,7 @@ export const Search = () => {
   const { dateFrom, dateTo, order, tags = [] } = useSelector(selectSearch)
   const { searchParams, setPhotoSearchParams } = usePhotoSearchParams()
   const orderParam = searchParams.get('order')
-  const orderParamValue =
+  const orderParamValue: PhotoOrder | undefined =
     orderParam === 'orderDownByTakenAt' || orderParam === 'orderUpByTakenAt' || orderParam === 'orderDownByEdited'
       ? orderParam
       : undefined
@@ -112,7 +113,7 @@ export const Search = () => {
   }
 
   const handleOrderChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const nextOrder = event.target.value as 'orderDownByTakenAt' | 'orderUpByTakenAt' | 'orderDownByEdited'
+    const nextOrder = event.target.value as PhotoOrder
     dispatch(setOrderSearch(nextOrder))
     setPhotoSearchParams({ dateFrom, dateTo, order: nextOrder, tags })
   }

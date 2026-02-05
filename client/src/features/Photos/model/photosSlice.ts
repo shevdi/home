@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { PhotoOrder } from '@/shared/types'
 
 interface PhotosState {
   filter: {
@@ -7,7 +8,7 @@ interface PhotosState {
   search: {
     dateFrom: string | null
     dateTo: string | null
-    order: 'orderDownByTakenAt' | 'orderUpByTakenAt' | 'orderDownByEdited'
+    order: PhotoOrder
     tags: string[]
   }
 }
@@ -39,7 +40,7 @@ const photosSlice = createSlice({
     },
     setOrderSearch: (
       state,
-      action: PayloadAction<'orderDownByTakenAt' | 'orderUpByTakenAt' | 'orderDownByEdited'>,
+      action: PayloadAction<PhotoOrder>,
     ) => {
       state.search.order = action.payload
     },

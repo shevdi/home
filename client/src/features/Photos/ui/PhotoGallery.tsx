@@ -1,4 +1,3 @@
-import { useMemo } from 'react'
 import styled from 'styled-components'
 import { useSelector } from 'react-redux'
 import { selectFilter, selectSearch, useGetInfinitePhotoWithMaxInfiniteQuery } from '../model'
@@ -15,12 +14,18 @@ interface IProps {
 export function PhotoGallery({ isHiddenFilters }: IProps) {
   const filters = useSelector(selectFilter)
   const search = useSelector(selectSearch)
-  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useGetInfinitePhotoWithMaxInfiniteQuery({
-    ...search,
-  })
-  const allResults = useMemo(() => {
-    return data?.pages.flatMap((page) => page.photos).filter((item) => (filters.private ? item.private : true)) ?? []
-  }, [data, filters.private])
+  const { isLoading, fetchNextPage, hasNextPage, isFetchingNextPage, data } = useGetInfinitePhotoWithMaxInfiniteQuery(
+    {
+      ...search,
+    },
+    {
+      selectFromResult: ({ data, ...rest }) => ({
+        data:
+          data?.pages.flatMap((page) => page.photos).filter((item) => (filters.private ? item.private : true)) ?? [],
+        ...rest,
+      }),
+    },
+  )
   const sentinelRef = useInfiniteLoader({
     hasNextPage: Boolean(hasNextPage),
     isLoading,
@@ -35,7 +40,7 @@ export function PhotoGallery({ isHiddenFilters }: IProps) {
         <Filter isHiddenFilters={isHiddenFilters} />
         <Search />
         <PhotoContainer>
-          {allResults?.map((item) => (
+          {data?.map((item) => (
             <PhotoLink key={item._id} photo={item} />
           ))}
         </PhotoContainer>

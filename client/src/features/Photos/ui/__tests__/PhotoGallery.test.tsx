@@ -78,6 +78,33 @@ const basePhotos = [
   { _id: 'photo-2', title: 'Photo Two', private: true },
 ]
 
+const buildHookResult = (
+  overrides: Partial<{
+    data: { pages: Array<{ photos: typeof basePhotos }> }
+    isLoading: boolean
+    fetchNextPage: jest.Mock
+    hasNextPage: boolean
+    isFetchingNextPage: boolean
+  }> = {},
+) => ({
+  data: { pages: [{ photos: basePhotos }] },
+  isLoading: false,
+  fetchNextPage: jest.fn(),
+  hasNextPage: false,
+  isFetchingNextPage: false,
+  ...overrides,
+})
+
+const mockInfiniteQuery = (overrides?: Parameters<typeof buildHookResult>[0]) => {
+  mockUseGetInfinitePhotoWithMaxInfiniteQuery.mockImplementation((_params, options) => {
+    const result = buildHookResult(overrides)
+    if (options?.selectFromResult) {
+      return options.selectFromResult(result)
+    }
+    return result
+  })
+}
+
 describe('PhotoGallery', () => {
   it('renders header, filter, search, and photo links', () => {
     mockUseSelector.mockImplementation((selector) => {
@@ -89,13 +116,7 @@ describe('PhotoGallery', () => {
       }
       return undefined
     })
-    mockUseGetInfinitePhotoWithMaxInfiniteQuery.mockReturnValue({
-      data: { pages: [{ photos: basePhotos }] },
-      isLoading: false,
-      fetchNextPage: jest.fn(),
-      hasNextPage: false,
-      isFetchingNextPage: false,
-    })
+    mockInfiniteQuery()
 
     render(
       <MemoryRouter>
@@ -119,13 +140,7 @@ describe('PhotoGallery', () => {
       }
       return undefined
     })
-    mockUseGetInfinitePhotoWithMaxInfiniteQuery.mockReturnValue({
-      data: { pages: [{ photos: basePhotos }] },
-      isLoading: false,
-      fetchNextPage: jest.fn(),
-      hasNextPage: false,
-      isFetchingNextPage: false,
-    })
+    mockInfiniteQuery()
 
     render(
       <MemoryRouter>
@@ -147,13 +162,7 @@ describe('PhotoGallery', () => {
       }
       return undefined
     })
-    mockUseGetInfinitePhotoWithMaxInfiniteQuery.mockReturnValue({
-      data: { pages: [{ photos: basePhotos }] },
-      isLoading: false,
-      fetchNextPage: jest.fn(),
-      hasNextPage: false,
-      isFetchingNextPage: false,
-    })
+    mockInfiniteQuery()
 
     render(
       <MemoryRouter>
@@ -175,13 +184,7 @@ describe('PhotoGallery', () => {
       }
       return undefined
     })
-    mockUseGetInfinitePhotoWithMaxInfiniteQuery.mockReturnValue({
-      data: { pages: [{ photos: basePhotos }] },
-      isLoading: true,
-      fetchNextPage: jest.fn(),
-      hasNextPage: true,
-      isFetchingNextPage: false,
-    })
+    mockInfiniteQuery({ isLoading: true, hasNextPage: true })
 
     render(
       <MemoryRouter>
@@ -203,13 +206,7 @@ describe('PhotoGallery', () => {
       }
       return undefined
     })
-    mockUseGetInfinitePhotoWithMaxInfiniteQuery.mockReturnValue({
-      data: { pages: [{ photos: basePhotos }] },
-      isLoading: false,
-      fetchNextPage,
-      hasNextPage: true,
-      isFetchingNextPage: false,
-    })
+    mockInfiniteQuery({ fetchNextPage, hasNextPage: true })
 
     render(
       <MemoryRouter>

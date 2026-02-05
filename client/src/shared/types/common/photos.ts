@@ -1,5 +1,7 @@
 import { ILink } from "./links";
 
+export type PhotoOrder = "orderDownByTakenAt" | "orderUpByTakenAt" | "orderDownByEdited" | "";
+
 export interface IPhotos {
   name?: string;
   descriptopn?: string;
@@ -10,7 +12,7 @@ export interface IPhotos {
 export interface IPhotoSearch {
   dateFrom?: string;
   dateTo?: string;
-  order?: 'orderDownByTakenAt' | 'orderUpByTakenAt' | 'orderDownByEdited';
+  order?: PhotoOrder;
   private?: boolean;
   tags?: string[];
   $nor?: IPhotoSearch;
