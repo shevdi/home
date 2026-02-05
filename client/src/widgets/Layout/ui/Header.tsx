@@ -1,7 +1,61 @@
+import { useMemo } from 'react'
 import { NavLink } from 'react-router'
 import styled from 'styled-components'
 import { Menu } from '@/widgets/Menu'
 import { ThemeProps } from '@/app/styles'
+import { useSelector } from 'react-redux'
+import { selectSearch } from '@/features/Photos'
+
+export function Header() {
+  const search = useSelector(selectSearch)
+  const photoSearchParams = useMemo(() => {
+    const params = new URLSearchParams()
+    if (search.dateFrom) {
+      params.set('dateFrom', search.dateFrom)
+    }
+    if (search.dateTo) {
+      params.set('dateTo', search.dateTo)
+    }
+    if (search.order) {
+      params.set('order', search.order)
+    }
+    if (search.tags.length > 0) {
+      params.set('tags', search.tags.join(','))
+    }
+    const queryString = params.toString()
+    return queryString ? `?${queryString}` : ''
+  }, [search.dateFrom, search.dateTo, search.order, search.tags])
+
+  return (
+    <Head>
+      <Nav>
+        <Logo>shevdi</Logo>
+        <NavList>
+          <NavItem>
+            <NavLink to='/'>Главная</NavLink> &nbsp;
+          </NavItem>
+          <NavItem>
+            <NavLink to='/projects'>Проекты</NavLink> &nbsp;
+          </NavItem>
+          <NavItem>
+            <NavLink
+              to={{
+                pathname: '/photos',
+                search: photoSearchParams,
+              }}
+            >
+              Фото
+            </NavLink>{' '}
+            &nbsp;
+          </NavItem>
+          <NavItem>
+            <Menu />
+          </NavItem>
+        </NavList>
+      </Nav>
+    </Head>
+  )
+}
 
 const Head = styled.header`
   background-color: var(--nav-back-color);
@@ -39,27 +93,3 @@ const Logo = styled.h1`
   margin: 0;
   color: inherit;
 `
-
-export function Header() {
-  return (
-    <Head>
-      <Nav>
-        <Logo>shevdi</Logo>
-        <NavList>
-          <NavItem>
-            <NavLink to='/'>Главная</NavLink> &nbsp;
-          </NavItem>
-          <NavItem>
-            <NavLink to='/projects'>Проекты</NavLink> &nbsp;
-          </NavItem>
-          <NavItem>
-            <NavLink to='/photos'>Фото</NavLink> &nbsp;
-          </NavItem>
-          <NavItem>
-            <Menu />
-          </NavItem>
-        </NavList>
-      </Nav>
-    </Head>
-  )
-}

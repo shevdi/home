@@ -3,12 +3,22 @@ import { ILink } from '@/shared/types'
 import { Link } from 'react-router'
 import { formatDate } from '../utils/uploadPhotoMeta'
 
-export function PhotoLink({ photo }: { photo: ILink }) {
+interface IProps {
+  photo: ILink
+  search: string
+}
+
+export function PhotoLink({ photo, search }: IProps) {
   const takenAtLabel = photo.meta?.takenAt ? formatDate(photo.meta.takenAt) : ''
 
   return (
     <Figure key={photo._id} featured={photo.priority ? photo.priority > 1 : false}>
-      <Link to={`/photos/${photo._id}${photo.page ? `?page=${photo.page}` : ''}`}>
+      <Link
+        to={{
+          pathname: `/photos/${photo._id}`,
+          search: search ? `${search}&page=${photo.page}` : `?page=${photo.page}`,
+        }}
+      >
         <Image
           src={((photo.priority ? photo.priority > 1 : false) ? photo.mdSizeUrl : photo.smSizeUrl) || photo.mdSizeUrl}
           alt={photo.title}
@@ -52,8 +62,7 @@ const Figure = styled.figure<{ featured: boolean }>`
   ${({ featured }) => (featured ? 'grid-row: span 2;' : '')};
   ${({ featured }) => (featured ? 'grid-column: span 2' : '')};
 
-  &:hover ${DateCaption},
-  &:focus-within ${DateCaption} {
+  &:hover ${DateCaption}, &:focus-within ${DateCaption} {
     opacity: 1;
   }
 `

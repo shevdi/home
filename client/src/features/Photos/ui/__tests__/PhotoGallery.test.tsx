@@ -1,4 +1,5 @@
 import { act, render, screen } from '@testing-library/react'
+import { MemoryRouter } from 'react-router'
 import { PhotoGallery } from '../PhotoGallery'
 import { useSelector } from 'react-redux'
 import { selectFilter, selectSearch, useGetInfinitePhotoWithMaxInfiniteQuery } from '../../model'
@@ -15,12 +16,12 @@ jest.mock('../../model', () => ({
 
 jest.mock('../PhotoLink', () => ({
   PhotoLink: ({ photo }: { photo: { _id: string; title?: string } }) => (
-    <div data-testid="photo-link">{photo.title ?? photo._id}</div>
+    <div data-testid='photo-link'>{photo.title ?? photo._id}</div>
   ),
 }))
 
 const mockFilter = jest.fn(({ isHiddenFilters }: { isHiddenFilters?: boolean }) => (
-  <div data-testid="filter">{isHiddenFilters ? 'hidden' : 'visible'}</div>
+  <div data-testid='filter'>{isHiddenFilters ? 'hidden' : 'visible'}</div>
 ))
 
 jest.mock('../Filter', () => ({
@@ -28,11 +29,11 @@ jest.mock('../Filter', () => ({
 }))
 
 jest.mock('../Search', () => ({
-  Search: () => <div data-testid="search">search</div>,
+  Search: () => <div data-testid='search'>search</div>,
 }))
 
 jest.mock('@/shared/ui', () => ({
-  Loader: ({ inline }: { inline?: boolean }) => <div data-testid="loader">{inline ? 'inline' : 'block'}</div>,
+  Loader: ({ inline }: { inline?: boolean }) => <div data-testid='loader'>{inline ? 'inline' : 'block'}</div>,
 }))
 
 type ObserverCallback = IntersectionObserverCallback
@@ -40,8 +41,7 @@ type ObserverCallback = IntersectionObserverCallback
 let observerCallback: ObserverCallback | null = null
 
 const mockUseSelector = useSelector as unknown as jest.Mock
-const mockUseGetInfinitePhotoWithMaxInfiniteQuery =
-  useGetInfinitePhotoWithMaxInfiniteQuery as unknown as jest.Mock
+const mockUseGetInfinitePhotoWithMaxInfiniteQuery = useGetInfinitePhotoWithMaxInfiniteQuery as unknown as jest.Mock
 
 class MockIntersectionObserver {
   static lastInstance: MockIntersectionObserver | null = null
@@ -97,7 +97,11 @@ describe('PhotoGallery', () => {
       isFetchingNextPage: false,
     })
 
-    render(<PhotoGallery />)
+    render(
+      <MemoryRouter>
+        <PhotoGallery />
+      </MemoryRouter>,
+    )
 
     expect(screen.getByText('Фотки')).toBeInTheDocument()
     expect(screen.getByTestId('filter')).toHaveTextContent('visible')
@@ -123,7 +127,11 @@ describe('PhotoGallery', () => {
       isFetchingNextPage: false,
     })
 
-    render(<PhotoGallery isHiddenFilters />)
+    render(
+      <MemoryRouter>
+        <PhotoGallery isHiddenFilters />
+      </MemoryRouter>,
+    )
 
     expect(mockFilter).toHaveBeenCalledWith({ isHiddenFilters: true })
     expect(screen.getByTestId('filter')).toHaveTextContent('hidden')
@@ -147,7 +155,11 @@ describe('PhotoGallery', () => {
       isFetchingNextPage: false,
     })
 
-    render(<PhotoGallery />)
+    render(
+      <MemoryRouter>
+        <PhotoGallery />
+      </MemoryRouter>,
+    )
 
     expect(screen.getAllByTestId('photo-link')).toHaveLength(1)
     expect(screen.getByText('Photo Two')).toBeInTheDocument()
@@ -171,7 +183,11 @@ describe('PhotoGallery', () => {
       isFetchingNextPage: false,
     })
 
-    render(<PhotoGallery />)
+    render(
+      <MemoryRouter>
+        <PhotoGallery />
+      </MemoryRouter>,
+    )
 
     expect(screen.getByTestId('loader')).toHaveTextContent('inline')
   })
@@ -195,7 +211,11 @@ describe('PhotoGallery', () => {
       isFetchingNextPage: false,
     })
 
-    render(<PhotoGallery />)
+    render(
+      <MemoryRouter>
+        <PhotoGallery />
+      </MemoryRouter>,
+    )
 
     expect(MockIntersectionObserver.lastInstance?.observe).toHaveBeenCalledTimes(1)
 

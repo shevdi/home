@@ -6,19 +6,21 @@ import { PhotoLink } from './PhotoLink'
 import { Loader } from '@/shared/ui'
 import { Search } from './Search'
 import { Filter } from './Filter'
+import { useLocation } from 'react-router'
 
 interface IProps {
   isHiddenFilters?: boolean
 }
 
 export function PhotoGallery({ isHiddenFilters }: IProps) {
+  const location = useLocation()
   const filters = useSelector(selectFilter)
   const search = useSelector(selectSearch)
   const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useGetInfinitePhotoWithMaxInfiniteQuery({
     ...search,
   })
   const allResults = useMemo(() => {
-    return data?.pages.flatMap((page) => page.photos).filter(item => filters.private ? item.private : true) ?? []
+    return data?.pages.flatMap((page) => page.photos).filter((item) => (filters.private ? item.private : true)) ?? []
   }, [data, filters.private])
   const sentinelRef = useRef<HTMLDivElement>(null)
   const isLoadingRef = useRef(false)
@@ -71,7 +73,7 @@ export function PhotoGallery({ isHiddenFilters }: IProps) {
         <Search />
         <PhotoContainer>
           {allResults?.map((item) => (
-            <PhotoLink key={item._id} photo={item} />
+            <PhotoLink key={item._id} photo={item} search={location.search} />
           ))}
         </PhotoContainer>
         {hasNextPage && <Sentinel ref={sentinelRef} />}

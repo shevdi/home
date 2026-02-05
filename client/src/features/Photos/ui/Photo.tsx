@@ -4,9 +4,8 @@ import { selectSearch, useGetInfinitePhotoWithMaxInfiniteQuery, useGetPhotoQuery
 import { Link, useLocation, useSearchParams } from 'react-router'
 import { getNeighbours } from '@/shared/utils'
 import { useMemo } from 'react'
-import { Loader } from '@/shared/ui'
+import { Loader, MapEmbed } from '@/shared/ui'
 import { formatDate } from '../utils/uploadPhotoMeta'
-
 
 const usePhoto = () => {
   const location = useLocation()
@@ -17,14 +16,14 @@ const usePhoto = () => {
   const search = useSelector(selectSearch)
   const shouldUseInfinite = Boolean(page)
   const { data: photo, isLoading: isPhotoLoading } = useGetPhotoQuery(photoId, {
-    skip: shouldUseInfinite
+    skip: shouldUseInfinite,
   })
   const { data, isLoading: isInfiniteLoading } = useGetInfinitePhotoWithMaxInfiniteQuery(
     { ...search },
     {
       initialPageParam: initialPage,
-      skip: !shouldUseInfinite
-    }
+      skip: !shouldUseInfinite,
+    },
   )
   const photos = useMemo(() => data?.pages.flatMap((pageItem) => pageItem.photos) ?? [], [data?.pages])
   const foundPhoto = useMemo(() => photos.find((item) => item._id === photoId), [photos, photoId])
@@ -32,23 +31,22 @@ const usePhoto = () => {
   return {
     photo: shouldUseInfinite ? foundPhoto : photo,
     neighbours,
-    isLoading: shouldUseInfinite ? isInfiniteLoading : isPhotoLoading
+    isLoading: shouldUseInfinite ? isInfiniteLoading : isPhotoLoading,
   }
-} 
+}
 
 export function Photo() {
-  const {
-    photo,
-    neighbours,
-    isLoading
-  } = usePhoto()
+  const { photo, neighbours, isLoading } = usePhoto()
 
   const takenAt = photo?.meta?.takenAt
+  const gpsLat = photo?.meta?.gpsLatitude
+  const gpsLon = photo?.meta?.gpsLongitude
+  const hasGps = Number.isFinite(gpsLat) && Number.isFinite(gpsLon)
 
   return (
     <PageContainer>
       <PhotosNavigation>
-        <div>{neighbours[0] && <Link to={`../${neighbours[0]._id}`}>Предыдущее фото</Link>}</div>
+        <div>{neighbours[0] && <Link to={{ pathname: `../${neighbours[0]._id}` }}>Предыдущее фото</Link>}</div>
         <div>
           {photo && (
             <a href={photo?.fullSizeUrl} target='_blank' rel='noreferrer'>
@@ -56,7 +54,7 @@ export function Photo() {
             </a>
           )}
         </div>
-        <div>{neighbours[1] && <Link to={`../${neighbours[1]._id}`}>Следующее фото</Link>}</div>
+        <div>{neighbours[1] && <Link to={{ pathname: `../${neighbours[1]._id}` }}>Следующее фото</Link>}</div>
       </PhotosNavigation>
       {isLoading ? <Loader /> : <Image key={photo?._id} src={photo?.mdSizeUrl} />}
       <PageHeader>{photo?.title}</PageHeader>
@@ -68,6 +66,7 @@ export function Photo() {
         </TagList>
       )}
       {takenAt && <PhotoMeta>{formatDate(takenAt)}</PhotoMeta>}
+      {hasGps && gpsLat && gpsLon && <MapEmbed label='Место съемки' lat={gpsLat} lon={gpsLon} />}
     </PageContainer>
   )
 }
@@ -92,8 +91,8 @@ const TagList = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
-  justify-content: center;
-  margin-top: 0.5rem;
+  justify-content: right;
+  margin: 1rem 0;
 `
 
 const TagChip = styled.div`

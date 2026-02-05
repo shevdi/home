@@ -11,22 +11,26 @@ interface DropdownProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
   options: DropdownOption[]
 }
 
-export const Dropdown: React.FC<DropdownProps> = ({ label, options, id, name, ...props }) => {
-  const controlId = id || name
+export const Dropdown = React.forwardRef<HTMLSelectElement, DropdownProps>(
+  ({ label, options, id, name, ...props }, ref) => {
+    const controlId = id || name
 
-  return (
-    <DropdownWrapper>
-      <StyledLabel htmlFor={controlId}>{label}</StyledLabel>
-      <StyledSelect id={controlId} {...props}>
-        {options.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.label}
-          </option>
-        ))}
-      </StyledSelect>
-    </DropdownWrapper>
-  )
-}
+    return (
+      <DropdownWrapper>
+        <StyledLabel htmlFor={controlId}>{label}</StyledLabel>
+        <StyledSelect id={controlId} name={name} ref={ref} {...props}>
+          {options.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </StyledSelect>
+      </DropdownWrapper>
+    )
+  },
+)
+
+Dropdown.displayName = 'Dropdown'
 
 const DropdownWrapper = styled.div`
   position: relative;

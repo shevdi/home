@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Search } from '@/features/Photos/ui/Search'
 import { selectFilter, selectSearch } from '../../model'
 import { setOrderSearch } from '../../model/photosSlice'
+import { MemoryRouter } from 'react-router'
 
 jest.mock('react-redux', () => ({
   useDispatch: jest.fn(),
@@ -15,13 +16,17 @@ jest.mock('@/shared/ui', () => {
   const actual = jest.requireActual('@/shared/ui')
   return {
     ...actual,
-    Checkbox: ({ label, checked, onChange }: { label: string; checked: boolean; onChange: (value: boolean) => void }) => (
+    Checkbox: ({
+      label,
+      checked,
+      onChange,
+    }: {
+      label: string
+      checked: boolean
+      onChange: (value: boolean) => void
+    }) => (
       <label>
-        <input
-          type='checkbox'
-          checked={checked}
-          onChange={(event) => onChange(event.target.checked)}
-        />
+        <input type='checkbox' checked={checked} onChange={(event) => onChange(event.target.checked)} />
         {label}
       </label>
     ),
@@ -73,7 +78,11 @@ describe('Search', () => {
     const dispatch = jest.fn()
     mockUseDispatch.mockReturnValue(dispatch)
 
-    render(<Search />)
+    render(
+      <MemoryRouter>
+        <Search />
+      </MemoryRouter>,
+    )
 
     const select = screen.getByLabelText('Сортировать') as HTMLSelectElement
     await userEvent.selectOptions(select, 'orderUpByTakenAt')
