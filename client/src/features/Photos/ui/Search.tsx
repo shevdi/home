@@ -5,10 +5,10 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Dropdown, Input, TagList } from '@/shared/ui'
 import { setOrderSearch, setDateFromSearch, setDateToSearch, setTagsSearch } from '../model/photosSlice'
 import { selectSearch } from '../model'
-import { useSearchParams } from 'react-router'
+import { usePhotoSearchParams } from '@/shared/hooks'
 
 type FormFields = {
-  order: 'orderDownByTakenAt' | 'orderUpByTakenAt' | 'orderDownByEdited'
+  order: 'orderDownByTakenAt' | 'orderUpByTakenAt' | 'orderDownByEdited' | ''
   dateFrom: string
   dateTo: string
   tagInput: string
@@ -17,8 +17,12 @@ type FormFields = {
 export const Search = () => {
   const dispatch = useDispatch()
   const { dateFrom, dateTo, order, tags = [] } = useSelector(selectSearch)
-  const [searchParams, setSearchParams] = useSearchParams()
-  const orderParam = searchParams.get('order') as FormFields['order'] | null
+  const { searchParams, setPhotoSearchParams } = usePhotoSearchParams()
+  const orderParam = searchParams.get('order')
+  const orderParamValue =
+    orderParam === 'orderDownByTakenAt' || orderParam === 'orderUpByTakenAt' || orderParam === 'orderDownByEdited'
+      ? orderParam
+      : undefined
   const dateFromParam = searchParams.get('dateFrom')
   const dateToParam = searchParams.get('dateTo')
   const tagsParamValue = searchParams.get('tags')
@@ -31,7 +35,7 @@ export const Search = () => {
   }, [tagsParamValue])
   const { register, watch, setValue } = useForm<FormFields>({
     defaultValues: {
-      order: orderParam ?? order,
+      order: orderParamValue ?? order ?? '',
       dateFrom: dateFromParam ?? dateFrom ?? '',
       dateTo: dateToParam ?? dateTo ?? '',
       tagInput: '',
@@ -41,8 +45,8 @@ export const Search = () => {
   const tagInput = watch('tagInput') ?? ''
 
   useEffect(() => {
-    if (orderParam && orderParam !== order) {
-      dispatch(setOrderSearch(orderParam))
+    if (orderParamValue && orderParamValue !== order) {
+      dispatch(setOrderSearch(orderParamValue))
     }
     if (searchParams.has('dateFrom')) {
       const normalizedDateFrom = dateFromParam?.trim() ? dateFromParam : null
@@ -63,40 +67,29 @@ export const Search = () => {
         dispatch(setTagsSearch(tagsFromParams))
       }
     }
-  }, [dispatch, order, orderParam, dateFrom, dateFromParam, dateTo, dateToParam, tags, tagsFromParams, searchParams])
-
-  const updateSearchParams = (next: {
-    dateFrom: string | null
-    dateTo: string | null
-    order: FormFields['order']
-    tags: string[]
-  }) => {
-    const params = new URLSearchParams()
-    if (next.dateFrom) {
-      params.set('dateFrom', next.dateFrom)
-    }
-    if (next.dateTo) {
-      params.set('dateTo', next.dateTo)
-    }
-    if (next.order) {
-      params.set('order', next.order)
-    }
-    if (next.tags.length > 0) {
-      params.set('tags', next.tags.join(','))
-    }
-    setSearchParams(params)
-  }
+  }, [
+    dispatch,
+    order,
+    orderParamValue,
+    dateFrom,
+    dateFromParam,
+    dateTo,
+    dateToParam,
+    tags,
+    tagsFromParams,
+    searchParams,
+  ])
 
   const handleDateFromChange = (value: string) => {
     const normalized = value.trim() ? value : null
     dispatch(setDateFromSearch(normalized))
-    updateSearchParams({ dateFrom: normalized, dateTo, order, tags })
+    setPhotoSearchParams({ dateFrom: normalized, dateTo, order, tags })
   }
 
   const handleDateToChange = (value: string) => {
     const normalized = value.trim() ? value : null
     dispatch(setDateToSearch(normalized))
-    updateSearchParams({ dateFrom, dateTo: normalized, order, tags })
+    setPhotoSearchParams({ dateFrom, dateTo: normalized, order, tags })
   }
 
   const addTag = () => {
@@ -108,20 +101,20 @@ export const Search = () => {
     }
     const nextTags = [...tags, trimmed]
     dispatch(setTagsSearch(nextTags))
-    updateSearchParams({ dateFrom, dateTo, order, tags: nextTags })
+    setPhotoSearchParams({ dateFrom, dateTo, order, tags: nextTags })
     setValue('tagInput', '')
   }
 
   const removeTag = (tagToRemove: string) => {
     const nextTags = tags.filter((tag) => tag !== tagToRemove)
     dispatch(setTagsSearch(nextTags))
-    updateSearchParams({ dateFrom, dateTo, order, tags: nextTags })
+    setPhotoSearchParams({ dateFrom, dateTo, order, tags: nextTags })
   }
 
   const handleOrderChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const nextOrder = event.target.value as 'orderDownByTakenAt' | 'orderUpByTakenAt' | 'orderDownByEdited'
     dispatch(setOrderSearch(nextOrder))
-    updateSearchParams({ dateFrom, dateTo, order: nextOrder, tags })
+    setPhotoSearchParams({ dateFrom, dateTo, order: nextOrder, tags })
   }
 
   return (

@@ -1,30 +1,11 @@
-import { useMemo } from 'react'
 import { NavLink } from 'react-router'
 import styled from 'styled-components'
 import { Menu } from '@/widgets/Menu'
 import { ThemeProps } from '@/app/styles'
-import { useSelector } from 'react-redux'
-import { selectSearch } from '@/features/Photos'
+import { usePhotoSearchParams } from '@/shared/hooks'
 
 export function Header() {
-  const search = useSelector(selectSearch)
-  const photoSearchParams = useMemo(() => {
-    const params = new URLSearchParams()
-    if (search.dateFrom) {
-      params.set('dateFrom', search.dateFrom)
-    }
-    if (search.dateTo) {
-      params.set('dateTo', search.dateTo)
-    }
-    if (search.order) {
-      params.set('order', search.order)
-    }
-    if (search.tags.length > 0) {
-      params.set('tags', search.tags.join(','))
-    }
-    const queryString = params.toString()
-    return queryString ? `?${queryString}` : ''
-  }, [search.dateFrom, search.dateTo, search.order, search.tags])
+  const { photoSearchParams } = usePhotoSearchParams()
 
   return (
     <Head>

@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import { useSelector } from 'react-redux'
-import { selectSearch, useGetInfinitePhotoWithMaxInfiniteQuery, useGetPhotoQuery } from '../model'
-import { Link, useLocation, useSearchParams } from 'react-router'
+import { photosApiSlice, selectSearch, useGetInfinitePhotoWithMaxInfiniteQuery, useGetPhotoQuery } from '../model'
+import { Link, useLocation } from 'react-router'
 import { getNeighbours } from '@/shared/utils'
 import { useMemo } from 'react'
 import { Loader, MapEmbed } from '@/shared/ui'
@@ -9,22 +9,21 @@ import { formatDate } from '../utils/uploadPhotoMeta'
 
 const usePhoto = () => {
   const location = useLocation()
-  const [searchParams] = useSearchParams()
-  const page = searchParams.get('page')
-  const initialPage = page ? Number(page) || 1 : 1
   const photoId = location.pathname.split('/')[2]
   const search = useSelector(selectSearch)
-  const shouldUseInfinite = Boolean(page)
+  const infiniteQueryState = useSelector(photosApiSlice.endpoints.getInfinitePhotoWithMax.select(search))
+  const shouldUseInfinite = infiniteQueryState?.status !== 'uninitialized'
   const { data: photo, isLoading: isPhotoLoading } = useGetPhotoQuery(photoId, {
     skip: shouldUseInfinite,
   })
   const { data, isLoading: isInfiniteLoading } = useGetInfinitePhotoWithMaxInfiniteQuery(
     { ...search },
     {
-      initialPageParam: initialPage,
+      initialPageParam: 1,
       skip: !shouldUseInfinite,
     },
   )
+  console.log(data)
   const photos = useMemo(() => data?.pages.flatMap((pageItem) => pageItem.photos) ?? [], [data?.pages])
   const foundPhoto = useMemo(() => photos.find((item) => item._id === photoId), [photos, photoId])
   const neighbours = getNeighbours(photos, photoId, (x) => x._id)

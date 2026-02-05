@@ -5,10 +5,9 @@ import { formatDate } from '../utils/uploadPhotoMeta'
 
 interface IProps {
   photo: ILink
-  search: string
 }
 
-export function PhotoLink({ photo, search }: IProps) {
+export function PhotoLink({ photo }: IProps) {
   const takenAtLabel = photo.meta?.takenAt ? formatDate(photo.meta.takenAt) : ''
 
   return (
@@ -16,7 +15,6 @@ export function PhotoLink({ photo, search }: IProps) {
       <Link
         to={{
           pathname: `/photos/${photo._id}`,
-          search: search ? `${search}&page=${photo.page}` : `?page=${photo.page}`,
         }}
       >
         <Image
