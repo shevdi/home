@@ -1,9 +1,10 @@
-import { useEffect, useRef, useCallback, useMemo } from 'react'
+import { useMemo } from 'react'
 import styled from 'styled-components'
 import { useSelector } from 'react-redux'
 import { selectFilter, selectSearch, useGetInfinitePhotoWithMaxInfiniteQuery } from '../model'
 import { PhotoLink } from './PhotoLink'
 import { Loader } from '@/shared/ui'
+import { useInfiniteLoader } from '@/shared/hooks'
 import { Search } from './Search'
 import { Filter } from './Filter'
 
@@ -20,48 +21,12 @@ export function PhotoGallery({ isHiddenFilters }: IProps) {
   const allResults = useMemo(() => {
     return data?.pages.flatMap((page) => page.photos).filter((item) => (filters.private ? item.private : true)) ?? []
   }, [data, filters.private])
-  const sentinelRef = useRef<HTMLDivElement>(null)
-  const isLoadingRef = useRef(false)
-
-  // Ensure sequential loading - prevent multiple simultaneous requests
-  const handleLoadMore = useCallback(async () => {
-    if (isLoadingRef.current || isLoading || isFetchingNextPage || !hasNextPage) {
-      return
-    }
-
-    isLoadingRef.current = true
-    try {
-      await fetchNextPage()
-    } finally {
-      isLoadingRef.current = false
-    }
-  }, [fetchNextPage, hasNextPage, isLoading, isFetchingNextPage])
-
-  useEffect(() => {
-    const sentinel = sentinelRef.current
-    if (!sentinel || !hasNextPage) {
-      return
-    }
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const [entry] = entries
-        if (entry.isIntersecting && !isLoadingRef.current && !isLoading && !isFetchingNextPage) {
-          handleLoadMore()
-        }
-      },
-      {
-        rootMargin: '500px',
-        threshold: 0.1,
-      },
-    )
-
-    observer.observe(sentinel)
-
-    return () => {
-      observer.disconnect()
-    }
-  }, [handleLoadMore, hasNextPage, isLoading, isFetchingNextPage])
+  const sentinelRef = useInfiniteLoader({
+    hasNextPage: Boolean(hasNextPage),
+    isLoading,
+    isFetchingNextPage,
+    onLoadMore: fetchNextPage,
+  })
 
   return (
     <PageContainer>

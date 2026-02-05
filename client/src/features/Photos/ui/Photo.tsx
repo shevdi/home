@@ -23,7 +23,6 @@ const usePhoto = () => {
       skip: !shouldUseInfinite,
     },
   )
-  console.log(data)
   const photos = useMemo(() => data?.pages.flatMap((pageItem) => pageItem.photos) ?? [], [data?.pages])
   const foundPhoto = useMemo(() => photos.find((item) => item._id === photoId), [photos, photoId])
   const neighbours = getNeighbours(photos, photoId, (x) => x._id)
