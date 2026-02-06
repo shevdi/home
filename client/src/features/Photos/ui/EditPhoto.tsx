@@ -5,13 +5,11 @@ import { useLocation } from 'react-router'
 import z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { SubmitHandler, useForm } from 'react-hook-form'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { Button, Checkbox, ErrMessage, Input, Loader, TagList } from '@/shared/ui'
-import { RootState } from '@/app/store'
 import { setPrivateFilter } from '../model/photosSlice'
 import { getErrorMessage } from '@/shared/utils'
 import { DeletePhoto } from './DeletePhoto'
-
 
 const schema = z.object({
   title: z.string(),
@@ -29,7 +27,6 @@ export function EditPhoto() {
   const { data, isLoading } = useGetPhotoQuery(photoId)
   const [changePhoto] = useChangePhotoMutation()
   const dispatch = useDispatch()
-  const privateFilter = useSelector((state: RootState) => state.photos.filter.private)
 
   const {
     register,
@@ -43,7 +40,7 @@ export function EditPhoto() {
     defaultValues: {
       title: data?.title,
       priority: data?.priority || 0,
-      private: privateFilter,
+      private: data?.private,
       tags: data?.tags || [],
       tagsInput: '',
     },
@@ -84,7 +81,7 @@ export function EditPhoto() {
     try {
       const parsedData = schema.safeParse({
         ...data,
-        private: privateFilter,
+        private: data?.private,
         tags,
       })
       if (!parsedData.success) {
@@ -94,7 +91,7 @@ export function EditPhoto() {
         return
       }
 
-      const { tags: parsedTags, title, priority } = parsedData.data
+      const { tags: parsedTags, title, priority, private: privateFilter } = parsedData.data
 
       await changePhoto({
         id: photoId,
@@ -117,11 +114,13 @@ export function EditPhoto() {
     <PageContainer>
       <PageHeader>Редактировать фото</PageHeader>
       <ErrMessage>{errors.root?.message}</ErrMessage>
-      {isLoading ? <Loader /> : (
+      {isLoading ? (
+        <Loader />
+      ) : (
         <>
           <form onSubmit={handleSubmit(onSubmit)}>
             <Checkbox
-              checked={privateFilter}
+              checked={!!data?.private}
               onChange={(checked) => dispatch(setPrivateFilter(checked))}
               label='Приватное'
             />
