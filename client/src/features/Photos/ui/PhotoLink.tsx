@@ -2,6 +2,7 @@ import styled from 'styled-components'
 import { ILink } from '@/shared/types'
 import { Link } from 'react-router'
 import { formatDate } from '../utils/uploadPhotoMeta'
+import { PrivateBadge } from './PrivateBadge'
 
 interface IProps {
   photo: ILink
@@ -13,6 +14,7 @@ export function PhotoLink({ photo, disabled }: IProps) {
 
   return (
     <Figure key={photo._id} $featured={photo.priority ? photo.priority > 1 : false}>
+      {photo.private && <PrivateBadge />}
       <Link
         to={{
           pathname: `/photos/${photo._id}`,
