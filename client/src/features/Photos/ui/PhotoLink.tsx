@@ -5,9 +5,10 @@ import { formatDate } from '../utils/uploadPhotoMeta'
 
 interface IProps {
   photo: ILink
+  disabled?: boolean
 }
 
-export function PhotoLink({ photo }: IProps) {
+export function PhotoLink({ photo, disabled }: IProps) {
   const takenAtLabel = photo.meta?.takenAt ? formatDate(photo.meta.takenAt) : ''
 
   return (
@@ -16,6 +17,12 @@ export function PhotoLink({ photo }: IProps) {
         to={{
           pathname: `/photos/${photo._id}`,
         }}
+        onClick={(e) => {
+          if (disabled) e.preventDefault()
+        }}
+        aria-disabled={disabled}
+        tabIndex={disabled ? -1 : 0}
+        style={disabled ? { pointerEvents: 'none' } : undefined}
       >
         <Image
           src={((photo.priority ? photo.priority > 1 : false) ? photo.mdSizeUrl : photo.smSizeUrl) || photo.mdSizeUrl}
