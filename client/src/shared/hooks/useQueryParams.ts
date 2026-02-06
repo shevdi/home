@@ -11,8 +11,6 @@ interface PhotoSearch {
 
 export const useQueryParams = () => {
   const [searchParams, setSearchParams] = useSearchParams()
-  console.log('searchParams', searchParams)
-  console.log('searchParams', searchParams.entries())
 
   // Helper function for updating multiple params
   const setQueryParams = (updates: Record<string, string | string[] | null | undefined>, replace = true) => {
@@ -35,7 +33,15 @@ export const useQueryParams = () => {
     )
   }
 
-  const queryParams = Array.from(searchParams.entries()).reduce((prev, value) => ({ ...prev, [value[0]]: value[0] === 'tags' ? value[1].split(',') : value[1] }), {})
+  const queryParams = Array.from(searchParams.entries()).reduce((prev, value) => {
+    if (value[0] === 'tags') {
+      if (!value[1]) {
+        return []
+      }
+      return value[1].split(',')
+    }
+    return { ...prev, [value[0]]: value[1] }
+  }, {})
 
   return {
     stringSearchParams: searchParams.toString(),

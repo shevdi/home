@@ -10,9 +10,7 @@ interface IProps {
 
 export const Filter = ({ isHiddenFilters }: IProps) => {
   const dispatch = useDispatch()
-  const { private: privateFilter } = useSelector(
-    selectFilter
-  )
+  const { private: privateFilter } = useSelector(selectFilter)
 
   const handlePrivateChange = (checked: boolean) => {
     dispatch(setPrivateFilter(checked))
@@ -30,6 +28,6 @@ export const Filter = ({ isHiddenFilters }: IProps) => {
 }
 
 const FilterContainer = styled.div`
-  padding: 1rem 0;
+  margin: 1rem 0;
   max-width: 480px;
 `

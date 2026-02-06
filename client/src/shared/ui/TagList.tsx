@@ -1,23 +1,25 @@
 import styled from 'styled-components'
 
 interface IProps {
-  tags: string[]
+  tags?: string[]
   onClick?: (tagToRemove: string) => void
 }
 
 export const TagList = ({ tags, onClick }: IProps) => {
   return (
     <TagContainer>
-      {tags.map((tag) => (
-        <TagChip key={tag}>
-          {tag}
-          {onClick && (
-            <TagRemoveButton type='button' onClick={() => onClick(tag)} aria-label={`Удалить тег ${tag}`}>
-              x
-            </TagRemoveButton>
-          )}
-        </TagChip>
-      ))}
+      {tags &&
+        tags.length > 0 &&
+        tags.map((tag) => (
+          <TagChip key={tag}>
+            {tag}
+            {onClick && (
+              <TagRemoveButton type='button' onClick={() => onClick(tag)} aria-label={`Удалить тег ${tag}`}>
+                x
+              </TagRemoveButton>
+            )}
+          </TagChip>
+        ))}
     </TagContainer>
   )
 }
@@ -27,6 +29,7 @@ const TagContainer = styled.div`
   flex-wrap: wrap;
   gap: 0.5rem;
   margin-top: 0.5rem;
+  min-height: 2rem;
 `
 const TagChip = styled.div`
   display: inline-flex;

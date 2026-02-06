@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, type ChangeEvent } from 'react'
 import { useForm } from 'react-hook-form'
 import styled from 'styled-components'
 import { useDispatch, useSelector } from 'react-redux'
@@ -52,14 +52,17 @@ export const Search = () => {
         tags: tagsParamValue ?? tags ?? [],
       }),
     )
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const handleDateFromChange = (value: string) => {
+  const handleDateFromChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value
     dispatch(setDateFromSearch(value))
     setQueryParams({ dateFrom: value, dateTo, order, tags: tags })
   }
 
-  const handleDateToChange = (value: string) => {
+  const handleDateToChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value
     dispatch(setDateToSearch(value))
     setQueryParams({ dateFrom, dateTo: value, order, tags: tags })
   }
@@ -92,7 +95,7 @@ export const Search = () => {
   }
 
   return (
-    <FilterContainer>
+    <SearchContainer>
       <Dropdown
         label='Сортировать'
         id='photo-sort-order'
@@ -110,14 +113,14 @@ export const Search = () => {
           label='Дата с'
           type='date'
           {...register('dateFrom', {
-            onChange: (event) => handleDateFromChange(event.target.value),
+            onChange: handleDateFromChange,
           })}
         />
         <Input
           label='Дата по'
           type='date'
           {...register('dateTo', {
-            onChange: (event) => handleDateToChange(event.target.value),
+            onChange: handleDateToChange,
           })}
         />
       </DateInputs>
@@ -133,13 +136,13 @@ export const Search = () => {
           }
         }}
       />
-      {tags.length > 0 && <TagList tags={tags} onClick={removeTag} />}
-    </FilterContainer>
+      {<TagList tags={tags} onClick={removeTag} />}
+    </SearchContainer>
   )
 }
 
-const FilterContainer = styled.div`
-  padding: 1rem 0;
+const SearchContainer = styled.div`
+  padding-bottom: 1rem;
   max-width: 480px;
 `
 

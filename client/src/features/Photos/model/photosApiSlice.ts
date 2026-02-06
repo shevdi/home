@@ -1,4 +1,5 @@
 import { apiSlice } from '@/app/store/api'
+import type { FetchBaseQueryError, FetchBaseQueryMeta, QueryReturnValue } from '@reduxjs/toolkit/query'
 import { ILink, PhotoOrder } from '@/shared/types'
 
 export interface UploadResponse {
@@ -25,6 +26,30 @@ interface PhotosResponse {
     totalCount: number
     pageSize: number
   }
+}
+
+type InfinitePhotosResponse = {
+  photos: ILink[]
+  pagination: {
+    currentPage: number
+    totalPages: number
+    totalCount: number
+    pageSize: number
+  }
+}
+
+let lastInfiniteSearchKey: string | null = null
+let lastInfiniteAbortControllers: AbortController[] = []
+
+const getInfiniteQueryAbortController = (searchKey: string) => {
+  if (lastInfiniteSearchKey !== searchKey) {
+    lastInfiniteAbortControllers.forEach((controller) => controller.abort())
+    lastInfiniteAbortControllers = []
+    lastInfiniteSearchKey = searchKey
+  }
+  const controller = new AbortController()
+  lastInfiniteAbortControllers.push(controller)
+  return controller
 }
 
 const buildPhotoSearchParams = (search?: PhotoSearch | void, pageParam?: number) => {
@@ -65,7 +90,7 @@ export const photosApiSlice = apiSlice.injectEndpoints({
       }
     }),
     getInfinitePhotoWithMax: builder.infiniteQuery<
-      { photos: ILink[], pagination: { currentPage: number, totalPages: number, totalCount: number, pageSize: number } },
+      InfinitePhotosResponse,
       PhotoSearch | void,
       number
     >({
@@ -91,10 +116,20 @@ export const photosApiSlice = apiSlice.injectEndpoints({
           return firstPageParam > 0 ? firstPageParam - 1 : undefined
         },
       },
-      query(arg: { queryArg: PhotoSearch | void; pageParam: number }) {
+      async queryFn(arg, api, extraOptions, baseQuery) {
         const { queryArg: search, pageParam } = arg
         const queryString = buildPhotoSearchParams(search, pageParam)
-        return `/photos?${queryString}`
+        const searchKey = buildPhotoSearchParams(search)
+        const abortController = getInfiniteQueryAbortController(searchKey)
+        const result = await baseQuery({
+          url: `/photos?${queryString}`,
+          signal: abortController.signal,
+        })
+        return result as QueryReturnValue<
+          InfinitePhotosResponse,
+          FetchBaseQueryError,
+          FetchBaseQueryMeta | undefined
+        >
       },
       providesTags() {
         return [{ type: 'Photos' as never, id: 'getInfinitePhotos' }]

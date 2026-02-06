@@ -11,7 +11,7 @@ export function PhotoLink({ photo }: IProps) {
   const takenAtLabel = photo.meta?.takenAt ? formatDate(photo.meta.takenAt) : ''
 
   return (
-    <Figure key={photo._id} featured={photo.priority ? photo.priority > 1 : false}>
+    <Figure key={photo._id} $featured={photo.priority ? photo.priority > 1 : false}>
       <Link
         to={{
           pathname: `/photos/${photo._id}`,
@@ -50,15 +50,15 @@ const DateCaption = styled.figcaption`
   pointer-events: none;
 `
 
-const Figure = styled.figure<{ featured: boolean }>`
+const Figure = styled.figure<{ $featured: boolean }>`
   position: relative;
   display: inline-block;
   margin: 0;
   overflow: hidden;
   border-radius: 4px;
-  ${({ featured }) => (featured ? 'height: 410px;' : 'height: 200px;')};
-  ${({ featured }) => (featured ? 'grid-row: span 2;' : '')};
-  ${({ featured }) => (featured ? 'grid-column: span 2' : '')};
+  ${({ $featured }) => ($featured ? 'height: 410px;' : 'height: 200px;')};
+  ${({ $featured }) => ($featured ? 'grid-row: span 2;' : '')};
+  ${({ $featured }) => ($featured ? 'grid-column: span 2' : '')};
 
   &:hover ${DateCaption}, &:focus-within ${DateCaption} {
     opacity: 1;
