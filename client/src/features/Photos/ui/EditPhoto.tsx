@@ -4,10 +4,9 @@ import { useChangePhotoMutation, useGetPhotoQuery } from '../model'
 import { useLocation } from 'react-router'
 import z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { SubmitHandler, useForm } from 'react-hook-form'
+import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import { useDispatch } from 'react-redux'
 import { Button, Checkbox, ErrMessage, Input, Loader, TagList } from '@/shared/ui'
-import { setPrivateFilter } from '../model/photosSlice'
 import { getErrorMessage } from '@/shared/utils'
 import { DeletePhoto } from './DeletePhoto'
 
@@ -31,6 +30,7 @@ export function EditPhoto() {
   const {
     register,
     handleSubmit,
+    control,
     setError,
     setValue,
     watch,
@@ -40,7 +40,7 @@ export function EditPhoto() {
     defaultValues: {
       title: data?.title,
       priority: data?.priority || 0,
-      private: data?.private,
+      private: data?.private ?? false,
       tags: data?.tags || [],
       tagsInput: '',
     },
@@ -56,6 +56,9 @@ export function EditPhoto() {
     setTags(initialTags)
     setValue('tags', initialTags, { shouldValidate: true })
     setTagsInitialized(true)
+    if (data?.private) {
+      setValue('private', data.private, { shouldValidate: true })
+    }
   }, [data, setValue, tagsInitialized])
 
   const addTag = () => {
@@ -119,10 +122,19 @@ export function EditPhoto() {
       ) : (
         <>
           <form onSubmit={handleSubmit(onSubmit)}>
-            <Checkbox
-              checked={!!data?.private}
-              onChange={(checked) => dispatch(setPrivateFilter(checked))}
-              label='Приватное'
+            <Controller
+              control={control}
+              name='private'
+              render={({ field }) => (
+                <Checkbox
+                  checked={!!field.value}
+                  onChange={(checked) => {
+                    field.onChange(checked)
+                    // dispatch(setPrivateFilter(checked))
+                  }}
+                  label='Приватное'
+                />
+              )}
             />
             <Input label='Заголовок' {...register('title')} />
             <Input

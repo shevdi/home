@@ -55,6 +55,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
 }
 
 const CheckboxContainer = styled.label<{ $disabled: boolean }>`
+  margin-bottom: 1rem;
   display: inline-flex;
   align-items: center;
   cursor: ${({ $disabled }) => ($disabled ? 'not-allowed' : 'pointer')};

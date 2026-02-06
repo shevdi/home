@@ -28,6 +28,5 @@ export const Filter = ({ isHiddenFilters }: IProps) => {
 }
 
 const FilterContainer = styled.div`
-  margin: 1rem 0;
   max-width: 480px;
 `
