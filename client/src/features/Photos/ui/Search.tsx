@@ -1,96 +1,67 @@
-import { useEffect, useMemo } from 'react'
+import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import styled from 'styled-components'
 import { useDispatch, useSelector } from 'react-redux'
 import { Dropdown, Input, TagList } from '@/shared/ui'
 import { PhotoOrder } from '@/shared/types'
-import { setOrderSearch, setDateFromSearch, setDateToSearch, setTagsSearch } from '../model/photosSlice'
+import { setOrderSearch, setDateFromSearch, setDateToSearch, setTagsSearch, setSearch } from '../model/photosSlice'
 import { selectSearch } from '../model'
-import { usePhotoSearchParams } from '@/shared/hooks'
+import { useQueryParams } from '@/shared/hooks'
 
 type FormFields = {
   order: PhotoOrder
   dateFrom: string
   dateTo: string
   tagInput: string
+  tags: string[]
 }
+
+const ORDER_PARAMS: PhotoOrder[] = ['orderDownByTakenAt', 'orderUpByTakenAt', 'orderDownByEdited']
 
 export const Search = () => {
   const dispatch = useDispatch()
   const { dateFrom, dateTo, order, tags = [] } = useSelector(selectSearch)
-  const { searchParams, setPhotoSearchParams } = usePhotoSearchParams()
-  const orderParam = searchParams.get('order')
-  const orderParamValue: PhotoOrder | undefined =
-    orderParam === 'orderDownByTakenAt' || orderParam === 'orderUpByTakenAt' || orderParam === 'orderDownByEdited'
-      ? orderParam
-      : undefined
-  const dateFromParam = searchParams.get('dateFrom')
-  const dateToParam = searchParams.get('dateTo')
-  const tagsParamValue = searchParams.get('tags')
-  const tagsFromParams = useMemo(() => {
-    if (!tagsParamValue) return []
-    return tagsParamValue
-      .split(',')
-      .map((tag) => tag.trim())
-      .filter(Boolean)
-  }, [tagsParamValue])
+  const { queryParams, setQueryParams } = useQueryParams()
+  const {
+    dateFrom: dateFromParamValue,
+    dateTo: dateToParamValue,
+    order: orderParamValue,
+    tags: tagsParamValue = [],
+  } = queryParams
+  const normalizedOrderParamValue = ORDER_PARAMS.includes(orderParamValue as PhotoOrder)
+    ? (queryParams.order as PhotoOrder)
+    : undefined
   const { register, watch, setValue } = useForm<FormFields>({
     defaultValues: {
-      order: orderParamValue ?? order ?? '',
-      dateFrom: dateFromParam ?? dateFrom ?? '',
-      dateTo: dateToParam ?? dateTo ?? '',
+      order: normalizedOrderParamValue ?? order ?? '',
+      dateFrom: dateFromParamValue ?? dateFrom ?? '',
+      dateTo: dateToParamValue ?? dateTo ?? '',
       tagInput: '',
+      tags: (tagsParamValue && tagsParamValue.length > 0 ? tagsParamValue : tags) ?? [],
     },
   })
 
   const tagInput = watch('tagInput') ?? ''
 
   useEffect(() => {
-    if (orderParamValue && orderParamValue !== order) {
-      dispatch(setOrderSearch(orderParamValue))
-    }
-    if (searchParams.has('dateFrom')) {
-      const normalizedDateFrom = dateFromParam?.trim() ? dateFromParam : null
-      if (normalizedDateFrom !== dateFrom) {
-        dispatch(setDateFromSearch(normalizedDateFrom))
-      }
-    }
-    if (searchParams.has('dateTo')) {
-      const normalizedDateTo = dateToParam?.trim() ? dateToParam : null
-      if (normalizedDateTo !== dateTo) {
-        dispatch(setDateToSearch(normalizedDateTo))
-      }
-    }
-    if (searchParams.has('tags')) {
-      const hasSameTags =
-        tags.length === tagsFromParams.length && tags.every((tag, index) => tag === tagsFromParams[index])
-      if (!hasSameTags) {
-        dispatch(setTagsSearch(tagsFromParams))
-      }
-    }
-  }, [
-    dispatch,
-    order,
-    orderParamValue,
-    dateFrom,
-    dateFromParam,
-    dateTo,
-    dateToParam,
-    tags,
-    tagsFromParams,
-    searchParams,
-  ])
+    dispatch(
+      setSearch({
+        order: normalizedOrderParamValue ?? order ?? '',
+        dateFrom: dateFromParamValue ?? dateFrom ?? '',
+        dateTo: dateToParamValue ?? dateTo ?? '',
+        tags: tagsParamValue ?? tags ?? [],
+      }),
+    )
+  }, [])
 
   const handleDateFromChange = (value: string) => {
-    const normalized = value.trim() ? value : null
-    dispatch(setDateFromSearch(normalized))
-    setPhotoSearchParams({ dateFrom: normalized, dateTo, order, tags })
+    dispatch(setDateFromSearch(value))
+    setQueryParams({ dateFrom: value, dateTo, order, tags: tags })
   }
 
   const handleDateToChange = (value: string) => {
-    const normalized = value.trim() ? value : null
-    dispatch(setDateToSearch(normalized))
-    setPhotoSearchParams({ dateFrom, dateTo: normalized, order, tags })
+    dispatch(setDateToSearch(value))
+    setQueryParams({ dateFrom, dateTo: value, order, tags: tags })
   }
 
   const addTag = () => {
@@ -102,20 +73,22 @@ export const Search = () => {
     }
     const nextTags = [...tags, trimmed]
     dispatch(setTagsSearch(nextTags))
-    setPhotoSearchParams({ dateFrom, dateTo, order, tags: nextTags })
+    setQueryParams({ dateFrom, dateTo, order, tags: nextTags })
+    setValue('tags', nextTags)
     setValue('tagInput', '')
   }
 
   const removeTag = (tagToRemove: string) => {
     const nextTags = tags.filter((tag) => tag !== tagToRemove)
     dispatch(setTagsSearch(nextTags))
-    setPhotoSearchParams({ dateFrom, dateTo, order, tags: nextTags })
+    setQueryParams({ dateFrom, dateTo, order, tags: nextTags })
+    setValue('tags', nextTags)
   }
 
   const handleOrderChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const nextOrder = event.target.value as PhotoOrder
     dispatch(setOrderSearch(nextOrder))
-    setPhotoSearchParams({ dateFrom, dateTo, order: nextOrder, tags })
+    setQueryParams({ dateFrom, dateTo, order: nextOrder, tags: tags })
   }
 
   return (

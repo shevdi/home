@@ -6,8 +6,8 @@ interface PhotosState {
     private: boolean
   }
   search: {
-    dateFrom: string | null
-    dateTo: string | null
+    dateFrom: string
+    dateTo: string
     order: PhotoOrder
     tags: string[]
   }
@@ -18,8 +18,8 @@ const initialState: PhotosState = {
     private: false,
   },
   search: {
-    dateFrom: null,
-    dateTo: null,
+    dateFrom: '',
+    dateTo: '',
     order: 'orderDownByTakenAt',
     tags: [],
   },
@@ -32,10 +32,16 @@ const photosSlice = createSlice({
     setPrivateFilter: (state, action: PayloadAction<boolean>) => {
       state.filter.private = action.payload
     },
-    setDateFromSearch: (state, action: PayloadAction<string | null>) => {
+    setSearch: (
+      state,
+      action: PayloadAction<{ dateFrom: string; dateTo: string; order: PhotoOrder; tags: string[] }>,
+    ) => {
+      state.search = action.payload
+    },
+    setDateFromSearch: (state, action: PayloadAction<string>) => {
       state.search.dateFrom = action.payload
     },
-    setDateToSearch: (state, action: PayloadAction<string | null>) => {
+    setDateToSearch: (state, action: PayloadAction<string>) => {
       state.search.dateTo = action.payload
     },
     setOrderSearch: (
@@ -50,5 +56,6 @@ const photosSlice = createSlice({
   },
 })
 
-export const { setPrivateFilter, setDateFromSearch, setDateToSearch, setOrderSearch, setTagsSearch } = photosSlice.actions
+export const { setPrivateFilter, setSearch, setDateFromSearch, setDateToSearch, setOrderSearch, setTagsSearch } =
+  photosSlice.actions
 export default photosSlice.reducer

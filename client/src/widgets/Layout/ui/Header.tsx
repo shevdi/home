@@ -2,10 +2,10 @@ import { NavLink } from 'react-router'
 import styled from 'styled-components'
 import { Menu } from '@/widgets/Menu'
 import { ThemeProps } from '@/app/styles'
-import { usePhotoSearchParams } from '@/shared/hooks'
+import { useQueryParams } from '@/shared/hooks'
 
 export function Header() {
-  const { photoSearchParams } = usePhotoSearchParams()
+  const { stringSearchParams } = useQueryParams()
 
   return (
     <Head>
@@ -22,7 +22,7 @@ export function Header() {
             <NavLink
               to={{
                 pathname: '/photos',
-                search: photoSearchParams,
+                search: stringSearchParams,
               }}
             >
               Фото

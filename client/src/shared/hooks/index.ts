@@ -1,4 +1,4 @@
 export { useOnClickOutside } from './useOnClickOutside'
-export { usePhotoSearchParams } from './usePhotoSearchParams'
+export { useQueryParams } from './useQueryParams'
 export { useInfiniteLoader } from './useInfiniteLoader'
 export { useTitle } from './useTitle'
