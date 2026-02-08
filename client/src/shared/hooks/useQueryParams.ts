@@ -17,7 +17,7 @@ export const useQueryParams = () => {
     setSearchParams(
       (searchParams) => {
         Object.entries(updates).forEach(([key, value]) => {
-          if (value) {
+          if (value && value.length > 0) {
             let normalized = value
             if (Array.isArray(value)) {
               normalized = value.join(',')
@@ -38,6 +38,7 @@ export const useQueryParams = () => {
       if (!value[1]) {
         return []
       }
+      return { ...prev, [value[0]]: value[1].split(',') }
       return value[1].split(',')
     }
     return { ...prev, [value[0]]: value[1] }

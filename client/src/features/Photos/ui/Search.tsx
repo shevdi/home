@@ -1,10 +1,10 @@
-import { useEffect, type ChangeEvent } from 'react'
+import { KeyboardEvent, useEffect, type ChangeEvent } from 'react'
 import { useForm } from 'react-hook-form'
 import styled from 'styled-components'
 import { useDispatch, useSelector } from 'react-redux'
 import { Dropdown, Input, TagList } from '@/shared/ui'
 import { PhotoOrder } from '@/shared/types'
-import { setOrderSearch, setDateFromSearch, setDateToSearch, setTagsSearch, setSearch } from '../model/photosSlice'
+import { setOrderSearch, setDateFromSearch, setDateToSearch, setTagsSearch } from '../model/photosSlice'
 import { selectSearch } from '../model'
 import { useQueryParams } from '@/shared/hooks'
 
@@ -44,14 +44,7 @@ export const Search = () => {
   const tagInput = watch('tagInput') ?? ''
 
   useEffect(() => {
-    dispatch(
-      setSearch({
-        order: normalizedOrderParamValue ?? order ?? '',
-        dateFrom: dateFromParamValue ?? dateFrom ?? '',
-        dateTo: dateToParamValue ?? dateTo ?? '',
-        tags: tagsParamValue ?? tags ?? [],
-      }),
-    )
+    dispatch(setTagsSearch(tagsParamValue ?? tags ?? []))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -67,18 +60,21 @@ export const Search = () => {
     setQueryParams({ dateFrom, dateTo: value, order, tags: tags })
   }
 
-  const addTag = () => {
-    const trimmed = tagInput.trim()
-    if (!trimmed) return
-    if (tags.includes(trimmed)) {
+  const addTag = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      event.preventDefault()
+      const trimmed = tagInput.trim()
+      if (!trimmed) return
+      if (tags.includes(trimmed)) {
+        setValue('tagInput', '')
+        return
+      }
+      const nextTags = [...tags, trimmed]
+      dispatch(setTagsSearch(nextTags))
+      setQueryParams({ dateFrom, dateTo, order, tags: nextTags })
+      setValue('tags', nextTags)
       setValue('tagInput', '')
-      return
     }
-    const nextTags = [...tags, trimmed]
-    dispatch(setTagsSearch(nextTags))
-    setQueryParams({ dateFrom, dateTo, order, tags: nextTags })
-    setValue('tags', nextTags)
-    setValue('tagInput', '')
   }
 
   const removeTag = (tagToRemove: string) => {
@@ -129,12 +125,7 @@ export const Search = () => {
         id='photo-filter-tags'
         placeholder='Введите тег и нажмите Enter'
         {...register('tagInput')}
-        onKeyDown={(event) => {
-          if (event.key === 'Enter') {
-            event.preventDefault()
-            addTag()
-          }
-        }}
+        onKeyDown={addTag}
       />
       {<TagList tags={tags} onClick={removeTag} />}
     </SearchContainer>

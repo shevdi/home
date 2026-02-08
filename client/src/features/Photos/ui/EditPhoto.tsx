@@ -1,11 +1,10 @@
-import { useEffect, useState } from 'react'
+import { type KeyboardEvent } from 'react'
 import styled from 'styled-components'
 import { useChangePhotoMutation, useGetPhotoQuery } from '../model'
 import { useLocation } from 'react-router'
 import z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
-import { useDispatch } from 'react-redux'
 import { Button, Checkbox, ErrMessage, Input, Loader, TagList } from '@/shared/ui'
 import { getErrorMessage } from '@/shared/utils'
 import { DeletePhoto } from './DeletePhoto'
@@ -25,7 +24,6 @@ export function EditPhoto() {
   const photoId = location.pathname.split('/')[2]
   const { data, isLoading } = useGetPhotoQuery(photoId)
   const [changePhoto] = useChangePhotoMutation()
-  const dispatch = useDispatch()
 
   const {
     register,
@@ -37,31 +35,21 @@ export function EditPhoto() {
     formState: { isSubmitting, errors },
   } = useForm<FormFields>({
     resolver: zodResolver(schema),
-    defaultValues: {
-      title: data?.title,
-      priority: data?.priority || 0,
+    values: {
+      title: data?.title ?? '',
+      priority: data?.priority ?? 0,
       private: data?.private ?? false,
-      tags: data?.tags || [],
+      tags: data?.tags ?? [],
       tagsInput: '',
     },
   })
 
-  const [tags, setTags] = useState<string[]>([])
-  const [tagsInitialized, setTagsInitialized] = useState(false)
   const tagInput = watch('tagsInput') ?? ''
+  const tags = watch('tags') ?? []
 
-  useEffect(() => {
-    if (tagsInitialized || !data) return
-    const initialTags = data.tags || []
-    setTags(initialTags)
-    setValue('tags', initialTags, { shouldValidate: true })
-    setTagsInitialized(true)
-    if (data?.private) {
-      setValue('private', data.private, { shouldValidate: true })
-    }
-  }, [data, setValue, tagsInitialized])
-
-  const addTag = () => {
+  const addTag = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key !== 'Enter') return
+    event.preventDefault()
     const trimmed = tagInput.trim()
     if (!trimmed) return
     if (tags.includes(trimmed)) {
@@ -69,14 +57,12 @@ export function EditPhoto() {
       return
     }
     const nextTags = [...tags, trimmed]
-    setTags(nextTags)
     setValue('tags', nextTags, { shouldValidate: true, shouldDirty: true })
     setValue('tagsInput', '')
   }
 
   const removeTag = (tagToRemove: string) => {
     const nextTags = tags.filter((tag) => tag !== tagToRemove)
-    setTags(nextTags)
     setValue('tags', nextTags, { shouldValidate: true, shouldDirty: true })
   }
 
@@ -148,12 +134,7 @@ export function EditPhoto() {
               label='Теги'
               placeholder='Введите тег и нажмите Enter'
               {...register('tagsInput')}
-              onKeyDown={(event) => {
-                if (event.key === 'Enter') {
-                  event.preventDefault()
-                  addTag()
-                }
-              }}
+              onKeyDown={addTag}
             />
             <TagList tags={tags} onClick={removeTag} />
             <Button display='block' margin='1rem auto' disabled={isSubmitting}>
