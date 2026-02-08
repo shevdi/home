@@ -17,3 +17,10 @@ export interface IPhotoSearch {
   tags?: string[];
   $nor?: IPhotoSearch;
 }
+
+export interface IPhotoSearchParams {
+  dateFrom?: string | null
+  dateTo?: string | null
+  order?: PhotoOrder
+  tags?: string[]
+}

@@ -1,5 +1,6 @@
 import { KeyboardEvent, useEffect, type ChangeEvent } from 'react'
 import { useForm } from 'react-hook-form'
+import z from 'zod'
 import styled from 'styled-components'
 import { useDispatch, useSelector } from 'react-redux'
 import { Dropdown, Input, TagList } from '@/shared/ui'
@@ -7,14 +8,18 @@ import { PhotoOrder } from '@/shared/types'
 import { setOrderSearch, setDateFromSearch, setDateToSearch, setTagsSearch } from '../model/photosSlice'
 import { selectSearch } from '../model'
 import { useQueryParams } from '@/shared/hooks'
+import { zodResolver } from '@hookform/resolvers/zod'
 
-type FormFields = {
-  order: PhotoOrder
-  dateFrom: string
-  dateTo: string
-  tagInput: string
-  tags: string[]
-}
+const schema = z.object({
+  order: z.string(),
+  dateFrom: z.string(),
+  dateTo: z.string(),
+  priority: z.number().optional(),
+  tags: z.array(z.string()).optional(),
+  tagInput: z.string().optional(),
+})
+
+type FormFields = z.infer<typeof schema>
 
 const ORDER_PARAMS: PhotoOrder[] = ['orderDownByTakenAt', 'orderUpByTakenAt', 'orderDownByEdited']
 
@@ -32,7 +37,8 @@ export const Search = () => {
     ? (queryParams.order as PhotoOrder)
     : undefined
   const { register, watch, setValue } = useForm<FormFields>({
-    defaultValues: {
+    resolver: zodResolver(schema),
+    values: {
       order: normalizedOrderParamValue ?? order ?? '',
       dateFrom: dateFromParamValue ?? dateFrom ?? '',
       dateTo: dateToParamValue ?? dateTo ?? '',
@@ -42,7 +48,6 @@ export const Search = () => {
   })
 
   const tagInput = watch('tagInput') ?? ''
-
   useEffect(() => {
     dispatch(setTagsSearch(tagsParamValue ?? tags ?? []))
     // eslint-disable-next-line react-hooks/exhaustive-deps

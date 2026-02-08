@@ -1,6 +1,7 @@
 import { apiSlice } from '@/app/store/api'
 import type { FetchBaseQueryError, FetchBaseQueryMeta, QueryReturnValue } from '@reduxjs/toolkit/query'
 import { ILink, PhotoOrder } from '@/shared/types'
+import { buildPhotoSearchParams } from '@/shared/utils'
 
 export interface UploadResponse {
   ok: boolean
@@ -52,25 +53,6 @@ const getInfiniteQueryAbortController = (searchKey: string) => {
   return controller
 }
 
-const buildPhotoSearchParams = (search?: PhotoSearch | void, pageParam?: number) => {
-  const params = new URLSearchParams()
-  if (pageParam !== undefined) {
-    params.append('page', pageParam.toString())
-  }
-  if (search?.dateFrom) {
-    params.append('dateFrom', search.dateFrom)
-  }
-  if (search?.dateTo) {
-    params.append('dateTo', search.dateTo)
-  }
-  if (search?.order) {
-    params.append('order', search.order)
-  }
-  if (search?.tags && search.tags.length > 0) {
-    params.append('tags', search.tags.join(','))
-  }
-  return params.toString()
-}
 
 export const photosApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({

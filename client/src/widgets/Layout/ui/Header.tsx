@@ -2,10 +2,13 @@ import { NavLink } from 'react-router'
 import styled from 'styled-components'
 import { Menu } from '@/widgets/Menu'
 import { ThemeProps } from '@/app/styles'
-import { useQueryParams } from '@/shared/hooks'
+import { useSelector } from 'react-redux'
+import { selectSearch } from '@/features'
+import { buildPhotoSearchParams } from '@/shared/utils'
 
 export function Header() {
-  const { stringSearchParams } = useQueryParams()
+  const search = useSelector(selectSearch)
+  const stringSearchParams = buildPhotoSearchParams(search)
 
   return (
     <Head>
