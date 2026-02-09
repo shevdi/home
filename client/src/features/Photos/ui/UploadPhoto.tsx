@@ -35,7 +35,7 @@ const buildUploadFormData = (files: File[], isPrivate: boolean, meta: FileMeta[]
   return formData
 }
 
-const getUploadMessage = (response?: { data?: UploadResponse}) => {
+const getUploadMessage = (response?: { data?: UploadResponse }) => {
   const data = response?.data
   if (!data) return ''
   const { successCount, errorsCount, totalCount } = data
@@ -128,7 +128,6 @@ export function UploadPhoto() {
 
   return (
     <PageContainer>
-      <PageHeader>Добавить фото</PageHeader>
       <ErrMessage>{errors.root?.message}</ErrMessage>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Controller
@@ -155,12 +154,7 @@ export function UploadPhoto() {
             control={control}
             name='private'
             render={({ field }) => (
-              <Checkbox
-                checked={field.value}
-                onChange={field.onChange}
-                label='Скрыть'
-                disabled={isProcessed}
-              />
+              <Checkbox checked={field.value} onChange={field.onChange} label='Скрыть' disabled={isProcessed} />
             )}
           />
         </CheckboxContainer>
@@ -168,9 +162,7 @@ export function UploadPhoto() {
           <FileList>
             {files.map((file, index) => {
               const meta = fileMeta[index]
-              return (
-                <FileData key={`${file.name}-${index}`} file={file} meta={meta} />
-              )
+              return <FileData key={`${file.name}-${index}`} file={file} meta={meta} />
             })}
           </FileList>
         )}
@@ -183,10 +175,6 @@ export function UploadPhoto() {
 }
 
 const PageContainer = styled.div``
-
-const PageHeader = styled.h1`
-  text-align: center;
-`
 
 const FileList = styled.div`
   margin: 1rem 0;

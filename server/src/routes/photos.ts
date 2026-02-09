@@ -92,6 +92,8 @@ router.get(`/`, optionalAuth, async (req: Request & Partial<IUserInfo>, res: Res
           smSizeUrl,
           mdSizeUrl,
           fullSizeUrl,
+          updatedAt: item.updatedAt,
+          createdAt: item.createdAt,
           page,
           meta: item.meta
         }

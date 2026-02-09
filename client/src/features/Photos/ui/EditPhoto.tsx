@@ -101,7 +101,6 @@ export function EditPhoto() {
 
   return (
     <PageContainer>
-      <PageHeader>Редактировать фото</PageHeader>
       <ErrMessage>{errors.root?.message}</ErrMessage>
       {isLoading ? (
         <Loader />
@@ -150,10 +149,6 @@ export function EditPhoto() {
 }
 
 const PageContainer = styled.div``
-
-const PageHeader = styled.h1`
-  text-align: center;
-`
 
 const Image = styled.img`
   width: 100%;

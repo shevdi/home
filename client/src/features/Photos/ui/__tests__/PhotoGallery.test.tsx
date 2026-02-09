@@ -130,28 +130,6 @@ describe('PhotoGallery', () => {
     expect(screen.getAllByTestId('photo-link')).toHaveLength(2)
   })
 
-  it('passes isHiddenFilters to Filter', () => {
-    mockUseSelector.mockImplementation((selector) => {
-      if (selector === selectFilter) {
-        return { private: false }
-      }
-      if (selector === selectSearch) {
-        return baseSearch
-      }
-      return undefined
-    })
-    mockInfiniteQuery()
-
-    render(
-      <MemoryRouter>
-        <PhotoGallery isHiddenFilters />
-      </MemoryRouter>,
-    )
-
-    expect(mockFilter).toHaveBeenCalledWith({ isHiddenFilters: true })
-    expect(screen.getByTestId('filter')).toHaveTextContent('hidden')
-  })
-
   it('filters out non-private photos when private filter enabled', () => {
     mockUseSelector.mockImplementation((selector) => {
       if (selector === selectFilter) {

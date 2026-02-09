@@ -4,14 +4,8 @@ import { selectFilter, selectSearch, useGetInfinitePhotoWithMaxInfiniteQuery } f
 import { PhotoLink } from './PhotoLink'
 import { Loader } from '@/shared/ui'
 import { useInfiniteLoader } from '@/shared/hooks'
-import { Search } from './Search'
-import { Filter } from './Filter'
 
-interface IProps {
-  isHiddenFilters?: boolean
-}
-
-export function PhotoGallery({ isHiddenFilters }: IProps) {
+export function PhotoGallery() {
   const filters = useSelector(selectFilter)
   const search = useSelector(selectSearch)
   const { isLoading, fetchNextPage, hasNextPage, isFetchingNextPage, data, isFetching } =
@@ -36,31 +30,22 @@ export function PhotoGallery({ isHiddenFilters }: IProps) {
 
   return (
     <PageContainer>
-      <PageHeader>Фотки</PageHeader>
-      <>
-        <Filter isHiddenFilters={isHiddenFilters} />
-        <Search />
-        <PhotoContainer $isLoading={isFetching && !isFetchingNextPage}>
-          {data?.map((item) => (
-            <PhotoLink key={item._id} photo={item} disabled={isFetching && !isFetchingNextPage} />
-          ))}
-        </PhotoContainer>
-        {hasNextPage && <Sentinel ref={sentinelRef} />}
-        {(isLoading || isFetchingNextPage) && (
-          <LoaderContainer>
-            <Loader inline />
-          </LoaderContainer>
-        )}
-      </>
+      <PhotoContainer $isLoading={isFetching && !isFetchingNextPage}>
+        {data?.map((item) => (
+          <PhotoLink key={item._id} photo={item} disabled={isFetching && !isFetchingNextPage} />
+        ))}
+      </PhotoContainer>
+      {hasNextPage && <Sentinel ref={sentinelRef} />}
+      {(isLoading || isFetchingNextPage) && (
+        <LoaderContainer>
+          <Loader inline />
+        </LoaderContainer>
+      )}
     </PageContainer>
   )
 }
 
 const PageContainer = styled.div``
-
-const PageHeader = styled.h1`
-  text-align: center;
-`
 
 const PhotoContainer = styled.div<{ $isLoading: boolean }>`
   display: grid;
