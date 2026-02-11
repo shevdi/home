@@ -112,7 +112,6 @@ router.post(`/upload`, upload.array("files", 50), async (req: Request, res: Resp
     const files = req.files as Express.Multer.File[];
     const isPrivate = parseBoolean(req.body?.private as string | undefined)
     const tags = normalizeTags(req.body?.tags)
-    const meta = req.body?.meta
     const metaRaw = req.body?.meta as string | undefined
     const metaList = metaRaw
       ? (JSON.parse(metaRaw) as Array<{
@@ -139,7 +138,7 @@ router.post(`/upload`, upload.array("files", 50), async (req: Request, res: Resp
         const { url: smSizeUrl, photoData: smSizePhoto } = await drime.cropPhotoAndUpload(file, 300)
         const { url: mdSizeUrl, photoData: mdSizePhoto } = await drime.cropPhotoAndUpload(file, 1024)
 
-        await addNewPhoto({
+        const addedPhoto = await addNewPhoto({
           smSizeUrl,
           mdSizeUrl,
           fullSizeUrl,
@@ -156,7 +155,7 @@ router.post(`/upload`, upload.array("files", 50), async (req: Request, res: Resp
             takenAtDate: gpsMeta?.takenAt ? new Date(gpsMeta?.takenAt) : undefined
           },
         })
-        results.push({ ok: true, fileName: file.originalname })
+        results.push({ ok: true, photo: addedPhoto })
       } catch (err) {
         console.error(`Error uploading file ${file.originalname}:`, err);
         results.push({ ok: false, fileName: file.originalname, error: err instanceof Error ? err.message : 'Unknown error' })
@@ -217,7 +216,7 @@ router.put(`/:id`, verifyJWT, async (req: Request, res: Response): Promise<any> 
     const photo = await updatePhotoById(req.params.id, updateData)
 
     if (!photo) {
-      return res.status(404)
+      return res.status(404).json({ message: 'Photo not found' })
     }
 
     const { url } = await drime.getEntries(`/file-entries/${photo.mdSizeEntryId}`)
