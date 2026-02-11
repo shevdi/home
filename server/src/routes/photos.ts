@@ -12,11 +12,11 @@ import {
   updatePhotoById,
 } from '../db/services/photos.ts'
 import drime from '../services/drime.ts';
-import { normalizeTags, parseBoolean } from '../utils';
-import { IPhotoSearch, IUserInfo } from '@/types/index.ts';
+import { normalizeTags, parseBoolean, queryBuilder } from '../utils';
+import { IUserInfo } from '@/types/index.ts';
 import { optionalAuth } from '../middlewares/optionalAuth';
 import { verifyJWT } from '../middlewares/verifyJWT';
-import { FilterQuery, SortOrder } from 'mongoose'
+import { SortOrder } from 'mongoose'
 
 const router = express.Router()
 
@@ -27,54 +27,35 @@ const getErrorStatus = (err: unknown): number | undefined => {
   return (err as { status?: number })?.status;
 }
 
+const sortTypes: Record<string, Record<string, SortOrder>> = {
+  orderDownByTakenAt: { 'meta.takenAt': -1, _id: -1 },
+  orderUpByTakenAt: { 'meta.takenAt': 1, _id: -1 },
+  orderDownByEdited: { updatedAt: -1, _id: -1 }
+}
+
 router.get(`/`, optionalAuth, async (req: Request & Partial<IUserInfo>, res: Response): Promise<any> => {
   try {
     const pageParam = <string>req.query.page
-    const privateParam = <string>req.query.private
     const dateFromParam = <string>req.query.dateFrom
     const dateToParam = <string>req.query.dateTo
     const orderParam = <string>req.query.order
     const tagsParam = req.query.tags
-    const pageSize = req.query.page ? 5 : 100// Number of photos per page
-    const privateFilter = parseBoolean(privateParam)
-    const search: FilterQuery<IPhotoSearch> & Record<string, unknown> = {}
+    const pageSize = req.query.page ? 5 : 100 // Number of photos per page
 
-    if (!req.roles || !req.roles.includes('admin')) {
-      search.$nor = [{ private: true }]
-    }
-
-    const dateFrom = dateFromParam?.trim() || undefined
-    const dateTo = dateToParam?.trim() || undefined
-    if (dateFrom || dateTo) {
-      const takenAt: Record<string, string> = {}
-      if (dateFrom) {
-        takenAt.$gte = dateFrom
-      }
-      if (dateTo) {
-        takenAt.$lte = dateTo
-      }
-      search['meta.takenAt'] = takenAt
-    }
-
-    const tags = normalizeTags(tagsParam)
-    if (tags && tags.length > 0) {
-      search.tags = { $all: tags }
-    }
+    const isAdmin = Boolean(req.roles?.includes('admin'))
+    const builder = queryBuilder()
+      .dateRange('meta.takenAt', dateFromParam, dateToParam)
+      .allIn('tags', tagsParam, (v) => normalizeTags(v) ?? [])
+    const search = (isAdmin ? builder : builder.excludeWhere('private', true)).build()
 
     const page = pageParam ? parseInt(pageParam) : 1
-    const sort: Record<string, SortOrder> =
-      orderParam === 'orderDownByTakenAt' || orderParam === 'orderDownBtTakerAt'
-        ? { 'meta.takenAt': -1 as SortOrder, _id: -1 as SortOrder }
-        : orderParam === 'orderUpByTakenAt'
-          ? { 'meta.takenAt': 1 as SortOrder, _id: -1 as SortOrder }
-          : orderParam === 'orderDownByEdited'
-            ? { updatedAt: -1 as SortOrder, _id: -1 as SortOrder }
-            : { createdAt: -1 as SortOrder, _id: -1 as SortOrder }
+    const sort = sortTypes[orderParam]
 
     const [photos, totalCount] = await Promise.all([
       getPhotosPaginated(page, pageSize, search, sort),
       getPhotosCount(search)
     ])
+
 
     const results = await Promise.all(photos
       .map(async (item) => {
