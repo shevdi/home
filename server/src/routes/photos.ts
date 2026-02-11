@@ -56,7 +56,6 @@ router.get(`/`, optionalAuth, async (req: Request & Partial<IUserInfo>, res: Res
       getPhotosCount(search)
     ])
 
-
     const results = await Promise.all(photos
       .map(async (item) => {
         const { url: smSizeUrl } = await drime.getEntries(`/file-entries/${item.smSizeEntryId}`)
@@ -153,7 +152,8 @@ router.post(`/upload`, upload.array("files", 50), async (req: Request, res: Resp
           tags,
           meta: {
             ...metadata,
-            ...gpsMeta
+            ...gpsMeta,
+            takenAtDate: gpsMeta?.takenAt ? new Date(gpsMeta?.takenAt) : undefined
           },
         })
         results.push({ ok: true, fileName: file.originalname })

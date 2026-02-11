@@ -14,8 +14,8 @@ const linkSchema = new Schema(
     fullSizeEntryId: { type: String },
     priority: { type: Number },
     tags: [{ type: String }],
-    createdAt: { type: String },
-    updatedAt: { type: String },
+    createdAt: { type: Date },
+    updatedAt: { type: Date },
     private: { type: Boolean },
     meta: {
       mimeType: { type: String },
@@ -28,10 +28,11 @@ const linkSchema = new Schema(
       make: { type: String },
       model: { type: String },
       takenAt: { type: String },
+      takenAtDate: { type: Date },
     }
   },
   {
-    timestamps: true
+    timestamps: true,
   }
 )
 

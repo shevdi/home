@@ -9,6 +9,7 @@ export interface IMeta {
   make?: string;
   model?: string;
   takenAt?: string;
+  takenAtDate?: Date;
 }
 
 export interface ILink {

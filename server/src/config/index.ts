@@ -1,5 +1,5 @@
 export const photoFolderNames = {
-  sm: 'home small photos',
-  md: 'home medium photos',
-  full: 'home full photos'
+  sm: 'dev home small photos',
+  md: 'dev home medium photos',
+  full: 'dev home full photos'
 }

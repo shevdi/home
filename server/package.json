@@ -7,7 +7,8 @@
   "scripts": {
     "start": "node --experimental-transform-types --experimental-strip-types src/index.ts",
     "dev": "nodemon --experimental-transform-types --experimental-strip-types src/index.ts",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "test:integration": "node --experimental-vm-modules node_modules/jest/bin/jest.js photos.integration.test --runInBand"
   },
   "keywords": [
     "nodejs",
