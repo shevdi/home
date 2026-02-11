@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import { useDispatch, useSelector } from 'react-redux'
 import { Dropdown, Input, TagList } from '@/shared/ui'
 import { PhotoOrder } from '@/shared/types'
-import { setOrderSearch, setDateFromSearch, setDateToSearch, setTagsSearch } from '../model/photosSlice'
+import { setSearch, setOrderSearch, setDateFromSearch, setDateToSearch, setTagsSearch } from '../model/photosSlice'
 import { selectSearch } from '../model'
 import { useQueryParams } from '@/shared/hooks'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -49,7 +49,14 @@ export const Search = () => {
 
   const tagInput = watch('tagInput') ?? ''
   useEffect(() => {
-    dispatch(setTagsSearch(tagsParamValue ?? tags ?? []))
+    dispatch(
+      setSearch({
+        dateFrom: dateFromParamValue ?? dateFrom ?? '',
+        dateTo: dateToParamValue ?? dateTo ?? '',
+        order: (normalizedOrderParamValue ?? order ?? 'orderDownByTakenAt') as PhotoOrder,
+        tags: tagsParamValue ?? tags ?? [],
+      }),
+    )
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 

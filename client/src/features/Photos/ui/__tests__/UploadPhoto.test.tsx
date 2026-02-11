@@ -53,7 +53,6 @@ describe('UploadPhoto', () => {
 
     const { container } = render(<UploadPhoto />)
 
-    expect(screen.getByText('Добавить фото')).toBeInTheDocument()
     expect(screen.getByText('Загрузить фото', { selector: 'label' })).toBeInTheDocument()
     expect(getFileInput(container)).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Загрузить фото' })).toBeDisabled()

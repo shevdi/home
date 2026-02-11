@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import { useReverseGeocode } from '@/shared/hooks'
 
 type MapEmbedProps = {
   lat: number
@@ -17,12 +18,14 @@ export const MapEmbed = ({
   height = 280,
   linkText = 'Открыть в Google Maps',
 }: MapEmbedProps) => {
+  const resolvedLabel = useReverseGeocode(lat, lon, !label)
   const mapQuery = `${lat},${lon}`
   const encodedQuery = encodeURIComponent(mapQuery)
+  const locationLabel = label ?? resolvedLabel
 
   return (
     <MapSection>
-      {label && <MapLabel>{label}</MapLabel>}
+      {locationLabel && <MapLabel>{locationLabel}</MapLabel>}
       <MapFrame
         title='Map location'
         loading='lazy'

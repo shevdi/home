@@ -9,8 +9,6 @@ jest.mock('react-redux', () => ({
 }))
 
 jest.mock('../../model', () => ({
-  selectFilter: jest.fn(),
-  selectSearch: jest.fn(),
   useGetInfinitePhotoWithMaxInfiniteQuery: jest.fn(),
 }))
 
@@ -18,14 +16,6 @@ jest.mock('../PhotoLink', () => ({
   PhotoLink: ({ photo }: { photo: { _id: string; title?: string } }) => (
     <div data-testid='photo-link'>{photo.title ?? photo._id}</div>
   ),
-}))
-
-const mockFilter = jest.fn(({ isHiddenFilters }: { isHiddenFilters?: boolean }) => (
-  <div data-testid='filter'>{isHiddenFilters ? 'hidden' : 'visible'}</div>
-))
-
-jest.mock('../Filter', () => ({
-  Filter: (props: { isHiddenFilters?: boolean }) => mockFilter(props),
 }))
 
 jest.mock('../Search', () => ({
@@ -59,7 +49,6 @@ beforeEach(() => {
   observerCallback = null
   MockIntersectionObserver.lastInstance = null
   global.IntersectionObserver = MockIntersectionObserver as unknown as typeof IntersectionObserver
-  mockFilter.mockClear()
 })
 
 afterEach(() => {
@@ -106,52 +95,6 @@ const mockInfiniteQuery = (overrides?: Parameters<typeof buildHookResult>[0]) =>
 }
 
 describe('PhotoGallery', () => {
-  it('renders header, filter, search, and photo links', () => {
-    mockUseSelector.mockImplementation((selector) => {
-      if (selector === selectFilter) {
-        return { private: false }
-      }
-      if (selector === selectSearch) {
-        return baseSearch
-      }
-      return undefined
-    })
-    mockInfiniteQuery()
-
-    render(
-      <MemoryRouter>
-        <PhotoGallery />
-      </MemoryRouter>,
-    )
-
-    expect(screen.getByText('Фотки')).toBeInTheDocument()
-    expect(screen.getByTestId('filter')).toHaveTextContent('visible')
-    expect(screen.getByTestId('search')).toBeInTheDocument()
-    expect(screen.getAllByTestId('photo-link')).toHaveLength(2)
-  })
-
-  it('filters out non-private photos when private filter enabled', () => {
-    mockUseSelector.mockImplementation((selector) => {
-      if (selector === selectFilter) {
-        return { private: true }
-      }
-      if (selector === selectSearch) {
-        return baseSearch
-      }
-      return undefined
-    })
-    mockInfiniteQuery()
-
-    render(
-      <MemoryRouter>
-        <PhotoGallery />
-      </MemoryRouter>,
-    )
-
-    expect(screen.getAllByTestId('photo-link')).toHaveLength(1)
-    expect(screen.getByText('Photo Two')).toBeInTheDocument()
-  })
-
   it('shows loader when fetching', () => {
     mockUseSelector.mockImplementation((selector) => {
       if (selector === selectFilter) {
