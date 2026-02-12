@@ -174,8 +174,8 @@ describe('photos routes', () => {
 
       const searchArg = mockGetPhotosPaginated.mock.calls[0][2] as Record<string, unknown>
       expect(searchArg['meta.takenAt']).toEqual({
-        $gte: '2024-01-01',
-        $lte: '2024-12-31',
+        $gte: '2024-01-01T00:00:00Z',
+        $lte: '2024-12-31T59:59:59Z',
       })
     })
 

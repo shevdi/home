@@ -1,0 +1,304 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`Photo renders full photo with all elements when using infinite query 1`] = `
+<div>
+  <div
+    class="sc-beySbL kFfCMY"
+  >
+    <div
+      class="sc-hLQRIK gLJKpu"
+    >
+      <div>
+        <a
+          data-discover="true"
+          href="/photo-0"
+        >
+          Предыдущее фото
+        </a>
+      </div>
+      <div>
+        <a
+          href="/photo-full.jpg"
+          rel="noreferrer"
+          target="_blank"
+        >
+          Полный размер
+        </a>
+      </div>
+      <div>
+        <a
+          data-discover="true"
+          href="/photo-2"
+        >
+          Следующее фото
+        </a>
+      </div>
+    </div>
+    <img
+      class="sc-eDLJxb bVapFp"
+      src="/photo-md.jpg"
+    />
+    <h1
+      class="sc-guDLRU gDrxEN"
+    >
+      Test Photo
+    </h1>
+    <div
+      data-testid="tag-list"
+    >
+      <span>
+        landscape
+      </span>
+    </div>
+    <div
+      class="sc-dmyDGl bLewBZ"
+    >
+      <a
+        data-discover="true"
+        href="/photos?dateFrom=2024-01-15&dateTo=2024-01-15"
+      >
+        formatted:2024-01-15T10:30:00Z
+      </a>
+    </div>
+    <div
+      data-testid="map-embed"
+    >
+      map:
+      55.7558
+      ,
+      37.6173
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Photo renders loader when loading 1`] = `
+<div>
+  <div
+    class="sc-beySbL kFfCMY"
+  >
+    <div
+      class="sc-hLQRIK gLJKpu"
+    >
+      <div />
+      <div />
+      <div />
+    </div>
+    <div
+      data-testid="loader"
+    >
+      loader
+    </div>
+    <h1
+      class="sc-guDLRU gDrxEN"
+    />
+  </div>
+</div>
+`;
+
+exports[`Photo renders photo with GPS coordinates and MapEmbed 1`] = `
+<div>
+  <div
+    class="sc-beySbL kFfCMY"
+  >
+    <div
+      class="sc-hLQRIK gLJKpu"
+    >
+      <div />
+      <div>
+        <a
+          href="/photo-full.jpg"
+          rel="noreferrer"
+          target="_blank"
+        >
+          Полный размер
+        </a>
+      </div>
+      <div />
+    </div>
+    <img
+      class="sc-eDLJxb bVapFp"
+      src="/photo-md.jpg"
+    />
+    <h1
+      class="sc-guDLRU gDrxEN"
+    >
+      Test Photo
+    </h1>
+    <div
+      data-testid="map-embed"
+    >
+      map:
+      55.7558
+      ,
+      37.6173
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Photo renders photo with basic info 1`] = `
+<div>
+  <div
+    class="sc-beySbL kFfCMY"
+  >
+    <div
+      class="sc-hLQRIK gLJKpu"
+    >
+      <div />
+      <div>
+        <a
+          href="/photo-full.jpg"
+          rel="noreferrer"
+          target="_blank"
+        >
+          Полный размер
+        </a>
+      </div>
+      <div />
+    </div>
+    <img
+      class="sc-eDLJxb bVapFp"
+      src="/photo-md.jpg"
+    />
+    <h1
+      class="sc-guDLRU gDrxEN"
+    >
+      Test Photo
+    </h1>
+  </div>
+</div>
+`;
+
+exports[`Photo renders photo with neighbours navigation 1`] = `
+<div>
+  <div
+    class="sc-beySbL kFfCMY"
+  >
+    <div
+      class="sc-hLQRIK gLJKpu"
+    >
+      <div>
+        <a
+          data-discover="true"
+          href="/photo-0"
+        >
+          Предыдущее фото
+        </a>
+      </div>
+      <div>
+        <a
+          href="/photo-full.jpg"
+          rel="noreferrer"
+          target="_blank"
+        >
+          Полный размер
+        </a>
+      </div>
+      <div>
+        <a
+          data-discover="true"
+          href="/photo-2"
+        >
+          Следующее фото
+        </a>
+      </div>
+    </div>
+    <img
+      class="sc-eDLJxb bVapFp"
+      src="/photo-md.jpg"
+    />
+    <h1
+      class="sc-guDLRU gDrxEN"
+    >
+      Test Photo
+    </h1>
+  </div>
+</div>
+`;
+
+exports[`Photo renders photo with tags 1`] = `
+<div>
+  <div
+    class="sc-beySbL kFfCMY"
+  >
+    <div
+      class="sc-hLQRIK gLJKpu"
+    >
+      <div />
+      <div>
+        <a
+          href="/photo-full.jpg"
+          rel="noreferrer"
+          target="_blank"
+        >
+          Полный размер
+        </a>
+      </div>
+      <div />
+    </div>
+    <img
+      class="sc-eDLJxb bVapFp"
+      src="/photo-md.jpg"
+    />
+    <h1
+      class="sc-guDLRU gDrxEN"
+    >
+      Test Photo
+    </h1>
+    <div
+      data-testid="tag-list"
+    >
+      <span>
+        nature
+      </span>
+      <span>
+        sunset
+      </span>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Photo renders photo with takenAt date 1`] = `
+<div>
+  <div
+    class="sc-beySbL kFfCMY"
+  >
+    <div
+      class="sc-hLQRIK gLJKpu"
+    >
+      <div />
+      <div>
+        <a
+          href="/photo-full.jpg"
+          rel="noreferrer"
+          target="_blank"
+        >
+          Полный размер
+        </a>
+      </div>
+      <div />
+    </div>
+    <img
+      class="sc-eDLJxb bVapFp"
+      src="/photo-md.jpg"
+    />
+    <h1
+      class="sc-guDLRU gDrxEN"
+    >
+      Test Photo
+    </h1>
+    <div
+      class="sc-dmyDGl bLewBZ"
+    >
+      <a
+        data-discover="true"
+        href="/photos?dateFrom=2024-01-15&dateTo=2024-01-15"
+      >
+        formatted:2024-01-15T10:30:00Z
+      </a>
+    </div>
+  </div>
+</div>
+`;

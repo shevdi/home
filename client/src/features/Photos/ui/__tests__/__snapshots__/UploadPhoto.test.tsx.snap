@@ -1,0 +1,278 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`UploadPhoto renders default state and disables submit 1`] = `
+<div>
+  <div
+    class="sc-lnskGQ"
+  >
+    <div
+      class="sc-fmKESW iRLnfY"
+    />
+    <form>
+      <div
+        class="sc-csKIKD cmDwWi"
+      >
+        <label
+          class="sc-irLwvM diVwJC"
+          for="files"
+        >
+          Загрузить фото
+        </label>
+        <input
+          class="sc-eTNem jBVWLP"
+          multiple=""
+          name="files"
+          type="file"
+        />
+        <div
+          class="sc-ktwOSE fZLBGI"
+        />
+      </div>
+      <div
+        class="sc-gjLKRm kWWhDf"
+      >
+        <label
+          class="sc-jTQDnk kacxwV"
+        >
+          <input
+            class="sc-gLLvbB filfep"
+            type="checkbox"
+          />
+          <span
+            class="sc-iBdmCa jMfnCS"
+          />
+          <span
+            class="sc-fsYeqr iSlNFZ"
+          >
+            Скрыть
+          </span>
+        </label>
+      </div>
+      <button
+        class="sc-hABAzn bBOExv"
+        disabled=""
+        type="submit"
+      >
+        Загрузить фото
+      </button>
+    </form>
+  </div>
+</div>
+`;
+
+exports[`UploadPhoto shows error message when upload fails 1`] = `
+<div>
+  <div
+    class="sc-lnskGQ"
+  >
+    <div
+      class="sc-fmKESW iRLnfY"
+    >
+      boom
+    </div>
+    <form>
+      <div
+        class="sc-csKIKD cmDwWi"
+      >
+        <label
+          class="sc-irLwvM diVwJC"
+          for="files"
+        >
+          1 файл выбран
+        </label>
+        <input
+          class="sc-eTNem jBVWLP"
+          multiple=""
+          name="files"
+          type="file"
+        />
+        <div
+          class="sc-ktwOSE fZLBGI"
+        />
+      </div>
+      <div
+        class="sc-gjLKRm kWWhDf"
+      >
+        <label
+          class="sc-jTQDnk kacxwV"
+        >
+          <input
+            class="sc-gLLvbB filfep"
+            type="checkbox"
+          />
+          <span
+            class="sc-iBdmCa jMfnCS"
+          />
+          <span
+            class="sc-fsYeqr iSlNFZ"
+          >
+            Скрыть
+          </span>
+        </label>
+      </div>
+      <div
+        class="sc-iKOlBD eqGymv"
+      >
+        <div
+          class="sc-cyZbSl eNtRys"
+        >
+          photo.jpg
+           | 
+          image/jpeg
+           · 
+          4 B
+           · Canon M50
+           · 01.01.2020, 03:00:00
+           · 1.000000, 2.000000 · 3m
+        </div>
+      </div>
+      <button
+        class="sc-hABAzn dSZFFp"
+        type="submit"
+      >
+        Загрузить 1 фото
+      </button>
+    </form>
+  </div>
+</div>
+`;
+
+exports[`UploadPhoto submits files and shows success message 1`] = `
+<div>
+  <div
+    class="sc-lnskGQ"
+  >
+    <div
+      class="sc-fmKESW iRLnfY"
+    />
+    <form>
+      <div
+        class="sc-csKIKD cmDwWi"
+      >
+        <label
+          class="sc-irLwvM diVwJC"
+          for="files"
+        >
+          Загрузить фото
+        </label>
+        <input
+          class="sc-eTNem jBVWLP"
+          multiple=""
+          name="files"
+          type="file"
+        />
+        <div
+          class="sc-ktwOSE fZLBGI"
+        />
+      </div>
+      <div
+        class="sc-eAKupd dBHVHg"
+      >
+        Загружено: 1 из 1. Ошибок: 0
+      </div>
+      <div
+        class="sc-gjLKRm kWWhDf"
+      >
+        <label
+          class="sc-jTQDnk kacxwV"
+        >
+          <input
+            class="sc-gLLvbB filfep"
+            type="checkbox"
+          />
+          <span
+            class="sc-iBdmCa jMfnCS"
+          />
+          <span
+            class="sc-fsYeqr iSlNFZ"
+          >
+            Скрыть
+          </span>
+        </label>
+      </div>
+      <button
+        class="sc-hABAzn bBOExv"
+        disabled=""
+        type="submit"
+      >
+        Загрузить фото
+      </button>
+    </form>
+  </div>
+</div>
+`;
+
+exports[`UploadPhoto updates label and shows selected file 1`] = `
+<div>
+  <div
+    class="sc-lnskGQ"
+  >
+    <div
+      class="sc-fmKESW iRLnfY"
+    />
+    <form>
+      <div
+        class="sc-csKIKD cmDwWi"
+      >
+        <label
+          class="sc-irLwvM diVwJC"
+          for="files"
+        >
+          1 файл выбран
+        </label>
+        <input
+          class="sc-eTNem jBVWLP"
+          multiple=""
+          name="files"
+          type="file"
+        />
+        <div
+          class="sc-ktwOSE fZLBGI"
+        />
+      </div>
+      <div
+        class="sc-gjLKRm kWWhDf"
+      >
+        <label
+          class="sc-jTQDnk kacxwV"
+        >
+          <input
+            class="sc-gLLvbB filfep"
+            type="checkbox"
+          />
+          <span
+            class="sc-iBdmCa jMfnCS"
+          />
+          <span
+            class="sc-fsYeqr iSlNFZ"
+          >
+            Скрыть
+          </span>
+        </label>
+      </div>
+      <div
+        class="sc-iKOlBD eqGymv"
+      >
+        <div
+          class="sc-cyZbSl eNtRys"
+        >
+          photo.jpg
+           | 
+          image/jpeg
+           · 
+          4 B
+           · Canon M50
+           · 01.01.2020, 03:00:00
+           · 1.000000, 2.000000 · 3m
+        </div>
+      </div>
+      <button
+        class="sc-hABAzn dSZFFp"
+        type="submit"
+      >
+        Загрузить 1 фото
+      </button>
+    </form>
+  </div>
+</div>
+`;

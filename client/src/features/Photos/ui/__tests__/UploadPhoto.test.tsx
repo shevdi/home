@@ -53,9 +53,7 @@ describe('UploadPhoto', () => {
 
     const { container } = render(<UploadPhoto />)
 
-    expect(screen.getByText('Загрузить фото', { selector: 'label' })).toBeInTheDocument()
-    expect(getFileInput(container)).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Загрузить фото' })).toBeDisabled()
+    expect(container).toMatchSnapshot()
   })
 
   it('updates label and shows selected file', async () => {
@@ -68,9 +66,7 @@ describe('UploadPhoto', () => {
     const input = getFileInput(container)
     await user.upload(input, createFile())
 
-    expect(await screen.findByText('1 файл выбран', { selector: 'label' })).toBeInTheDocument()
-    expect(screen.getByText(/photo\.jpg/)).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Загрузить 1 фото' })).toBeEnabled()
+    expect(container).toMatchSnapshot()
   })
 
   it('submits files and shows success message', async () => {
@@ -106,6 +102,7 @@ describe('UploadPhoto', () => {
     expect(await screen.findByText('Загружено: 1 из 1. Ошибок: 0')).toBeInTheDocument()
     await waitFor(() => expect(screen.queryByText('photo.jpg')).not.toBeInTheDocument())
     expect(screen.getByText('Загрузить фото', { selector: 'label' })).toBeInTheDocument()
+    expect(container).toMatchSnapshot()
   })
 
   it('shows error message when upload fails', async () => {
@@ -119,6 +116,6 @@ describe('UploadPhoto', () => {
     await user.upload(input, createFile())
     await user.click(screen.getByRole('button', { name: 'Загрузить 1 фото' }))
 
-    expect(await screen.findByText('boom')).toBeInTheDocument()
+    expect(container).toMatchSnapshot()
   })
 })

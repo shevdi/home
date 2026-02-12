@@ -1,0 +1,413 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`Search renders search form with default state 1`] = `
+<div>
+  <div
+    class="sc-cyZbSl hRJPD"
+  >
+    <div
+      class="sc-fHekdU KNIbI"
+    >
+      <label
+        class="sc-blmETN jsoQky"
+        for="photo-sort-order"
+      >
+        Сортировать
+      </label>
+      <select
+        class="sc-ifyqMW gJLHwP"
+        id="photo-sort-order"
+        name="order"
+      >
+        <option
+          value="orderDownByTakenAt"
+        >
+          Вначале новые
+        </option>
+        <option
+          value="orderUpByTakenAt"
+        >
+          Вначале старые
+        </option>
+        <option
+          value="orderDownByEdited"
+        >
+          Последние загруженные
+        </option>
+      </select>
+    </div>
+    <div
+      class="sc-lnskGQ ljexQk"
+    >
+      <label>
+        Дата с
+        <input
+          name="dateFrom"
+          type="date"
+        />
+      </label>
+      <label>
+        Дата по
+        <input
+          name="dateTo"
+          type="date"
+        />
+      </label>
+    </div>
+    <label>
+      Теги
+      <input
+        id="photo-filter-tags"
+        name="tagInput"
+        placeholder="Введите тег и нажмите Enter"
+        type="text"
+      />
+    </label>
+    <div
+      class="sc-dJGLCP nLOeT"
+    />
+  </div>
+</div>
+`;
+
+exports[`Search renders with different queryParams renders with all params 1`] = `
+<div>
+  <div
+    class="sc-cyZbSl hRJPD"
+  >
+    <div
+      class="sc-fHekdU KNIbI"
+    >
+      <label
+        class="sc-blmETN jsoQky"
+        for="photo-sort-order"
+      >
+        Сортировать
+      </label>
+      <select
+        class="sc-ifyqMW gJLHwP"
+        id="photo-sort-order"
+        name="order"
+      >
+        <option
+          value="orderDownByTakenAt"
+        >
+          Вначале новые
+        </option>
+        <option
+          value="orderUpByTakenAt"
+        >
+          Вначале старые
+        </option>
+        <option
+          value="orderDownByEdited"
+        >
+          Последние загруженные
+        </option>
+      </select>
+    </div>
+    <div
+      class="sc-lnskGQ ljexQk"
+    >
+      <label>
+        Дата с
+        <input
+          name="dateFrom"
+          type="date"
+        />
+      </label>
+      <label>
+        Дата по
+        <input
+          name="dateTo"
+          type="date"
+        />
+      </label>
+    </div>
+    <label>
+      Теги
+      <input
+        id="photo-filter-tags"
+        name="tagInput"
+        placeholder="Введите тег и нажмите Enter"
+        type="text"
+      />
+    </label>
+    <div
+      class="sc-dJGLCP nLOeT"
+    >
+      <div
+        class="sc-hIPCAM hYLELY"
+      >
+        foo
+        <button
+          aria-label="Удалить тег foo"
+          class="sc-dmXXqF ibzAVg"
+          type="button"
+        >
+          x
+        </button>
+      </div>
+      <div
+        class="sc-hIPCAM hYLELY"
+      >
+        bar
+        <button
+          aria-label="Удалить тег bar"
+          class="sc-dmXXqF ibzAVg"
+          type="button"
+        >
+          x
+        </button>
+      </div>
+      <div
+        class="sc-hIPCAM hYLELY"
+      >
+        baz
+        <button
+          aria-label="Удалить тег baz"
+          class="sc-dmXXqF ibzAVg"
+          type="button"
+        >
+          x
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Search renders with different queryParams renders with date range params 1`] = `
+<div>
+  <div
+    class="sc-cyZbSl hRJPD"
+  >
+    <div
+      class="sc-fHekdU KNIbI"
+    >
+      <label
+        class="sc-blmETN jsoQky"
+        for="photo-sort-order"
+      >
+        Сортировать
+      </label>
+      <select
+        class="sc-ifyqMW gJLHwP"
+        id="photo-sort-order"
+        name="order"
+      >
+        <option
+          value="orderDownByTakenAt"
+        >
+          Вначале новые
+        </option>
+        <option
+          value="orderUpByTakenAt"
+        >
+          Вначале старые
+        </option>
+        <option
+          value="orderDownByEdited"
+        >
+          Последние загруженные
+        </option>
+      </select>
+    </div>
+    <div
+      class="sc-lnskGQ ljexQk"
+    >
+      <label>
+        Дата с
+        <input
+          name="dateFrom"
+          type="date"
+        />
+      </label>
+      <label>
+        Дата по
+        <input
+          name="dateTo"
+          type="date"
+        />
+      </label>
+    </div>
+    <label>
+      Теги
+      <input
+        id="photo-filter-tags"
+        name="tagInput"
+        placeholder="Введите тег и нажмите Enter"
+        type="text"
+      />
+    </label>
+    <div
+      class="sc-dJGLCP nLOeT"
+    />
+  </div>
+</div>
+`;
+
+exports[`Search renders with different queryParams renders with order param 1`] = `
+<div>
+  <div
+    class="sc-cyZbSl hRJPD"
+  >
+    <div
+      class="sc-fHekdU KNIbI"
+    >
+      <label
+        class="sc-blmETN jsoQky"
+        for="photo-sort-order"
+      >
+        Сортировать
+      </label>
+      <select
+        class="sc-ifyqMW gJLHwP"
+        id="photo-sort-order"
+        name="order"
+      >
+        <option
+          value="orderDownByTakenAt"
+        >
+          Вначале новые
+        </option>
+        <option
+          value="orderUpByTakenAt"
+        >
+          Вначале старые
+        </option>
+        <option
+          value="orderDownByEdited"
+        >
+          Последние загруженные
+        </option>
+      </select>
+    </div>
+    <div
+      class="sc-lnskGQ ljexQk"
+    >
+      <label>
+        Дата с
+        <input
+          name="dateFrom"
+          type="date"
+        />
+      </label>
+      <label>
+        Дата по
+        <input
+          name="dateTo"
+          type="date"
+        />
+      </label>
+    </div>
+    <label>
+      Теги
+      <input
+        id="photo-filter-tags"
+        name="tagInput"
+        placeholder="Введите тег и нажмите Enter"
+        type="text"
+      />
+    </label>
+    <div
+      class="sc-dJGLCP nLOeT"
+    />
+  </div>
+</div>
+`;
+
+exports[`Search renders with different queryParams renders with tags param 1`] = `
+<div>
+  <div
+    class="sc-cyZbSl hRJPD"
+  >
+    <div
+      class="sc-fHekdU KNIbI"
+    >
+      <label
+        class="sc-blmETN jsoQky"
+        for="photo-sort-order"
+      >
+        Сортировать
+      </label>
+      <select
+        class="sc-ifyqMW gJLHwP"
+        id="photo-sort-order"
+        name="order"
+      >
+        <option
+          value="orderDownByTakenAt"
+        >
+          Вначале новые
+        </option>
+        <option
+          value="orderUpByTakenAt"
+        >
+          Вначале старые
+        </option>
+        <option
+          value="orderDownByEdited"
+        >
+          Последние загруженные
+        </option>
+      </select>
+    </div>
+    <div
+      class="sc-lnskGQ ljexQk"
+    >
+      <label>
+        Дата с
+        <input
+          name="dateFrom"
+          type="date"
+        />
+      </label>
+      <label>
+        Дата по
+        <input
+          name="dateTo"
+          type="date"
+        />
+      </label>
+    </div>
+    <label>
+      Теги
+      <input
+        id="photo-filter-tags"
+        name="tagInput"
+        placeholder="Введите тег и нажмите Enter"
+        type="text"
+      />
+    </label>
+    <div
+      class="sc-dJGLCP nLOeT"
+    >
+      <div
+        class="sc-hIPCAM hYLELY"
+      >
+        landscape
+        <button
+          aria-label="Удалить тег landscape"
+          class="sc-dmXXqF ibzAVg"
+          type="button"
+        >
+          x
+        </button>
+      </div>
+      <div
+        class="sc-hIPCAM hYLELY"
+      >
+        portrait
+        <button
+          aria-label="Удалить тег portrait"
+          class="sc-dmXXqF ibzAVg"
+          type="button"
+        >
+          x
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;

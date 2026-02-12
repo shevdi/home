@@ -7,8 +7,8 @@ import {
   useGetPhotoQuery,
 } from '../model'
 import { Link, useLocation } from 'react-router'
-import { getNeighbours } from '@/shared/utils'
-import { Loader, MapEmbed } from '@/shared/ui'
+import { buildSearchParams, getNeighbours } from '@/shared/utils'
+import { Loader, MapEmbed, TagList } from '@/shared/ui'
 import { formatDate } from '../utils/uploadPhotoMeta'
 
 const usePhoto = () => {
@@ -48,9 +48,15 @@ const usePhoto = () => {
 }
 
 export function Photo() {
+  const search = useSelector(selectSearch)
+  const tagsUrl = {
+    pathname: '/photos',
+    search,
+  }
   const { photo, neighbours, isLoading } = usePhoto()
 
   const takenAt = photo?.meta?.takenAt
+  const dateStr = takenAt ? takenAt.split('T')[0] : null
   const gpsLat = photo?.meta?.gpsLatitude
   const gpsLon = photo?.meta?.gpsLongitude
   const hasGps = Number.isFinite(gpsLat) && Number.isFinite(gpsLon)
@@ -70,14 +76,19 @@ export function Photo() {
       </PhotosNavigation>
       {isLoading ? <Loader /> : <Image key={photo?._id} src={photo?.mdSizeUrl} />}
       <PageHeader>{photo?.title}</PageHeader>
-      {photo?.tags && photo.tags.length > 0 && (
-        <TagList>
-          {photo.tags.map((tag) => (
-            <TagChip key={tag}>{tag}</TagChip>
-          ))}
-        </TagList>
+      {photo?.tags && photo.tags.length > 0 && <TagList tags={photo.tags} url={tagsUrl} position='right' />}
+      {takenAt && dateStr && (
+        <PhotoMeta>
+          <Link
+            to={{
+              pathname: '/photos',
+              search: buildSearchParams({ dateFrom: dateStr, dateTo: dateStr }),
+            }}
+          >
+            {formatDate(takenAt)}
+          </Link>
+        </PhotoMeta>
       )}
-      {takenAt && <PhotoMeta>{formatDate(takenAt)}</PhotoMeta>}
       {hasGps && gpsLat && gpsLon && <MapEmbed lat={gpsLat} lon={gpsLon} />}
     </PageContainer>
   )
@@ -97,25 +108,9 @@ const PhotoMeta = styled.div`
   color: #555;
   font-size: 0.9rem;
   margin-top: 0.25rem;
-`
-
-const TagList = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  justify-content: right;
-  margin: 1rem 0;
-`
-
-const TagChip = styled.div`
-  display: inline-flex;
-  align-items: center;
-  padding: 0.3rem 0.6rem;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  background: #f5f5f5;
-  color: #333;
-  font-size: 0.9rem;
+  a {
+    text-decoration: none;
+  }
 `
 
 const PhotosNavigation = styled.div`

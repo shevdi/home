@@ -4,11 +4,11 @@ import { Menu } from '@/widgets/Menu'
 import { ThemeProps } from '@/app/styles'
 import { useSelector } from 'react-redux'
 import { selectSearch } from '@/features'
-import { buildPhotoSearchParams } from '@/shared/utils'
+import { buildSearchParams } from '@/shared/utils'
 
 export function Header() {
   const search = useSelector(selectSearch)
-  const stringSearchParams = buildPhotoSearchParams(search)
+  const stringSearchParams = buildSearchParams(search)
 
   return (
     <Head>

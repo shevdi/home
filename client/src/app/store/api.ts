@@ -5,6 +5,7 @@ const baseQuery = fetchBaseQuery({
   baseUrl: `${process.env.BACKEND_URL}`,
   mode: "cors",
   credentials: "include",
+  cache: "no-store",
   prepareHeaders: (headers, { getState }) => {
     /* eslint @typescript-eslint/no-explicit-any: "off" */
     const token = (getState() as any).auth?.token;
@@ -16,12 +17,9 @@ const baseQuery = fetchBaseQuery({
 })
 
 const baseQueryWithReauth = async (args: any, api: any, extraOptions: any) => {
-
   let result = await baseQuery(args, api, extraOptions)
 
   if (result?.error?.status === 403) {
-    console.log('sending refresh token')
-
     const refreshResult = await baseQuery('/auth/refresh', api, extraOptions)
 
     if (refreshResult?.data) {
