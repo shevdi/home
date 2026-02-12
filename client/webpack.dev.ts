@@ -10,7 +10,7 @@ interface CustomConfiguration extends Configuration {
 const devConfig: CustomConfiguration = merge(commonConfig, {
   mode: 'development',
   output: {
-    filename: "[name].[contenthash].js",
+    filename: "[name].js",
   },
   devtool: 'inline-source-map',
   devServer: {
