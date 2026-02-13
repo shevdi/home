@@ -33,6 +33,23 @@ describe('buildSearchParams', () => {
     expect(buildSearchParams({ tags: [] })).toBe('')
   })
 
+  it('adds country when provided', () => {
+    expect(buildSearchParams({ country: ['Russia'] })).toBe('country=Russia')
+  })
+
+  it('adds city when provided', () => {
+    expect(buildSearchParams({ city: ['Moscow'] })).toBe('city=Moscow')
+  })
+
+  it('adds multiple countries and cities as comma-separated', () => {
+    expect(buildSearchParams({ country: ['Russia', 'France'], city: ['Moscow', 'Paris'] })).toContain(
+      'country=Russia%2CFrance',
+    )
+    expect(buildSearchParams({ country: ['Russia', 'France'], city: ['Moscow', 'Paris'] })).toContain(
+      'city=Moscow%2CParis',
+    )
+  })
+
   it('combines all params when multiple provided', () => {
     const result = buildSearchParams(
       {
@@ -40,6 +57,8 @@ describe('buildSearchParams', () => {
         dateTo: '2024-12-31',
         order: 'orderDownByTakenAt',
         tags: ['a', 'b'],
+        country: ['Russia'],
+        city: ['Moscow'],
       },
       2,
     )
@@ -48,6 +67,8 @@ describe('buildSearchParams', () => {
     expect(result).toContain('dateTo=2024-12-31')
     expect(result).toContain('order=orderDownByTakenAt')
     expect(result).toContain('tags=a%2Cb')
+    expect(result).toContain('country=Russia')
+    expect(result).toContain('city=Moscow')
   })
 
   it('ignores null/undefined dateFrom and dateTo', () => {

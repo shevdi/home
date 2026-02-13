@@ -12,7 +12,8 @@ import {
   updatePhotoById,
 } from '../db/services/photos.ts'
 import drime from '../services/drime.ts';
-import { normalizeTags, parseBoolean, queryBuilder } from '../utils';
+import { dadataReverseGeocode, nominatimReverseGeocode } from '../services';
+import { getLocationValue, normalizeTags, parseBoolean, queryBuilder } from '../utils';
 import { IUserInfo } from '@/types/index.ts';
 import { optionalAuth } from '../middlewares/optionalAuth';
 import { verifyJWT } from '../middlewares/verifyJWT';
@@ -40,12 +41,15 @@ router.get(`/`, optionalAuth, async (req: Request & Partial<IUserInfo>, res: Res
     const dateToParam = <string>req.query.dateTo
     const orderParam = <string>req.query.order
     const tagsParam = req.query.tags
+    const countryParam = req.query.country
+    const cityParam = req.query.city
     const pageSize = req.query.page ? 5 : 100 // Number of photos per page
 
     const isAdmin = Boolean(req.roles?.includes('admin'))
     const builder = queryBuilder()
       .dateRange('meta.takenAt', dateFromParam, dateToParam)
       .allIn('tags', tagsParam, (v) => normalizeTags(v) ?? [])
+      .locationMatch(normalizeTags(countryParam) ?? [], normalizeTags(cityParam) ?? [])
     const search = (isAdmin ? builder : builder.excludeWhere('private', true)).build()
 
     const page = pageParam ? parseInt(pageParam) : 1
@@ -69,6 +73,7 @@ router.get(`/`, optionalAuth, async (req: Request & Partial<IUserInfo>, res: Res
           priority: item.priority,
           private: item.private,
           tags: item.tags,
+          location: item.location,
           smSizeUrl,
           mdSizeUrl,
           fullSizeUrl,
@@ -134,6 +139,22 @@ router.post(`/upload`, upload.array("files", 50), async (req: Request, res: Resp
       try {
         const metadata = await sharp(file.buffer).metadata()
         const gpsMeta = metaList[results.length]
+        const meta = {
+          ...metadata,
+          ...gpsMeta,
+          takenAtDate: gpsMeta?.takenAt ? new Date(gpsMeta?.takenAt) : undefined
+        }
+        const lat = meta.gpsLatitude
+        const lon = meta.gpsLongitude
+        // const location =
+        //   lat != null && lon != null ? await fetchLocationData(lat, lon) : null
+        const [nominatim, dadata] = lat != null && lon != null ? await Promise.all([
+          nominatimReverseGeocode(lat, lon),
+          dadataReverseGeocode(lat, lon),
+        ]) : [null, null]
+
+        const locationValue = getLocationValue([nominatim, dadata])
+
         const { url: fullSizeUrl, photoData: fullSizePhoto } = await drime.cropPhotoAndUpload(file)
         const { url: smSizeUrl, photoData: smSizePhoto } = await drime.cropPhotoAndUpload(file, 300)
         const { url: mdSizeUrl, photoData: mdSizePhoto } = await drime.cropPhotoAndUpload(file, 1024)
@@ -149,11 +170,15 @@ router.post(`/upload`, upload.array("files", 50), async (req: Request, res: Resp
           fileName: file.originalname,
           private: isPrivate,
           tags,
-          meta: {
-            ...metadata,
-            ...gpsMeta,
-            takenAtDate: gpsMeta?.takenAt ? new Date(gpsMeta?.takenAt) : undefined
+          location: {
+            value: locationValue,
+            nominatim: nominatim ?? undefined,
+            dadata: dadata?.suggestions[0] ? {
+              ...dadata.suggestions[0].data,
+              value: dadata.suggestions[0].value
+            } : undefined
           },
+          meta,
         })
         results.push({ ok: true, photo: addedPhoto })
       } catch (err) {

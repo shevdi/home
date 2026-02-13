@@ -45,6 +45,7 @@ const StyledLabel = styled.label`
 `
 
 const StyledSelect = styled.select`
+  width: 100%;
   padding: 0.8rem;
   border: 1px solid #ccc;
   border-radius: 6px;

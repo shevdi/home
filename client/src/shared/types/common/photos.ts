@@ -23,4 +23,6 @@ export interface IPhotoSearchParams {
   dateTo?: string | null
   order?: PhotoOrder
   tags?: string[]
+  country?: string[]
+  city?: string[]
 }

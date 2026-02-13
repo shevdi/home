@@ -1,10 +1,12 @@
+import { Link } from 'react-router'
 import styled from 'styled-components'
-import { useReverseGeocode } from '@/shared/hooks'
+import type { ILocation } from '@/shared/types/common/links'
+import { buildSearchParams } from '@/shared/utils'
 
 type MapEmbedProps = {
   lat: number
   lon: number
-  label?: string
+  location?: ILocation
   zoom?: number
   height?: number
   linkText?: string
@@ -13,19 +15,34 @@ type MapEmbedProps = {
 export const MapEmbed = ({
   lat,
   lon,
-  label,
+  location,
   zoom = 14,
   height = 280,
   linkText = 'Открыть в Google Maps',
 }: MapEmbedProps) => {
-  const resolvedLabel = useReverseGeocode(lat, lon, !label)
   const mapQuery = `${lat},${lon}`
   const encodedQuery = encodeURIComponent(mapQuery)
-  const locationLabel = label ?? resolvedLabel
+  const city = location?.value?.city?.[0]
+  const country = location?.value?.country?.[0]
+  const hasLocation = city || country
 
   return (
     <MapSection>
-      {locationLabel && <MapLabel>{locationLabel}</MapLabel>}
+      {hasLocation && (
+        <MapLabel>
+          {city && (
+            <LocationLink to={{ pathname: '/photos', search: buildSearchParams({ city: [city] }) }}>
+              {city}
+            </LocationLink>
+          )}
+          {city && country && ', '}
+          {country && (
+            <LocationLink to={{ pathname: '/photos', search: buildSearchParams({ country: [country] }) }}>
+              {country}
+            </LocationLink>
+          )}
+        </MapLabel>
+      )}
       <MapFrame
         title='Map location'
         loading='lazy'
@@ -51,9 +68,14 @@ const MapSection = styled.div`
 
 const MapLabel = styled.div`
   color: #555;
-  font-size: 0.9rem;
   margin-bottom: 0.5rem;
   text-align: center;
+`
+
+const LocationLink = styled(Link)`
+  text-align: right;
+  margin-top: 0.25rem;
+  text-decoration: none;
 `
 
 const MapFrame = styled.iframe<{ $height: number }>`

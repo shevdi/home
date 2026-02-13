@@ -62,6 +62,8 @@ describe('Search', () => {
           dateTo: null,
           order: 'orderDownByTakenAt',
           tags: [],
+          country: [],
+          city: [],
         }
       }
       return undefined
@@ -103,7 +105,14 @@ describe('Search', () => {
   describe('renders with different queryParams', () => {
     const renderWithQueryParams = (
       search = '',
-      searchState?: { dateFrom?: string | null; dateTo?: string | null; order?: string; tags?: string[] },
+      searchState?: {
+        dateFrom?: string | null
+        dateTo?: string | null
+        order?: string
+        tags?: string[]
+        country?: string[]
+        city?: string[]
+      },
     ) => {
       if (searchState) {
         mockUseSelector.mockImplementation((selector: unknown) => {
@@ -114,6 +123,8 @@ describe('Search', () => {
               dateTo: searchState.dateTo ?? null,
               order: searchState.order ?? 'orderDownByTakenAt',
               tags: searchState.tags ?? [],
+              country: searchState.country ?? [],
+              city: searchState.city ?? [],
             }
           }
           return undefined
@@ -196,6 +207,8 @@ describe('Search', () => {
             dateTo: null,
             order: 'orderDownByTakenAt',
             tags: ['landscape'],
+            country: '',
+            city: '',
           }
         }
         return undefined
@@ -242,6 +255,8 @@ describe('Search', () => {
             dateTo: null,
             order: 'orderDownByTakenAt',
             tags: ['foo', 'bar'],
+            country: '',
+            city: '',
           }
         }
         return undefined

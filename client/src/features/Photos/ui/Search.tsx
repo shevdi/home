@@ -1,11 +1,19 @@
-import { KeyboardEvent, useEffect, type ChangeEvent } from 'react'
+import { KeyboardEvent, useCallback, useEffect, type ChangeEvent } from 'react'
 import { useForm } from 'react-hook-form'
 import z from 'zod'
 import styled from 'styled-components'
 import { useDispatch, useSelector } from 'react-redux'
 import { Dropdown, Input, TagList } from '@/shared/ui'
 import { PhotoOrder } from '@/shared/types'
-import { setSearch, setOrderSearch, setDateFromSearch, setDateToSearch, setTagsSearch } from '../model/photosSlice'
+import {
+  setSearch,
+  setOrderSearch,
+  setDateFromSearch,
+  setDateToSearch,
+  setTagsSearch,
+  setCountrySearch,
+  setCitySearch,
+} from '../model/photosSlice'
 import { selectSearch } from '../model'
 import { useQueryParams } from '@/shared/hooks'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -14,6 +22,8 @@ const schema = z.object({
   order: z.string(),
   dateFrom: z.string(),
   dateTo: z.string(),
+  countryInput: z.string().optional(),
+  cityInput: z.string().optional(),
   priority: z.number().optional(),
   tags: z.array(z.string()).optional(),
   tagInput: z.string().optional(),
@@ -25,13 +35,15 @@ const ORDER_PARAMS: PhotoOrder[] = ['orderDownByTakenAt', 'orderUpByTakenAt', 'o
 
 export const Search = () => {
   const dispatch = useDispatch()
-  const { dateFrom, dateTo, order, tags = [] } = useSelector(selectSearch)
+  const { dateFrom, dateTo, order, tags = [], country = [], city = [] } = useSelector(selectSearch)
   const { queryParams, setQueryParams } = useQueryParams()
   const {
     dateFrom: dateFromParamValue,
     dateTo: dateToParamValue,
     order: orderParamValue,
     tags: tagsParamValue = [],
+    country: countryParamValue = [],
+    city: cityParamValue = [],
   } = queryParams
   const normalizedOrderParamValue = ORDER_PARAMS.includes(orderParamValue as PhotoOrder)
     ? (queryParams.order as PhotoOrder)
@@ -42,12 +54,16 @@ export const Search = () => {
       order: normalizedOrderParamValue ?? order ?? '',
       dateFrom: dateFromParamValue ?? dateFrom ?? '',
       dateTo: dateToParamValue ?? dateTo ?? '',
+      countryInput: '',
+      cityInput: '',
       tagInput: '',
       tags: (tagsParamValue && tagsParamValue.length > 0 ? tagsParamValue : tags) ?? [],
     },
   })
 
   const tagInput = watch('tagInput') ?? ''
+  const countryInput = watch('countryInput') ?? ''
+  const cityInput = watch('cityInput') ?? ''
   useEffect(() => {
     dispatch(
       setSearch({
@@ -55,21 +71,67 @@ export const Search = () => {
         dateTo: dateToParamValue ?? dateTo ?? '',
         order: (normalizedOrderParamValue ?? order ?? 'orderDownByTakenAt') as PhotoOrder,
         tags: tagsParamValue ?? tags ?? [],
+        country: countryParamValue?.length ? countryParamValue : (country ?? []),
+        city: cityParamValue?.length ? cityParamValue : (city ?? []),
       }),
     )
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  const addCountry = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      event.preventDefault()
+      const trimmed = countryInput.trim()
+      if (!trimmed) return
+      if (country.includes(trimmed)) {
+        setValue('countryInput', '')
+        return
+      }
+      const nextCountries = [...country, trimmed]
+      dispatch(setCountrySearch(nextCountries))
+      setQueryParams({ dateFrom, dateTo, order, tags, country: nextCountries, city })
+      setValue('countryInput', '')
+    }
+  }
+
+  const removeCountry = (toRemove: string) => {
+    const nextCountries = country.filter((c) => c !== toRemove)
+    dispatch(setCountrySearch(nextCountries))
+    setQueryParams({ dateFrom, dateTo, order, tags, country: nextCountries, city })
+  }
+
+  const addCity = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      event.preventDefault()
+      const trimmed = cityInput.trim()
+      if (!trimmed) return
+      if (city.includes(trimmed)) {
+        setValue('cityInput', '')
+        return
+      }
+      const nextCities = [...city, trimmed]
+      dispatch(setCitySearch(nextCities))
+      setQueryParams({ dateFrom, dateTo, order, tags, country, city: nextCities })
+      setValue('cityInput', '')
+    }
+  }
+
+  const removeCity = (toRemove: string) => {
+    const nextCities = city.filter((c) => c !== toRemove)
+    dispatch(setCitySearch(nextCities))
+    setQueryParams({ dateFrom, dateTo, order, tags, country, city: nextCities })
+  }
+
   const handleDateFromChange = (event: ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value
     dispatch(setDateFromSearch(value))
-    setQueryParams({ dateFrom: value, dateTo, order, tags: tags })
+    setQueryParams({ dateFrom: value, dateTo, order, tags, country, city })
   }
 
   const handleDateToChange = (event: ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value
     dispatch(setDateToSearch(value))
-    setQueryParams({ dateFrom, dateTo: value, order, tags: tags })
+    setQueryParams({ dateFrom, dateTo: value, order, tags, country, city })
   }
 
   const addTag = (event: KeyboardEvent<HTMLInputElement>) => {
@@ -83,7 +145,7 @@ export const Search = () => {
       }
       const nextTags = [...tags, trimmed]
       dispatch(setTagsSearch(nextTags))
-      setQueryParams({ dateFrom, dateTo, order, tags: nextTags })
+      setQueryParams({ dateFrom, dateTo, order, tags: nextTags, country, city })
       setValue('tags', nextTags)
       setValue('tagInput', '')
     }
@@ -92,30 +154,35 @@ export const Search = () => {
   const removeTag = (tagToRemove: string) => {
     const nextTags = tags.filter((tag) => tag !== tagToRemove)
     dispatch(setTagsSearch(nextTags))
-    setQueryParams({ dateFrom, dateTo, order, tags: nextTags })
+    setQueryParams({ dateFrom, dateTo, order, tags: nextTags, country, city })
     setValue('tags', nextTags)
   }
 
-  const handleOrderChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const nextOrder = event.target.value as PhotoOrder
-    dispatch(setOrderSearch(nextOrder))
-    setQueryParams({ dateFrom, dateTo, order: nextOrder, tags: tags })
-  }
+  const handleOrderChange = useCallback(
+    (event: React.ChangeEvent<HTMLSelectElement>) => {
+      const nextOrder = event.target.value as PhotoOrder
+      dispatch(setOrderSearch(nextOrder))
+      setQueryParams({ dateFrom, dateTo, order: nextOrder, tags, country, city })
+    },
+    [dateFrom, dateTo, tags, country, city, dispatch, setQueryParams],
+  )
 
   return (
     <SearchContainer>
-      <Dropdown
-        label='Сортировать'
-        id='photo-sort-order'
-        {...register('order', {
-          onChange: handleOrderChange,
-        })}
-        options={[
-          { value: 'orderDownByTakenAt', label: 'Вначале новые' },
-          { value: 'orderUpByTakenAt', label: 'Вначале старые' },
-          { value: 'orderDownByEdited', label: 'Последние загруженные' },
-        ]}
-      />
+      <FieldWrapper>
+        <Dropdown
+          label='Сортировать'
+          id='photo-sort-order'
+          {...register('order', {
+            onChange: handleOrderChange,
+          })}
+          options={[
+            { value: 'orderDownByTakenAt', label: 'Вначале новые' },
+            { value: 'orderUpByTakenAt', label: 'Вначале старые' },
+            { value: 'orderDownByEdited', label: 'Последние загруженные' },
+          ]}
+        />
+      </FieldWrapper>
       <DateInputs>
         <Input
           label='Дата с'
@@ -132,27 +199,52 @@ export const Search = () => {
           })}
         />
       </DateInputs>
-      <Input
-        label='Теги'
-        id='photo-filter-tags'
-        placeholder='Введите тег и нажмите Enter'
-        {...register('tagInput')}
-        onKeyDown={addTag}
-      />
-      {<TagList tags={tags} onClick={removeTag} />}
+      <FieldWrapper>
+        <Input
+          label='Страна'
+          id='photo-filter-country'
+          placeholder='Введите страну и нажмите Enter'
+          {...register('countryInput')}
+          onKeyDown={addCountry}
+        />
+        <TagList tags={country} onClick={removeCountry} />
+      </FieldWrapper>
+      <FieldWrapper>
+        <Input
+          label='Город'
+          id='photo-filter-city'
+          placeholder='Введите город и нажмите Enter'
+          {...register('cityInput')}
+          onKeyDown={addCity}
+        />
+        <TagList tags={city} onClick={removeCity} />
+      </FieldWrapper>
+      <FieldWrapper>
+        <Input
+          label='Теги'
+          id='photo-filter-tags'
+          placeholder='Введите тег и нажмите Enter'
+          {...register('tagInput')}
+          onKeyDown={addTag}
+        />
+        {<TagList tags={tags} onClick={removeTag} />}
+      </FieldWrapper>
     </SearchContainer>
   )
 }
 
 const SearchContainer = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 0 2rem;
   padding-bottom: 1rem;
-  max-width: 480px;
 `
 
+const FieldWrapper = styled.div``
+
 const DateInputs = styled.div`
-  margin-top: 2rem;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 0.75rem;
-  width: min(480px, 100%);
+  /* width: min(320px, 100%); */
 `

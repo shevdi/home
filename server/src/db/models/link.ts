@@ -17,6 +17,14 @@ const linkSchema = new Schema(
     createdAt: { type: Date },
     updatedAt: { type: Date },
     private: { type: Boolean },
+    location: {
+      value: {
+        country: [{ type: String }],
+        city: [{ type: String }]
+      },
+      nominatim: { type: Schema.Types.Mixed },
+      dadata: { type: Schema.Types.Mixed }
+    },
     meta: {
       mimeType: { type: String },
       size: { type: Number },

@@ -11,6 +11,8 @@ interface IProps {
 
 export function PhotoLink({ photo, disabled }: IProps) {
   const takenAtLabel = photo.meta?.takenAt ? formatDate(photo.meta.takenAt) : ''
+  const city = photo.location?.value?.city?.[0]
+  const country = photo.location?.value?.country?.[0]
 
   return (
     <Figure key={photo._id} $featured={photo.priority ? photo.priority > 1 : false}>
@@ -32,7 +34,13 @@ export function PhotoLink({ photo, disabled }: IProps) {
         />
       </Link>
       {takenAtLabel && <DateCaption>{takenAtLabel}</DateCaption>}
-      {photo.title && <Figcaption>{photo.title}</Figcaption>}
+      {(country || city) && (
+        <Figcaption>
+          {city}
+          {city && country && ', '}
+          {country}
+        </Figcaption>
+      )}
     </Figure>
   )
 }

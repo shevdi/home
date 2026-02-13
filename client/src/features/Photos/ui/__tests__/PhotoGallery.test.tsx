@@ -60,6 +60,8 @@ const baseSearch = {
   dateTo: null,
   order: 'orderDownByTakenAt',
   tags: [],
+  country: [],
+  city: [],
 }
 
 const basePhotos = [

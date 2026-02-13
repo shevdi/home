@@ -27,6 +27,14 @@ jest.unstable_mockModule('../../services/drime.js', () => ({
     getEntries: (...args: unknown[]) => mockGetEntries(...args),
     cropPhotoAndUpload: (...args: unknown[]) => mockCropPhotoAndUpload(...args),
   },
+  createDrimeService: () => ({}),
+}))
+
+jest.unstable_mockModule('../../services/nominatim.js', () => ({
+  nominatimReverseGeocode: () => Promise.resolve(null),
+}))
+jest.unstable_mockModule('../../services/dadata.js', () => ({
+  dadataReverseGeocode: () => Promise.resolve(null),
 }))
 
 jest.unstable_mockModule('sharp', () => ({

@@ -17,5 +17,11 @@ export const buildSearchParams = (search?: IPhotoSearchParams | void, pageParam?
   if (search?.tags && search.tags.length > 0) {
     params.append('tags', search.tags.join(','))
   }
+  if (search?.country && search.country.length > 0) {
+    params.append('country', search.country.join(','))
+  }
+  if (search?.city && search.city.length > 0) {
+    params.append('city', search.city.join(','))
+  }
   return params.toString()
 }

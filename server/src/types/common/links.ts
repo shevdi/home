@@ -12,6 +12,17 @@ export interface IMeta {
   takenAtDate?: Date;
 }
 
+export interface ILocationValue {
+  country: string[]
+  city: string[]
+}
+
+export interface ILocation {
+  value?: ILocationValue
+  dadata?: Record<string, string | undefined | null>,
+  nominatim?: Record<string, unknown | undefined | null>
+}
+
 export interface ILink {
   _id?: string;
   url?: string;
@@ -33,5 +44,6 @@ export interface ILink {
   createdAt?: string;
   updatedAt?: string;
   meta?: IMeta;
+  location?: ILocation;
 }
 

@@ -18,9 +18,9 @@ export function Header() {
           <NavItem>
             <NavLink to='/'>Главная</NavLink> &nbsp;
           </NavItem>
-          <NavItem>
+          {/* <NavItem>
             <NavLink to='/projects'>Проекты</NavLink> &nbsp;
-          </NavItem>
+          </NavItem> */}
           <NavItem>
             <NavLink
               to={{

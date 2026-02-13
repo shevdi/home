@@ -10,6 +10,8 @@ interface PhotosState {
     dateTo: string
     order: PhotoOrder
     tags: string[]
+    country: string[]
+    city: string[]
   }
 }
 
@@ -22,6 +24,8 @@ const initialState: PhotosState = {
     dateTo: '',
     order: 'orderDownByTakenAt',
     tags: [],
+    country: [],
+    city: [],
   },
 }
 
@@ -34,7 +38,14 @@ const photosSlice = createSlice({
     },
     setSearch: (
       state,
-      action: PayloadAction<{ dateFrom: string; dateTo: string; order: PhotoOrder; tags: string[] }>,
+      action: PayloadAction<{
+        dateFrom: string
+        dateTo: string
+        order: PhotoOrder
+        tags: string[]
+        country: string[]
+        city: string[]
+      }>,
     ) => {
       state.search = action.payload
     },
@@ -53,9 +64,24 @@ const photosSlice = createSlice({
     setTagsSearch: (state, action: PayloadAction<string[]>) => {
       state.search.tags = action.payload
     },
+    setCountrySearch: (state, action: PayloadAction<string[]>) => {
+      state.search.country = action.payload
+    },
+    setCitySearch: (state, action: PayloadAction<string[]>) => {
+      state.search.city = action.payload
+    },
   },
 })
 
-export const { setPrivateFilter, setSearch, setDateFromSearch, setDateToSearch, setOrderSearch, setTagsSearch } =
+export const {
+  setPrivateFilter,
+  setSearch,
+  setDateFromSearch,
+  setDateToSearch,
+  setOrderSearch,
+  setTagsSearch,
+  setCountrySearch,
+  setCitySearch,
+} =
   photosSlice.actions
 export default photosSlice.reducer

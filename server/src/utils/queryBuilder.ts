@@ -31,7 +31,38 @@ export const queryBuilder = () => {
       }
       return this
     },
+    locationMatch(countries?: string[], cities?: string[]) {
+      const countryList = countries?.map((c) => c.trim()).filter(Boolean) ?? []
+      const cityList = cities?.map((c) => c.trim()).filter(Boolean) ?? []
+      if (countryList.length === 0 && cityList.length === 0) return this
+      const andConditions: MongoFilter[] = []
+      if (countryList.length > 0) {
+        const countryOrConditions = countryList.flatMap((countryTrim) => [
+          { 'location.dadata.country': { $regex: countryTrim, $options: 'i' } },
+          { 'location.dadata.country_iso_code': { $regex: countryTrim, $options: 'i' } },
+          { 'location.nominatim.address.country': { $regex: countryTrim, $options: 'i' } },
+          { 'location.nominatim.address.country_code': { $regex: countryTrim, $options: 'i' } },
+        ])
+        andConditions.push({ $or: countryOrConditions })
+      }
+      if (cityList.length > 0) {
+        const cityOrConditions = cityList.flatMap((cityTrim) => [
+          { 'location.dadata.city': { $regex: cityTrim, $options: 'i' } },
+          { 'location.dadata.settlement': { $regex: cityTrim, $options: 'i' } },
+          { 'location.nominatim.address.city': { $regex: cityTrim, $options: 'i' } },
+          { 'location.nominatim.address.town': { $regex: cityTrim, $options: 'i' } },
+          { 'location.nominatim.address.village': { $regex: cityTrim, $options: 'i' } },
+          { 'location.nominatim.address.municipality': { $regex: cityTrim, $options: 'i' } },
+        ])
+        andConditions.push({ $or: cityOrConditions })
+      }
+      if (andConditions.length > 0) {
+        filter.$and = (filter.$and as object[] ?? []).concat(andConditions)
+      }
+      return this
+    },
     build(): MongoFilter {
+      console.log(filter)
       return filter
     }
   }

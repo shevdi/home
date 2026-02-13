@@ -52,14 +52,14 @@ export const Input: React.FC<InputProps> = ({ label, type, focus, error, disable
         </StyledLabel>
       )}
       <StyledInput ref={inputRef} type={type} disabled={disabled} {...props} />
-      <ErrorText>{error}</ErrorText>
+      {(error || error === null) && <ErrorText>{error}</ErrorText>}
     </InputWrapper>
   )
 }
 
 const InputWrapper = styled.div`
   position: relative;
-  margin-bottom: 1rem;
+  margin: 1rem 0;
 `
 
 const StyledInput = styled.input<{

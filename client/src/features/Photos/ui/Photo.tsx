@@ -89,7 +89,7 @@ export function Photo() {
           </Link>
         </PhotoMeta>
       )}
-      {hasGps && gpsLat && gpsLon && <MapEmbed lat={gpsLat} lon={gpsLon} />}
+      {hasGps && gpsLat && gpsLon && <MapEmbed lat={gpsLat} lon={gpsLon} location={photo?.location} />}
     </PageContainer>
   )
 }

@@ -19,7 +19,7 @@ export function PhotosPage() {
         </LinkWrapper>
       )}
 
-      <PageHeader>Фотки</PageHeader>
+      <PageHeader>Фото</PageHeader>
       <Filter isHiddenFilters={!isAdmin} />
       <Search />
       <PhotoGallery />

@@ -3,14 +3,14 @@
 exports[`UploadPhoto renders default state and disables submit 1`] = `
 <div>
   <div
-    class="sc-lnskGQ"
+    class="sc-iKOlBD"
   >
     <div
       class="sc-fmKESW iRLnfY"
     />
     <form>
       <div
-        class="sc-csKIKD cmDwWi"
+        class="sc-csKIKD erOzaQ"
       >
         <label
           class="sc-irLwvM diVwJC"
@@ -24,12 +24,9 @@ exports[`UploadPhoto renders default state and disables submit 1`] = `
           name="files"
           type="file"
         />
-        <div
-          class="sc-ktwOSE fZLBGI"
-        />
       </div>
       <div
-        class="sc-gjLKRm kWWhDf"
+        class="sc-eAKupd bJfyjU"
       >
         <label
           class="sc-jTQDnk kacxwV"
@@ -63,7 +60,7 @@ exports[`UploadPhoto renders default state and disables submit 1`] = `
 exports[`UploadPhoto shows error message when upload fails 1`] = `
 <div>
   <div
-    class="sc-lnskGQ"
+    class="sc-iKOlBD"
   >
     <div
       class="sc-fmKESW iRLnfY"
@@ -72,7 +69,7 @@ exports[`UploadPhoto shows error message when upload fails 1`] = `
     </div>
     <form>
       <div
-        class="sc-csKIKD cmDwWi"
+        class="sc-csKIKD erOzaQ"
       >
         <label
           class="sc-irLwvM diVwJC"
@@ -86,12 +83,9 @@ exports[`UploadPhoto shows error message when upload fails 1`] = `
           name="files"
           type="file"
         />
-        <div
-          class="sc-ktwOSE fZLBGI"
-        />
       </div>
       <div
-        class="sc-gjLKRm kWWhDf"
+        class="sc-eAKupd bJfyjU"
       >
         <label
           class="sc-jTQDnk kacxwV"
@@ -111,10 +105,10 @@ exports[`UploadPhoto shows error message when upload fails 1`] = `
         </label>
       </div>
       <div
-        class="sc-iKOlBD eqGymv"
+        class="sc-gjLKRm fVxITt"
       >
         <div
-          class="sc-cyZbSl eNtRys"
+          class="sc-lnskGQ biuAAl"
         >
           photo.jpg
            | 
@@ -140,14 +134,14 @@ exports[`UploadPhoto shows error message when upload fails 1`] = `
 exports[`UploadPhoto submits files and shows success message 1`] = `
 <div>
   <div
-    class="sc-lnskGQ"
+    class="sc-iKOlBD"
   >
     <div
       class="sc-fmKESW iRLnfY"
     />
     <form>
       <div
-        class="sc-csKIKD cmDwWi"
+        class="sc-csKIKD erOzaQ"
       >
         <label
           class="sc-irLwvM diVwJC"
@@ -161,17 +155,14 @@ exports[`UploadPhoto submits files and shows success message 1`] = `
           name="files"
           type="file"
         />
-        <div
-          class="sc-ktwOSE fZLBGI"
-        />
       </div>
       <div
-        class="sc-eAKupd dBHVHg"
+        class="sc-bZHTEM dEIAbu"
       >
         Загружено: 1 из 1. Ошибок: 0
       </div>
       <div
-        class="sc-gjLKRm kWWhDf"
+        class="sc-eAKupd bJfyjU"
       >
         <label
           class="sc-jTQDnk kacxwV"
@@ -205,14 +196,14 @@ exports[`UploadPhoto submits files and shows success message 1`] = `
 exports[`UploadPhoto updates label and shows selected file 1`] = `
 <div>
   <div
-    class="sc-lnskGQ"
+    class="sc-iKOlBD"
   >
     <div
       class="sc-fmKESW iRLnfY"
     />
     <form>
       <div
-        class="sc-csKIKD cmDwWi"
+        class="sc-csKIKD erOzaQ"
       >
         <label
           class="sc-irLwvM diVwJC"
@@ -226,12 +217,9 @@ exports[`UploadPhoto updates label and shows selected file 1`] = `
           name="files"
           type="file"
         />
-        <div
-          class="sc-ktwOSE fZLBGI"
-        />
       </div>
       <div
-        class="sc-gjLKRm kWWhDf"
+        class="sc-eAKupd bJfyjU"
       >
         <label
           class="sc-jTQDnk kacxwV"
@@ -251,10 +239,10 @@ exports[`UploadPhoto updates label and shows selected file 1`] = `
         </label>
       </div>
       <div
-        class="sc-iKOlBD eqGymv"
+        class="sc-gjLKRm fVxITt"
       >
         <div
-          class="sc-cyZbSl eNtRys"
+          class="sc-lnskGQ biuAAl"
         >
           photo.jpg
            | 

@@ -7,6 +7,8 @@ interface PhotoSearch {
   dateTo?: string | null
   order?: PhotoOrder
   tags?: string[]
+  country?: string[]
+  city?: string[]
 }
 
 export const useQueryParams = () => {
@@ -33,16 +35,13 @@ export const useQueryParams = () => {
     )
   }
 
-  const queryParams = Array.from(searchParams.entries()).reduce((prev, value) => {
-    if (value[0] === 'tags') {
-      if (!value[1]) {
-        return []
-      }
-      return { ...prev, [value[0]]: value[1].split(',') }
-      return value[1].split(',')
+  const arrayParams = ['tags', 'country', 'city']
+  const queryParams = Array.from(searchParams.entries()).reduce((prev, [key, val]) => {
+    if (arrayParams.includes(key) && val) {
+      return { ...prev, [key]: val.split(',').filter(Boolean) }
     }
-    return { ...prev, [value[0]]: value[1] }
-  }, {})
+    return { ...prev, [key]: val }
+  }, {} as Record<string, string | string[]>)
 
   return {
     stringSearchParams: searchParams.toString(),
