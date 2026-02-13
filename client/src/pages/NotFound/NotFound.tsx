@@ -14,27 +14,32 @@ const Container = styled.div`
 
 const Title = styled.h1`
   font-size: 4rem;
-  font-weight: bold;
+  font-weight: 700;
   margin: 0;
-  color: inherit;
+  color: var(--text-color);
+  letter-spacing: -0.03em;
 `
 
 const Message = styled.p`
-  font-size: 1.25rem;
-  color: inherit;
-  opacity: 0.8;
+  font-size: 1.1rem;
+  color: var(--text-muted);
   margin: 0;
 `
 
 const StyledLink = styled(Link)`
-  color: inherit;
+  color: var(--accent);
   text-decoration: none;
-  font-size: 1.1rem;
-  transition: opacity 0.2s ease-in-out;
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 0.6rem 1.25rem;
+  border-radius: var(--radius-md);
+  background: transparent;
+  border: 1px solid var(--accent);
+  transition: all var(--transition-fast);
 
   &:hover {
-    opacity: 0.8;
-    text-decoration: underline;
+    background: var(--accent);
+    color: white;
   }
 `
 

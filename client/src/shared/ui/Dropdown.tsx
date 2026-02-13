@@ -34,40 +34,49 @@ Dropdown.displayName = 'Dropdown'
 
 const DropdownWrapper = styled.div`
   position: relative;
-  margin: 1rem 0;
+  margin-bottom: 1rem;
 `
 
 const StyledLabel = styled.label`
   display: block;
-  margin-bottom: 0.8rem;
+  margin-bottom: 0.5rem;
   font-weight: 500;
-  color: #555;
+  font-size: 0.9rem;
+  color: var(--text-muted);
 `
 
 const StyledSelect = styled.select`
   width: 100%;
-  padding: 0.8rem;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 1rem;
-  color: #333;
-  background-color: white;
+  padding: 0.65rem 1rem;
+  border: 1px solid var(--input-border);
+  border-radius: var(--radius-md);
+  font-size: 0.95rem;
+  font-family: inherit;
+  color: var(--text-color);
+  background-color: var(--input-bg);
   transition:
-    border-color 0.2s ease-in-out,
-    box-shadow 0.2s ease-in-out;
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b6560' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  padding-right: 2.25rem;
 
   &:focus {
     outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+    border-color: var(--input-focus);
+    box-shadow: 0 0 0 3px rgba(199, 107, 57, 0.2);
   }
 
   &:disabled {
-    background-color: #708090;
+    background-color: var(--input-disabled-color);
     cursor: not-allowed;
+    opacity: 0.7;
   }
 
-  &:hover {
-    cursor: pointer;
+  &:hover:not(:disabled) {
+    border-color: var(--text-muted);
   }
 `

@@ -1,7 +1,6 @@
 import { NavLink } from 'react-router'
 import styled from 'styled-components'
 import { Menu } from '@/widgets/Menu'
-import { ThemeProps } from '@/app/styles'
 import { useSelector } from 'react-redux'
 import { selectSearch } from '@/features'
 import { buildSearchParams } from '@/shared/utils'
@@ -13,14 +12,11 @@ export function Header() {
   return (
     <Head>
       <Nav>
-        <Logo>shevdi</Logo>
+        <Logo to='/'>shevdi</Logo>
         <NavList>
           <NavItem>
-            <NavLink to='/'>Главная</NavLink> &nbsp;
+            <NavLink to='/'>Главная</NavLink>
           </NavItem>
-          {/* <NavItem>
-            <NavLink to='/projects'>Проекты</NavLink> &nbsp;
-          </NavItem> */}
           <NavItem>
             <NavLink
               to={{
@@ -29,8 +25,7 @@ export function Header() {
               }}
             >
               Фото
-            </NavLink>{' '}
-            &nbsp;
+            </NavLink>
           </NavItem>
           <NavItem>
             <Menu />
@@ -42,16 +37,20 @@ export function Header() {
 }
 
 const Head = styled.header`
-  background-color: var(--nav-back-color);
+  background: linear-gradient(135deg, var(--nav-back-color) 0%, var(--nav-back-color-end) 100%);
   color: var(--nav-font-color);
   z-index: 100;
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.15);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
 `
 
-const Nav = styled.nav<ThemeProps>`
+const Nav = styled.nav`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem;
+  padding: 0.75rem 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
 `
 
 const NavList = styled.ul`
@@ -59,21 +58,44 @@ const NavList = styled.ul`
   margin: 0;
   padding: 0;
   display: flex;
+  align-items: center;
+  gap: 0.5rem;
 `
 
 const NavItem = styled.li`
   display: flex;
   align-items: center;
-  margin: 0 1rem;
+
   a {
-    font-size: 1.2rem;
+    font-size: 0.95rem;
+    font-weight: 500;
     color: inherit;
     text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-md);
+    transition:
+      background-color var(--transition-fast),
+      color var(--transition-fast);
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    &.active {
+      background-color: rgba(255, 255, 255, 0.15);
+    }
   }
 `
 
-const Logo = styled.h1`
-  font-size: 1.5rem;
+const Logo = styled(NavLink)`
+  font-size: 1.35rem;
+  font-weight: 700;
   margin: 0;
   color: inherit;
+  text-decoration: none;
+  letter-spacing: -0.03em;
+
+  &:hover {
+    opacity: 0.9;
+  }
 `

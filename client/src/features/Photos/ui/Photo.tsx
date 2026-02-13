@@ -15,7 +15,6 @@ const usePhoto = () => {
   const location = useLocation()
   const photoId = location.pathname.split('/')[2]
   const search = useSelector(selectSearch)
-  // if photo is opened by direct link, show just photo. Otherwise, show also neighbours links
   const shouldUseInfinite = useSelector(selectIsInitializedInfiniteQuery)
   const { data: photo, isLoading: isPhotoLoading } = useGetPhotoQuery(photoId, {
     skip: shouldUseInfinite,
@@ -64,17 +63,17 @@ export function Photo() {
   return (
     <PageContainer>
       <PhotosNavigation>
-        <div>{neighbours[0] && <Link to={{ pathname: `../${neighbours[0]._id}` }}>Предыдущее фото</Link>}</div>
+        <div>{neighbours[0] && <NavLink to={{ pathname: `../${neighbours[0]._id}` }}>← Предыдущее</NavLink>}</div>
         <div>
           {photo && (
-            <a href={photo?.fullSizeUrl} target='_blank' rel='noreferrer'>
+            <FullSizeLink href={photo?.fullSizeUrl} target='_blank' rel='noreferrer'>
               Полный размер
-            </a>
+            </FullSizeLink>
           )}
         </div>
-        <div>{neighbours[1] && <Link to={{ pathname: `../${neighbours[1]._id}` }}>Следующее фото</Link>}</div>
+        <div>{neighbours[1] && <NavLink to={{ pathname: `../${neighbours[1]._id}` }}>Следующее →</NavLink>}</div>
       </PhotosNavigation>
-      {isLoading ? <Loader /> : <Image key={photo?._id} src={photo?.mdSizeUrl} />}
+      {isLoading ? <Loader /> : <Image key={photo?._id} src={photo?.mdSizeUrl} alt={photo?.title} />}
       <PageHeader>{photo?.title}</PageHeader>
       {photo?.tags && photo.tags.length > 0 && <TagList tags={photo.tags} url={tagsUrl} position='right' />}
       {takenAt && dateStr && (
@@ -101,24 +100,58 @@ const PageContainer = styled.div`
 
 const PageHeader = styled.h1`
   text-align: center;
+  font-size: 1.5rem;
+  margin: 1rem 0 0.5rem;
 `
 
 const PhotoMeta = styled.div`
   text-align: right;
-  color: #555;
+  color: var(--text-muted);
   font-size: 0.9rem;
   margin-top: 0.25rem;
+
   a {
     text-decoration: none;
+    color: var(--accent);
+
+    &:hover {
+      text-decoration: underline;
+    }
   }
 `
 
 const PhotosNavigation = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: center;
   margin: 1rem 0;
+  gap: 1rem;
+`
+
+const NavLink = styled(Link)`
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--accent);
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+`
+
+const FullSizeLink = styled.a`
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--accent);
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
 `
 
 const Image = styled.img`
   width: 100%;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
 `

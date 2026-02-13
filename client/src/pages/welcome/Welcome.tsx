@@ -6,6 +6,18 @@ import { useAuth } from '@/shared/hooks/useAuth'
 
 const LinkWrapper = styled.div`
   text-align: right;
+  margin-bottom: 1rem;
+`
+
+const EditLink = styled(Link)`
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--accent);
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
 `
 
 export function WelcomePage() {
@@ -16,7 +28,7 @@ export function WelcomePage() {
     <>
       {isAdmin && (
         <LinkWrapper>
-          <Link to={location.pathname.length === 1 ? 'home/edit' : 'edit'}>Редактировать</Link>
+          <EditLink to={location.pathname.length === 1 ? 'home/edit' : 'edit'}>Редактировать</EditLink>
         </LinkWrapper>
       )}
       <Page url='welcome' />

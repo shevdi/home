@@ -16,7 +16,7 @@ export function Error({ title, message, onRetry }: ErrorProps) {
       </ErrorIcon>
       <ErrorTitle>{title}</ErrorTitle>
       <ErrorMessage>{message}</ErrorMessage>
-      {onRetry && <RetryButton onClick={onRetry}>Try Again</RetryButton>}
+      {onRetry && <RetryButton onClick={onRetry}>Повторить</RetryButton>}
     </ErrorWrapper>
   )
 }
@@ -34,59 +34,61 @@ const fadeIn = keyframes`
 
 const ErrorWrapper = styled.div`
   animation: ${fadeIn} 0.3s ease-out;
-  background-color: #fff0f0;
-  border: 1px solid #ffcccc;
-  border-radius: 8px;
-  padding: 1.5rem;
+  background-color: var(--surface-elevated);
+  border: 1px solid var(--error-color);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
   text-align: center;
-  margin: 2rem auto;
-  max-width: 500px;
-  box-shadow: 0 4px 12px rgba(255, 0, 0, 0.1);
-  color: #a30000;
+  margin: 3rem auto;
+  max-width: 420px;
+  box-shadow: var(--shadow-md);
+  color: var(--text-color);
 `
 
 const ErrorIcon = styled.div`
   margin: 0 auto 1rem;
-  width: 50px;
-  height: 50px;
+  width: 48px;
+  height: 48px;
+  opacity: 0.9;
 
   svg {
     width: 100%;
     height: 100%;
-    fill: #dc3545;
+    fill: var(--error-color);
   }
 `
 
 const ErrorTitle = styled.h3`
   margin: 0 0 0.5rem 0;
-  font-size: 1.25rem;
+  font-size: 1.2rem;
   font-weight: 600;
-  color: #721c24;
+  color: var(--text-color);
 `
 
 const ErrorMessage = styled.p`
   margin: 0;
   font-size: 0.95rem;
   line-height: 1.5;
-  color: #721c24;
+  color: var(--text-muted);
 `
 
 const RetryButton = styled.button`
-  margin-top: 1.5rem;
-  background-color: #dc3545;
+  margin-top: 1.25rem;
+  background-color: var(--accent);
   color: white;
   border: none;
-  border-radius: 5px;
-  padding: 0.6rem 1.2rem;
-  font-size: 1rem;
+  border-radius: var(--radius-md);
+  padding: 0.6rem 1.25rem;
+  font-size: 0.95rem;
   font-weight: 500;
+  font-family: inherit;
   cursor: pointer;
   transition:
-    background-color 0.2s ease-in-out,
-    transform 0.1s ease;
+    background-color var(--transition-fast),
+    transform var(--transition-fast);
 
   &:hover {
-    background-color: #c82333;
+    background-color: var(--accent-hover);
   }
 
   &:active {

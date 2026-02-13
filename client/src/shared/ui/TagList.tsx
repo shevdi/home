@@ -34,8 +34,16 @@ export const TagList = ({ tags, url, position, onClick }: IProps) => {
               <TagChip>
                 {tag}
                 {onClick && (
-                  <TagRemoveButton type='button' onClick={() => onClick(tag)} aria-label={`Удалить тег ${tag}`}>
-                    x
+                  <TagRemoveButton
+                    type='button'
+                    onClick={(e) => {
+                      e.preventDefault()
+                      e.stopPropagation()
+                      onClick(tag)
+                    }}
+                    aria-label={`Удалить тег ${tag}`}
+                  >
+                    ×
                   </TagRemoveButton>
                 )}
               </TagChip>
@@ -45,7 +53,7 @@ export const TagList = ({ tags, url, position, onClick }: IProps) => {
               {tag}
               {onClick && (
                 <TagRemoveButton type='button' onClick={() => onClick(tag)} aria-label={`Удалить тег ${tag}`}>
-                  x
+                  ×
                 </TagRemoveButton>
               )}
             </TagChip>
@@ -56,9 +64,9 @@ export const TagList = ({ tags, url, position, onClick }: IProps) => {
 }
 
 const positions = {
-  left: 'start',
+  left: 'flex-start',
   center: 'center',
-  right: 'end',
+  right: 'flex-end',
 } as const
 
 const TagContainer = styled.div<{
@@ -69,29 +77,44 @@ const TagContainer = styled.div<{
   gap: 0.5rem;
   margin: 0.5rem 0;
   min-height: 2rem;
-  justify-content: ${({ position }) => (position ? positions[position] : 'start')};
+  justify-content: ${({ position }) => (position ? positions[position] : 'flex-start')};
 `
-const TagChip = styled.div`
+
+const TagChip = styled.span`
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  padding: 0.3rem 0.6rem;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  background: #f5f5f5;
-  color: #333;
-  font-size: 0.9rem;
+  gap: 0.35rem;
+  padding: 0.35rem 0.75rem;
+  border: 1px solid var(--input-border);
+  border-radius: var(--radius-xl);
+  background: var(--surface-elevated);
+  color: var(--text-color);
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition:
+    background-color var(--transition-fast),
+    border-color var(--transition-fast);
+  box-shadow: var(--shadow-sm);
+
+  &:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+  }
 `
 
 const TagRemoveButton = styled.button`
   border: none;
   background: transparent;
-  color: #666;
-  font-size: 0.9rem;
+  color: inherit;
+  font-size: 1.1rem;
+  line-height: 1;
   cursor: pointer;
   padding: 0;
+  opacity: 0.8;
 
   &:hover {
-    color: #000;
+    opacity: 1;
   }
 `

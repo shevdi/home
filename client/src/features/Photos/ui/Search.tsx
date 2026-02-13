@@ -169,82 +169,93 @@ export const Search = () => {
 
   return (
     <SearchContainer>
-      <FieldWrapper>
-        <Dropdown
-          label='Сортировать'
-          id='photo-sort-order'
-          {...register('order', {
-            onChange: handleOrderChange,
-          })}
-          options={[
-            { value: 'orderDownByTakenAt', label: 'Вначале новые' },
-            { value: 'orderUpByTakenAt', label: 'Вначале старые' },
-            { value: 'orderDownByEdited', label: 'Последние загруженные' },
-          ]}
-        />
-      </FieldWrapper>
-      <DateInputs>
-        <Input
-          label='Дата с'
-          type='date'
-          {...register('dateFrom', {
-            onChange: handleDateFromChange,
-          })}
-        />
-        <Input
-          label='Дата по'
-          type='date'
-          {...register('dateTo', {
-            onChange: handleDateToChange,
-          })}
-        />
-      </DateInputs>
-      <FieldWrapper>
-        <Input
-          label='Страна'
-          id='photo-filter-country'
-          placeholder='Введите страну и нажмите Enter'
-          {...register('countryInput')}
-          onKeyDown={addCountry}
-        />
-        <TagList tags={country} onClick={removeCountry} />
-      </FieldWrapper>
-      <FieldWrapper>
-        <Input
-          label='Город'
-          id='photo-filter-city'
-          placeholder='Введите город и нажмите Enter'
-          {...register('cityInput')}
-          onKeyDown={addCity}
-        />
-        <TagList tags={city} onClick={removeCity} />
-      </FieldWrapper>
-      <FieldWrapper>
-        <Input
-          label='Теги'
-          id='photo-filter-tags'
-          placeholder='Введите тег и нажмите Enter'
-          {...register('tagInput')}
-          onKeyDown={addTag}
-        />
-        {<TagList tags={tags} onClick={removeTag} />}
-      </FieldWrapper>
+      <SearchCard>
+        <FieldWrapper>
+          <Dropdown
+            label='Сортировать'
+            id='photo-sort-order'
+            {...register('order', {
+              onChange: handleOrderChange,
+            })}
+            options={[
+              { value: 'orderDownByTakenAt', label: 'Вначале новые' },
+              { value: 'orderUpByTakenAt', label: 'Вначале старые' },
+              { value: 'orderDownByEdited', label: 'Последние загруженные' },
+            ]}
+          />
+        </FieldWrapper>
+        <DateInputs>
+          <Input
+            label='Дата с'
+            type='date'
+            {...register('dateFrom', {
+              onChange: handleDateFromChange,
+            })}
+          />
+          <Input
+            label='Дата по'
+            type='date'
+            {...register('dateTo', {
+              onChange: handleDateToChange,
+            })}
+          />
+        </DateInputs>
+        <FieldWrapper>
+          <Input
+            label='Страна'
+            id='photo-filter-country'
+            placeholder='Введите страну и нажмите Enter'
+            {...register('countryInput')}
+            onKeyDown={addCountry}
+          />
+          <TagList tags={country} onClick={removeCountry} />
+        </FieldWrapper>
+        <FieldWrapper>
+          <Input
+            label='Город'
+            id='photo-filter-city'
+            placeholder='Введите город и нажмите Enter'
+            {...register('cityInput')}
+            onKeyDown={addCity}
+          />
+          <TagList tags={city} onClick={removeCity} />
+        </FieldWrapper>
+        <FieldWrapper>
+          <Input
+            label='Теги'
+            id='photo-filter-tags'
+            placeholder='Введите тег и нажмите Enter'
+            {...register('tagInput')}
+            onKeyDown={addTag}
+          />
+          <TagList tags={tags} onClick={removeTag} />
+        </FieldWrapper>
+      </SearchCard>
     </SearchContainer>
   )
 }
 
 const SearchContainer = styled.div`
+  padding-bottom: 1.5rem;
+`
+
+const SearchCard = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-  gap: 0 2rem;
-  padding-bottom: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem 1.5rem;
+  padding: 1.5rem;
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--glass-shadow);
+  border: 1px solid var(--glass-border);
 `
 
 const FieldWrapper = styled.div``
 
 const DateInputs = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 0.75rem;
-  /* width: min(320px, 100%); */
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0 0.75rem;
 `

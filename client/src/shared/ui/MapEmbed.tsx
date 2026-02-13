@@ -63,30 +63,42 @@ export const MapEmbed = ({
 }
 
 const MapSection = styled.div`
-  margin-top: 1rem;
+  margin-top: 1.5rem;
 `
 
 const MapLabel = styled.div`
-  color: #555;
+  color: var(--text-muted);
   margin-bottom: 0.5rem;
   text-align: center;
+  font-size: 0.9rem;
 `
 
 const LocationLink = styled(Link)`
-  text-align: right;
-  margin-top: 0.25rem;
+  color: var(--accent);
   text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
 `
 
 const MapFrame = styled.iframe<{ $height: number }>`
   width: 100%;
   height: ${({ $height }) => `${$height}px`};
   border: 0;
-  border-radius: 8px;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
 `
 
 const MapLink = styled.a`
   display: block;
   margin-top: 0.5rem;
   text-align: center;
+  font-size: 0.9rem;
+  color: var(--accent);
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
 `

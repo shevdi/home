@@ -32,8 +32,8 @@ export function PhotoLink({ photo, disabled }: IProps) {
           src={((photo.priority ? photo.priority > 1 : false) ? photo.mdSizeUrl : photo.smSizeUrl) || photo.mdSizeUrl}
           alt={photo.title}
         />
+        {takenAtLabel && <DateCaption>{takenAtLabel}</DateCaption>}
       </Link>
-      {takenAtLabel && <DateCaption>{takenAtLabel}</DateCaption>}
       {(country || city) && (
         <Figcaption>
           {city}
@@ -57,14 +57,19 @@ const DateCaption = styled.figcaption`
   top: 0;
   left: 0;
   width: 100%;
-  padding: 12px;
-  background: rgba(0, 0, 0, 0.6);
+  padding: 0.75rem 1rem;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.7), transparent);
   color: #fff;
   font-size: 0.85rem;
-  text-align: center;
+  font-weight: 500;
+  text-align: left;
   opacity: 0;
-  transition: opacity 0.2s ease;
+  transition: opacity var(--transition-fast);
   pointer-events: none;
+
+  @media (hover: none) {
+    opacity: 1;
+  }
 `
 
 const Figure = styled.figure<{ $featured: boolean }>`
@@ -72,10 +77,24 @@ const Figure = styled.figure<{ $featured: boolean }>`
   display: inline-block;
   margin: 0;
   overflow: hidden;
-  border-radius: 4px;
-  ${({ $featured }) => ($featured ? 'height: 410px;' : 'height: 200px;')};
+  border-radius: var(--radius-lg);
+  box-shadow:
+    0 2px 12px rgba(0, 0, 0, 0.08),
+    0 1px 0 rgba(255, 255, 255, 0.15) inset;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  ${({ $featured }) => ($featured ? 'height: 420px;' : 'height: 220px;')};
   ${({ $featured }) => ($featured ? 'grid-row: span 2;' : '')};
   ${({ $featured }) => ($featured ? 'grid-column: span 2' : '')};
+  transition:
+    transform var(--transition-normal),
+    box-shadow var(--transition-normal);
+
+  &:hover {
+    transform: translateY(-4px) scale(1.01);
+    box-shadow:
+      0 12px 32px rgba(0, 0, 0, 0.12),
+      0 1px 0 rgba(255, 255, 255, 0.2) inset;
+  }
 
   &:hover ${DateCaption}, &:focus-within ${DateCaption} {
     opacity: 1;
@@ -83,14 +102,14 @@ const Figure = styled.figure<{ $featured: boolean }>`
 `
 
 const Figcaption = styled.figcaption`
-  text-align: right;
   position: absolute;
   bottom: 0;
   left: 0;
   width: 100%;
-  padding: 12px;
-  background: rgba(0, 0, 0, 0.6);
+  padding: 0.75rem 1rem;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.75), transparent);
   color: #fff;
-  font-size: 0.9rem;
-  text-align: center;
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-align: left;
 `

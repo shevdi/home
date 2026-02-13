@@ -19,14 +19,20 @@ export const Filter = ({ isHiddenFilters }: IProps) => {
   return (
     <FilterContainer>
       {!isHiddenFilters && (
-        <>
-          <Checkbox checked={privateFilter} onChange={handlePrivateChange} label='Приватные' />
-        </>
+        <FilterRow>
+          <Checkbox checked={privateFilter} onChange={handlePrivateChange} label='Приватные' color='var(--accent)' />
+        </FilterRow>
       )}
     </FilterContainer>
   )
 }
 
 const FilterContainer = styled.div`
-  max-width: 480px;
+  margin-bottom: 1rem;
+`
+
+const FilterRow = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 `

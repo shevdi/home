@@ -8,7 +8,7 @@ import { Auth } from '@/features/Auth'
 const ModalContainer = styled.header``
 
 const ModalButton = styled.button`
-  background-color: inherit;
+  background-color: transparent;
   border: none;
   width: 40px;
   height: 40px;
@@ -16,10 +16,12 @@ const ModalButton = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
-  transition: transform 1s ease;
+  transition: transform var(--transition-normal);
+  color: inherit;
+  border-radius: var(--radius-md);
 
   &:hover {
-    transform: rotate(180deg);
+    transform: rotate(90deg);
   }
 
   &:active {
@@ -38,26 +40,27 @@ const ModalOverlay = styled.div`
 
 const ModalContent = styled.div`
   position: absolute;
-  top: 55px;
-  right: 2rem;
-  background: #f2f3f5;
-  border-radius: 8px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  top: 56px;
+  right: 1.5rem;
+  background: var(--dropdown-over-nav);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
   padding: 1.5rem;
   z-index: 1000;
-  width: 250px;
-  border: 1px solid #ccc;
+  width: 260px;
+  border: 1px solid var(--input-border);
 
   h3 {
-    color: #555;
-    margin-top: 0;
-    font-size: 1.1rem;
+    color: var(--text-color);
+    margin: 0 0 1rem;
+    font-size: 1rem;
+    font-weight: 600;
   }
 
   p {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
     font-size: 0.9rem;
-    color: #555;
+    color: var(--text-muted);
   }
 
   > div {
@@ -65,26 +68,10 @@ const ModalContent = styled.div`
   }
 `
 
-// const CloseButton = styled.button`
-//   background-color: #dc3545;
-//   color: white;
-//   border: none;
-//   border-radius: 4px;
-//   padding: 0.5rem 1rem;
-//   cursor: pointer;
-//   width: 100%;
-//   transition: background-color 0.2s ease-in-out;
-
-//   &:hover {
-//     background-color: #c82333;
-//   }
-// `
-
 export function Menu(): ReactElement {
   const [isModalOpen, setModalOpen] = useState(false)
   const modalRef = useRef<HTMLDivElement>(null)
 
-  // Use the custom hook to close modal on outside click
   useOnClickOutside(modalRef, () => setModalOpen(false))
 
   const toggleModal = () => {
@@ -102,7 +89,6 @@ export function Menu(): ReactElement {
           <ModalContent ref={modalRef}>
             <h3>Настройки</h3>
             <ThemeSwitch />
-            {/* <CloseButton onClick={toggleModal}>Закрыть</CloseButton> */}
             <Auth />
           </ModalContent>
         </ModalOverlay>

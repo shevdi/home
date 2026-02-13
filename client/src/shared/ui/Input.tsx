@@ -59,44 +59,52 @@ export const Input: React.FC<InputProps> = ({ label, type, focus, error, disable
 
 const InputWrapper = styled.div`
   position: relative;
-  margin: 1rem 0;
+  margin-bottom: 1rem;
 `
 
 const StyledInput = styled.input<{
   type?: string
 }>`
   width: 100%;
-  padding: 12px 15px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 1rem;
-  color: #333;
+  padding: 0.65rem 1rem;
+  border: 1px solid var(--input-border);
+  border-radius: var(--radius-md);
+  font-size: 0.95rem;
+  font-family: inherit;
+  color: var(--text-color);
+  background-color: var(--input-bg);
   display: ${({ type }) => (type === 'file' ? 'none' : 'initial')};
   transition:
-    border-color 0.2s ease-in-out,
-    box-shadow 0.2s ease-in-out;
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+
+  &::placeholder {
+    color: var(--text-muted);
+  }
 
   &:focus {
     outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+    border-color: var(--input-focus);
+    box-shadow: 0 0 0 3px rgba(199, 107, 57, 0.2);
   }
 
   &:disabled {
-    background-color: #708090;
+    background-color: var(--input-disabled-color);
     cursor: not-allowed;
+    opacity: 0.7;
   }
 `
 
 const StyledLabel = styled.label`
   display: block;
-  margin-bottom: 0.8rem;
+  margin-bottom: 0.5rem;
   font-weight: 500;
-  color: #555;
+  font-size: 0.9rem;
+  color: var(--text-muted);
 `
 
 const ErrorText = styled.div`
-  margin-top: 0.5rem;
+  margin-top: 0.4rem;
   font-size: 0.8rem;
   color: var(--error-color);
   min-height: 1rem;

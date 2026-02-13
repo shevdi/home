@@ -1,3 +1,4 @@
+import path from 'path'
 import { merge } from 'webpack-merge'
 import commonConfig from './webpack.common'
 import { Configuration } from 'webpack';
@@ -14,6 +15,9 @@ const devConfig: CustomConfiguration = merge(commonConfig, {
   },
   devtool: 'inline-source-map',
   devServer: {
+    static: {
+      directory: path.join(__dirname, 'public'),
+    },
     hot: 'only',
     liveReload: false,
     host: '0.0.0.0',  // Important for Docker

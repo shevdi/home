@@ -29,20 +29,20 @@ const LoaderWrapper = styled.div`
 `
 
 const Spinner = styled.div<{ $inline?: boolean }>`
-  border: 4px solid rgba(0, 123, 255, 0.2);
-  border-top: 4px solid #007bff;
+  border: 3px solid var(--input-border);
+  border-top-color: var(--accent);
   border-radius: 50%;
-  width: ${({ $inline }) => ($inline ? '20px' : '40px')};
-  height: ${({ $inline }) => ($inline ? '20px' : '40px')};
+  width: ${({ $inline }) => ($inline ? '24px' : '44px')};
+  height: ${({ $inline }) => ($inline ? '24px' : '44px')};
   margin: ${({ $inline }) => ($inline ? '0 auto' : 'initial')};
-  animation: ${spin} 0.8s linear infinite;
+  animation: ${spin} 0.7s linear infinite;
 `
 
 const LoadingMessage = styled.p`
   margin-top: 1rem;
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 500;
-  color: #333;
+  color: var(--text-muted);
 `
 
 export function Loader({ message, inline }: LoaderProps) {

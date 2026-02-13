@@ -6,25 +6,26 @@ export const UploadLabel = styled.label<{ isDragActive?: boolean; disabled?: boo
   justify-content: center;
   gap: 12px;
 
-  padding: 18px 24px;
-  border-radius: 12px;
+  padding: 1rem 1.5rem;
+  border-radius: var(--radius-md);
 
   cursor: pointer;
   user-select: none;
 
-  border: 2px dashed ${({ isDragActive, disabled }) => (isDragActive || disabled ? '#4f46e5' : '#c7c7c7')};
+  border: 2px dashed
+    ${({ isDragActive, disabled }) => (isDragActive || disabled ? 'var(--accent)' : 'var(--input-border)')};
 
   background: ${({ isDragActive, disabled }) =>
-    isDragActive || disabled ? 'var(--input-disabled-color)' : 'var(--input-color)'};
+    isDragActive || disabled ? 'var(--input-disabled-color)' : 'var(--input-bg)'};
 
-  color: #1f2937;
-  font-weight: 600;
+  color: var(--text-color);
+  font-weight: 500;
 
-  transition: all 0.2s ease;
+  transition: all var(--transition-fast);
 
-  &:hover {
-    border-color: #4f46e5;
-    background: var(--input-disabled-color);
+  &:hover:not([disabled]) {
+    border-color: var(--accent);
+    background: rgba(199, 107, 57, 0.08);
   }
 
   &:active {

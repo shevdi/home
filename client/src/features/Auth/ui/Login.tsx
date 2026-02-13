@@ -10,12 +10,19 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { getErrorMessage } from '@/shared/utils'
 
 const Section = styled.section`
-  max-width: 300px;
-  margin: 0 auto;
+  max-width: 360px;
+  margin: 3rem auto;
+  padding: 2rem;
+  background: var(--surface-elevated);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--input-border);
 `
 
 const Head = styled.h1`
   text-align: center;
+  font-size: 1.5rem;
+  margin: 0 0 1.5rem;
 `
 
 const schema = z.object({
@@ -54,7 +61,7 @@ export function Login() {
 
   return (
     <Section>
-      <Head>Логин</Head>
+      <Head>Вход</Head>
       <ErrMessage>{errors.root?.message}</ErrMessage>
 
       <form className='form' onSubmit={handleSubmit(onSubmit)}>
@@ -72,7 +79,7 @@ export function Login() {
           error={errors.password?.message}
           disabled={isSubmitting}
         />
-        <Button display='block' type='submit' margin='1rem auto' disabled={isSubmitting}>
+        <Button display='block' type='submit' margin='1.25rem auto 0' disabled={isSubmitting}>
           Войти
         </Button>
       </form>

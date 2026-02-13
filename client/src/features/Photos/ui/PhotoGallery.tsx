@@ -45,19 +45,21 @@ export function PhotoGallery() {
   )
 }
 
-const PageContainer = styled.div``
+const PageContainer = styled.div`
+  margin-top: 1rem;
+`
 
 const PhotoContainer = styled.div<{ $isLoading: boolean }>`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   grid-auto-rows: 1fr;
-  gap: 0.5rem;
+  gap: 1rem;
   grid-auto-flow: dense;
   opacity: ${({ $isLoading }) => ($isLoading ? 0.6 : 1)};
-  filter: ${({ $isLoading }) => ($isLoading ? 'brightness(0.8)' : 'none')};
+  filter: ${({ $isLoading }) => ($isLoading ? 'brightness(0.9)' : 'none')};
   transition:
-    opacity 0.2s ease,
-    filter 0.2s ease;
+    opacity var(--transition-normal),
+    filter var(--transition-normal);
 `
 
 const Sentinel = styled.div`
@@ -68,6 +70,6 @@ const Sentinel = styled.div`
 const LoaderContainer = styled.div`
   display: flex;
   justify-content: center;
-  padding: 1rem;
+  padding: 2rem;
   position: relative;
 `

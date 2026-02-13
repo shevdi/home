@@ -6,23 +6,46 @@ interface IPageProps {
   url?: string
 }
 
-const PageContainer = styled.div``
+const PageContainer = styled.div`
+  max-width: 640px;
+  margin: 0 auto;
+`
 
 const PageHeader = styled.h1`
   text-align: center;
+  font-size: 1.75rem;
+  margin: 0 0 1rem;
 `
 
 const PageText = styled.div`
   text-align: center;
+  line-height: 1.7;
+  color: var(--text-color);
+  margin-bottom: 1.5rem;
 `
 
 const PageLinks = styled.ul`
   list-style: none;
   padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
 `
 
 const PageLink = styled.li`
   text-align: center;
+
+  a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 `
 
 export function Page({ url }: IPageProps) {
