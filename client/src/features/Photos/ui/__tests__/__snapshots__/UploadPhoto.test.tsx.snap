@@ -10,16 +10,16 @@ exports[`UploadPhoto renders default state and disables submit 1`] = `
     />
     <form>
       <div
-        class="sc-csKIKD erOzaQ"
+        class="sc-csKIKD cmDwWi"
       >
         <label
-          class="sc-irLwvM diVwJC"
+          class="sc-irLwvM kyIWET"
           for="files"
         >
           Загрузить фото
         </label>
         <input
-          class="sc-eTNem jBVWLP"
+          class="sc-eTNem hHjbvm"
           multiple=""
           name="files"
           type="file"
@@ -46,7 +46,7 @@ exports[`UploadPhoto renders default state and disables submit 1`] = `
         </label>
       </div>
       <button
-        class="sc-hABAzn bBOExv"
+        class="sc-hABAzn hesWCt"
         disabled=""
         type="submit"
       >
@@ -69,16 +69,16 @@ exports[`UploadPhoto shows error message when upload fails 1`] = `
     </div>
     <form>
       <div
-        class="sc-csKIKD erOzaQ"
+        class="sc-csKIKD cmDwWi"
       >
         <label
-          class="sc-irLwvM diVwJC"
+          class="sc-irLwvM kyIWET"
           for="files"
         >
           1 файл выбран
         </label>
         <input
-          class="sc-eTNem jBVWLP"
+          class="sc-eTNem hHjbvm"
           multiple=""
           name="files"
           type="file"
@@ -121,7 +121,7 @@ exports[`UploadPhoto shows error message when upload fails 1`] = `
         </div>
       </div>
       <button
-        class="sc-hABAzn dSZFFp"
+        class="sc-hABAzn gvjyd"
         type="submit"
       >
         Загрузить 1 фото
@@ -141,16 +141,16 @@ exports[`UploadPhoto submits files and shows success message 1`] = `
     />
     <form>
       <div
-        class="sc-csKIKD erOzaQ"
+        class="sc-csKIKD cmDwWi"
       >
         <label
-          class="sc-irLwvM diVwJC"
+          class="sc-irLwvM kyIWET"
           for="files"
         >
           Загрузить фото
         </label>
         <input
-          class="sc-eTNem jBVWLP"
+          class="sc-eTNem hHjbvm"
           multiple=""
           name="files"
           type="file"
@@ -182,7 +182,7 @@ exports[`UploadPhoto submits files and shows success message 1`] = `
         </label>
       </div>
       <button
-        class="sc-hABAzn bBOExv"
+        class="sc-hABAzn hesWCt"
         disabled=""
         type="submit"
       >
@@ -203,16 +203,16 @@ exports[`UploadPhoto updates label and shows selected file 1`] = `
     />
     <form>
       <div
-        class="sc-csKIKD erOzaQ"
+        class="sc-csKIKD cmDwWi"
       >
         <label
-          class="sc-irLwvM diVwJC"
+          class="sc-irLwvM kyIWET"
           for="files"
         >
           1 файл выбран
         </label>
         <input
-          class="sc-eTNem jBVWLP"
+          class="sc-eTNem hHjbvm"
           multiple=""
           name="files"
           type="file"
@@ -255,7 +255,7 @@ exports[`UploadPhoto updates label and shows selected file 1`] = `
         </div>
       </div>
       <button
-        class="sc-hABAzn dSZFFp"
+        class="sc-hABAzn gvjyd"
         type="submit"
       >
         Загрузить 1 фото

@@ -81,7 +81,7 @@ const StyledCheckbox = styled.span<{
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: 2px solid ${({ $checked, $color }) => ($checked ? $color : '#4caf50')};
+  border: 2px solid ${({ $checked, $color }) => ($checked ? $color : 'var(--accent)')};
   background: ${({ $checked, $color }) => ($checked ? $color : 'transparent')};
   transition: all 0.2s ease;
   border-radius: 50%;

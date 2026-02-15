@@ -3,108 +3,112 @@
 exports[`Search renders search form with default state 1`] = `
 <div>
   <div
-    class="sc-lnskGQ iFxayW"
+    class="sc-lnskGQ iMHAcJ"
   >
     <div
-      class="sc-iKOlBD"
+      class="sc-iKOlBD jgctmD"
     >
       <div
-        class="sc-fHekdU KNIbI"
+        class="sc-gjLKRm"
       >
-        <label
-          class="sc-blmETN jsoQky"
-          for="photo-sort-order"
+        <div
+          class="sc-fHekdU dssWqK"
         >
-          Сортировать
-        </label>
-        <select
-          class="sc-ifyqMW bBnvre"
-          id="photo-sort-order"
-          name="order"
-        >
-          <option
-            value="orderDownByTakenAt"
+          <label
+            class="sc-blmETN bLNVuV"
+            for="photo-sort-order"
           >
-            Вначале новые
-          </option>
-          <option
-            value="orderUpByTakenAt"
+            Сортировать
+          </label>
+          <select
+            class="sc-ifyqMW hsVASY"
+            id="photo-sort-order"
+            name="order"
           >
-            Вначале старые
-          </option>
-          <option
-            value="orderDownByEdited"
-          >
-            Последние загруженные
-          </option>
-        </select>
+            <option
+              value="orderDownByTakenAt"
+            >
+              Вначале новые
+            </option>
+            <option
+              value="orderUpByTakenAt"
+            >
+              Вначале старые
+            </option>
+            <option
+              value="orderDownByEdited"
+            >
+              Последние загруженные
+            </option>
+          </select>
+        </div>
       </div>
-    </div>
-    <div
-      class="sc-gjLKRm fpnqVH"
-    >
-      <label>
-        Дата с
-        <input
-          name="dateFrom"
-          type="date"
-        />
-      </label>
-      <label>
-        Дата по
-        <input
-          name="dateTo"
-          type="date"
-        />
-      </label>
-    </div>
-    <div
-      class="sc-iKOlBD"
-    >
-      <label>
-        Страна
-        <input
-          id="photo-filter-country"
-          name="countryInput"
-          placeholder="Введите страну и нажмите Enter"
-          type="text"
-        />
-      </label>
       <div
-        class="sc-dJGLCP nLOeT"
-      />
-    </div>
-    <div
-      class="sc-iKOlBD"
-    >
-      <label>
-        Город
-        <input
-          id="photo-filter-city"
-          name="cityInput"
-          placeholder="Введите город и нажмите Enter"
-          type="text"
-        />
-      </label>
+        class="sc-eAKupd eFelt"
+      >
+        <label>
+          Дата с
+          <input
+            name="dateFrom"
+            type="date"
+          />
+        </label>
+        <label>
+          Дата по
+          <input
+            name="dateTo"
+            type="date"
+          />
+        </label>
+      </div>
       <div
-        class="sc-dJGLCP nLOeT"
-      />
-    </div>
-    <div
-      class="sc-iKOlBD"
-    >
-      <label>
-        Теги
-        <input
-          id="photo-filter-tags"
-          name="tagInput"
-          placeholder="Введите тег и нажмите Enter"
-          type="text"
+        class="sc-gjLKRm"
+      >
+        <label>
+          Страна
+          <input
+            id="photo-filter-country"
+            name="countryInput"
+            placeholder="Введите страну и нажмите Enter"
+            type="text"
+          />
+        </label>
+        <div
+          class="sc-dJGLCP ejpPQV"
         />
-      </label>
+      </div>
       <div
-        class="sc-dJGLCP nLOeT"
-      />
+        class="sc-gjLKRm"
+      >
+        <label>
+          Город
+          <input
+            id="photo-filter-city"
+            name="cityInput"
+            placeholder="Введите город и нажмите Enter"
+            type="text"
+          />
+        </label>
+        <div
+          class="sc-dJGLCP ejpPQV"
+        />
+      </div>
+      <div
+        class="sc-gjLKRm"
+      >
+        <label>
+          Теги
+          <input
+            id="photo-filter-tags"
+            name="tagInput"
+            placeholder="Введите тег и нажмите Enter"
+            type="text"
+          />
+        </label>
+        <div
+          class="sc-dJGLCP ejpPQV"
+        />
+      </div>
     </div>
   </div>
 </div>
@@ -113,143 +117,147 @@ exports[`Search renders search form with default state 1`] = `
 exports[`Search renders with different queryParams renders with all params 1`] = `
 <div>
   <div
-    class="sc-lnskGQ iFxayW"
+    class="sc-lnskGQ iMHAcJ"
   >
     <div
-      class="sc-iKOlBD"
+      class="sc-iKOlBD jgctmD"
     >
       <div
-        class="sc-fHekdU KNIbI"
+        class="sc-gjLKRm"
       >
-        <label
-          class="sc-blmETN jsoQky"
-          for="photo-sort-order"
+        <div
+          class="sc-fHekdU dssWqK"
         >
-          Сортировать
-        </label>
-        <select
-          class="sc-ifyqMW bBnvre"
-          id="photo-sort-order"
-          name="order"
-        >
-          <option
-            value="orderDownByTakenAt"
+          <label
+            class="sc-blmETN bLNVuV"
+            for="photo-sort-order"
           >
-            Вначале новые
-          </option>
-          <option
-            value="orderUpByTakenAt"
+            Сортировать
+          </label>
+          <select
+            class="sc-ifyqMW hsVASY"
+            id="photo-sort-order"
+            name="order"
           >
-            Вначале старые
-          </option>
-          <option
-            value="orderDownByEdited"
-          >
-            Последние загруженные
-          </option>
-        </select>
+            <option
+              value="orderDownByTakenAt"
+            >
+              Вначале новые
+            </option>
+            <option
+              value="orderUpByTakenAt"
+            >
+              Вначале старые
+            </option>
+            <option
+              value="orderDownByEdited"
+            >
+              Последние загруженные
+            </option>
+          </select>
+        </div>
       </div>
-    </div>
-    <div
-      class="sc-gjLKRm fpnqVH"
-    >
-      <label>
-        Дата с
-        <input
-          name="dateFrom"
-          type="date"
-        />
-      </label>
-      <label>
-        Дата по
-        <input
-          name="dateTo"
-          type="date"
-        />
-      </label>
-    </div>
-    <div
-      class="sc-iKOlBD"
-    >
-      <label>
-        Страна
-        <input
-          id="photo-filter-country"
-          name="countryInput"
-          placeholder="Введите страну и нажмите Enter"
-          type="text"
-        />
-      </label>
       <div
-        class="sc-dJGLCP nLOeT"
-      />
-    </div>
-    <div
-      class="sc-iKOlBD"
-    >
-      <label>
-        Город
-        <input
-          id="photo-filter-city"
-          name="cityInput"
-          placeholder="Введите город и нажмите Enter"
-          type="text"
-        />
-      </label>
-      <div
-        class="sc-dJGLCP nLOeT"
-      />
-    </div>
-    <div
-      class="sc-iKOlBD"
-    >
-      <label>
-        Теги
-        <input
-          id="photo-filter-tags"
-          name="tagInput"
-          placeholder="Введите тег и нажмите Enter"
-          type="text"
-        />
-      </label>
-      <div
-        class="sc-dJGLCP nLOeT"
+        class="sc-eAKupd eFelt"
       >
+        <label>
+          Дата с
+          <input
+            name="dateFrom"
+            type="date"
+          />
+        </label>
+        <label>
+          Дата по
+          <input
+            name="dateTo"
+            type="date"
+          />
+        </label>
+      </div>
+      <div
+        class="sc-gjLKRm"
+      >
+        <label>
+          Страна
+          <input
+            id="photo-filter-country"
+            name="countryInput"
+            placeholder="Введите страну и нажмите Enter"
+            type="text"
+          />
+        </label>
         <div
-          class="sc-hIPCAM hYLELY"
-        >
-          foo
-          <button
-            aria-label="Удалить тег foo"
-            class="sc-dmXXqF ibzAVg"
-            type="button"
-          >
-            x
-          </button>
-        </div>
+          class="sc-dJGLCP ejpPQV"
+        />
+      </div>
+      <div
+        class="sc-gjLKRm"
+      >
+        <label>
+          Город
+          <input
+            id="photo-filter-city"
+            name="cityInput"
+            placeholder="Введите город и нажмите Enter"
+            type="text"
+          />
+        </label>
         <div
-          class="sc-hIPCAM hYLELY"
-        >
-          bar
-          <button
-            aria-label="Удалить тег bar"
-            class="sc-dmXXqF ibzAVg"
-            type="button"
-          >
-            x
-          </button>
-        </div>
+          class="sc-dJGLCP ejpPQV"
+        />
+      </div>
+      <div
+        class="sc-gjLKRm"
+      >
+        <label>
+          Теги
+          <input
+            id="photo-filter-tags"
+            name="tagInput"
+            placeholder="Введите тег и нажмите Enter"
+            type="text"
+          />
+        </label>
         <div
-          class="sc-hIPCAM hYLELY"
+          class="sc-dJGLCP ejpPQV"
         >
-          baz
-          <button
-            aria-label="Удалить тег baz"
-            class="sc-dmXXqF ibzAVg"
-            type="button"
+          <span
+            class="sc-hIPCAM kiIpFo"
           >
-            x
-          </button>
+            foo
+            <button
+              aria-label="Удалить тег foo"
+              class="sc-dmXXqF ejSuxt"
+              type="button"
+            >
+              ×
+            </button>
+          </span>
+          <span
+            class="sc-hIPCAM kiIpFo"
+          >
+            bar
+            <button
+              aria-label="Удалить тег bar"
+              class="sc-dmXXqF ejSuxt"
+              type="button"
+            >
+              ×
+            </button>
+          </span>
+          <span
+            class="sc-hIPCAM kiIpFo"
+          >
+            baz
+            <button
+              aria-label="Удалить тег baz"
+              class="sc-dmXXqF ejSuxt"
+              type="button"
+            >
+              ×
+            </button>
+          </span>
         </div>
       </div>
     </div>
@@ -260,108 +268,112 @@ exports[`Search renders with different queryParams renders with all params 1`] =
 exports[`Search renders with different queryParams renders with date range params 1`] = `
 <div>
   <div
-    class="sc-lnskGQ iFxayW"
+    class="sc-lnskGQ iMHAcJ"
   >
     <div
-      class="sc-iKOlBD"
+      class="sc-iKOlBD jgctmD"
     >
       <div
-        class="sc-fHekdU KNIbI"
+        class="sc-gjLKRm"
       >
-        <label
-          class="sc-blmETN jsoQky"
-          for="photo-sort-order"
+        <div
+          class="sc-fHekdU dssWqK"
         >
-          Сортировать
-        </label>
-        <select
-          class="sc-ifyqMW bBnvre"
-          id="photo-sort-order"
-          name="order"
-        >
-          <option
-            value="orderDownByTakenAt"
+          <label
+            class="sc-blmETN bLNVuV"
+            for="photo-sort-order"
           >
-            Вначале новые
-          </option>
-          <option
-            value="orderUpByTakenAt"
+            Сортировать
+          </label>
+          <select
+            class="sc-ifyqMW hsVASY"
+            id="photo-sort-order"
+            name="order"
           >
-            Вначале старые
-          </option>
-          <option
-            value="orderDownByEdited"
-          >
-            Последние загруженные
-          </option>
-        </select>
+            <option
+              value="orderDownByTakenAt"
+            >
+              Вначале новые
+            </option>
+            <option
+              value="orderUpByTakenAt"
+            >
+              Вначале старые
+            </option>
+            <option
+              value="orderDownByEdited"
+            >
+              Последние загруженные
+            </option>
+          </select>
+        </div>
       </div>
-    </div>
-    <div
-      class="sc-gjLKRm fpnqVH"
-    >
-      <label>
-        Дата с
-        <input
-          name="dateFrom"
-          type="date"
-        />
-      </label>
-      <label>
-        Дата по
-        <input
-          name="dateTo"
-          type="date"
-        />
-      </label>
-    </div>
-    <div
-      class="sc-iKOlBD"
-    >
-      <label>
-        Страна
-        <input
-          id="photo-filter-country"
-          name="countryInput"
-          placeholder="Введите страну и нажмите Enter"
-          type="text"
-        />
-      </label>
       <div
-        class="sc-dJGLCP nLOeT"
-      />
-    </div>
-    <div
-      class="sc-iKOlBD"
-    >
-      <label>
-        Город
-        <input
-          id="photo-filter-city"
-          name="cityInput"
-          placeholder="Введите город и нажмите Enter"
-          type="text"
-        />
-      </label>
+        class="sc-eAKupd eFelt"
+      >
+        <label>
+          Дата с
+          <input
+            name="dateFrom"
+            type="date"
+          />
+        </label>
+        <label>
+          Дата по
+          <input
+            name="dateTo"
+            type="date"
+          />
+        </label>
+      </div>
       <div
-        class="sc-dJGLCP nLOeT"
-      />
-    </div>
-    <div
-      class="sc-iKOlBD"
-    >
-      <label>
-        Теги
-        <input
-          id="photo-filter-tags"
-          name="tagInput"
-          placeholder="Введите тег и нажмите Enter"
-          type="text"
+        class="sc-gjLKRm"
+      >
+        <label>
+          Страна
+          <input
+            id="photo-filter-country"
+            name="countryInput"
+            placeholder="Введите страну и нажмите Enter"
+            type="text"
+          />
+        </label>
+        <div
+          class="sc-dJGLCP ejpPQV"
         />
-      </label>
+      </div>
       <div
-        class="sc-dJGLCP nLOeT"
-      />
+        class="sc-gjLKRm"
+      >
+        <label>
+          Город
+          <input
+            id="photo-filter-city"
+            name="cityInput"
+            placeholder="Введите город и нажмите Enter"
+            type="text"
+          />
+        </label>
+        <div
+          class="sc-dJGLCP ejpPQV"
+        />
+      </div>
+      <div
+        class="sc-gjLKRm"
+      >
+        <label>
+          Теги
+          <input
+            id="photo-filter-tags"
+            name="tagInput"
+            placeholder="Введите тег и нажмите Enter"
+            type="text"
+          />
+        </label>
+        <div
+          class="sc-dJGLCP ejpPQV"
+        />
+      </div>
     </div>
   </div>
 </div>
@@ -370,108 +382,112 @@ exports[`Search renders with different queryParams renders with date range param
 exports[`Search renders with different queryParams renders with order param 1`] = `
 <div>
   <div
-    class="sc-lnskGQ iFxayW"
+    class="sc-lnskGQ iMHAcJ"
   >
     <div
-      class="sc-iKOlBD"
+      class="sc-iKOlBD jgctmD"
     >
       <div
-        class="sc-fHekdU KNIbI"
+        class="sc-gjLKRm"
       >
-        <label
-          class="sc-blmETN jsoQky"
-          for="photo-sort-order"
+        <div
+          class="sc-fHekdU dssWqK"
         >
-          Сортировать
-        </label>
-        <select
-          class="sc-ifyqMW bBnvre"
-          id="photo-sort-order"
-          name="order"
-        >
-          <option
-            value="orderDownByTakenAt"
+          <label
+            class="sc-blmETN bLNVuV"
+            for="photo-sort-order"
           >
-            Вначале новые
-          </option>
-          <option
-            value="orderUpByTakenAt"
+            Сортировать
+          </label>
+          <select
+            class="sc-ifyqMW hsVASY"
+            id="photo-sort-order"
+            name="order"
           >
-            Вначале старые
-          </option>
-          <option
-            value="orderDownByEdited"
-          >
-            Последние загруженные
-          </option>
-        </select>
+            <option
+              value="orderDownByTakenAt"
+            >
+              Вначале новые
+            </option>
+            <option
+              value="orderUpByTakenAt"
+            >
+              Вначале старые
+            </option>
+            <option
+              value="orderDownByEdited"
+            >
+              Последние загруженные
+            </option>
+          </select>
+        </div>
       </div>
-    </div>
-    <div
-      class="sc-gjLKRm fpnqVH"
-    >
-      <label>
-        Дата с
-        <input
-          name="dateFrom"
-          type="date"
-        />
-      </label>
-      <label>
-        Дата по
-        <input
-          name="dateTo"
-          type="date"
-        />
-      </label>
-    </div>
-    <div
-      class="sc-iKOlBD"
-    >
-      <label>
-        Страна
-        <input
-          id="photo-filter-country"
-          name="countryInput"
-          placeholder="Введите страну и нажмите Enter"
-          type="text"
-        />
-      </label>
       <div
-        class="sc-dJGLCP nLOeT"
-      />
-    </div>
-    <div
-      class="sc-iKOlBD"
-    >
-      <label>
-        Город
-        <input
-          id="photo-filter-city"
-          name="cityInput"
-          placeholder="Введите город и нажмите Enter"
-          type="text"
-        />
-      </label>
+        class="sc-eAKupd eFelt"
+      >
+        <label>
+          Дата с
+          <input
+            name="dateFrom"
+            type="date"
+          />
+        </label>
+        <label>
+          Дата по
+          <input
+            name="dateTo"
+            type="date"
+          />
+        </label>
+      </div>
       <div
-        class="sc-dJGLCP nLOeT"
-      />
-    </div>
-    <div
-      class="sc-iKOlBD"
-    >
-      <label>
-        Теги
-        <input
-          id="photo-filter-tags"
-          name="tagInput"
-          placeholder="Введите тег и нажмите Enter"
-          type="text"
+        class="sc-gjLKRm"
+      >
+        <label>
+          Страна
+          <input
+            id="photo-filter-country"
+            name="countryInput"
+            placeholder="Введите страну и нажмите Enter"
+            type="text"
+          />
+        </label>
+        <div
+          class="sc-dJGLCP ejpPQV"
         />
-      </label>
+      </div>
       <div
-        class="sc-dJGLCP nLOeT"
-      />
+        class="sc-gjLKRm"
+      >
+        <label>
+          Город
+          <input
+            id="photo-filter-city"
+            name="cityInput"
+            placeholder="Введите город и нажмите Enter"
+            type="text"
+          />
+        </label>
+        <div
+          class="sc-dJGLCP ejpPQV"
+        />
+      </div>
+      <div
+        class="sc-gjLKRm"
+      >
+        <label>
+          Теги
+          <input
+            id="photo-filter-tags"
+            name="tagInput"
+            placeholder="Введите тег и нажмите Enter"
+            type="text"
+          />
+        </label>
+        <div
+          class="sc-dJGLCP ejpPQV"
+        />
+      </div>
     </div>
   </div>
 </div>
@@ -480,131 +496,135 @@ exports[`Search renders with different queryParams renders with order param 1`] 
 exports[`Search renders with different queryParams renders with tags param 1`] = `
 <div>
   <div
-    class="sc-lnskGQ iFxayW"
+    class="sc-lnskGQ iMHAcJ"
   >
     <div
-      class="sc-iKOlBD"
+      class="sc-iKOlBD jgctmD"
     >
       <div
-        class="sc-fHekdU KNIbI"
-      >
-        <label
-          class="sc-blmETN jsoQky"
-          for="photo-sort-order"
-        >
-          Сортировать
-        </label>
-        <select
-          class="sc-ifyqMW bBnvre"
-          id="photo-sort-order"
-          name="order"
-        >
-          <option
-            value="orderDownByTakenAt"
-          >
-            Вначале новые
-          </option>
-          <option
-            value="orderUpByTakenAt"
-          >
-            Вначале старые
-          </option>
-          <option
-            value="orderDownByEdited"
-          >
-            Последние загруженные
-          </option>
-        </select>
-      </div>
-    </div>
-    <div
-      class="sc-gjLKRm fpnqVH"
-    >
-      <label>
-        Дата с
-        <input
-          name="dateFrom"
-          type="date"
-        />
-      </label>
-      <label>
-        Дата по
-        <input
-          name="dateTo"
-          type="date"
-        />
-      </label>
-    </div>
-    <div
-      class="sc-iKOlBD"
-    >
-      <label>
-        Страна
-        <input
-          id="photo-filter-country"
-          name="countryInput"
-          placeholder="Введите страну и нажмите Enter"
-          type="text"
-        />
-      </label>
-      <div
-        class="sc-dJGLCP nLOeT"
-      />
-    </div>
-    <div
-      class="sc-iKOlBD"
-    >
-      <label>
-        Город
-        <input
-          id="photo-filter-city"
-          name="cityInput"
-          placeholder="Введите город и нажмите Enter"
-          type="text"
-        />
-      </label>
-      <div
-        class="sc-dJGLCP nLOeT"
-      />
-    </div>
-    <div
-      class="sc-iKOlBD"
-    >
-      <label>
-        Теги
-        <input
-          id="photo-filter-tags"
-          name="tagInput"
-          placeholder="Введите тег и нажмите Enter"
-          type="text"
-        />
-      </label>
-      <div
-        class="sc-dJGLCP nLOeT"
+        class="sc-gjLKRm"
       >
         <div
-          class="sc-hIPCAM hYLELY"
+          class="sc-fHekdU dssWqK"
         >
-          landscape
-          <button
-            aria-label="Удалить тег landscape"
-            class="sc-dmXXqF ibzAVg"
-            type="button"
+          <label
+            class="sc-blmETN bLNVuV"
+            for="photo-sort-order"
           >
-            x
-          </button>
+            Сортировать
+          </label>
+          <select
+            class="sc-ifyqMW hsVASY"
+            id="photo-sort-order"
+            name="order"
+          >
+            <option
+              value="orderDownByTakenAt"
+            >
+              Вначале новые
+            </option>
+            <option
+              value="orderUpByTakenAt"
+            >
+              Вначале старые
+            </option>
+            <option
+              value="orderDownByEdited"
+            >
+              Последние загруженные
+            </option>
+          </select>
         </div>
+      </div>
+      <div
+        class="sc-eAKupd eFelt"
+      >
+        <label>
+          Дата с
+          <input
+            name="dateFrom"
+            type="date"
+          />
+        </label>
+        <label>
+          Дата по
+          <input
+            name="dateTo"
+            type="date"
+          />
+        </label>
+      </div>
+      <div
+        class="sc-gjLKRm"
+      >
+        <label>
+          Страна
+          <input
+            id="photo-filter-country"
+            name="countryInput"
+            placeholder="Введите страну и нажмите Enter"
+            type="text"
+          />
+        </label>
         <div
-          class="sc-hIPCAM hYLELY"
+          class="sc-dJGLCP ejpPQV"
+        />
+      </div>
+      <div
+        class="sc-gjLKRm"
+      >
+        <label>
+          Город
+          <input
+            id="photo-filter-city"
+            name="cityInput"
+            placeholder="Введите город и нажмите Enter"
+            type="text"
+          />
+        </label>
+        <div
+          class="sc-dJGLCP ejpPQV"
+        />
+      </div>
+      <div
+        class="sc-gjLKRm"
+      >
+        <label>
+          Теги
+          <input
+            id="photo-filter-tags"
+            name="tagInput"
+            placeholder="Введите тег и нажмите Enter"
+            type="text"
+          />
+        </label>
+        <div
+          class="sc-dJGLCP ejpPQV"
         >
-          portrait
-          <button
-            aria-label="Удалить тег portrait"
-            class="sc-dmXXqF ibzAVg"
-            type="button"
+          <span
+            class="sc-hIPCAM kiIpFo"
           >
-            x
-          </button>
+            landscape
+            <button
+              aria-label="Удалить тег landscape"
+              class="sc-dmXXqF ejSuxt"
+              type="button"
+            >
+              ×
+            </button>
+          </span>
+          <span
+            class="sc-hIPCAM kiIpFo"
+          >
+            portrait
+            <button
+              aria-label="Удалить тег portrait"
+              class="sc-dmXXqF ejSuxt"
+              type="button"
+            >
+              ×
+            </button>
+          </span>
         </div>
       </div>
     </div>

@@ -16,7 +16,7 @@ export function PrivateBadge() {
 const Badge = styled.div`
   position: absolute;
   top: 8px;
-  left: 8px;
+  right: 8px;
   z-index: 2;
   display: inline-flex;
   align-items: center;

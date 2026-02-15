@@ -33,6 +33,12 @@ type FormFields = z.infer<typeof schema>
 
 const ORDER_PARAMS: PhotoOrder[] = ['orderDownByTakenAt', 'orderUpByTakenAt', 'orderDownByEdited']
 
+const ORDER_OPTIONS: { value: string; label: string }[] = [
+  { value: 'orderDownByTakenAt', label: 'Вначале новые' },
+  { value: 'orderUpByTakenAt', label: 'Вначале старые' },
+  { value: 'orderDownByEdited', label: 'Последние загруженные' },
+]
+
 export const Search = () => {
   const dispatch = useDispatch()
   const { dateFrom, dateTo, order, tags = [], country = [], city = [] } = useSelector(selectSearch)
@@ -48,7 +54,7 @@ export const Search = () => {
   const normalizedOrderParamValue = ORDER_PARAMS.includes(orderParamValue as PhotoOrder)
     ? (queryParams.order as PhotoOrder)
     : undefined
-  const { register, watch, setValue } = useForm<FormFields>({
+  const { register, setValue, getValues } = useForm<FormFields>({
     resolver: zodResolver(schema),
     values: {
       order: normalizedOrderParamValue ?? order ?? '',
@@ -61,9 +67,6 @@ export const Search = () => {
     },
   })
 
-  const tagInput = watch('tagInput') ?? ''
-  const countryInput = watch('countryInput') ?? ''
-  const cityInput = watch('cityInput') ?? ''
   useEffect(() => {
     dispatch(
       setSearch({
@@ -81,7 +84,7 @@ export const Search = () => {
   const addCountry = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
       event.preventDefault()
-      const trimmed = countryInput.trim()
+      const trimmed = (getValues('countryInput') ?? '').trim()
       if (!trimmed) return
       if (country.includes(trimmed)) {
         setValue('countryInput', '')
@@ -103,7 +106,7 @@ export const Search = () => {
   const addCity = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
       event.preventDefault()
-      const trimmed = cityInput.trim()
+      const trimmed = (getValues('cityInput') ?? '').trim()
       if (!trimmed) return
       if (city.includes(trimmed)) {
         setValue('cityInput', '')
@@ -137,7 +140,7 @@ export const Search = () => {
   const addTag = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
       event.preventDefault()
-      const trimmed = tagInput.trim()
+      const trimmed = (getValues('tagInput') ?? '').trim()
       if (!trimmed) return
       if (tags.includes(trimmed)) {
         setValue('tagInput', '')
@@ -158,14 +161,11 @@ export const Search = () => {
     setValue('tags', nextTags)
   }
 
-  const handleOrderChange = useCallback(
-    (event: React.ChangeEvent<HTMLSelectElement>) => {
-      const nextOrder = event.target.value as PhotoOrder
-      dispatch(setOrderSearch(nextOrder))
-      setQueryParams({ dateFrom, dateTo, order: nextOrder, tags, country, city })
-    },
-    [dateFrom, dateTo, tags, country, city, dispatch, setQueryParams],
-  )
+  const handleOrderChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const nextOrder = event.target.value as PhotoOrder
+    dispatch(setOrderSearch(nextOrder))
+    setQueryParams({ dateFrom, dateTo, order: nextOrder, tags, country, city })
+  }
 
   return (
     <SearchContainer>
@@ -177,11 +177,7 @@ export const Search = () => {
             {...register('order', {
               onChange: handleOrderChange,
             })}
-            options={[
-              { value: 'orderDownByTakenAt', label: 'Вначале новые' },
-              { value: 'orderUpByTakenAt', label: 'Вначале старые' },
-              { value: 'orderDownByEdited', label: 'Последние загруженные' },
-            ]}
+            options={ORDER_OPTIONS}
           />
         </FieldWrapper>
         <DateInputs>
