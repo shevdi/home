@@ -62,7 +62,6 @@ export const queryBuilder = () => {
       return this
     },
     build(): MongoFilter {
-      console.log(filter)
       return filter
     }
   }

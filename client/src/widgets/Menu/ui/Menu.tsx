@@ -5,6 +5,35 @@ import { ReactComponent as Gear } from './gear.svg'
 import { ThemeSwitch } from '@/features/ThemeSwitch'
 import { Auth } from '@/features/Auth'
 
+export function Menu(): ReactElement {
+  const [isModalOpen, setModalOpen] = useState(false)
+  const modalRef = useRef<HTMLDivElement>(null)
+
+  useOnClickOutside(modalRef, () => setModalOpen(false))
+
+  const toggleModal = () => {
+    setModalOpen(!isModalOpen)
+  }
+
+  return (
+    <ModalContainer>
+      <ModalButton onClick={toggleModal}>
+        <Gear />
+      </ModalButton>
+
+      {isModalOpen && (
+        <ModalOverlay>
+          <ModalContent ref={modalRef}>
+            <h3>Настройки</h3>
+            <ThemeSwitch />
+            <Auth />
+          </ModalContent>
+        </ModalOverlay>
+      )}
+    </ModalContainer>
+  )
+}
+
 const ModalContainer = styled.header``
 
 const ModalButton = styled.button`
@@ -67,32 +96,3 @@ const ModalContent = styled.div`
     margin-top: 1rem;
   }
 `
-
-export function Menu(): ReactElement {
-  const [isModalOpen, setModalOpen] = useState(false)
-  const modalRef = useRef<HTMLDivElement>(null)
-
-  useOnClickOutside(modalRef, () => setModalOpen(false))
-
-  const toggleModal = () => {
-    setModalOpen(!isModalOpen)
-  }
-
-  return (
-    <ModalContainer>
-      <ModalButton onClick={toggleModal}>
-        <Gear />
-      </ModalButton>
-
-      {isModalOpen && (
-        <ModalOverlay>
-          <ModalContent ref={modalRef}>
-            <h3>Настройки</h3>
-            <ThemeSwitch />
-            <Auth />
-          </ModalContent>
-        </ModalOverlay>
-      )}
-    </ModalContainer>
-  )
-}

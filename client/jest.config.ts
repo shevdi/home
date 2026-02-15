@@ -5,6 +5,8 @@ const config: Config = {
   setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
+    '^react-calendar$': '<rootDir>/__mocks__/react-calendar.tsx',
+    '^react-calendar/dist/Calendar.css$': '<rootDir>/__mocks__/empty.ts',
   },
   transform: {
     '^.+\\.(ts|tsx)$': [

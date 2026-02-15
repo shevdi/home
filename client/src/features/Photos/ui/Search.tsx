@@ -1,9 +1,9 @@
-import { KeyboardEvent, useEffect, type ChangeEvent } from 'react'
+import { KeyboardEvent, useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import z from 'zod'
 import styled from 'styled-components'
 import { useDispatch, useSelector } from 'react-redux'
-import { Dropdown, Input, TagList } from '@/shared/ui'
+import { CalendarPopover, Dropdown, Input, TagList } from '@/shared/ui'
 import { PhotoOrder } from '@/shared/types'
 import {
   setSearch,
@@ -39,6 +39,26 @@ const ORDER_OPTIONS: { value: string; label: string }[] = [
   { value: 'orderDownByEdited', label: 'Последние загруженные' },
 ]
 
+const DEFAULT_DATE_FROM = '2016-04-03'
+
+const getTodayYMD = () => {
+  const d = new Date()
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+}
+
+const toDate = (str: string): Date | null => (str ? new Date(str + 'T12:00:00') : null)
+const toYMD = (d: Date): string => {
+  const y = d.getFullYear()
+  const m = String(d.getMonth() + 1).padStart(2, '0')
+  const day = String(d.getDate()).padStart(2, '0')
+  return `${y}-${m}-${day}`
+}
+const toDMY = (ymd: string): string => {
+  if (!ymd) return ''
+  const [y, m, d] = ymd.split('-')
+  return d && m && y ? `${d}-${m}-${y}` : ymd
+}
+
 export const Search = () => {
   const dispatch = useDispatch()
   const { dateFrom, dateTo, order, tags = [], country = [], city = [] } = useSelector(selectSearch)
@@ -58,8 +78,8 @@ export const Search = () => {
     resolver: zodResolver(schema),
     values: {
       order: normalizedOrderParamValue ?? order ?? '',
-      dateFrom: dateFromParamValue ?? dateFrom ?? '',
-      dateTo: dateToParamValue ?? dateTo ?? '',
+      dateFrom: dateFromParamValue || dateFrom || DEFAULT_DATE_FROM,
+      dateTo: dateToParamValue || dateTo || getTodayYMD(),
       countryInput: '',
       cityInput: '',
       tagInput: '',
@@ -70,8 +90,8 @@ export const Search = () => {
   useEffect(() => {
     dispatch(
       setSearch({
-        dateFrom: dateFromParamValue ?? dateFrom ?? '',
-        dateTo: dateToParamValue ?? dateTo ?? '',
+        dateFrom: dateFromParamValue || dateFrom || DEFAULT_DATE_FROM,
+        dateTo: dateToParamValue || dateTo || getTodayYMD(),
         order: (normalizedOrderParamValue ?? order ?? 'orderDownByTakenAt') as PhotoOrder,
         tags: tagsParamValue ?? tags ?? [],
         country: countryParamValue?.length ? countryParamValue : (country ?? []),
@@ -81,7 +101,20 @@ export const Search = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const addCountry = (event: KeyboardEvent<HTMLInputElement>) => {
+  const [calendarOpen, setCalendarOpen] = useState(false)
+  const calendarRef = useRef<HTMLDivElement>(null)
+
+  const calendarValue: [Date | null, Date | null] =
+    dateFrom && dateTo ? [toDate(dateFrom), toDate(dateTo)] : dateFrom ? [toDate(dateFrom), null] : [null, null]
+
+  const shownCalendarValue =
+    dateFrom && dateTo
+      ? `${toDMY(dateFrom)} — ${toDMY(dateTo)}`
+      : dateFrom
+        ? `${toDMY(dateFrom)} — ${toDMY(getTodayYMD())}`
+        : ''
+
+  const handleCountryKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
       event.preventDefault()
       const trimmed = (getValues('countryInput') ?? '').trim()
@@ -97,13 +130,13 @@ export const Search = () => {
     }
   }
 
-  const removeCountry = (toRemove: string) => {
+  const handleRemoveCountry = (toRemove: string) => {
     const nextCountries = country.filter((c) => c !== toRemove)
     dispatch(setCountrySearch(nextCountries))
     setQueryParams({ dateFrom, dateTo, order, tags, country: nextCountries, city })
   }
 
-  const addCity = (event: KeyboardEvent<HTMLInputElement>) => {
+  const handleCityKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
       event.preventDefault()
       const trimmed = (getValues('cityInput') ?? '').trim()
@@ -119,25 +152,45 @@ export const Search = () => {
     }
   }
 
-  const removeCity = (toRemove: string) => {
+  const handleRemoveCity = (toRemove: string) => {
     const nextCities = city.filter((c) => c !== toRemove)
     dispatch(setCitySearch(nextCities))
     setQueryParams({ dateFrom, dateTo, order, tags, country, city: nextCities })
   }
 
-  const handleDateFromChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value
-    dispatch(setDateFromSearch(value))
-    setQueryParams({ dateFrom: value, dateTo, order, tags, country, city })
+  const handleCalendarChange = (value: Date | [Date | null, Date | null] | null) => {
+    const range = Array.isArray(value) ? value : value ? [value, value] : [null, null]
+    const [from, to] = range
+    const fromStr = from ? toYMD(from) : ''
+    const toStr = to ? toYMD(to) : ''
+    dispatch(setDateFromSearch(fromStr))
+    dispatch(setDateToSearch(toStr))
+    setQueryParams({ dateFrom: fromStr, dateTo: toStr, order, tags, country, city })
+    setValue('dateFrom', fromStr)
+    setValue('dateTo', toStr)
+    if (fromStr && toStr) setCalendarOpen(false)
   }
 
-  const handleDateToChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value
-    dispatch(setDateToSearch(value))
-    setQueryParams({ dateFrom, dateTo: value, order, tags, country, city })
+  const handleClearDates = () => {
+    dispatch(setDateFromSearch(''))
+    dispatch(setDateToSearch(''))
+    setQueryParams({ dateFrom: '', dateTo: '', order, tags, country, city })
+    setValue('dateFrom', '')
+    setValue('dateTo', '')
+    setCalendarOpen(false)
   }
 
-  const addTag = (event: KeyboardEvent<HTMLInputElement>) => {
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (calendarRef.current && !calendarRef.current.contains(e.target as Node)) {
+        setCalendarOpen(false)
+      }
+    }
+    if (calendarOpen) document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [calendarOpen])
+
+  const handleTagKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
       event.preventDefault()
       const trimmed = (getValues('tagInput') ?? '').trim()
@@ -154,7 +207,7 @@ export const Search = () => {
     }
   }
 
-  const removeTag = (tagToRemove: string) => {
+  const handleRemoveTag = (tagToRemove: string) => {
     const nextTags = tags.filter((tag) => tag !== tagToRemove)
     dispatch(setTagsSearch(nextTags))
     setQueryParams({ dateFrom, dateTo, order, tags: nextTags, country, city })
@@ -181,31 +234,30 @@ export const Search = () => {
             options={ORDER_OPTIONS}
           />
         </FieldWrapper>
-        <DateInputs>
-          <Input
-            label='Дата с'
-            type='date'
-            {...register('dateFrom', {
-              onChange: handleDateFromChange,
-            })}
+        <DateRangeWrapper ref={calendarRef}>
+          <DateRangeLabel htmlFor='photo-filter-date'>Период</DateRangeLabel>
+          <DateRangeInput
+            id='photo-filter-date'
+            type='text'
+            readOnly
+            value={shownCalendarValue}
+            placeholder='Выберите период'
+            onClick={() => setCalendarOpen((o) => !o)}
+            aria-expanded={calendarOpen}
           />
-          <Input
-            label='Дата по'
-            type='date'
-            {...register('dateTo', {
-              onChange: handleDateToChange,
-            })}
-          />
-        </DateInputs>
+          {calendarOpen && (
+            <CalendarPopover value={calendarValue} onChange={handleCalendarChange} onClear={handleClearDates} />
+          )}
+        </DateRangeWrapper>
         <FieldWrapper>
           <Input
             label='Страна'
             id='photo-filter-country'
             placeholder='Введите страну и нажмите Enter'
             {...register('countryInput')}
-            onKeyDown={addCountry}
+            onKeyDown={handleCountryKeyDown}
           />
-          <TagList tags={country} onClick={removeCountry} />
+          <TagList tags={country} onClick={handleRemoveCountry} />
         </FieldWrapper>
         <FieldWrapper>
           <Input
@@ -213,9 +265,9 @@ export const Search = () => {
             id='photo-filter-city'
             placeholder='Введите город и нажмите Enter'
             {...register('cityInput')}
-            onKeyDown={addCity}
+            onKeyDown={handleCityKeyDown}
           />
-          <TagList tags={city} onClick={removeCity} />
+          <TagList tags={city} onClick={handleRemoveCity} />
         </FieldWrapper>
         <FieldWrapper>
           <Input
@@ -223,9 +275,9 @@ export const Search = () => {
             id='photo-filter-tags'
             placeholder='Введите тег и нажмите Enter'
             {...register('tagInput')}
-            onKeyDown={addTag}
+            onKeyDown={handleTagKeyDown}
           />
-          <TagList tags={tags} onClick={removeTag} />
+          <TagList tags={tags} onClick={handleRemoveTag} />
         </FieldWrapper>
       </SearchCard>
     </SearchContainer>
@@ -233,6 +285,8 @@ export const Search = () => {
 }
 
 const SearchContainer = styled.div`
+  position: relative;
+  z-index: 110;
   padding-bottom: 1.5rem;
 `
 
@@ -251,8 +305,44 @@ const SearchCard = styled.div`
 
 const FieldWrapper = styled.div``
 
-const DateInputs = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 0 0.75rem;
+const DateRangeWrapper = styled.div`
+  position: relative;
+  margin-bottom: 1rem;
+`
+
+const DateRangeLabel = styled.label`
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+`
+
+const DateRangeInput = styled.input`
+  width: 100%;
+  padding: 0.65rem 1rem;
+  border: 1px solid var(--input-border);
+  border-radius: var(--radius-md);
+  font-size: 0.95rem;
+  font-family: inherit;
+  color: var(--text-color);
+  background-color: var(--input-bg);
+  cursor: pointer;
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+
+  &::placeholder {
+    color: var(--text-muted);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: var(--input-focus);
+    box-shadow: 0 0 0 3px var(--input-focus-shadow);
+  }
+
+  &:hover {
+    border-color: var(--text-muted);
+  }
 `

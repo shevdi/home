@@ -17,8 +17,9 @@ export const LightGlobalStyle = createGlobalStyle`
     --surface: #faf8f5;
     --surface-elevated: rgba(255, 255, 255, 0.92);
     --dropdown-over-nav: rgba(255, 255, 255, 0.98);
-    --accent: #c76b39;
-    --accent-hover: #b35a2d;
+    --accent: #003e1f;
+    --accent-hover: #003e1f;
+    --circle: #d5f2e3;
     --glass-bg: rgba(255, 255, 255, 0.75);
     --glass-border: rgba(255, 255, 255, 0.5);
     --glass-shadow: 0 4px 24px rgba(0, 0, 0, 0.06), 0 1px 0 rgba(255, 255, 255, 0.5) inset;

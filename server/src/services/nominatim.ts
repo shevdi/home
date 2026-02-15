@@ -39,8 +39,6 @@ export async function nominatimReverseGeocode(lat: number, lon: number): Promise
       },
     })
 
-    console.log(response)
-
     if (!response.ok) {
       return null
     }

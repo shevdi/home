@@ -3,13 +3,13 @@
 exports[`Search renders search form with default state 1`] = `
 <div>
   <div
-    class="sc-gjLKRm bOuwGY"
+    class="sc-ilxdoe esYEGG"
   >
     <div
-      class="sc-eAKupd ccCPzq"
+      class="sc-jIBmdN xGYZG"
     >
       <div
-        class="sc-bZHTEM"
+        class="sc-hhyLtw"
       >
         <div
           class="sc-fHekdU dssWqK"
@@ -54,25 +54,26 @@ exports[`Search renders search form with default state 1`] = `
         </div>
       </div>
       <div
-        class="sc-kMzDYv cdQZwU"
+        class="sc-gYrpUK izYNyN"
       >
-        <label>
-          Дата с
-          <input
-            name="dateFrom"
-            type="date"
-          />
+        <label
+          class="sc-cCzKKD cAVOjz"
+          for="photo-filter-date"
+        >
+          Период
         </label>
-        <label>
-          Дата по
-          <input
-            name="dateTo"
-            type="date"
-          />
-        </label>
+        <input
+          aria-expanded="false"
+          class="sc-ckdFjQ dpwCAm"
+          id="photo-filter-date"
+          placeholder="Выберите период"
+          readonly=""
+          type="text"
+          value=""
+        />
       </div>
       <div
-        class="sc-bZHTEM"
+        class="sc-hhyLtw"
       >
         <label>
           Страна
@@ -88,7 +89,7 @@ exports[`Search renders search form with default state 1`] = `
         />
       </div>
       <div
-        class="sc-bZHTEM"
+        class="sc-hhyLtw"
       >
         <label>
           Город
@@ -104,7 +105,7 @@ exports[`Search renders search form with default state 1`] = `
         />
       </div>
       <div
-        class="sc-bZHTEM"
+        class="sc-hhyLtw"
       >
         <label>
           Теги
@@ -127,13 +128,13 @@ exports[`Search renders search form with default state 1`] = `
 exports[`Search renders with different queryParams renders with all params 1`] = `
 <div>
   <div
-    class="sc-gjLKRm bOuwGY"
+    class="sc-ilxdoe esYEGG"
   >
     <div
-      class="sc-eAKupd ccCPzq"
+      class="sc-jIBmdN xGYZG"
     >
       <div
-        class="sc-bZHTEM"
+        class="sc-hhyLtw"
       >
         <div
           class="sc-fHekdU dssWqK"
@@ -178,25 +179,26 @@ exports[`Search renders with different queryParams renders with all params 1`] =
         </div>
       </div>
       <div
-        class="sc-kMzDYv cdQZwU"
+        class="sc-gYrpUK izYNyN"
       >
-        <label>
-          Дата с
-          <input
-            name="dateFrom"
-            type="date"
-          />
+        <label
+          class="sc-cCzKKD cAVOjz"
+          for="photo-filter-date"
+        >
+          Период
         </label>
-        <label>
-          Дата по
-          <input
-            name="dateTo"
-            type="date"
-          />
-        </label>
+        <input
+          aria-expanded="false"
+          class="sc-ckdFjQ dpwCAm"
+          id="photo-filter-date"
+          placeholder="Выберите период"
+          readonly=""
+          type="text"
+          value="2024-01 — 2024-12"
+        />
       </div>
       <div
-        class="sc-bZHTEM"
+        class="sc-hhyLtw"
       >
         <label>
           Страна
@@ -212,7 +214,7 @@ exports[`Search renders with different queryParams renders with all params 1`] =
         />
       </div>
       <div
-        class="sc-bZHTEM"
+        class="sc-hhyLtw"
       >
         <label>
           Город
@@ -228,7 +230,7 @@ exports[`Search renders with different queryParams renders with all params 1`] =
         />
       </div>
       <div
-        class="sc-bZHTEM"
+        class="sc-hhyLtw"
       >
         <label>
           Теги
@@ -288,13 +290,13 @@ exports[`Search renders with different queryParams renders with all params 1`] =
 exports[`Search renders with different queryParams renders with date range params 1`] = `
 <div>
   <div
-    class="sc-gjLKRm bOuwGY"
+    class="sc-ilxdoe esYEGG"
   >
     <div
-      class="sc-eAKupd ccCPzq"
+      class="sc-jIBmdN xGYZG"
     >
       <div
-        class="sc-bZHTEM"
+        class="sc-hhyLtw"
       >
         <div
           class="sc-fHekdU dssWqK"
@@ -339,25 +341,26 @@ exports[`Search renders with different queryParams renders with date range param
         </div>
       </div>
       <div
-        class="sc-kMzDYv cdQZwU"
+        class="sc-gYrpUK izYNyN"
       >
-        <label>
-          Дата с
-          <input
-            name="dateFrom"
-            type="date"
-          />
+        <label
+          class="sc-cCzKKD cAVOjz"
+          for="photo-filter-date"
+        >
+          Период
         </label>
-        <label>
-          Дата по
-          <input
-            name="dateTo"
-            type="date"
-          />
-        </label>
+        <input
+          aria-expanded="false"
+          class="sc-ckdFjQ dpwCAm"
+          id="photo-filter-date"
+          placeholder="Выберите период"
+          readonly=""
+          type="text"
+          value="2024-01-15 — 2024-12-31"
+        />
       </div>
       <div
-        class="sc-bZHTEM"
+        class="sc-hhyLtw"
       >
         <label>
           Страна
@@ -373,7 +376,7 @@ exports[`Search renders with different queryParams renders with date range param
         />
       </div>
       <div
-        class="sc-bZHTEM"
+        class="sc-hhyLtw"
       >
         <label>
           Город
@@ -389,7 +392,7 @@ exports[`Search renders with different queryParams renders with date range param
         />
       </div>
       <div
-        class="sc-bZHTEM"
+        class="sc-hhyLtw"
       >
         <label>
           Теги
@@ -412,13 +415,13 @@ exports[`Search renders with different queryParams renders with date range param
 exports[`Search renders with different queryParams renders with order param 1`] = `
 <div>
   <div
-    class="sc-gjLKRm bOuwGY"
+    class="sc-ilxdoe esYEGG"
   >
     <div
-      class="sc-eAKupd ccCPzq"
+      class="sc-jIBmdN xGYZG"
     >
       <div
-        class="sc-bZHTEM"
+        class="sc-hhyLtw"
       >
         <div
           class="sc-fHekdU dssWqK"
@@ -463,25 +466,26 @@ exports[`Search renders with different queryParams renders with order param 1`] 
         </div>
       </div>
       <div
-        class="sc-kMzDYv cdQZwU"
+        class="sc-gYrpUK izYNyN"
       >
-        <label>
-          Дата с
-          <input
-            name="dateFrom"
-            type="date"
-          />
+        <label
+          class="sc-cCzKKD cAVOjz"
+          for="photo-filter-date"
+        >
+          Период
         </label>
-        <label>
-          Дата по
-          <input
-            name="dateTo"
-            type="date"
-          />
-        </label>
+        <input
+          aria-expanded="false"
+          class="sc-ckdFjQ dpwCAm"
+          id="photo-filter-date"
+          placeholder="Выберите период"
+          readonly=""
+          type="text"
+          value=""
+        />
       </div>
       <div
-        class="sc-bZHTEM"
+        class="sc-hhyLtw"
       >
         <label>
           Страна
@@ -497,7 +501,7 @@ exports[`Search renders with different queryParams renders with order param 1`] 
         />
       </div>
       <div
-        class="sc-bZHTEM"
+        class="sc-hhyLtw"
       >
         <label>
           Город
@@ -513,7 +517,7 @@ exports[`Search renders with different queryParams renders with order param 1`] 
         />
       </div>
       <div
-        class="sc-bZHTEM"
+        class="sc-hhyLtw"
       >
         <label>
           Теги
@@ -536,13 +540,13 @@ exports[`Search renders with different queryParams renders with order param 1`] 
 exports[`Search renders with different queryParams renders with tags param 1`] = `
 <div>
   <div
-    class="sc-gjLKRm bOuwGY"
+    class="sc-ilxdoe esYEGG"
   >
     <div
-      class="sc-eAKupd ccCPzq"
+      class="sc-jIBmdN xGYZG"
     >
       <div
-        class="sc-bZHTEM"
+        class="sc-hhyLtw"
       >
         <div
           class="sc-fHekdU dssWqK"
@@ -587,25 +591,26 @@ exports[`Search renders with different queryParams renders with tags param 1`] =
         </div>
       </div>
       <div
-        class="sc-kMzDYv cdQZwU"
+        class="sc-gYrpUK izYNyN"
       >
-        <label>
-          Дата с
-          <input
-            name="dateFrom"
-            type="date"
-          />
+        <label
+          class="sc-cCzKKD cAVOjz"
+          for="photo-filter-date"
+        >
+          Период
         </label>
-        <label>
-          Дата по
-          <input
-            name="dateTo"
-            type="date"
-          />
-        </label>
+        <input
+          aria-expanded="false"
+          class="sc-ckdFjQ dpwCAm"
+          id="photo-filter-date"
+          placeholder="Выберите период"
+          readonly=""
+          type="text"
+          value=""
+        />
       </div>
       <div
-        class="sc-bZHTEM"
+        class="sc-hhyLtw"
       >
         <label>
           Страна
@@ -621,7 +626,7 @@ exports[`Search renders with different queryParams renders with tags param 1`] =
         />
       </div>
       <div
-        class="sc-bZHTEM"
+        class="sc-hhyLtw"
       >
         <label>
           Город
@@ -637,7 +642,7 @@ exports[`Search renders with different queryParams renders with tags param 1`] =
         />
       </div>
       <div
-        class="sc-bZHTEM"
+        class="sc-hhyLtw"
       >
         <label>
           Теги

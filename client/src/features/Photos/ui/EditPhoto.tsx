@@ -47,7 +47,7 @@ export function EditPhoto() {
   const tagInput = watch('tagsInput') ?? ''
   const tags = watch('tags') ?? []
 
-  const addTag = (event: KeyboardEvent<HTMLInputElement>) => {
+  const handleTagKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key !== 'Enter') return
     event.preventDefault()
     const trimmed = tagInput.trim()
@@ -61,7 +61,7 @@ export function EditPhoto() {
     setValue('tagsInput', '')
   }
 
-  const removeTag = (tagToRemove: string) => {
+  const handleRemoveTag = (tagToRemove: string) => {
     const nextTags = tags.filter((tag) => tag !== tagToRemove)
     setValue('tags', nextTags, { shouldValidate: true, shouldDirty: true })
   }
@@ -133,9 +133,9 @@ export function EditPhoto() {
               label='Теги'
               placeholder='Введите тег и нажмите Enter'
               {...register('tagsInput')}
-              onKeyDown={addTag}
+              onKeyDown={handleTagKeyDown}
             />
-            <TagList tags={tags} onClick={removeTag} />
+            <TagList tags={tags} onClick={handleRemoveTag} />
             <Button display='block' margin='1rem auto' disabled={isSubmitting}>
               Сохранить
             </Button>
