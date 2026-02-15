@@ -1,4 +1,4 @@
-import { KeyboardEvent, useCallback, useEffect, type ChangeEvent } from 'react'
+import { KeyboardEvent, useEffect, type ChangeEvent } from 'react'
 import { useForm } from 'react-hook-form'
 import z from 'zod'
 import styled from 'styled-components'
@@ -54,7 +54,7 @@ export const Search = () => {
   const normalizedOrderParamValue = ORDER_PARAMS.includes(orderParamValue as PhotoOrder)
     ? (queryParams.order as PhotoOrder)
     : undefined
-  const { register, setValue, getValues } = useForm<FormFields>({
+  const { register, setValue, getValues, watch } = useForm<FormFields>({
     resolver: zodResolver(schema),
     values: {
       order: normalizedOrderParamValue ?? order ?? '',
@@ -174,6 +174,7 @@ export const Search = () => {
           <Dropdown
             label='Сортировать'
             id='photo-sort-order'
+            value={watch('order')}
             {...register('order', {
               onChange: handleOrderChange,
             })}

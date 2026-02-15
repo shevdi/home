@@ -7,9 +7,10 @@ export const DarkGlobalStyle = createGlobalStyle`
     --nav-back-color-end: #151d22;
     --nav-font-color: #e8e4df;
     --link-color: #e8e4df;
-    --input-bg: rgba(26, 35, 42, 0.9);
-    --input-border: rgba(74, 95, 110, 0.5);
-    --input-focus: #e07d4a;
+    --input-bg: rgba(26, 35, 42, 1);
+    --input-border: rgba(213, 242, 227, 0.8);
+    --input-focus: rgba(213, 242, 227, 1);
+    --input-focus-shadow: rgba(213, 242, 227, 0.2);
     --input-disabled-color: #606473;
     --text-color: #e8e4df;
     --text-muted: #9ca3af;

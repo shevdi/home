@@ -3,7 +3,7 @@
 exports[`UploadPhoto renders default state and disables submit 1`] = `
 <div>
   <div
-    class="sc-iKOlBD"
+    class="sc-eAKupd"
   >
     <div
       class="sc-fmKESW iRLnfY"
@@ -19,14 +19,14 @@ exports[`UploadPhoto renders default state and disables submit 1`] = `
           Загрузить фото
         </label>
         <input
-          class="sc-eTNem hHjbvm"
+          class="sc-eTNem cJVMTg"
           multiple=""
           name="files"
           type="file"
         />
       </div>
       <div
-        class="sc-eAKupd bJfyjU"
+        class="sc-kMzDYv hvhEqB"
       >
         <label
           class="sc-jTQDnk kacxwV"
@@ -36,7 +36,7 @@ exports[`UploadPhoto renders default state and disables submit 1`] = `
             type="checkbox"
           />
           <span
-            class="sc-iBdmCa jMfnCS"
+            class="sc-iBdmCa hgaMgi"
           />
           <span
             class="sc-fsYeqr iSlNFZ"
@@ -60,7 +60,7 @@ exports[`UploadPhoto renders default state and disables submit 1`] = `
 exports[`UploadPhoto shows error message when upload fails 1`] = `
 <div>
   <div
-    class="sc-iKOlBD"
+    class="sc-eAKupd"
   >
     <div
       class="sc-fmKESW iRLnfY"
@@ -78,14 +78,14 @@ exports[`UploadPhoto shows error message when upload fails 1`] = `
           1 файл выбран
         </label>
         <input
-          class="sc-eTNem hHjbvm"
+          class="sc-eTNem cJVMTg"
           multiple=""
           name="files"
           type="file"
         />
       </div>
       <div
-        class="sc-eAKupd bJfyjU"
+        class="sc-kMzDYv hvhEqB"
       >
         <label
           class="sc-jTQDnk kacxwV"
@@ -95,7 +95,7 @@ exports[`UploadPhoto shows error message when upload fails 1`] = `
             type="checkbox"
           />
           <span
-            class="sc-iBdmCa jMfnCS"
+            class="sc-iBdmCa hgaMgi"
           />
           <span
             class="sc-fsYeqr iSlNFZ"
@@ -105,10 +105,10 @@ exports[`UploadPhoto shows error message when upload fails 1`] = `
         </label>
       </div>
       <div
-        class="sc-gjLKRm fVxITt"
+        class="sc-bZHTEM jhUFGE"
       >
         <div
-          class="sc-lnskGQ biuAAl"
+          class="sc-gjLKRm hxaXjg"
         >
           photo.jpg
            | 
@@ -134,7 +134,7 @@ exports[`UploadPhoto shows error message when upload fails 1`] = `
 exports[`UploadPhoto submits files and shows success message 1`] = `
 <div>
   <div
-    class="sc-iKOlBD"
+    class="sc-eAKupd"
   >
     <div
       class="sc-fmKESW iRLnfY"
@@ -150,19 +150,19 @@ exports[`UploadPhoto submits files and shows success message 1`] = `
           Загрузить фото
         </label>
         <input
-          class="sc-eTNem hHjbvm"
+          class="sc-eTNem cJVMTg"
           multiple=""
           name="files"
           type="file"
         />
       </div>
       <div
-        class="sc-bZHTEM dEIAbu"
+        class="sc-ilxdoe francF"
       >
         Загружено: 1 из 1. Ошибок: 0
       </div>
       <div
-        class="sc-eAKupd bJfyjU"
+        class="sc-kMzDYv hvhEqB"
       >
         <label
           class="sc-jTQDnk kacxwV"
@@ -172,7 +172,7 @@ exports[`UploadPhoto submits files and shows success message 1`] = `
             type="checkbox"
           />
           <span
-            class="sc-iBdmCa jMfnCS"
+            class="sc-iBdmCa hgaMgi"
           />
           <span
             class="sc-fsYeqr iSlNFZ"
@@ -196,7 +196,7 @@ exports[`UploadPhoto submits files and shows success message 1`] = `
 exports[`UploadPhoto updates label and shows selected file 1`] = `
 <div>
   <div
-    class="sc-iKOlBD"
+    class="sc-eAKupd"
   >
     <div
       class="sc-fmKESW iRLnfY"
@@ -212,14 +212,14 @@ exports[`UploadPhoto updates label and shows selected file 1`] = `
           1 файл выбран
         </label>
         <input
-          class="sc-eTNem hHjbvm"
+          class="sc-eTNem cJVMTg"
           multiple=""
           name="files"
           type="file"
         />
       </div>
       <div
-        class="sc-eAKupd bJfyjU"
+        class="sc-kMzDYv hvhEqB"
       >
         <label
           class="sc-jTQDnk kacxwV"
@@ -229,7 +229,7 @@ exports[`UploadPhoto updates label and shows selected file 1`] = `
             type="checkbox"
           />
           <span
-            class="sc-iBdmCa jMfnCS"
+            class="sc-iBdmCa hgaMgi"
           />
           <span
             class="sc-fsYeqr iSlNFZ"
@@ -239,10 +239,10 @@ exports[`UploadPhoto updates label and shows selected file 1`] = `
         </label>
       </div>
       <div
-        class="sc-gjLKRm fVxITt"
+        class="sc-bZHTEM jhUFGE"
       >
         <div
-          class="sc-lnskGQ biuAAl"
+          class="sc-gjLKRm hxaXjg"
         >
           photo.jpg
            | 

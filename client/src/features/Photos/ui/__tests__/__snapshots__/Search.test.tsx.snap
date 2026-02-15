@@ -3,13 +3,13 @@
 exports[`Search renders search form with default state 1`] = `
 <div>
   <div
-    class="sc-lnskGQ iMHAcJ"
+    class="sc-gjLKRm bOuwGY"
   >
     <div
-      class="sc-iKOlBD jgctmD"
+      class="sc-eAKupd ccCPzq"
     >
       <div
-        class="sc-gjLKRm"
+        class="sc-bZHTEM"
       >
         <div
           class="sc-fHekdU dssWqK"
@@ -21,9 +21,11 @@ exports[`Search renders search form with default state 1`] = `
             Сортировать
           </label>
           <select
-            class="sc-ifyqMW hsVASY"
+            aria-hidden="true"
             id="photo-sort-order"
             name="order"
+            style="position: absolute; opacity: 0; pointer-events: none; width: 0px; height: 0px;"
+            tabindex="-1"
           >
             <option
               value="orderDownByTakenAt"
@@ -41,10 +43,18 @@ exports[`Search renders search form with default state 1`] = `
               Последние загруженные
             </option>
           </select>
+          <button
+            aria-expanded="false"
+            aria-haspopup="listbox"
+            class="sc-ifyqMW euLUzX"
+            type="button"
+          >
+            Вначале новые
+          </button>
         </div>
       </div>
       <div
-        class="sc-eAKupd eFelt"
+        class="sc-kMzDYv cdQZwU"
       >
         <label>
           Дата с
@@ -62,7 +72,7 @@ exports[`Search renders search form with default state 1`] = `
         </label>
       </div>
       <div
-        class="sc-gjLKRm"
+        class="sc-bZHTEM"
       >
         <label>
           Страна
@@ -74,11 +84,11 @@ exports[`Search renders search form with default state 1`] = `
           />
         </label>
         <div
-          class="sc-dJGLCP ejpPQV"
+          class="sc-dmXXqF hzeltJ"
         />
       </div>
       <div
-        class="sc-gjLKRm"
+        class="sc-bZHTEM"
       >
         <label>
           Город
@@ -90,11 +100,11 @@ exports[`Search renders search form with default state 1`] = `
           />
         </label>
         <div
-          class="sc-dJGLCP ejpPQV"
+          class="sc-dmXXqF hzeltJ"
         />
       </div>
       <div
-        class="sc-gjLKRm"
+        class="sc-bZHTEM"
       >
         <label>
           Теги
@@ -106,7 +116,7 @@ exports[`Search renders search form with default state 1`] = `
           />
         </label>
         <div
-          class="sc-dJGLCP ejpPQV"
+          class="sc-dmXXqF hzeltJ"
         />
       </div>
     </div>
@@ -117,13 +127,13 @@ exports[`Search renders search form with default state 1`] = `
 exports[`Search renders with different queryParams renders with all params 1`] = `
 <div>
   <div
-    class="sc-lnskGQ iMHAcJ"
+    class="sc-gjLKRm bOuwGY"
   >
     <div
-      class="sc-iKOlBD jgctmD"
+      class="sc-eAKupd ccCPzq"
     >
       <div
-        class="sc-gjLKRm"
+        class="sc-bZHTEM"
       >
         <div
           class="sc-fHekdU dssWqK"
@@ -135,9 +145,11 @@ exports[`Search renders with different queryParams renders with all params 1`] =
             Сортировать
           </label>
           <select
-            class="sc-ifyqMW hsVASY"
+            aria-hidden="true"
             id="photo-sort-order"
             name="order"
+            style="position: absolute; opacity: 0; pointer-events: none; width: 0px; height: 0px;"
+            tabindex="-1"
           >
             <option
               value="orderDownByTakenAt"
@@ -155,10 +167,18 @@ exports[`Search renders with different queryParams renders with all params 1`] =
               Последние загруженные
             </option>
           </select>
+          <button
+            aria-expanded="false"
+            aria-haspopup="listbox"
+            class="sc-ifyqMW euLUzX"
+            type="button"
+          >
+            Последние загруженные
+          </button>
         </div>
       </div>
       <div
-        class="sc-eAKupd eFelt"
+        class="sc-kMzDYv cdQZwU"
       >
         <label>
           Дата с
@@ -176,7 +196,7 @@ exports[`Search renders with different queryParams renders with all params 1`] =
         </label>
       </div>
       <div
-        class="sc-gjLKRm"
+        class="sc-bZHTEM"
       >
         <label>
           Страна
@@ -188,11 +208,11 @@ exports[`Search renders with different queryParams renders with all params 1`] =
           />
         </label>
         <div
-          class="sc-dJGLCP ejpPQV"
+          class="sc-dmXXqF hzeltJ"
         />
       </div>
       <div
-        class="sc-gjLKRm"
+        class="sc-bZHTEM"
       >
         <label>
           Город
@@ -204,11 +224,11 @@ exports[`Search renders with different queryParams renders with all params 1`] =
           />
         </label>
         <div
-          class="sc-dJGLCP ejpPQV"
+          class="sc-dmXXqF hzeltJ"
         />
       </div>
       <div
-        class="sc-gjLKRm"
+        class="sc-bZHTEM"
       >
         <label>
           Теги
@@ -220,39 +240,39 @@ exports[`Search renders with different queryParams renders with all params 1`] =
           />
         </label>
         <div
-          class="sc-dJGLCP ejpPQV"
+          class="sc-dmXXqF hzeltJ"
         >
           <span
-            class="sc-hIPCAM kiIpFo"
+            class="sc-khjJjO jMVqNg"
           >
             foo
             <button
               aria-label="Удалить тег foo"
-              class="sc-dmXXqF ejSuxt"
+              class="sc-fLsdZH bmzcfQ"
               type="button"
             >
               ×
             </button>
           </span>
           <span
-            class="sc-hIPCAM kiIpFo"
+            class="sc-khjJjO jMVqNg"
           >
             bar
             <button
               aria-label="Удалить тег bar"
-              class="sc-dmXXqF ejSuxt"
+              class="sc-fLsdZH bmzcfQ"
               type="button"
             >
               ×
             </button>
           </span>
           <span
-            class="sc-hIPCAM kiIpFo"
+            class="sc-khjJjO jMVqNg"
           >
             baz
             <button
               aria-label="Удалить тег baz"
-              class="sc-dmXXqF ejSuxt"
+              class="sc-fLsdZH bmzcfQ"
               type="button"
             >
               ×
@@ -268,13 +288,13 @@ exports[`Search renders with different queryParams renders with all params 1`] =
 exports[`Search renders with different queryParams renders with date range params 1`] = `
 <div>
   <div
-    class="sc-lnskGQ iMHAcJ"
+    class="sc-gjLKRm bOuwGY"
   >
     <div
-      class="sc-iKOlBD jgctmD"
+      class="sc-eAKupd ccCPzq"
     >
       <div
-        class="sc-gjLKRm"
+        class="sc-bZHTEM"
       >
         <div
           class="sc-fHekdU dssWqK"
@@ -286,9 +306,11 @@ exports[`Search renders with different queryParams renders with date range param
             Сортировать
           </label>
           <select
-            class="sc-ifyqMW hsVASY"
+            aria-hidden="true"
             id="photo-sort-order"
             name="order"
+            style="position: absolute; opacity: 0; pointer-events: none; width: 0px; height: 0px;"
+            tabindex="-1"
           >
             <option
               value="orderDownByTakenAt"
@@ -306,10 +328,18 @@ exports[`Search renders with different queryParams renders with date range param
               Последние загруженные
             </option>
           </select>
+          <button
+            aria-expanded="false"
+            aria-haspopup="listbox"
+            class="sc-ifyqMW euLUzX"
+            type="button"
+          >
+            Вначале новые
+          </button>
         </div>
       </div>
       <div
-        class="sc-eAKupd eFelt"
+        class="sc-kMzDYv cdQZwU"
       >
         <label>
           Дата с
@@ -327,7 +357,7 @@ exports[`Search renders with different queryParams renders with date range param
         </label>
       </div>
       <div
-        class="sc-gjLKRm"
+        class="sc-bZHTEM"
       >
         <label>
           Страна
@@ -339,11 +369,11 @@ exports[`Search renders with different queryParams renders with date range param
           />
         </label>
         <div
-          class="sc-dJGLCP ejpPQV"
+          class="sc-dmXXqF hzeltJ"
         />
       </div>
       <div
-        class="sc-gjLKRm"
+        class="sc-bZHTEM"
       >
         <label>
           Город
@@ -355,11 +385,11 @@ exports[`Search renders with different queryParams renders with date range param
           />
         </label>
         <div
-          class="sc-dJGLCP ejpPQV"
+          class="sc-dmXXqF hzeltJ"
         />
       </div>
       <div
-        class="sc-gjLKRm"
+        class="sc-bZHTEM"
       >
         <label>
           Теги
@@ -371,7 +401,7 @@ exports[`Search renders with different queryParams renders with date range param
           />
         </label>
         <div
-          class="sc-dJGLCP ejpPQV"
+          class="sc-dmXXqF hzeltJ"
         />
       </div>
     </div>
@@ -382,13 +412,13 @@ exports[`Search renders with different queryParams renders with date range param
 exports[`Search renders with different queryParams renders with order param 1`] = `
 <div>
   <div
-    class="sc-lnskGQ iMHAcJ"
+    class="sc-gjLKRm bOuwGY"
   >
     <div
-      class="sc-iKOlBD jgctmD"
+      class="sc-eAKupd ccCPzq"
     >
       <div
-        class="sc-gjLKRm"
+        class="sc-bZHTEM"
       >
         <div
           class="sc-fHekdU dssWqK"
@@ -400,9 +430,11 @@ exports[`Search renders with different queryParams renders with order param 1`] 
             Сортировать
           </label>
           <select
-            class="sc-ifyqMW hsVASY"
+            aria-hidden="true"
             id="photo-sort-order"
             name="order"
+            style="position: absolute; opacity: 0; pointer-events: none; width: 0px; height: 0px;"
+            tabindex="-1"
           >
             <option
               value="orderDownByTakenAt"
@@ -420,10 +452,18 @@ exports[`Search renders with different queryParams renders with order param 1`] 
               Последние загруженные
             </option>
           </select>
+          <button
+            aria-expanded="false"
+            aria-haspopup="listbox"
+            class="sc-ifyqMW euLUzX"
+            type="button"
+          >
+            Вначале старые
+          </button>
         </div>
       </div>
       <div
-        class="sc-eAKupd eFelt"
+        class="sc-kMzDYv cdQZwU"
       >
         <label>
           Дата с
@@ -441,7 +481,7 @@ exports[`Search renders with different queryParams renders with order param 1`] 
         </label>
       </div>
       <div
-        class="sc-gjLKRm"
+        class="sc-bZHTEM"
       >
         <label>
           Страна
@@ -453,11 +493,11 @@ exports[`Search renders with different queryParams renders with order param 1`] 
           />
         </label>
         <div
-          class="sc-dJGLCP ejpPQV"
+          class="sc-dmXXqF hzeltJ"
         />
       </div>
       <div
-        class="sc-gjLKRm"
+        class="sc-bZHTEM"
       >
         <label>
           Город
@@ -469,11 +509,11 @@ exports[`Search renders with different queryParams renders with order param 1`] 
           />
         </label>
         <div
-          class="sc-dJGLCP ejpPQV"
+          class="sc-dmXXqF hzeltJ"
         />
       </div>
       <div
-        class="sc-gjLKRm"
+        class="sc-bZHTEM"
       >
         <label>
           Теги
@@ -485,7 +525,7 @@ exports[`Search renders with different queryParams renders with order param 1`] 
           />
         </label>
         <div
-          class="sc-dJGLCP ejpPQV"
+          class="sc-dmXXqF hzeltJ"
         />
       </div>
     </div>
@@ -496,13 +536,13 @@ exports[`Search renders with different queryParams renders with order param 1`] 
 exports[`Search renders with different queryParams renders with tags param 1`] = `
 <div>
   <div
-    class="sc-lnskGQ iMHAcJ"
+    class="sc-gjLKRm bOuwGY"
   >
     <div
-      class="sc-iKOlBD jgctmD"
+      class="sc-eAKupd ccCPzq"
     >
       <div
-        class="sc-gjLKRm"
+        class="sc-bZHTEM"
       >
         <div
           class="sc-fHekdU dssWqK"
@@ -514,9 +554,11 @@ exports[`Search renders with different queryParams renders with tags param 1`] =
             Сортировать
           </label>
           <select
-            class="sc-ifyqMW hsVASY"
+            aria-hidden="true"
             id="photo-sort-order"
             name="order"
+            style="position: absolute; opacity: 0; pointer-events: none; width: 0px; height: 0px;"
+            tabindex="-1"
           >
             <option
               value="orderDownByTakenAt"
@@ -534,10 +576,18 @@ exports[`Search renders with different queryParams renders with tags param 1`] =
               Последние загруженные
             </option>
           </select>
+          <button
+            aria-expanded="false"
+            aria-haspopup="listbox"
+            class="sc-ifyqMW euLUzX"
+            type="button"
+          >
+            Вначале новые
+          </button>
         </div>
       </div>
       <div
-        class="sc-eAKupd eFelt"
+        class="sc-kMzDYv cdQZwU"
       >
         <label>
           Дата с
@@ -555,7 +605,7 @@ exports[`Search renders with different queryParams renders with tags param 1`] =
         </label>
       </div>
       <div
-        class="sc-gjLKRm"
+        class="sc-bZHTEM"
       >
         <label>
           Страна
@@ -567,11 +617,11 @@ exports[`Search renders with different queryParams renders with tags param 1`] =
           />
         </label>
         <div
-          class="sc-dJGLCP ejpPQV"
+          class="sc-dmXXqF hzeltJ"
         />
       </div>
       <div
-        class="sc-gjLKRm"
+        class="sc-bZHTEM"
       >
         <label>
           Город
@@ -583,11 +633,11 @@ exports[`Search renders with different queryParams renders with tags param 1`] =
           />
         </label>
         <div
-          class="sc-dJGLCP ejpPQV"
+          class="sc-dmXXqF hzeltJ"
         />
       </div>
       <div
-        class="sc-gjLKRm"
+        class="sc-bZHTEM"
       >
         <label>
           Теги
@@ -599,27 +649,27 @@ exports[`Search renders with different queryParams renders with tags param 1`] =
           />
         </label>
         <div
-          class="sc-dJGLCP ejpPQV"
+          class="sc-dmXXqF hzeltJ"
         >
           <span
-            class="sc-hIPCAM kiIpFo"
+            class="sc-khjJjO jMVqNg"
           >
             landscape
             <button
               aria-label="Удалить тег landscape"
-              class="sc-dmXXqF ejSuxt"
+              class="sc-fLsdZH bmzcfQ"
               type="button"
             >
               ×
             </button>
           </span>
           <span
-            class="sc-hIPCAM kiIpFo"
+            class="sc-khjJjO jMVqNg"
           >
             portrait
             <button
               aria-label="Удалить тег portrait"
-              class="sc-dmXXqF ejSuxt"
+              class="sc-fLsdZH bmzcfQ"
               type="button"
             >
               ×

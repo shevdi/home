@@ -85,7 +85,7 @@ const StyledInput = styled.input<{
   &:focus {
     outline: none;
     border-color: var(--input-focus);
-    box-shadow: 0 0 0 3px rgba(199, 107, 57, 0.2);
+    box-shadow: 0 0 0 3px var(--input-focus-shadow);
   }
 
   &:disabled {

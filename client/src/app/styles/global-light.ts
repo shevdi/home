@@ -7,9 +7,10 @@ export const LightGlobalStyle = createGlobalStyle`
     --nav-back-color-end: #1e2d32;
     --nav-font-color: #f5f3ef;
     --link-color: #2d2a26;
-    --input-bg: rgba(255, 255, 255, 0.9);
-    --input-border: rgba(181, 169, 155, 0.4);
-    --input-focus: #c76b39;
+    --input-bg: rgba(255, 255, 255, 1);
+    --input-border: rgba(0, 62, 31, 0.8);
+    --input-focus: rgba(0, 62, 31, 1);
+    --input-focus-shadow: rgba(0, 62, 31, 0.2);
     --input-disabled-color: #cacede;
     --text-color: #2d2a26;
     --text-muted: #6b6560;
