@@ -1,7 +1,15 @@
 import styled from 'styled-components'
 
-export const Button = styled.button<{ margin?: string; display?: string; width?: string; disabled?: boolean }>`
-  background-color: ${({ disabled }) => (disabled ? 'var(--text-muted)' : 'var(--accent)')};
+export const Button = styled.button<{
+  margin?: string
+  display?: string
+  width?: string
+  disabled?: boolean
+  backgroundColor?: string
+  hoverBackgroundColor?: string
+}>`
+  background-color: ${({ disabled, backgroundColor }) =>
+    disabled ? 'var(--text-muted)' : backgroundColor ?? 'var(--accent)'};
   color: white;
   display: ${({ display = 'initial' }) => display};
   border: none;
@@ -19,7 +27,10 @@ export const Button = styled.button<{ margin?: string; display?: string; width?:
   box-shadow: var(--shadow-sm);
 
   &:hover {
-    background-color: ${({ disabled }) => (disabled ? 'var(--text-muted)' : 'var(--accent-hover)')};
+    background-color: ${({ disabled, hoverBackgroundColor, backgroundColor }) =>
+      disabled
+        ? 'var(--text-muted)'
+        : hoverBackgroundColor ?? backgroundColor ?? 'var(--accent-hover)'};
   }
 
   &:active:not(:disabled) {

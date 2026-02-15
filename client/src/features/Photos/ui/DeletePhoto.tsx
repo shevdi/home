@@ -38,7 +38,7 @@ export function DeletePhoto() {
     <PageContainer>
       <ErrMessage>{errors.root?.message}</ErrMessage>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Button display='block' margin='1rem auto' disabled={isSubmitting}>
+        <Button display='block' margin='1rem auto' backgroundColor='var(--warning-color)' disabled={isSubmitting}>
           Удалить
         </Button>
       </form>
