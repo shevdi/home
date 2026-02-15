@@ -52,6 +52,7 @@
     "@types/webpack-dev-server": "4.7.1",
     "@types/webpack-env": "1.18.8",
     "babel-loader": "^10.0.0",
+    "babel-plugin-react-compiler": "^1.0.0",
     "babel-plugin-styled-components": "2.1.4",
     "copy-webpack-plugin": "^13.0.1",
     "dotenv-webpack": "8.1.1",
