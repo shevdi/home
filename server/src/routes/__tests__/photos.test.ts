@@ -10,8 +10,9 @@ const mockUpdatePhotoById = jest.fn<(...args: unknown[]) => Promise<unknown | nu
 const mockDeletePhotoById = jest.fn<(...args: unknown[]) => Promise<unknown>>()
 const mockAddNewPhoto = jest.fn<(...args: unknown[]) => Promise<unknown>>()
 
-const mockGetEntries = jest.fn<(...args: unknown[]) => Promise<{ url: string }>>()
+const mockGetFiles = jest.fn<(...args: unknown[]) => Promise<{ url: string }>>()
 const mockCropPhotoAndUpload = jest.fn<(...args: unknown[]) => Promise<{ url: string; photoData: { id: number; name: string } }>>()
+const mockDeleteFile = jest.fn<(...args: unknown[]) => Promise<void>>()
 
 jest.unstable_mockModule('../../db/services/photos.js', () => ({
   getPhotosPaginated: (...args: unknown[]) => mockGetPhotosPaginated(...args),
@@ -24,8 +25,9 @@ jest.unstable_mockModule('../../db/services/photos.js', () => ({
 
 jest.unstable_mockModule('../../services/drime.js', () => ({
   default: {
-    getEntries: (...args: unknown[]) => mockGetEntries(...args),
+    getFiles: (...args: unknown[]) => mockGetFiles(...args),
     cropPhotoAndUpload: (...args: unknown[]) => mockCropPhotoAndUpload(...args),
+    deleteFile: (...args: unknown[]) => mockDeleteFile(...args),
   },
   createDrimeService: () => ({}),
 }))
@@ -71,7 +73,7 @@ const mockPhotoUrls = {
 beforeEach(() => {
   jest.clearAllMocks()
   jest.spyOn(console, 'error').mockImplementation(() => { })
-  mockGetEntries.mockResolvedValue({ url: 'https://example.com/photo.jpg' })
+  mockGetFiles.mockResolvedValue({ url: 'https://example.com/photo.jpg' })
   mockCropPhotoAndUpload.mockImplementation((...args: unknown[]) => {
     const size = args[1] as number | undefined
     return Promise.resolve({
@@ -205,7 +207,7 @@ describe('photos routes', () => {
     })
 
     it('filters out photos without fullSizeUrl', async () => {
-      mockGetEntries
+      mockGetFiles
         .mockResolvedValueOnce({ url: 'https://sm.jpg' })
         .mockResolvedValueOnce({ url: 'https://md.jpg' })
         .mockResolvedValueOnce({ url: '' })
@@ -255,7 +257,7 @@ describe('photos routes', () => {
       ]
       mockGetPhotosPaginated.mockResolvedValue(photos)
       mockGetPhotosCount.mockResolvedValue(1)
-      mockGetEntries.mockRejectedValue(createAxiosError(429))
+      mockGetFiles.mockRejectedValue(createAxiosError(429))
 
       const res = await request(createApp()).get('/photos').expect(429)
 
@@ -504,7 +506,14 @@ describe('photos routes', () => {
   })
 
   describe('DELETE /:id', () => {
-    it('deletes photo and returns ok', async () => {
+    it('deletes photo from drime then db and returns ok', async () => {
+      mockGetPhotoById.mockResolvedValue({
+        _id: 'id1',
+        smSizeEntryId: 'e1',
+        mdSizeEntryId: 'e2',
+        fullSizeEntryId: 'e3',
+      })
+      mockDeleteFile.mockResolvedValue(undefined)
       mockDeletePhotoById.mockResolvedValue({})
 
       const res = await request(createApp())
@@ -512,27 +521,55 @@ describe('photos routes', () => {
         .expect(200)
 
       expect(res.body).toEqual({ ok: true })
+      expect(mockGetPhotoById).toHaveBeenCalledWith('id1')
+      expect(mockDeleteFile).toHaveBeenCalledWith(['e1', 'e2', 'e3'])
       expect(mockDeletePhotoById).toHaveBeenCalledWith('id1')
     })
 
+    it('returns 404 when photo not found', async () => {
+      mockGetPhotoById.mockResolvedValue(null)
+
+      const res = await request(createApp())
+        .delete('/photos/id1')
+        .expect(404)
+
+      expect(res.body).toEqual({ message: 'Photo not found' })
+      expect(mockDeleteFile).not.toHaveBeenCalled()
+      expect(mockDeletePhotoById).not.toHaveBeenCalled()
+    })
+
     it('returns 429 when drime returns rate limit', async () => {
-      mockDeletePhotoById.mockRejectedValue(createAxiosError(429))
+      mockGetPhotoById.mockResolvedValue({
+        _id: 'id1',
+        smSizeEntryId: 'e1',
+        mdSizeEntryId: 'e2',
+        fullSizeEntryId: 'e3',
+      })
+      mockDeleteFile.mockRejectedValue(createAxiosError(429))
 
       const res = await request(createApp())
         .delete('/photos/id1')
         .expect(429)
 
       expect(res.body).toEqual({ message: 'Too Many Attempts' })
+      expect(mockDeletePhotoById).not.toHaveBeenCalled()
     })
 
     it('returns 500 on generic error', async () => {
-      mockDeletePhotoById.mockRejectedValue(new Error('DB error'))
+      mockGetPhotoById.mockResolvedValue({
+        _id: 'id1',
+        smSizeEntryId: 'e1',
+        mdSizeEntryId: 'e2',
+        fullSizeEntryId: 'e3',
+      })
+      mockDeleteFile.mockRejectedValue(new Error('Drime error'))
 
       const res = await request(createApp())
         .delete('/photos/id1')
         .expect(500)
 
       expect(res.body).toEqual({ message: 'Failed to delete photo' })
+      expect(mockDeletePhotoById).not.toHaveBeenCalled()
     })
   })
 })

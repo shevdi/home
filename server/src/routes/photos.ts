@@ -62,9 +62,9 @@ router.get(`/`, optionalAuth, async (req: Request & Partial<IUserInfo>, res: Res
 
     const results = await Promise.all(photos
       .map(async (item) => {
-        const { url: smSizeUrl } = await drime.getEntries(`/file-entries/${item.smSizeEntryId}`)
-        const { url: mdSizeUrl } = await drime.getEntries(`/file-entries/${item.mdSizeEntryId}`)
-        const { url: fullSizeUrl } = await drime.getEntries(`/file-entries/${item.fullSizeEntryId}`)
+        const { url: smSizeUrl } = await drime.getFiles(`/file-entries/${item.smSizeEntryId}`)
+        const { url: mdSizeUrl } = await drime.getFiles(`/file-entries/${item.mdSizeEntryId}`)
+        const { url: fullSizeUrl } = await drime.getFiles(`/file-entries/${item.fullSizeEntryId}`)
         return {
           _id: item._id,
           name: item.name,
@@ -146,8 +146,6 @@ router.post(`/upload`, upload.array("files", 50), async (req: Request, res: Resp
         }
         const lat = meta.gpsLatitude
         const lon = meta.gpsLongitude
-        // const location =
-        //   lat != null && lon != null ? await fetchLocationData(lat, lon) : null
         const [nominatim, dadata] = lat != null && lon != null ? await Promise.all([
           nominatimReverseGeocode(lat, lon),
           dadataReverseGeocode(lat, lon),
@@ -217,8 +215,8 @@ router.get(`/:id`, optionalAuth, async (req: Request & Partial<IUserInfo>, res: 
     if (photo.private && (!req.roles || !req.roles.includes('admin'))) {
       return res.status(403).json({ message: 'Forbidden' })
     }
-    const { url: mdSizeUrl } = await drime.getEntries(`/file-entries/${photo.mdSizeEntryId}`)
-    const { url: fullSizeUrl } = await drime.getEntries(`/file-entries/${photo.fullSizeEntryId}`)
+    const { url: mdSizeUrl } = await drime.getFiles(`/file-entries/${photo.mdSizeEntryId}`)
+    const { url: fullSizeUrl } = await drime.getFiles(`/file-entries/${photo.fullSizeEntryId}`)
     return res.json({
       ...photo,
       mdSizeUrl,
@@ -244,7 +242,7 @@ router.put(`/:id`, verifyJWT, async (req: Request, res: Response): Promise<any> 
       return res.status(404).json({ message: 'Photo not found' })
     }
 
-    const { url } = await drime.getEntries(`/file-entries/${photo.mdSizeEntryId}`)
+    const { url } = await drime.getFiles(`/file-entries/${photo.mdSizeEntryId}`)
     res.json({
       ...photo,
       url
@@ -261,6 +259,17 @@ router.put(`/:id`, verifyJWT, async (req: Request, res: Response): Promise<any> 
 
 router.delete(`/:id`, verifyJWT, async (req: Request, res: Response): Promise<any> => {
   try {
+    const photo = await getPhotoById(req.params.id)
+
+    if (!photo) {
+      return res.status(404).json({ message: 'Photo not found' })
+    }
+
+    const entryIds = [photo.smSizeEntryId, photo.mdSizeEntryId, photo.fullSizeEntryId]
+      .filter((id): id is string => Boolean(id))
+
+    await drime.deleteFile(entryIds)
+
     await deletePhotoById(req.params.id)
 
     res.json({

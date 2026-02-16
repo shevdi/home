@@ -76,7 +76,7 @@ describe('drime service', () => {
     )
   })
 
-  it('retries getEntries on retryable status codes', async () => {
+  it('retries getFiles on retryable status codes', async () => {
     const request = createMock()
     request
       .mockRejectedValueOnce(createAxiosError(503))
@@ -99,14 +99,14 @@ describe('drime service', () => {
       sleep
     })
 
-    const result = await service.getEntries('/file-entries/1')
+    const result = await service.getFiles('/file-entries/1')
 
     expect(result.url).toBe('https://drime.test/file-1')
     expect(request).toHaveBeenCalledTimes(2)
     expect(sleep).toHaveBeenCalledTimes(1)
   })
 
-  it('retries uploadPhotos for transient failures when non-idempotent is allowed', async () => {
+  it('retries uploadFile for transient failures when non-idempotent is allowed', async () => {
     const postForm = createMock()
     postForm
       .mockRejectedValueOnce(createAxiosError(503))
@@ -129,7 +129,7 @@ describe('drime service', () => {
       sleep
     })
 
-    const result = await service.uploadPhotos(Buffer.from('file'), {
+    const result = await service.uploadFile(Buffer.from('file'), {
       fileName: 'file.jpg',
       mimetype: 'image/jpeg'
     })

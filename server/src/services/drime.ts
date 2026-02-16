@@ -74,9 +74,10 @@ type DrimeServiceDeps = {
 type DrimeService = {
   cropPhotoAndUpload: (file: Express.Multer.File, size?: number) => Promise<{ url: string; photoData: DrimeFileEntry }>
   getToken: () => Promise<DrimeTokenApiResponse>
-  getEntries: (url?: string) => Promise<{ url: string }>
-  updateEntry: (url: string, data: DrimeFileEntry) => Promise<{ url: string }>
-  uploadPhotos: (file: Buffer<ArrayBufferLike>, input: UploadPhotoInput) => Promise<DrimeFileEntry>
+  getFiles: (url?: string) => Promise<{ url: string }>
+  updateFile: (url: string, data: DrimeFileEntry) => Promise<{ url: string }>
+  uploadFile: (file: Buffer<ArrayBufferLike>, input: UploadPhotoInput) => Promise<DrimeFileEntry>
+  deleteFile: (entryIds: string[], deleteForever?: boolean) => Promise<void>
 }
 
 export const createDrimeService = (deps: DrimeServiceDeps = {}): DrimeService => {
@@ -117,12 +118,12 @@ export const createDrimeService = (deps: DrimeServiceDeps = {}): DrimeService =>
         })
         // .jpeg({ quality: 80 })
         .toBuffer()
-    const photoData = await uploadPhotos(cropped, {
+    const photoData = await uploadFile(cropped, {
       fileName: `${file.originalname}`,
       mimetype: file.mimetype,
       folder
     })
-    const { url } = await getEntries(`/file-entries/${photoData.id}`)
+    const { url } = await getFiles(`/file-entries/${photoData.id}`)
     return { url, photoData }
   }
 
@@ -257,7 +258,7 @@ export const createDrimeService = (deps: DrimeServiceDeps = {}): DrimeService =>
     config?: AxiosRequestConfig,
     options?: { allowNonIdempotent?: boolean }
   ) => {
-    // Ensure auth and apply retry for form uploads.
+    // Use postForm for multipart uploads; client.request() would serialize FormData as JSON.
     await ensureToken()
     return withRetry(
       () => client.postForm<T>(url, data, config),
@@ -266,7 +267,7 @@ export const createDrimeService = (deps: DrimeServiceDeps = {}): DrimeService =>
     )
   }
 
-  const getEntries = async (url: string = ''): Promise<{ url: string }> => {
+  const getFiles = async (url: string = ''): Promise<{ url: string }> => {
     try {
       const response = await authedRequest<{ url: string }>({
         method: 'get',
@@ -279,7 +280,7 @@ export const createDrimeService = (deps: DrimeServiceDeps = {}): DrimeService =>
     }
   }
 
-  const updateEntry = async (url: string = '', data: DrimeFileEntry): Promise<{ url: string }> => {
+  const updateFile = async (url: string = '', data: DrimeFileEntry): Promise<{ url: string }> => {
     try {
       const response = await authedRequest<{ url: string }>({
         method: 'put',
@@ -296,7 +297,26 @@ export const createDrimeService = (deps: DrimeServiceDeps = {}): DrimeService =>
     }
   }
 
-  const uploadPhotos = async (
+  const deleteFile = async (
+    entryIds: string[],
+    deleteForever = false
+  ): Promise<void> => {
+    if (entryIds.length === 0) return
+
+    await authedRequest(
+      {
+        method: 'post',
+        url: '/file-entries/delete',
+        data: {
+          entryIds: entryIds,
+          deleteForever: deleteForever
+        }
+      },
+      { allowNonIdempotent: true }
+    )
+  }
+
+  const uploadFile = async (
     file: Buffer<ArrayBufferLike>,
     {
       fileName,
@@ -320,12 +340,7 @@ export const createDrimeService = (deps: DrimeServiceDeps = {}): DrimeService =>
     const response = await authedPostForm<{ fileEntry: DrimeFileEntry }>(
       '/uploads',
       formData,
-      {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          accept: 'application/json'
-        }
-      },
+      { headers: { accept: 'application/json' } },
       { allowNonIdempotent: true }
     )
 
@@ -335,9 +350,10 @@ export const createDrimeService = (deps: DrimeServiceDeps = {}): DrimeService =>
   return {
     cropPhotoAndUpload,
     getToken,
-    getEntries,
-    updateEntry,
-    uploadPhotos
+    getFiles,
+    updateFile,
+    uploadFile,
+    deleteFile
   }
 }
 
