@@ -13,6 +13,8 @@ import {
   updatePhotoById,
 } from '../db/services/photos.ts'
 import drime from '../services/drime.ts';
+import { createUrlCache, type UrlSource } from '../services/urlCache.ts';
+
 import { dadataReverseGeocode, nominatimReverseGeocode } from '../services';
 import { getLocationValue, normalizeTags, parseBoolean, queryBuilder } from '../utils';
 import { IUserInfo } from '@/types';
@@ -36,6 +38,18 @@ const sortTypes: Record<string, Record<string, SortOrder>> = {
 }
 
 const cache = cacheMiddleware('10 min', 'photos')
+
+const urlSource: UrlSource = {
+  listIds: (page) => drime.getFilesList(page),
+  fetchUrlById: (id) => drime.getFiles(`/file-entries/${id}`).then((r) => r.url),
+}
+
+const urlCache = createUrlCache()
+
+urlCache.preload(urlSource).catch((err) =>
+  console.error('urlCache preload failed:', err)
+)
+urlCache.startRefresh(urlSource)
 
 router.get(`/`, optionalAuth, cache, async (req: Request & Partial<IUserInfo>, res: Response): Promise<any> => {
   try {
@@ -65,9 +79,11 @@ router.get(`/`, optionalAuth, cache, async (req: Request & Partial<IUserInfo>, r
 
     const results = await Promise.all(photos
       .map(async (item) => {
-        const { url: smSizeUrl } = await drime.getFiles(`/file-entries/${item.smSizeEntryId}`)
-        const { url: mdSizeUrl } = await drime.getFiles(`/file-entries/${item.mdSizeEntryId}`)
-        const { url: fullSizeUrl } = await drime.getFiles(`/file-entries/${item.fullSizeEntryId}`)
+        const [smSizeUrl, mdSizeUrl, fullSizeUrl] = await Promise.all([
+          urlCache.getUrl(urlSource, item.smSizeEntryId),
+          urlCache.getUrl(urlSource, item.mdSizeEntryId),
+          urlCache.getUrl(urlSource, item.fullSizeEntryId),
+        ])
         return {
           _id: item._id,
           name: item.name,
@@ -160,6 +176,10 @@ router.post(`/upload`, upload.array("files", 50), async (req: Request, res: Resp
         const { url: smSizeUrl, photoData: smSizePhoto } = await drime.cropPhotoAndUpload(file, 300)
         const { url: mdSizeUrl, photoData: mdSizePhoto } = await drime.cropPhotoAndUpload(file, 1024)
 
+        urlCache.setUrl(fullSizePhoto.id.toString(), fullSizeUrl)
+        urlCache.setUrl(smSizePhoto.id.toString(), smSizeUrl)
+        urlCache.setUrl(mdSizePhoto.id.toString(), mdSizeUrl)
+
         const addedPhoto = await addNewPhoto({
           smSizeUrl,
           mdSizeUrl,
@@ -218,8 +238,10 @@ router.get(`/:id`, optionalAuth, cache, async (req: Request & Partial<IUserInfo>
     if (photo.private && (!req.roles || !req.roles.includes('admin'))) {
       return res.status(403).json({ message: 'Forbidden' })
     }
-    const { url: mdSizeUrl } = await drime.getFiles(`/file-entries/${photo.mdSizeEntryId}`)
-    const { url: fullSizeUrl } = await drime.getFiles(`/file-entries/${photo.fullSizeEntryId}`)
+    const [mdSizeUrl, fullSizeUrl] = await Promise.all([
+      urlCache.getUrl(urlSource, photo.mdSizeEntryId),
+      urlCache.getUrl(urlSource, photo.fullSizeEntryId),
+    ])
     return res.json({
       ...photo,
       mdSizeUrl,
@@ -245,7 +267,7 @@ router.put(`/:id`, verifyJWT, async (req: Request, res: Response): Promise<any> 
       return res.status(404).json({ message: 'Photo not found' })
     }
 
-    const { url } = await drime.getFiles(`/file-entries/${photo.mdSizeEntryId}`)
+    const url = await urlCache.getUrl(urlSource, photo.mdSizeEntryId)
     cacheClear('photos')
     res.json({
       ...photo,
@@ -273,6 +295,7 @@ router.delete(`/:id`, verifyJWT, async (req: Request, res: Response): Promise<an
       .filter((id): id is string => Boolean(id))
 
     await drime.deleteFile(entryIds)
+    urlCache.remove(entryIds)
 
     await deletePhotoById(req.params.id)
     cacheClear('photos')

@@ -71,10 +71,16 @@ type DrimeServiceDeps = {
   sleep?: (ms: number) => Promise<void>
 }
 
+type DrimeFileEntriesListResponse = {
+  data?: Array<{ id: number; url?: string }>
+  meta?: { last_page?: number; current_page?: number }
+}
+
 type DrimeService = {
   cropPhotoAndUpload: (file: Express.Multer.File, size?: number) => Promise<{ url: string; photoData: DrimeFileEntry }>
   getToken: () => Promise<DrimeTokenApiResponse>
   getFiles: (url?: string) => Promise<{ url: string }>
+  getFilesList: (page?: number) => Promise<DrimeFileEntriesListResponse>
   updateFile: (url: string, data: DrimeFileEntry) => Promise<{ url: string }>
   uploadFile: (file: Buffer<ArrayBufferLike>, input: UploadPhotoInput) => Promise<DrimeFileEntry>
   deleteFile: (entryIds: string[], deleteForever?: boolean) => Promise<void>
@@ -273,10 +279,28 @@ export const createDrimeService = (deps: DrimeServiceDeps = {}): DrimeService =>
         method: 'get',
         url,
       })
-      return { url: responseUrlFrom(response) };
+      return { url: responseUrlFrom(response) }
     } catch (err) {
-      console.log(err)
-      return Promise.resolve(err as any);
+      const axiosErr = err as AxiosError
+      if (axiosErr.response?.status === 404) {
+        return { url: '' }
+      }
+      throw err
+    }
+  }
+
+  const getFileEntriesList = async (page = 1): Promise<DrimeFileEntriesListResponse> => {
+    try {
+      const response = await authedRequest<DrimeFileEntriesListResponse>({
+        method: 'get',
+        url: '/drive/file-entries',
+        params: { perPage: 10, page },
+      })
+      console.log('response.data', page)
+      return response.data
+    } catch (err) {
+      console.error('getFileEntriesList failed:', err)
+      return { data: [], meta: {} }
     }
   }
 
@@ -351,6 +375,7 @@ export const createDrimeService = (deps: DrimeServiceDeps = {}): DrimeService =>
     cropPhotoAndUpload,
     getToken,
     getFiles,
+    getFilesList: getFileEntriesList,
     updateFile,
     uploadFile,
     deleteFile

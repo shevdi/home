@@ -26,6 +26,7 @@ jest.unstable_mockModule('../../db/services/photos.js', () => ({
 jest.unstable_mockModule('../../services/drime.js', () => ({
   default: {
     getFiles: (...args: unknown[]) => mockGetFiles(...args),
+    getFileEntriesList: () => Promise.resolve({ data: [], meta: { last_page: 1 } }),
     cropPhotoAndUpload: (...args: unknown[]) => mockCropPhotoAndUpload(...args),
     deleteFile: (...args: unknown[]) => mockDeleteFile(...args),
   },
@@ -62,6 +63,17 @@ jest.unstable_mockModule('../../middlewares/optionalAuth.js', () => ({
 }))
 jest.unstable_mockModule('../../middlewares/verifyJWT.js', () => ({
   verifyJWT: passThrough,
+}))
+
+jest.unstable_mockModule('../../services/urlCache.js', () => ({
+  createUrlCache: () => ({
+    getUrl: (source: { fetchUrlById: (id: string) => Promise<string> }, entryId: string | null | undefined) =>
+      entryId ? source.fetchUrlById(entryId) : Promise.resolve(''),
+    setUrl: () => {},
+    remove: () => {},
+    preload: () => Promise.resolve(),
+    startRefresh: () => () => {},
+  }),
 }))
 
 let photosRouter: { default: express.Router }
@@ -213,10 +225,11 @@ describe('photos routes', () => {
     })
 
     it('filters out photos without fullSizeUrl', async () => {
-      mockGetFiles
-        .mockResolvedValueOnce({ url: 'https://sm.jpg' })
-        .mockResolvedValueOnce({ url: 'https://md.jpg' })
-        .mockResolvedValueOnce({ url: '' })
+      mockGetFiles.mockImplementation((url: unknown) =>
+        Promise.resolve({
+          url: String(url).includes('e3') ? '' : 'https://example.com/photo.jpg',
+        })
+      )
 
       const photos = [
         {
