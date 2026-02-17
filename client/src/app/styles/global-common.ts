@@ -36,7 +36,7 @@ export const GlobalStyle = createGlobalStyle`
 
   a {
     transition: color var(--transition-fast), opacity var(--transition-fast);
-    &:hover {
+    &:not(:has(img)):hover {
       opacity: 0.85;
     }
   }

@@ -39,7 +39,7 @@ const ORDER_OPTIONS: { value: string; label: string }[] = [
   { value: 'orderDownByEdited', label: 'Последние загруженные' },
 ]
 
-const DEFAULT_DATE_FROM = '2016-04-03'
+const DEFAULT_DATE_FROM = '2016-03-26'
 
 const getTodayYMD = () => {
   const d = new Date()

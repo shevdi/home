@@ -356,7 +356,7 @@ exports[`Search renders with different queryParams renders with date range param
           placeholder="Выберите период"
           readonly=""
           type="text"
-          value="2024-01-15 — 2024-12-31"
+          value="15-01-2024 — 31-12-2024"
         />
       </div>
       <div

@@ -36,7 +36,7 @@ export function PhotoGallery() {
         ))}
       </PhotoContainer>
       {hasNextPage && <Sentinel ref={sentinelRef} />}
-      {isLoading && (
+      {(isLoading || isFetchingNextPage) && (
         <LoaderContainer>
           <Loader inline />
         </LoaderContainer>
