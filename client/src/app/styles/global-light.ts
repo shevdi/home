@@ -1,4 +1,5 @@
 import { createGlobalStyle } from 'styled-components'
+import bgLight from '../../assets/background-light.jpg'
 
 export const LightGlobalStyle = createGlobalStyle`
   :root {
@@ -39,7 +40,7 @@ export const LightGlobalStyle = createGlobalStyle`
       content: '';
       position: fixed;
       inset: 0;
-      background-image: url('/background-light.jpg');
+      background-image: url(${bgLight});
       background-size: cover;
       background-position: center;
       opacity: 0.12;

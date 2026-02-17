@@ -8,7 +8,12 @@ export default merge(common, {
   mode: 'production',
   plugins: [
     new CopyPlugin({
-      patterns: [{ from: path.resolve(__dirname, 'public'), to: '.', noErrorOnMissing: true }],
+      patterns: [{
+        from: path.resolve(__dirname, 'public'),
+        to: '.',
+        noErrorOnMissing: true,
+        globOptions: { ignore: ['**/index.html'] },
+      }],
     }),
   ],
   entry: path.resolve(__dirname, "src", "index.tsx"),

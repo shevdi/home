@@ -18,7 +18,8 @@ const commonConfig: Configuration = {
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, "public", "index.html"),
       filename: 'index.html',
-      inject: 'body'
+      inject: 'body',
+      favicon: path.resolve(__dirname, "src", "assets", "favicon.ico"),
     }),
   ],
   module: {
@@ -40,6 +41,10 @@ const commonConfig: Configuration = {
       {
         test: /\.svg$/,
         loader: 'svg-inline-loader'
+      },
+      {
+        test: /\.(jpg|jpeg|png|ico)$/,
+        type: 'asset/resource',
       },
     ],
   },

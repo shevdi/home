@@ -1,4 +1,5 @@
 import { createGlobalStyle } from 'styled-components'
+import bgDark from '../../assets/background-dark.jpg'
 
 export const DarkGlobalStyle = createGlobalStyle`
   :root {
@@ -39,7 +40,7 @@ export const DarkGlobalStyle = createGlobalStyle`
       content: '';
       position: fixed;
       inset: 0;
-      background-image: url('/background-dark.jpg');
+      background-image: url(${bgDark});
       background-size: cover;
       background-position: center;
       opacity: 0.08;
