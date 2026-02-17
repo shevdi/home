@@ -13,10 +13,12 @@ import {
 } from '@/pages'
 import { Layout } from '@/widgets/Layout'
 import { PersistLogin, RequireAuth } from '@/features/Auth'
+import { YandexMetrika } from '@/shared/analytics/YandexMetrika'
 
 export function RoutesList() {
   return (
     <BrowserRouter>
+      <YandexMetrika />
       <Routes>
         <Route element={<Layout />}>
           <Route element={<PersistLogin />}>
