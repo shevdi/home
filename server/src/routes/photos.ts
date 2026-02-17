@@ -3,6 +3,7 @@ import axios from 'axios';
 import express from 'express'
 import multer from 'multer';
 import sharp from 'sharp';
+import { SortOrder } from 'mongoose'
 import {
   addNewPhoto,
   deletePhotoById,
@@ -14,10 +15,10 @@ import {
 import drime from '../services/drime.ts';
 import { dadataReverseGeocode, nominatimReverseGeocode } from '../services';
 import { getLocationValue, normalizeTags, parseBoolean, queryBuilder } from '../utils';
-import { IUserInfo } from '@/types/index.ts';
+import { IUserInfo } from '@/types';
 import { optionalAuth } from '../middlewares/optionalAuth';
 import { verifyJWT } from '../middlewares/verifyJWT';
-import { SortOrder } from 'mongoose'
+import { cacheClear, cacheMiddleware } from '../middlewares/cache';
 
 const router = express.Router()
 
@@ -34,7 +35,9 @@ const sortTypes: Record<string, Record<string, SortOrder>> = {
   orderDownByEdited: { updatedAt: -1, _id: -1 }
 }
 
-router.get(`/`, optionalAuth, async (req: Request & Partial<IUserInfo>, res: Response): Promise<any> => {
+const cache = cacheMiddleware('10 min', 'photos')
+
+router.get(`/`, optionalAuth, cache, async (req: Request & Partial<IUserInfo>, res: Response): Promise<any> => {
   try {
     const pageParam = <string>req.query.page
     const dateFromParam = <string>req.query.dateFrom
@@ -187,7 +190,7 @@ router.post(`/upload`, upload.array("files", 50), async (req: Request, res: Resp
 
     const successCount = results.filter(r => r.ok).length
     const errorsCount = results.filter(r => !r.ok).length
-
+    cacheClear('photos')
     res.json({
       ok: successCount > 0,
       successCount,
@@ -205,7 +208,7 @@ router.post(`/upload`, upload.array("files", 50), async (req: Request, res: Resp
   }
 })
 
-router.get(`/:id`, optionalAuth, async (req: Request & Partial<IUserInfo>, res: Response): Promise<any> => {
+router.get(`/:id`, optionalAuth, cache, async (req: Request & Partial<IUserInfo>, res: Response): Promise<any> => {
   try {
     const photo = await getPhotoById(req.params.id)
 
@@ -243,6 +246,7 @@ router.put(`/:id`, verifyJWT, async (req: Request, res: Response): Promise<any> 
     }
 
     const { url } = await drime.getFiles(`/file-entries/${photo.mdSizeEntryId}`)
+    cacheClear('photos')
     res.json({
       ...photo,
       url
@@ -271,6 +275,7 @@ router.delete(`/:id`, verifyJWT, async (req: Request, res: Response): Promise<an
     await drime.deleteFile(entryIds)
 
     await deletePhotoById(req.params.id)
+    cacheClear('photos')
 
     res.json({
       ok: true

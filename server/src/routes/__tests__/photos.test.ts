@@ -46,6 +46,12 @@ jest.unstable_mockModule('sharp', () => ({
 }))
 
 const passThrough = (_req: unknown, _res: unknown, next: () => void) => next()
+const passThroughCache = (_req: unknown, _res: unknown, next: () => void) => next()
+jest.unstable_mockModule('../../middlewares/cache.js', () => ({
+  cacheMiddleware: () => passThroughCache,
+  cacheClear: () => {},
+}))
+
 jest.unstable_mockModule('../../middlewares/optionalAuth.js', () => ({
   optionalAuth: (req: { headers?: { authorization?: string }; roles?: string[] }, _res: unknown, next: () => void) => {
     if (req.headers?.authorization) {
