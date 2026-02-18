@@ -1,10 +1,11 @@
 import { Page } from '../models/pages';
+import { logError } from './logs';
 
 export async function getPage(url: string) {
   try {
     return await Page.findOne({ url })
   } catch (error) {
-    console.error('Error fetching projects:', error);
+    logError(error, { service: 'pages', action: 'getPage', url })
     throw new Error('Failed to fetch projects');
   }
 }
@@ -19,7 +20,7 @@ export async function changePage(url: string, data: { title?: string; text?: str
 
     return updatedPage
   } catch (error) {
-    console.error('Error updating page:', error)
+    logError(error, { service: 'pages', action: 'changePage', url })
     throw new Error('Failed to update page')
   }
 }

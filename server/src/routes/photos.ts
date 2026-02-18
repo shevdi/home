@@ -16,6 +16,7 @@ import drime from '../services/drime.ts';
 import { createUrlCache, type UrlSource } from '../services/urlCache.ts';
 import { dadataReverseGeocode, nominatimReverseGeocode } from '../services';
 import { normalizeTags, parseBoolean, queryBuilder } from '../utils';
+import { logError } from '../db/services/logs';
 import { IUserInfo } from '@/types';
 import { optionalAuth } from '../middlewares/optionalAuth';
 import { verifyJWT } from '../middlewares/verifyJWT';
@@ -45,9 +46,10 @@ const urlSource: UrlSource = {
 
 const urlCache = createUrlCache()
 
-urlCache.preload(urlSource).catch((err) =>
+urlCache.preload(urlSource).catch((err) => {
+  logError(err, { source: 'urlCache.preload' })
   console.error('urlCache preload failed:', err)
-)
+})
 urlCache.startRefresh(urlSource)
 
 router.get(`/`, optionalAuth, cache, async (req: Request & Partial<IUserInfo>, res: Response): Promise<any> => {
@@ -114,6 +116,7 @@ router.get(`/`, optionalAuth, cache, async (req: Request & Partial<IUserInfo>, r
       }
     })
   } catch (err) {
+    logError(err, { route: 'photos', action: 'get' })
     const status = getErrorStatus(err);
     if (status === 429) {
       return res.status(429).json({ message: 'Too Many Attempts' })
@@ -206,6 +209,7 @@ router.post(`/upload`, upload.array("files", 50), async (req: Request, res: Resp
         })
         results.push({ ok: true, photo: addedPhoto })
       } catch (err) {
+        logError(err, { route: 'photos', action: 'upload', fileName: file.originalname })
         console.error(`Error uploading file ${file.originalname}:`, err);
         results.push({ ok: false, fileName: file.originalname, error: err instanceof Error ? err.message : 'Unknown error' })
       }
@@ -222,6 +226,7 @@ router.post(`/upload`, upload.array("files", 50), async (req: Request, res: Resp
       results
     })
   } catch (err) {
+    logError(err, { route: 'photos', action: 'upload' })
     const status = getErrorStatus(err);
     if (status === 429) {
       return res.status(429).json({ ok: false, error: 'Too Many Attempts' })
@@ -251,6 +256,7 @@ router.get(`/:id`, optionalAuth, cache, async (req: Request & Partial<IUserInfo>
       fullSizeUrl
     })
   } catch (err) {
+    logError(err, { route: 'photos', action: 'getById', id: req.params.id })
     const status = getErrorStatus(err);
     if (status === 429) {
       return res.status(429).json({ message: 'Too Many Attempts' })
@@ -276,6 +282,7 @@ router.put(`/:id`, verifyJWT, async (req: Request, res: Response): Promise<any> 
       url
     })
   } catch (err) {
+    logError(err, { route: 'photos', action: 'put', id: req.params.id })
     const status = getErrorStatus(err);
     if (status === 429) {
       return res.status(429).json({ message: 'Too Many Attempts' })
@@ -306,6 +313,7 @@ router.delete(`/:id`, verifyJWT, async (req: Request, res: Response): Promise<an
       ok: true
     })
   } catch (err) {
+    logError(err, { route: 'photos', action: 'delete', id: req.params.id })
     const status = getErrorStatus(err);
     if (status === 429) {
       return res.status(429).json({ message: 'Too Many Attempts' })

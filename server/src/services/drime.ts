@@ -2,6 +2,7 @@ import sharp from 'sharp';
 import { photoFolderNames } from '../config';
 import { DrimeFileEntry, DrimeTokenApiResponse } from '../types/api';
 import axios, { AxiosError, AxiosHeaders, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import { logError } from '../db/services/logs';
 
 const DEFAULT_TOKEN = process.env.DRIME_TOKEN as string
 const DEFAULT_TOKEN_TTL_MS = 5 * 60 * 1000
@@ -163,6 +164,7 @@ export const createDrimeService = (deps: DrimeServiceDeps = {}): DrimeService =>
     try {
       return await tokenRequestInFlight
     } catch (err) {
+      logError(err, { service: 'drime', action: 'getToken' })
       cachedToken = null
       cachedTokenExpiresAt = 0
       throw err
@@ -298,7 +300,7 @@ export const createDrimeService = (deps: DrimeServiceDeps = {}): DrimeService =>
       })
       return response.data
     } catch (err) {
-      console.error('getFileEntriesList failed:', err)
+      logError(err, { service: 'drime', action: 'getFileEntriesList', page })
       return { data: [], meta: {} }
     }
   }
@@ -315,7 +317,7 @@ export const createDrimeService = (deps: DrimeServiceDeps = {}): DrimeService =>
       })
       return { url: responseUrlFrom(response) };
     } catch (err) {
-      console.log(err)
+      logError(err, { service: 'drime', action: 'updateFile', url })
       return Promise.resolve(err as any);
     }
   }

@@ -1,10 +1,11 @@
 import { Project } from '../models/link'
+import { logError } from './logs'
 
 export async function listAllProjects() {
   try {
     return await Project.find({})
   } catch (error) {
-    console.error('Error fetching projects:', error);
+    logError(error, { service: 'projects', action: 'listAllProjects' })
     throw new Error('Failed to fetch projects');
   }
 }

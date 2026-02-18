@@ -12,6 +12,7 @@ dotenv.config();
 
 import { app } from "./app.ts";
 import { initDatabase } from "./db/init.ts";
+import { logError } from "./db/services/logs";
 
 const PORT = process.env.PORT || 3001;
 const DATABASE_URL = process.env.DATABASE_URL || 'localhost'
@@ -25,6 +26,7 @@ async function startServer(): Promise<void> {
       console.info(`Environment: ${process.env.NODE_ENV || 'development'}`);
     });
   } catch (err) {
+    logError(err, { source: 'startServer', action: 'initDatabase' })
     console.error("Error connecting to database:", err);
     process.exit(1);
   }

@@ -3,6 +3,8 @@
  * Uses Factory pattern for configurable, isolated instances.
  */
 
+import { logError } from '../db/services/logs'
+
 export interface UrlSource {
   listIds: (page?: number) => Promise<{
     data?: Array<{ id: number }>
@@ -130,6 +132,7 @@ export function createUrlCache(options: UrlCacheOptions = {}): UrlCache {
         const url = await source.fetchUrlById(String(id))
         if (url) setUrl(String(id), url)
       } catch (err) {
+        logError(err, { source: 'urlCache', action: 'preloadFetch', entryId: id })
         log.warn?.(`urlCache: failed to fetch for entry ${id}:`, err)
       }
     })
@@ -139,9 +142,10 @@ export function createUrlCache(options: UrlCacheOptions = {}): UrlCache {
 
   function startRefresh(source: UrlSource): () => void {
     const id = setInterval(() => {
-      preload(source).catch((err) =>
+      preload(source).catch((err) => {
+        logError(err, { source: 'urlCache', action: 'refresh' })
         log.warn?.('urlCache refresh failed:', err)
-      )
+      })
     }, refreshIntervalMs)
     return () => clearInterval(id)
   }
