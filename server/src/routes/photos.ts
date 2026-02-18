@@ -14,9 +14,8 @@ import {
 } from '../db/services/photos.ts'
 import drime from '../services/drime.ts';
 import { createUrlCache, type UrlSource } from '../services/urlCache.ts';
-
 import { dadataReverseGeocode, nominatimReverseGeocode } from '../services';
-import { getLocationValue, normalizeTags, parseBoolean, queryBuilder } from '../utils';
+import { normalizeTags, parseBoolean, queryBuilder } from '../utils';
 import { IUserInfo } from '@/types';
 import { optionalAuth } from '../middlewares/optionalAuth';
 import { verifyJWT } from '../middlewares/verifyJWT';
@@ -71,7 +70,6 @@ router.get(`/`, optionalAuth, cache, async (req: Request & Partial<IUserInfo>, r
 
     const page = pageParam ? parseInt(pageParam) : 1
     const sort = sortTypes[orderParam]
-
     const [photos, totalCount] = await Promise.all([
       getPhotosPaginated(page, pageSize, search, sort),
       getPhotosCount(search)
@@ -136,6 +134,8 @@ router.post(`/upload`, upload.array("files", 50), async (req: Request, res: Resp
     const files = req.files as Express.Multer.File[];
     const isPrivate = parseBoolean(req.body?.private as string | undefined)
     const tags = normalizeTags(req.body?.tags)
+    const userCountry = normalizeTags(req.body?.country) ?? []
+    const userCity = normalizeTags(req.body?.city) ?? []
     const metaRaw = req.body?.meta as string | undefined
     const metaList = metaRaw
       ? (JSON.parse(metaRaw) as Array<{
@@ -170,7 +170,10 @@ router.post(`/upload`, upload.array("files", 50), async (req: Request, res: Resp
           dadataReverseGeocode(lat, lon),
         ]) : [null, null]
 
-        const locationValue = getLocationValue([nominatim, dadata])
+        const locationValue = {
+          country: userCountry,
+          city: userCity,
+        }
 
         const { url: fullSizeUrl, photoData: fullSizePhoto } = await drime.cropPhotoAndUpload(file)
         const { url: smSizeUrl, photoData: smSizePhoto } = await drime.cropPhotoAndUpload(file, 300)
@@ -262,7 +265,6 @@ router.put(`/:id`, verifyJWT, async (req: Request, res: Response): Promise<any> 
     const normalizedTags = normalizeTags(req.body?.tags)
     const updateData = normalizedTags === undefined ? req.body : { ...req.body, tags: normalizedTags }
     const photo = await updatePhotoById(req.params.id, updateData)
-
     if (!photo) {
       return res.status(404).json({ message: 'Photo not found' })
     }

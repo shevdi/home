@@ -5,6 +5,8 @@ type UseInfiniteLoaderOptions = {
   isLoading: boolean
   isFetchingNextPage: boolean
   onLoadMore: () => Promise<unknown> | void
+  /** When data changes (e.g. after loading more), observer is recreated to re-check intersection */
+  dataLength?: number
   rootMargin?: string
   threshold?: number
 }
@@ -14,6 +16,7 @@ export const useInfiniteLoader = ({
   isLoading,
   isFetchingNextPage,
   onLoadMore,
+  dataLength,
   rootMargin = '500px',
   threshold = 0.1,
 }: UseInfiniteLoaderOptions) => {
@@ -33,6 +36,9 @@ export const useInfiniteLoader = ({
     }
   }, [hasNextPage, isLoading, isFetchingNextPage, onLoadMore])
 
+  // Recreate observer when data changes. IntersectionObserver only fires on state
+  // *change*; if the sentinel stays in view after loading, we never get another callback.
+  // Recreating when dataLength changes triggers a fresh intersection check.
   useEffect(() => {
     const sentinel = sentinelRef.current
     if (!sentinel || !hasNextPage) {
@@ -54,7 +60,7 @@ export const useInfiniteLoader = ({
     return () => {
       observer.disconnect()
     }
-  }, [handleLoadMore, hasNextPage, rootMargin, threshold])
+  }, [handleLoadMore, hasNextPage, isFetchingNextPage, dataLength, rootMargin, threshold])
 
   return sentinelRef
 }

@@ -88,7 +88,9 @@ export function Photo() {
         </PhotoMeta>
       )}
       {photo?.tags && photo.tags.length > 0 && <TagList tags={photo.tags} url={tagsUrl} position='right' />}
-      {hasGps && gpsLat && gpsLon && <MapEmbed lat={gpsLat} lon={gpsLon} location={photo?.location} />}
+      {(photo?.location?.value?.country?.[0] || photo?.location?.value?.city?.[0] || (hasGps && gpsLat && gpsLon)) && (
+        <MapEmbed lat={gpsLat} lon={gpsLon} location={photo?.location} />
+      )}
     </PageContainer>
   )
 }

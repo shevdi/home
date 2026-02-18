@@ -13,7 +13,11 @@ const schema = z.object({
   title: z.string(),
   priority: z.number().optional(),
   private: z.boolean(),
+  country: z.array(z.string()),
+  city: z.array(z.string()),
   tags: z.array(z.string()).optional(),
+  countryInput: z.string().optional(),
+  cityInput: z.string().optional(),
   tagsInput: z.string().optional(),
 })
 
@@ -22,7 +26,7 @@ type FormFields = z.infer<typeof schema>
 export function EditPhoto() {
   const location = useLocation()
   const photoId = location.pathname.split('/')[2]
-  const { data, isLoading } = useGetPhotoQuery(photoId)
+  const { data: photo, isLoading } = useGetPhotoQuery(photoId)
   const [changePhoto] = useChangePhotoMutation()
 
   const {
@@ -32,20 +36,49 @@ export function EditPhoto() {
     setError,
     setValue,
     watch,
+    getValues,
     formState: { isSubmitting, errors },
   } = useForm<FormFields>({
     resolver: zodResolver(schema),
     values: {
-      title: data?.title ?? '',
-      priority: data?.priority ?? 0,
-      private: data?.private ?? false,
-      tags: data?.tags ?? [],
+      title: photo?.title ?? '',
+      priority: photo?.priority ?? 0,
+      private: photo?.private ?? false,
+      country: photo?.location?.value?.country ?? [],
+      city: photo?.location?.value?.city ?? [],
+      tags: photo?.tags ?? [],
+      countryInput: '',
+      cityInput: '',
       tagsInput: '',
     },
   })
 
   const tagInput = watch('tagsInput') ?? ''
   const tags = watch('tags') ?? []
+  const country = watch('country') ?? []
+  const city = watch('city') ?? []
+
+  const handleCountryKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key !== 'Enter') return
+    event.preventDefault()
+    const trimmed = (getValues('countryInput') ?? '').trim()
+    if (!trimmed) return
+    const countries = [...city]
+    countries.unshift(trimmed)
+    setValue('country', Array.from(new Set(countries)), { shouldValidate: true, shouldDirty: true })
+    setValue('countryInput', '')
+  }
+
+  const handleCityKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key !== 'Enter') return
+    event.preventDefault()
+    const trimmed = (getValues('cityInput') ?? '').trim()
+    if (!trimmed) return
+    const cities = [...city]
+    cities.unshift(trimmed)
+    setValue('city', Array.from(new Set(cities)), { shouldValidate: true, shouldDirty: true })
+    setValue('cityInput', '')
+  }
 
   const handleTagKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key !== 'Enter') return
@@ -66,13 +99,31 @@ export function EditPhoto() {
     setValue('tags', nextTags, { shouldValidate: true, shouldDirty: true })
   }
 
+  const handleRemoveCountry = (toRemove: string) => {
+    setValue(
+      'country',
+      country.filter((c) => c !== toRemove),
+      { shouldValidate: true, shouldDirty: true },
+    )
+  }
+
+  const handleRemoveCity = (toRemove: string) => {
+    setValue(
+      'city',
+      city.filter((c) => c !== toRemove),
+      { shouldValidate: true, shouldDirty: true },
+    )
+  }
+
   const onSubmit: SubmitHandler<FormFields> = async (data) => {
     try {
       const parsedData = schema.safeParse({
         ...data,
         private: data?.private,
         tags,
-      })
+        country,
+        city,
+      } as FormFields)
       if (!parsedData.success) {
         setError('root', {
           message: 'Некорректное значение приватности.',
@@ -80,7 +131,14 @@ export function EditPhoto() {
         return
       }
 
-      const { tags: parsedTags, title, priority, private: privateFilter } = parsedData.data
+      const {
+        tags: parsedTags,
+        title,
+        priority,
+        private: privateFilter,
+        country: parsedCountry,
+        city: parsedCity,
+      } = parsedData.data
 
       await changePhoto({
         id: photoId,
@@ -89,6 +147,13 @@ export function EditPhoto() {
           priority,
           private: privateFilter,
           tags: parsedTags,
+          location: {
+            ...photo?.location,
+            value: {
+              country: parsedCountry ?? [],
+              city: parsedCity ?? [],
+            },
+          },
         },
       }).unwrap()
     } catch (error: unknown) {
@@ -130,6 +195,20 @@ export function EditPhoto() {
               type='number'
             />
             <Input
+              label='Страна'
+              placeholder='Введите страну и нажмите Enter'
+              {...register('countryInput')}
+              onKeyDown={handleCountryKeyDown}
+            />
+            <TagList tags={country} onClick={handleRemoveCountry} />
+            <Input
+              label='Город'
+              placeholder='Введите город и нажмите Enter'
+              {...register('cityInput')}
+              onKeyDown={handleCityKeyDown}
+            />
+            <TagList tags={city} onClick={handleRemoveCity} />
+            <Input
               label='Теги'
               placeholder='Введите тег и нажмите Enter'
               {...register('tagsInput')}
@@ -140,7 +219,7 @@ export function EditPhoto() {
               Сохранить
             </Button>
           </form>
-          <Image src={data?.mdSizeUrl} />
+          <Image src={photo?.mdSizeUrl} />
           <DeletePhoto />
         </>
       )}

@@ -1,9 +1,9 @@
-import { useCallback, useMemo, useState } from 'react'
+import { KeyboardEvent, useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { z } from 'zod'
 import { SubmitHandler, useForm, Controller } from 'react-hook-form'
 import { useDropzone } from 'react-dropzone'
-import { Button, Checkbox, ErrMessage } from '@/shared/ui'
+import { Button, Checkbox, ErrMessage, Input, TagList } from '@/shared/ui'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { UploadResponse, useUploadPhotosMutation } from '../model'
 import { buildMeta, FileMeta } from '../utils/uploadPhotoMeta'
@@ -26,10 +26,20 @@ const buildMetaPayload = ({ gps, make, model, takenAt }: FileMeta) => ({
   takenAt,
 })
 
-const buildUploadFormData = (files: File[], isPrivate: boolean, meta: FileMeta[]) => {
+const buildUploadFormData = (
+  files: File[],
+  isPrivate: boolean,
+  meta: FileMeta[],
+  country: string[],
+  city: string[],
+  tags: string[],
+) => {
   const formData = new FormData()
   formData.append('private', isPrivate.toString())
   formData.append('meta', JSON.stringify(meta.map(buildMetaPayload)))
+  if (country.length > 0) formData.append('country', country.join(','))
+  if (city.length > 0) formData.append('city', city.join(','))
+  if (tags.length > 0) formData.append('tags', tags.join(','))
   files.forEach((file) => {
     formData.append('files', file)
   })
@@ -59,6 +69,12 @@ const IMAGE_ACCEPT = {
 const schema = z.object({
   files: z.array(z.instanceof(File)).min(1, 'Пожалуйста, выберите файлы'),
   private: z.boolean(),
+  country: z.array(z.string()),
+  city: z.array(z.string()),
+  tags: z.array(z.string()),
+  countryInput: z.string().optional(),
+  cityInput: z.string().optional(),
+  tagInput: z.string().optional(),
 })
 
 type FormFields = z.infer<typeof schema>
@@ -75,19 +91,64 @@ export function UploadPhoto() {
     setValue,
     reset,
     watch,
+    register,
+    getValues,
     formState: { isSubmitting, errors },
   } = useForm<FormFields>({
     resolver: zodResolver(schema),
     defaultValues: {
       files: [],
       private: false,
+      country: [],
+      city: [],
+      tags: [],
+      countryInput: '',
+      cityInput: '',
+      tagInput: '',
     },
   })
 
   const files = watch('files') || []
+  const country = watch('country') || []
+  const city = watch('city') || []
+  const tags = watch('tags') || []
   const isProcessed = isLoading || isSubmitting
 
   const fileLabel = useMemo(() => getFileLabel(files.length), [files.length])
+
+  const handleCountryKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      event.preventDefault()
+      const trimmed = (getValues('countryInput') ?? '').trim()
+      if (!trimmed) return
+      const countries = [...country]
+      countries.unshift(trimmed)
+      setValue('country', Array.from(new Set(countries)), { shouldValidate: true, shouldDirty: true })
+      setValue('countryInput', '')
+    }
+  }
+
+  const handleCityKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      event.preventDefault()
+      const trimmed = (getValues('cityInput') ?? '').trim()
+      if (!trimmed) return
+      const cities = [...city]
+      cities.unshift(trimmed)
+      setValue('city', Array.from(new Set(cities)), { shouldValidate: true, shouldDirty: true })
+      setValue('cityInput', '')
+    }
+  }
+
+  const handleTagKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      event.preventDefault()
+      const trimmed = (getValues('tagInput') ?? '').trim()
+      if (!trimmed || tags.includes(trimmed)) return
+      setValue('tags', [...tags, trimmed])
+      setValue('tagInput', '')
+    }
+  }
 
   const handleDrop = useCallback(
     async (acceptedFiles: File[]) => {
@@ -116,12 +177,28 @@ export function UploadPhoto() {
 
     const metaForSubmit = await buildMeta(data.files)
     setFileMeta(metaForSubmit)
-    const formData = buildUploadFormData(data.files, data.private, metaForSubmit)
+    const formData = buildUploadFormData(
+      data.files,
+      data.private,
+      metaForSubmit,
+      data.country ?? [],
+      data.city ?? [],
+      data.tags ?? [],
+    )
 
     try {
       const response = await uploadPhoto(formData)
       if (response?.data?.ok) {
-        reset({ files: [], private: data.private })
+        reset({
+          files: [],
+          private: data.private,
+          country: [],
+          city: [],
+          tags: [],
+          countryInput: '',
+          cityInput: '',
+          tagInput: '',
+        })
         setFileMeta([])
       }
 
@@ -163,6 +240,66 @@ export function UploadPhoto() {
             )}
           />
         </CheckboxContainer>
+        <FieldWrapper>
+          <Input
+            label='Страна'
+            id='upload-photo-country'
+            placeholder='Введите страну и нажмите Enter'
+            disabled={isProcessed}
+            {...register('countryInput')}
+            onKeyDown={handleCountryKeyDown}
+          />
+          <Controller
+            control={control}
+            name='country'
+            render={({ field }) => (
+              <TagList
+                tags={field.value ?? []}
+                onClick={(t) => field.onChange((field.value ?? []).filter((c) => c !== t))}
+              />
+            )}
+          />
+        </FieldWrapper>
+        <FieldWrapper>
+          <Input
+            label='Город'
+            id='upload-photo-city'
+            placeholder='Введите город и нажмите Enter'
+            disabled={isProcessed}
+            {...register('cityInput')}
+            onKeyDown={handleCityKeyDown}
+          />
+          <Controller
+            control={control}
+            name='city'
+            render={({ field }) => (
+              <TagList
+                tags={field.value ?? []}
+                onClick={(t) => field.onChange((field.value ?? []).filter((c) => c !== t))}
+              />
+            )}
+          />
+        </FieldWrapper>
+        <FieldWrapper>
+          <Input
+            label='Теги'
+            id='upload-photo-tags'
+            placeholder='Введите тег и нажмите Enter'
+            disabled={isProcessed}
+            {...register('tagInput')}
+            onKeyDown={handleTagKeyDown}
+          />
+          <Controller
+            control={control}
+            name='tags'
+            render={({ field }) => (
+              <TagList
+                tags={field.value ?? []}
+                onClick={(t) => field.onChange((field.value ?? []).filter((tag) => tag !== t))}
+              />
+            )}
+          />
+        </FieldWrapper>
         {files.length > 0 && (
           <FileList>
             {files.map((file, index) => {
@@ -225,6 +362,10 @@ const FileList = styled.div`
 
 const CheckboxContainer = styled.div`
   margin: 0.75rem 0;
+`
+
+const FieldWrapper = styled.div`
+  margin-bottom: 1rem;
 `
 
 const UploadMessage = styled.div`

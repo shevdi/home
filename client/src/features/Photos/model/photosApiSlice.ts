@@ -76,6 +76,7 @@ export const photosApiSlice = apiSlice.injectEndpoints({
       PhotoSearch | void,
       number
     >({
+      keepUnusedDataFor: 60 * 10,
       infiniteQueryOptions: {
         initialPageParam: 1,
         getNextPageParam: (
@@ -125,7 +126,10 @@ export const photosApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: [{ type: 'Photos' as never, id: 'getPhotos' }],
     }),
-    changePhoto: builder.mutation<ILink, { id: string; data: { title: string, priority?: number, private?: boolean, tags?: string[] } }>({
+    changePhoto: builder.mutation<
+      ILink,
+      { id: string; data: { title: string; priority?: number; private?: boolean; tags?: string[]; location?: ILink['location'] } }
+    >({
       query: ({ id, data }) => ({
         url: `photos/${id}`,
         method: "PUT",

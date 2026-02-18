@@ -4,8 +4,8 @@ import type { ILocation } from '@/shared/types/common/links'
 import { buildSearchParams } from '@/shared/utils'
 
 type MapEmbedProps = {
-  lat: number
-  lon: number
+  lat?: number
+  lon?: number
   location?: ILocation
   zoom?: number
   height?: number
@@ -43,21 +43,25 @@ export const MapEmbed = ({
           )}
         </MapLabel>
       )}
-      <MapFrame
-        title='Map location'
-        loading='lazy'
-        referrerPolicy='no-referrer-when-downgrade'
-        src={`https://maps.google.com/maps?q=${encodedQuery}&z=${zoom}&output=embed`}
-        $height={height}
-        allowFullScreen
-      />
-      <MapLink
-        href={`https://www.google.com/maps/search/?api=1&query=${encodedQuery}`}
-        target='_blank'
-        rel='noreferrer'
-      >
-        {linkText}
-      </MapLink>
+      {lat && lon && (
+        <>
+          <MapFrame
+            title='Map location'
+            loading='lazy'
+            referrerPolicy='no-referrer-when-downgrade'
+            src={`https://maps.google.com/maps?q=${encodedQuery}&z=${zoom}&output=embed`}
+            $height={height}
+            allowFullScreen
+          />
+          <MapLink
+            href={`https://www.google.com/maps/search/?api=1&query=${encodedQuery}`}
+            target='_blank'
+            rel='noreferrer'
+          >
+            {linkText}
+          </MapLink>
+        </>
+      )}
     </MapSection>
   )
 }

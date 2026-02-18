@@ -26,6 +26,7 @@ export function PhotoGallery() {
     isLoading,
     isFetchingNextPage,
     onLoadMore: fetchNextPage,
+    dataLength: data?.length ?? 0,
   })
 
   return (

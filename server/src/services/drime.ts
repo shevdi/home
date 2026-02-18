@@ -296,7 +296,6 @@ export const createDrimeService = (deps: DrimeServiceDeps = {}): DrimeService =>
         url: '/drive/file-entries',
         params: { perPage: 10, page },
       })
-      console.log('response.data', page)
       return response.data
     } catch (err) {
       console.error('getFileEntriesList failed:', err)

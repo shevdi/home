@@ -81,7 +81,6 @@ export function createUrlCache(options: UrlCacheOptions = {}): UrlCache {
   function getCached(entryId: string): string | null {
     const entry = store.get(entryId)
     if (!entry || isExpired(entry)) return null
-    console.log(store)
     return entry.url
   }
 
@@ -110,7 +109,6 @@ export function createUrlCache(options: UrlCacheOptions = {}): UrlCache {
   }
 
   async function preload(source: UrlSource): Promise<void> {
-    console.log('!!!!!!!!!!!!!!!!preload')
     const entryIds: number[] = []
     let page = 1
     let lastPage = 1
@@ -119,8 +117,6 @@ export function createUrlCache(options: UrlCacheOptions = {}): UrlCache {
       const res = await source.listIds(page)
       const data = res.data ?? []
       lastPage = res.last_page ?? 1
-      console.log('lastPage', lastPage)
-      console.log('res', res.last_page)
 
       for (const entry of data) {
         if (entry?.id != null) entryIds.push(entry.id)

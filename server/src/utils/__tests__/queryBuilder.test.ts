@@ -161,23 +161,23 @@ describe('queryBuilder', () => {
       expect(filter).toEqual({})
     })
 
-    it('adds $and with country $or when only country provided', () => {
+    it('adds $and with country $or when only country provided (default: value.country only)', () => {
       const filter = queryBuilder().locationMatch(['Russia']).build()
       const and = filter.$and as Array<{ $or: unknown[] }>
       expect(and).toHaveLength(1)
-      expect(and[0].$or).toHaveLength(4)
+      expect(and[0].$or).toHaveLength(1)
       expect(and[0].$or[0]).toEqual({
-        'location.dadata.country': { $regex: 'Russia', $options: 'i' },
+        'location.value.country': { $regex: 'Russia', $options: 'i' },
       })
     })
 
-    it('adds $and with city $or when only city provided', () => {
+    it('adds $and with city $or when only city provided (default: value.city only)', () => {
       const filter = queryBuilder().locationMatch(undefined, ['Moscow']).build()
       const and = filter.$and as Array<{ $or: unknown[] }>
       expect(and).toHaveLength(1)
-      expect(and[0].$or).toHaveLength(6)
+      expect(and[0].$or).toHaveLength(1)
       expect(and[0].$or[0]).toEqual({
-        'location.dadata.city': { $regex: 'Moscow', $options: 'i' },
+        'location.value.city': { $regex: 'Moscow', $options: 'i' },
       })
     })
 
@@ -186,26 +186,81 @@ describe('queryBuilder', () => {
       const and = filter.$and as Array<{ $or: unknown[] }>
       expect(and).toHaveLength(2)
       expect(and[0].$or[0]).toEqual({
-        'location.dadata.country': { $regex: 'Russia', $options: 'i' },
+        'location.value.country': { $regex: 'Russia', $options: 'i' },
       })
       expect(and[1].$or[0]).toEqual({
-        'location.dadata.city': { $regex: 'Moscow', $options: 'i' },
+        'location.value.city': { $regex: 'Moscow', $options: 'i' },
       })
     })
 
-    it('adds multiple countries and cities with expanded $or conditions', () => {
+    it('adds multiple countries and cities (default: 1 condition per country/city)', () => {
       const filter = queryBuilder().locationMatch(['Russia', 'France'], ['Moscow', 'Paris']).build()
       const and = filter.$and as Array<{ $or: unknown[] }>
       expect(and).toHaveLength(2)
-      expect(and[0].$or).toHaveLength(8) // 4 fields × 2 countries
-      expect(and[1].$or).toHaveLength(12) // 6 fields × 2 cities
+      expect(and[0].$or).toHaveLength(2) // 1 field × 2 countries
+      expect(and[1].$or).toHaveLength(2) // 1 field × 2 cities
+    })
+
+    it('isFullSearch: true expands country to value, dadata, nominatim fields', () => {
+      const filter = queryBuilder().locationMatch(['Russia'], undefined, true).build()
+      const and = filter.$and as Array<{ $or: unknown[] }>
+      expect(and).toHaveLength(1)
+      expect(and[0].$or).toHaveLength(5)
+      expect(and[0].$or).toContainEqual({
+        'location.value.country': { $regex: 'Russia', $options: 'i' },
+      })
+      expect(and[0].$or).toContainEqual({
+        'location.dadata.country': { $regex: 'Russia', $options: 'i' },
+      })
+      expect(and[0].$or).toContainEqual({
+        'location.dadata.country_iso_code': { $regex: 'Russia', $options: 'i' },
+      })
+      expect(and[0].$or).toContainEqual({
+        'location.nominatim.address.country': { $regex: 'Russia', $options: 'i' },
+      })
+      expect(and[0].$or).toContainEqual({
+        'location.nominatim.address.country_code': { $regex: 'Russia', $options: 'i' },
+      })
+    })
+
+    it('isFullSearch: true expands city to value, dadata, nominatim fields', () => {
+      const filter = queryBuilder().locationMatch(undefined, ['Moscow'], true).build()
+      const and = filter.$and as Array<{ $or: unknown[] }>
+      expect(and).toHaveLength(1)
+      expect(and[0].$or).toHaveLength(7)
+      expect(and[0].$or).toContainEqual({
+        'location.value.city': { $regex: 'Moscow', $options: 'i' },
+      })
+      expect(and[0].$or).toContainEqual({
+        'location.dadata.city': { $regex: 'Moscow', $options: 'i' },
+      })
+      expect(and[0].$or).toContainEqual({
+        'location.dadata.settlement': { $regex: 'Moscow', $options: 'i' },
+      })
+      expect(and[0].$or).toContainEqual({
+        'location.nominatim.address.city': { $regex: 'Moscow', $options: 'i' },
+      })
+    })
+
+    it('isFullSearch: true expands both country and city when both provided', () => {
+      const filter = queryBuilder().locationMatch(['Russia'], ['Moscow'], true).build()
+      const and = filter.$and as Array<{ $or: unknown[] }>
+      expect(and).toHaveLength(2)
+      expect(and[0].$or).toHaveLength(5)
+      expect(and[1].$or).toHaveLength(7)
+    })
+
+    it('isFullSearch: false uses only value fields (same as default)', () => {
+      const filterDefault = queryBuilder().locationMatch(['Russia']).build()
+      const filterExplicit = queryBuilder().locationMatch(['Russia'], undefined, false).build()
+      expect(filterDefault).toEqual(filterExplicit)
     })
 
     it('trims whitespace from country and city', () => {
       const filter = queryBuilder().locationMatch(['  Russia  '], ['  Moscow  ']).build()
       const and = filter.$and as Array<{ $or: Array<Record<string, { $regex: string }>> }>
-      expect(and[0].$or[0]['location.dadata.country'].$regex).toBe('Russia')
-      expect(and[1].$or[0]['location.dadata.city'].$regex).toBe('Moscow')
+      expect(and[0].$or[0]['location.value.country'].$regex).toBe('Russia')
+      expect(and[1].$or[0]['location.value.city'].$regex).toBe('Moscow')
     })
 
     it('returns this for chaining', () => {

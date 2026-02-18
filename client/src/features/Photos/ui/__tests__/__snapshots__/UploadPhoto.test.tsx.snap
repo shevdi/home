@@ -48,6 +48,75 @@ exports[`UploadPhoto renders default state and disables submit 1`] = `
           </span>
         </label>
       </div>
+      <div
+        class="sc-cbCZAW iHyKYv"
+      >
+        <div
+          class="sc-csKIKD cmDwWi"
+        >
+          <label
+            class="sc-brSaZZ fRAESH"
+            for="upload-photo-country"
+          >
+            Страна
+          </label>
+          <input
+            class="sc-eTNem gzvNIg"
+            id="upload-photo-country"
+            name="countryInput"
+            placeholder="Введите страну и нажмите Enter"
+          />
+        </div>
+        <div
+          class="sc-dmXXqF hzeltJ"
+        />
+      </div>
+      <div
+        class="sc-cbCZAW iHyKYv"
+      >
+        <div
+          class="sc-csKIKD cmDwWi"
+        >
+          <label
+            class="sc-brSaZZ fRAESH"
+            for="upload-photo-city"
+          >
+            Город
+          </label>
+          <input
+            class="sc-eTNem gzvNIg"
+            id="upload-photo-city"
+            name="cityInput"
+            placeholder="Введите город и нажмите Enter"
+          />
+        </div>
+        <div
+          class="sc-dmXXqF hzeltJ"
+        />
+      </div>
+      <div
+        class="sc-cbCZAW iHyKYv"
+      >
+        <div
+          class="sc-csKIKD cmDwWi"
+        >
+          <label
+            class="sc-brSaZZ fRAESH"
+            for="upload-photo-tags"
+          >
+            Теги
+          </label>
+          <input
+            class="sc-eTNem gzvNIg"
+            id="upload-photo-tags"
+            name="tagInput"
+            placeholder="Введите тег и нажмите Enter"
+          />
+        </div>
+        <div
+          class="sc-dmXXqF hzeltJ"
+        />
+      </div>
       <button
         class="sc-hABAzn hesWCt"
         disabled=""
@@ -111,6 +180,75 @@ exports[`UploadPhoto shows error message when upload fails 1`] = `
         </label>
       </div>
       <div
+        class="sc-cbCZAW iHyKYv"
+      >
+        <div
+          class="sc-csKIKD cmDwWi"
+        >
+          <label
+            class="sc-brSaZZ fRAESH"
+            for="upload-photo-country"
+          >
+            Страна
+          </label>
+          <input
+            class="sc-eTNem gzvNIg"
+            id="upload-photo-country"
+            name="countryInput"
+            placeholder="Введите страну и нажмите Enter"
+          />
+        </div>
+        <div
+          class="sc-dmXXqF hzeltJ"
+        />
+      </div>
+      <div
+        class="sc-cbCZAW iHyKYv"
+      >
+        <div
+          class="sc-csKIKD cmDwWi"
+        >
+          <label
+            class="sc-brSaZZ fRAESH"
+            for="upload-photo-city"
+          >
+            Город
+          </label>
+          <input
+            class="sc-eTNem gzvNIg"
+            id="upload-photo-city"
+            name="cityInput"
+            placeholder="Введите город и нажмите Enter"
+          />
+        </div>
+        <div
+          class="sc-dmXXqF hzeltJ"
+        />
+      </div>
+      <div
+        class="sc-cbCZAW iHyKYv"
+      >
+        <div
+          class="sc-csKIKD cmDwWi"
+        >
+          <label
+            class="sc-brSaZZ fRAESH"
+            for="upload-photo-tags"
+          >
+            Теги
+          </label>
+          <input
+            class="sc-eTNem gzvNIg"
+            id="upload-photo-tags"
+            name="tagInput"
+            placeholder="Введите тег и нажмите Enter"
+          />
+        </div>
+        <div
+          class="sc-dmXXqF hzeltJ"
+        />
+      </div>
+      <div
         class="sc-ckdFjQ frDwmJ"
       >
         <div
@@ -166,7 +304,7 @@ exports[`UploadPhoto submits files and shows success message 1`] = `
         </div>
       </div>
       <div
-        class="sc-cbCZAW begDpU"
+        class="sc-iVhdPL dgCJkt"
       >
         Загружено: 1 из 1. Ошибок: 0
       </div>
@@ -189,6 +327,75 @@ exports[`UploadPhoto submits files and shows success message 1`] = `
             Скрыть
           </span>
         </label>
+      </div>
+      <div
+        class="sc-cbCZAW iHyKYv"
+      >
+        <div
+          class="sc-csKIKD cmDwWi"
+        >
+          <label
+            class="sc-brSaZZ fRAESH"
+            for="upload-photo-country"
+          >
+            Страна
+          </label>
+          <input
+            class="sc-eTNem gzvNIg"
+            id="upload-photo-country"
+            name="countryInput"
+            placeholder="Введите страну и нажмите Enter"
+          />
+        </div>
+        <div
+          class="sc-dmXXqF hzeltJ"
+        />
+      </div>
+      <div
+        class="sc-cbCZAW iHyKYv"
+      >
+        <div
+          class="sc-csKIKD cmDwWi"
+        >
+          <label
+            class="sc-brSaZZ fRAESH"
+            for="upload-photo-city"
+          >
+            Город
+          </label>
+          <input
+            class="sc-eTNem gzvNIg"
+            id="upload-photo-city"
+            name="cityInput"
+            placeholder="Введите город и нажмите Enter"
+          />
+        </div>
+        <div
+          class="sc-dmXXqF hzeltJ"
+        />
+      </div>
+      <div
+        class="sc-cbCZAW iHyKYv"
+      >
+        <div
+          class="sc-csKIKD cmDwWi"
+        >
+          <label
+            class="sc-brSaZZ fRAESH"
+            for="upload-photo-tags"
+          >
+            Теги
+          </label>
+          <input
+            class="sc-eTNem gzvNIg"
+            id="upload-photo-tags"
+            name="tagInput"
+            placeholder="Введите тег и нажмите Enter"
+          />
+        </div>
+        <div
+          class="sc-dmXXqF hzeltJ"
+        />
       </div>
       <button
         class="sc-hABAzn hesWCt"
@@ -249,6 +456,75 @@ exports[`UploadPhoto updates label and shows selected file 1`] = `
             Скрыть
           </span>
         </label>
+      </div>
+      <div
+        class="sc-cbCZAW iHyKYv"
+      >
+        <div
+          class="sc-csKIKD cmDwWi"
+        >
+          <label
+            class="sc-brSaZZ fRAESH"
+            for="upload-photo-country"
+          >
+            Страна
+          </label>
+          <input
+            class="sc-eTNem gzvNIg"
+            id="upload-photo-country"
+            name="countryInput"
+            placeholder="Введите страну и нажмите Enter"
+          />
+        </div>
+        <div
+          class="sc-dmXXqF hzeltJ"
+        />
+      </div>
+      <div
+        class="sc-cbCZAW iHyKYv"
+      >
+        <div
+          class="sc-csKIKD cmDwWi"
+        >
+          <label
+            class="sc-brSaZZ fRAESH"
+            for="upload-photo-city"
+          >
+            Город
+          </label>
+          <input
+            class="sc-eTNem gzvNIg"
+            id="upload-photo-city"
+            name="cityInput"
+            placeholder="Введите город и нажмите Enter"
+          />
+        </div>
+        <div
+          class="sc-dmXXqF hzeltJ"
+        />
+      </div>
+      <div
+        class="sc-cbCZAW iHyKYv"
+      >
+        <div
+          class="sc-csKIKD cmDwWi"
+        >
+          <label
+            class="sc-brSaZZ fRAESH"
+            for="upload-photo-tags"
+          >
+            Теги
+          </label>
+          <input
+            class="sc-eTNem gzvNIg"
+            id="upload-photo-tags"
+            name="tagInput"
+            placeholder="Введите тег и нажмите Enter"
+          />
+        </div>
+        <div
+          class="sc-dmXXqF hzeltJ"
+        />
       </div>
       <div
         class="sc-ckdFjQ frDwmJ"
