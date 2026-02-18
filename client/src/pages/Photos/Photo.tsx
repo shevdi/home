@@ -1,8 +1,9 @@
 import { Photo } from '@/features/Photos'
+import { reachGoal } from '@/shared/analytics'
 import { useTitle } from '@/shared/hooks'
 import { useAuth } from '@/shared/hooks/useAuth'
-import { MouseEvent } from 'react'
-import { Link, useNavigate } from 'react-router'
+import { MouseEvent, useEffect } from 'react'
+import { Link, useNavigate, useParams } from 'react-router'
 import styled from 'styled-components'
 
 const LinkWrapper = styled.div`
@@ -11,8 +12,15 @@ const LinkWrapper = styled.div`
 
 export function PhotoPage() {
   useTitle('Фото')
+  const { id } = useParams()
   const { isAdmin } = useAuth()
   const navigate = useNavigate()
+
+  useEffect(() => {
+    if (id) {
+      reachGoal('photo_view', { photo_id: id })
+    }
+  }, [id])
 
   const handleNavigate = (e: MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault()

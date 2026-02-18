@@ -15,7 +15,7 @@ import {
   setCitySearch,
 } from '../model/photosSlice'
 import { selectSearch } from '../model'
-import { useQueryParams } from '@/shared/hooks'
+import { useQueryParams, useSearchAnalytics } from '@/shared/hooks'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 const schema = z.object({
@@ -63,6 +63,8 @@ export const Search = () => {
   const dispatch = useDispatch()
   const { dateFrom, dateTo, order, tags = [], country = [], city = [] } = useSelector(selectSearch)
   const { queryParams, setQueryParams } = useQueryParams()
+
+  useSearchAnalytics({ dateFrom, dateTo, order, tags, country, city })
   const {
     dateFrom: dateFromParamValue,
     dateTo: dateToParamValue,

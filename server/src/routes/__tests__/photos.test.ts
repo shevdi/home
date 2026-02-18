@@ -50,7 +50,7 @@ const passThrough = (_req: unknown, _res: unknown, next: () => void) => next()
 const passThroughCache = (_req: unknown, _res: unknown, next: () => void) => next()
 jest.unstable_mockModule('../../middlewares/cache.js', () => ({
   cacheMiddleware: () => passThroughCache,
-  cacheClear: () => {},
+  cacheClear: () => { },
 }))
 
 jest.unstable_mockModule('../../middlewares/optionalAuth.js', () => ({
@@ -69,10 +69,10 @@ jest.unstable_mockModule('../../services/urlCache.js', () => ({
   createUrlCache: () => ({
     getUrl: (source: { fetchUrlById: (id: string) => Promise<string> }, entryId: string | null | undefined) =>
       entryId ? source.fetchUrlById(entryId) : Promise.resolve(''),
-    setUrl: () => {},
-    remove: () => {},
+    setUrl: () => { },
+    remove: () => { },
     preload: () => Promise.resolve(),
-    startRefresh: () => () => {},
+    startRefresh: () => () => { },
   }),
 }))
 

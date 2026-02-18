@@ -1,6 +1,8 @@
 import { Filter, PhotoGallery, Search } from '@/features/Photos'
+import { reachGoal } from '@/shared/analytics'
 import { useTitle } from '@/shared/hooks'
 import { useAuth } from '@/shared/hooks/useAuth'
+import { useEffect } from 'react'
 import { Link } from 'react-router'
 import styled from 'styled-components'
 
@@ -32,6 +34,11 @@ const AddLink = styled(Link)`
 export function PhotosPage() {
   useTitle('Галерея фото')
   const { isAdmin } = useAuth()
+
+  useEffect(() => {
+    reachGoal('photos_gallery_open')
+  }, [])
+
   return (
     <>
       {isAdmin && (
