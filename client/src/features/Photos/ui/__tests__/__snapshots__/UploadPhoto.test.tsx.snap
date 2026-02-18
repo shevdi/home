@@ -10,23 +10,26 @@ exports[`UploadPhoto renders default state and disables submit 1`] = `
     />
     <form>
       <div
-        class="sc-csKIKD cmDwWi"
+        class="sc-hhyLtw cWeTQT"
       >
-        <label
-          class="sc-irLwvM kyIWET"
-          for="files"
+        <div
+          class="sc-gYrpUK bLOazG"
+          data-disabled="false"
+          role="presentation"
+          tabindex="0"
         >
+          <input
+            accept="image/jpeg,.jpeg,.jpg,image/png,.png,image/gif,.gif,image/webp,.webp"
+            multiple=""
+            style="border: 0px; clip: rect(0px, 0px, 0px, 0px); clip-path: inset(50%); height: 1px; margin: 0px -1px -1px 0px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap;"
+            tabindex="-1"
+            type="file"
+          />
           Загрузить фото
-        </label>
-        <input
-          class="sc-eTNem cJVMTg"
-          multiple=""
-          name="files"
-          type="file"
-        />
+        </div>
       </div>
       <div
-        class="sc-gYrpUK ebKcAg"
+        class="sc-jdHJyF gzXdpJ"
       >
         <label
           class="sc-jTQDnk kacxwV"
@@ -69,23 +72,26 @@ exports[`UploadPhoto shows error message when upload fails 1`] = `
     </div>
     <form>
       <div
-        class="sc-csKIKD cmDwWi"
+        class="sc-hhyLtw cWeTQT"
       >
-        <label
-          class="sc-irLwvM kyIWET"
-          for="files"
+        <div
+          class="sc-gYrpUK bLOazG"
+          data-disabled="false"
+          role="presentation"
+          tabindex="0"
         >
+          <input
+            accept="image/jpeg,.jpeg,.jpg,image/png,.png,image/gif,.gif,image/webp,.webp"
+            multiple=""
+            style="border: 0px; clip: rect(0px, 0px, 0px, 0px); clip-path: inset(50%); height: 1px; margin: 0px -1px -1px 0px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap;"
+            tabindex="-1"
+            type="file"
+          />
           1 файл выбран
-        </label>
-        <input
-          class="sc-eTNem cJVMTg"
-          multiple=""
-          name="files"
-          type="file"
-        />
+        </div>
       </div>
       <div
-        class="sc-gYrpUK ebKcAg"
+        class="sc-jdHJyF gzXdpJ"
       >
         <label
           class="sc-jTQDnk kacxwV"
@@ -105,7 +111,7 @@ exports[`UploadPhoto shows error message when upload fails 1`] = `
         </label>
       </div>
       <div
-        class="sc-hhyLtw cltryK"
+        class="sc-ckdFjQ frDwmJ"
       >
         <div
           class="sc-ilxdoe dkzrO"
@@ -141,28 +147,31 @@ exports[`UploadPhoto submits files and shows success message 1`] = `
     />
     <form>
       <div
-        class="sc-csKIKD cmDwWi"
+        class="sc-hhyLtw cWeTQT"
       >
-        <label
-          class="sc-irLwvM kyIWET"
-          for="files"
+        <div
+          class="sc-gYrpUK bLOazG"
+          data-disabled="false"
+          role="presentation"
+          tabindex="0"
         >
+          <input
+            accept="image/jpeg,.jpeg,.jpg,image/png,.png,image/gif,.gif,image/webp,.webp"
+            multiple=""
+            style="border: 0px; clip: rect(0px, 0px, 0px, 0px); clip-path: inset(50%); height: 1px; margin: 0px -1px -1px 0px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap;"
+            tabindex="-1"
+            type="file"
+          />
           Загрузить фото
-        </label>
-        <input
-          class="sc-eTNem cJVMTg"
-          multiple=""
-          name="files"
-          type="file"
-        />
+        </div>
       </div>
       <div
-        class="sc-cCzKKD iOuBws"
+        class="sc-cbCZAW begDpU"
       >
         Загружено: 1 из 1. Ошибок: 0
       </div>
       <div
-        class="sc-gYrpUK ebKcAg"
+        class="sc-jdHJyF gzXdpJ"
       >
         <label
           class="sc-jTQDnk kacxwV"
@@ -203,23 +212,26 @@ exports[`UploadPhoto updates label and shows selected file 1`] = `
     />
     <form>
       <div
-        class="sc-csKIKD cmDwWi"
+        class="sc-hhyLtw cWeTQT"
       >
-        <label
-          class="sc-irLwvM kyIWET"
-          for="files"
+        <div
+          class="sc-gYrpUK bLOazG"
+          data-disabled="false"
+          role="presentation"
+          tabindex="0"
         >
+          <input
+            accept="image/jpeg,.jpeg,.jpg,image/png,.png,image/gif,.gif,image/webp,.webp"
+            multiple=""
+            style="border: 0px; clip: rect(0px, 0px, 0px, 0px); clip-path: inset(50%); height: 1px; margin: 0px -1px -1px 0px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap;"
+            tabindex="-1"
+            type="file"
+          />
           1 файл выбран
-        </label>
-        <input
-          class="sc-eTNem cJVMTg"
-          multiple=""
-          name="files"
-          type="file"
-        />
+        </div>
       </div>
       <div
-        class="sc-gYrpUK ebKcAg"
+        class="sc-jdHJyF gzXdpJ"
       >
         <label
           class="sc-jTQDnk kacxwV"
@@ -239,7 +251,7 @@ exports[`UploadPhoto updates label and shows selected file 1`] = `
         </label>
       </div>
       <div
-        class="sc-hhyLtw cltryK"
+        class="sc-ckdFjQ frDwmJ"
       >
         <div
           class="sc-ilxdoe dkzrO"

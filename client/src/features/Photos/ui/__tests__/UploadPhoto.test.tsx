@@ -21,7 +21,7 @@ const mockBuildMeta = buildMeta as jest.MockedFunction<typeof buildMeta>
 
 const createFile = (name = 'photo.jpg') => new File(['file'], name, { type: 'image/jpeg' })
 const getFileInput = (container: HTMLElement) =>
-  container.querySelector('input[type="file"][name="files"]') as HTMLInputElement
+  container.querySelector('input[type="file"]') as HTMLInputElement
 
 type BuildMetaItem = Awaited<ReturnType<typeof buildMeta>>[number]
 
@@ -101,7 +101,7 @@ describe('UploadPhoto', () => {
 
     expect(await screen.findByText('Загружено: 1 из 1. Ошибок: 0')).toBeInTheDocument()
     await waitFor(() => expect(screen.queryByText('photo.jpg')).not.toBeInTheDocument())
-    expect(screen.getByText('Загрузить фото', { selector: 'label' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Загрузить фото' })).toBeInTheDocument()
     expect(container).toMatchSnapshot()
   })
 

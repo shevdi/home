@@ -1,8 +1,9 @@
-import { ChangeEvent, Dispatch, SetStateAction, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { z } from 'zod'
 import { SubmitHandler, useForm, Controller } from 'react-hook-form'
-import { Button, Checkbox, ErrMessage, Input } from '@/shared/ui'
+import { useDropzone } from 'react-dropzone'
+import { Button, Checkbox, ErrMessage } from '@/shared/ui'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { UploadResponse, useUploadPhotosMutation } from '../model'
 import { buildMeta, FileMeta } from '../utils/uploadPhotoMeta'
@@ -48,17 +49,12 @@ const getSubmitLabel = (count: number, isProcessed: boolean) => {
   return `Загрузить ${count > 0 ? `${count} ` : ''}фото`
 }
 
-const handleFileInputChange = async (
-  event: ChangeEvent<HTMLInputElement>,
-  onChange: (value: File[]) => void,
-  setFileMeta: Dispatch<SetStateAction<FileMeta[]>>,
-  setUploadMessage: Dispatch<SetStateAction<string>>,
-) => {
-  const selected = Array.from(event.target.files || [])
-  onChange(selected)
-  setFileMeta(selected.length ? await buildMeta(selected) : [])
-  setUploadMessage('')
-}
+const IMAGE_ACCEPT = {
+  'image/jpeg': ['.jpeg', '.jpg'],
+  'image/png': ['.png'],
+  'image/gif': ['.gif'],
+  'image/webp': ['.webp'],
+} as const
 
 const schema = z.object({
   files: z.array(z.instanceof(File)).min(1, 'Пожалуйста, выберите файлы'),
@@ -76,6 +72,7 @@ export function UploadPhoto() {
     control,
     handleSubmit,
     setError,
+    setValue,
     reset,
     watch,
     formState: { isSubmitting, errors },
@@ -90,9 +87,23 @@ export function UploadPhoto() {
   const files = watch('files') || []
   const isProcessed = isLoading || isSubmitting
 
-  const fileLabel = useMemo(() => {
-    return getFileLabel(files.length)
-  }, [files.length])
+  const fileLabel = useMemo(() => getFileLabel(files.length), [files.length])
+
+  const handleDrop = useCallback(
+    async (acceptedFiles: File[]) => {
+      setValue('files', acceptedFiles, { shouldValidate: true })
+      setFileMeta(acceptedFiles.length ? await buildMeta(acceptedFiles) : [])
+      setUploadMessage('')
+    },
+    [setValue],
+  )
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop: (acceptedFiles) => void handleDrop(acceptedFiles),
+    accept: IMAGE_ACCEPT,
+    disabled: isProcessed,
+    multiple: true,
+  })
 
   const onSubmit: SubmitHandler<FormFields> = async (submitData) => {
     const { success, data } = schema.safeParse(submitData)
@@ -130,24 +141,18 @@ export function UploadPhoto() {
     <PageContainer>
       <ErrMessage>{errors.root?.message}</ErrMessage>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Controller
-          control={control}
-          name='files'
-          render={({ field }) => (
-            <Input
-              label={fileLabel}
-              type='file'
-              name={field.name}
-              disabled={isProcessed}
-              onChange={(event) => {
-                void handleFileInputChange(event, field.onChange, setFileMeta, setUploadMessage)
-              }}
-              onBlur={field.onBlur}
-              multiple
-              error={errors.files?.message}
-            />
-          )}
-        />
+        <DropzoneWrapper>
+          <DropzoneArea
+            {...getRootProps()}
+            $isDragActive={isDragActive}
+            $disabled={isProcessed}
+            data-disabled={isProcessed}
+          >
+            <input {...getInputProps()} />
+            {fileLabel}
+          </DropzoneArea>
+          {errors.files?.message && <ErrorText>{errors.files?.message}</ErrorText>}
+        </DropzoneWrapper>
         {uploadMessage && <UploadMessage>{uploadMessage}</UploadMessage>}
         <CheckboxContainer>
           <Controller
@@ -175,6 +180,39 @@ export function UploadPhoto() {
 }
 
 const PageContainer = styled.div``
+
+const DropzoneWrapper = styled.div`
+  margin-bottom: 1rem;
+`
+
+const DropzoneArea = styled.div<{ $isDragActive?: boolean; $disabled?: boolean }>`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 1.5rem;
+  border-radius: var(--radius-md);
+  cursor: ${({ $disabled }) => ($disabled ? 'not-allowed' : 'pointer')};
+  user-select: none;
+  border: 2px dashed
+    ${({ $isDragActive, $disabled }) => ($isDragActive || $disabled ? 'var(--accent)' : 'var(--input-border)')};
+  background: ${({ $isDragActive, $disabled }) =>
+    $isDragActive || $disabled ? 'var(--input-disabled-color)' : 'var(--input-bg)'};
+  color: var(--text-color);
+  font-weight: 500;
+  transition: all var(--transition-fast);
+
+  &:hover:not([data-disabled='true']) {
+    border-color: var(--accent);
+    background: rgba(199, 107, 57, 0.08);
+  }
+`
+
+const ErrorText = styled.div`
+  margin-top: 0.4rem;
+  font-size: 0.8rem;
+  color: var(--error-color);
+  min-height: 1rem;
+`
 
 const FileList = styled.div`
   margin: 1rem 0;

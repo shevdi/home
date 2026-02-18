@@ -48,13 +48,6 @@ exports[`Photo renders full photo with all elements when using infinite query 1`
       Test Photo
     </h1>
     <div
-      data-testid="tag-list"
-    >
-      <span>
-        landscape
-      </span>
-    </div>
-    <div
       class="sc-dmyDGl fICjld"
     >
       <a
@@ -63,6 +56,13 @@ exports[`Photo renders full photo with all elements when using infinite query 1`
       >
         formatted:2024-01-15T10:30:00Z
       </a>
+    </div>
+    <div
+      data-testid="tag-list"
+    >
+      <span>
+        landscape
+      </span>
     </div>
     <div
       data-testid="map-embed"

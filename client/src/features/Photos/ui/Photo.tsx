@@ -75,7 +75,6 @@ export function Photo() {
       </PhotosNavigation>
       {isLoading ? <Loader /> : <Image key={photo?._id} src={photo?.mdSizeUrl} alt={photo?.title} />}
       <PageHeader>{photo?.title}</PageHeader>
-      {photo?.tags && photo.tags.length > 0 && <TagList tags={photo.tags} url={tagsUrl} position='right' />}
       {takenAt && dateStr && (
         <PhotoMeta>
           <Link
@@ -88,6 +87,7 @@ export function Photo() {
           </Link>
         </PhotoMeta>
       )}
+      {photo?.tags && photo.tags.length > 0 && <TagList tags={photo.tags} url={tagsUrl} position='right' />}
       {hasGps && gpsLat && gpsLon && <MapEmbed lat={gpsLat} lon={gpsLon} location={photo?.location} />}
     </PageContainer>
   )
