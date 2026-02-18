@@ -82,7 +82,7 @@ const Figure = styled.figure<{ $featured: boolean }>`
     0 2px 12px rgba(0, 0, 0, 0.08),
     0 1px 0 rgba(255, 255, 255, 0.15) inset;
   border: 1px solid rgba(0, 0, 0, 0.04);
-  ${({ $featured }) => ($featured ? 'height: 420px;' : 'height: 220px;')};
+  ${({ $featured }) => ($featured ? '' : 'height: 250px;')};
   ${({ $featured }) => ($featured ? 'grid-row: span 2;' : '')};
   ${({ $featured }) => ($featured ? 'grid-column: span 2' : '')};
   transition:

@@ -1,6 +1,6 @@
-import { type KeyboardEvent } from 'react'
+import { type KeyboardEvent, useEffect } from 'react'
 import styled from 'styled-components'
-import { useChangePhotoMutation, useGetPhotoQuery } from '../model'
+import { useChangePhotoMutation } from '../model'
 import { useLocation } from 'react-router'
 import z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -8,6 +8,8 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import { Button, Checkbox, ErrMessage, Input, Loader, TagList } from '@/shared/ui'
 import { getErrorMessage } from '@/shared/utils'
 import { DeletePhoto } from './DeletePhoto'
+import { PhotosNavigation } from './PhotosNavigation'
+import { usePhoto } from '../hooks/usePhoto'
 
 const schema = z.object({
   title: z.string(),
@@ -26,13 +28,14 @@ type FormFields = z.infer<typeof schema>
 export function EditPhoto() {
   const location = useLocation()
   const photoId = location.pathname.split('/')[2]
-  const { data: photo, isLoading } = useGetPhotoQuery(photoId)
+  const { photo, neighbours, isLoading } = usePhoto()
   const [changePhoto] = useChangePhotoMutation()
 
   const {
     register,
     handleSubmit,
     control,
+    reset,
     setError,
     setValue,
     watch,
@@ -52,6 +55,22 @@ export function EditPhoto() {
       tagsInput: '',
     },
   })
+
+  useEffect(() => {
+    if (photo) {
+      reset({
+        title: photo.title ?? '',
+        priority: photo.priority ?? 0,
+        private: photo.private ?? false,
+        country: photo.location?.value?.country ?? [],
+        city: photo.location?.value?.city ?? [],
+        tags: photo.tags ?? [],
+        countryInput: '',
+        cityInput: '',
+        tagsInput: '',
+      })
+    }
+  }, [photo, reset])
 
   const tagInput = watch('tagsInput') ?? ''
   const tags = watch('tags') ?? []
@@ -166,6 +185,7 @@ export function EditPhoto() {
 
   return (
     <PageContainer>
+      <PhotosNavigation photo={photo} neighbours={neighbours} pathSuffix='/edit' />
       <ErrMessage>{errors.root?.message}</ErrMessage>
       {isLoading ? (
         <Loader />

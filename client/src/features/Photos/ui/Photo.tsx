@@ -1,50 +1,12 @@
 import styled from 'styled-components'
 import { useSelector } from 'react-redux'
-import {
-  selectIsInitializedInfiniteQuery,
-  selectSearch,
-  useGetInfinitePhotoWithMaxInfiniteQuery,
-  useGetPhotoQuery,
-} from '../model'
-import { Link, useLocation } from 'react-router'
-import { buildSearchParams, getNeighbours } from '@/shared/utils'
+import { selectSearch } from '../model'
+import { Link } from 'react-router'
+import { buildSearchParams } from '@/shared/utils'
 import { Loader, MapEmbed, TagList } from '@/shared/ui'
 import { formatDate } from '../utils/uploadPhotoMeta'
-
-const usePhoto = () => {
-  const location = useLocation()
-  const photoId = location.pathname.split('/')[2]
-  const search = useSelector(selectSearch)
-  const shouldUseInfinite = useSelector(selectIsInitializedInfiniteQuery)
-  const { data: photo, isLoading: isPhotoLoading } = useGetPhotoQuery(photoId, {
-    skip: shouldUseInfinite,
-  })
-  const {
-    data: { infinityPhoto, neighbours },
-    isLoading: isInfiniteLoading,
-  } = useGetInfinitePhotoWithMaxInfiniteQuery(
-    { ...search },
-    {
-      initialPageParam: 1,
-      skip: !shouldUseInfinite,
-      selectFromResult: ({ data, ...rest }) => {
-        const photos = data?.pages.flatMap((pageItem) => pageItem.photos) ?? []
-        return {
-          data: {
-            infinityPhoto: photos.find((item) => item._id === photoId),
-            neighbours: getNeighbours(photos, photoId, (x) => x._id),
-          },
-          ...rest,
-        }
-      },
-    },
-  )
-  return {
-    photo: shouldUseInfinite ? infinityPhoto : photo,
-    neighbours,
-    isLoading: shouldUseInfinite ? isInfiniteLoading : isPhotoLoading,
-  }
-}
+import { PhotosNavigation } from './PhotosNavigation'
+import { usePhoto } from '../hooks/usePhoto'
 
 export function Photo() {
   const search = useSelector(selectSearch)
@@ -62,17 +24,7 @@ export function Photo() {
 
   return (
     <PageContainer>
-      <PhotosNavigation>
-        <div>{neighbours[0] && <NavLink to={{ pathname: `../${neighbours[0]._id}` }}>← Предыдущее</NavLink>}</div>
-        <div>
-          {photo && (
-            <FullSizeLink href={photo?.fullSizeUrl} target='_blank' rel='noreferrer'>
-              Полный размер
-            </FullSizeLink>
-          )}
-        </div>
-        <div>{neighbours[1] && <NavLink to={{ pathname: `../${neighbours[1]._id}` }}>Следующее →</NavLink>}</div>
-      </PhotosNavigation>
+      <PhotosNavigation photo={photo} neighbours={neighbours} />
       {isLoading ? <Loader /> : <Image key={photo?._id} src={photo?.mdSizeUrl} alt={photo?.title} />}
       <PageHeader>{photo?.title}</PageHeader>
       {takenAt && dateStr && (
@@ -119,36 +71,6 @@ const PhotoMeta = styled.div`
     &:hover {
       text-decoration: underline;
     }
-  }
-`
-
-const PhotosNavigation = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: 1rem 0;
-  gap: 1rem;
-`
-
-const NavLink = styled(Link)`
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: var(--accent);
-  text-decoration: none;
-
-  &:hover {
-    text-decoration: underline;
-  }
-`
-
-const FullSizeLink = styled.a`
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: var(--accent);
-  text-decoration: none;
-
-  &:hover {
-    text-decoration: underline;
   }
 `
 

@@ -1,6 +1,10 @@
 import mongoose from "mongoose";
 
 export function initDatabase() {
+  if (process.env.NODE_ENV === "development") {
+    mongoose.set("debug", true);
+  }
+
   const DATABASE_URL = process.env.DATABASE_URL || ''
   const DATABASE_USER = process.env.DATABASE_USER
   const DATABASE_PASS = process.env.DATABASE_PASS

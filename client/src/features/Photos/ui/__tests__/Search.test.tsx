@@ -12,6 +12,7 @@ jest.mock('@/shared/hooks', () => ({
     queryParams: {},
     setQueryParams: mockSetQueryParams,
   }),
+  useSearchAnalytics: jest.fn(),
 }))
 
 jest.mock('react-redux', () => ({
