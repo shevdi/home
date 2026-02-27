@@ -89,7 +89,6 @@ export function UploadPhoto() {
     handleSubmit,
     setError,
     setValue,
-    reset,
     watch,
     register,
     getValues,
@@ -188,19 +187,6 @@ export function UploadPhoto() {
 
     try {
       const response = await uploadPhoto(formData)
-      if (response?.data?.ok) {
-        reset({
-          files: [],
-          private: data.private,
-          country: [],
-          city: [],
-          tags: [],
-          countryInput: '',
-          cityInput: '',
-          tagInput: '',
-        })
-        setFileMeta([])
-      }
 
       const nextMessage = getUploadMessage(response)
       if (nextMessage) {

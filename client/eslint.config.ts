@@ -6,6 +6,7 @@ import reactPlugin from 'eslint-plugin-react'
 import tseslint from "typescript-eslint";
 import reactHooks from 'eslint-plugin-react-hooks'
 import eslintConfigPrettier from 'eslint-config-prettier/flat'
+import eslintPluginReactCompiler from 'eslint-plugin-react-compiler'
 import { defineConfig } from 'eslint/config'
 
 const tsconfigRootDir = path.dirname(fileURLToPath(import.meta.url))
@@ -20,7 +21,7 @@ export default defineConfig([
   },
   {
     files: ['**/*.{js,mjs,cjs,jsx,ts,tsx}'],
-    plugins: { js },
+    plugins: { js, eslintPluginReactCompiler },
     extends: ['js/recommended'],
   },
   reactPlugin.configs.flat.recommended,

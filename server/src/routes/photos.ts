@@ -15,7 +15,7 @@ import {
 import drime from '../services/drime.ts';
 import { createUrlCache, type UrlSource } from '../services/urlCache.ts';
 import { dadataReverseGeocode, nominatimReverseGeocode } from '../services';
-import { normalizeTags, parseBoolean, queryBuilder } from '../utils';
+import { getLocationValue, normalizeTags, parseBoolean, queryBuilder } from '../utils';
 import { logError } from '../db/services/logs';
 import { IUserInfo } from '@/types';
 import { optionalAuth } from '../middlewares/optionalAuth';
@@ -173,9 +173,11 @@ router.post(`/upload`, upload.array("files", 50), async (req: Request, res: Resp
           dadataReverseGeocode(lat, lon),
         ]) : [null, null]
 
+        const { country, city } = getLocationValue([nominatim, dadata])
+
         const locationValue = {
-          country: userCountry,
-          city: userCity,
+          country: Array.from(new Set([...userCountry, ...country])),
+          city: Array.from(new Set([...userCity, ...city])),
         }
 
         const { url: fullSizeUrl, photoData: fullSizePhoto } = await drime.cropPhotoAndUpload(file)

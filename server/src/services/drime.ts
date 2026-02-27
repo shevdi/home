@@ -23,6 +23,7 @@ export const createDrimeClient = ({
 }: DrimeClientDeps = {}): AxiosInstance => {
   const client = axiosInstance.create({
     baseURL,
+    timeout: 30000,
   })
 
   client.interceptors.request.use(

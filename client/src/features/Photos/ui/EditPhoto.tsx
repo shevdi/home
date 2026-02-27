@@ -77,6 +77,7 @@ export function EditPhoto() {
   const country = watch('country') ?? []
   const city = watch('city') ?? []
 
+  // TODO Fix bug
   const handleCountryKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key !== 'Enter') return
     event.preventDefault()

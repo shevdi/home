@@ -19,7 +19,7 @@ const Copywrite = styled.div`
 export function Footer() {
   return (
     <Foot>
-      <Copywrite>© shevdi 2025</Copywrite>
+      <Copywrite>© shevdi 2026</Copywrite>
     </Foot>
   )
 }
