@@ -1,6 +1,7 @@
 {
   "include": ["**/*", "**/.server/**/*", "**/.client/**/*", ".react-router/types/**/*", "webpack.*.ts", "webpack/*.ts"],
   "compilerOptions": {
+    "isolatedModules": true,
     "target": "es2022",
     "module": "es2022",
     "moduleResolution": "bundler",

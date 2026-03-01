@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach, jest } from '@jest/globals'
 import { createUrlCache, type UrlSource } from '../urlCache.js'
 
+
 const mockListIds = (impl?: UrlSource['listIds']) =>
   impl
     ? jest.fn<UrlSource['listIds']>(impl)
@@ -21,6 +22,8 @@ const createMockSource = (overrides?: Partial<UrlSource>): UrlSource =>
     ...overrides,
   }) as UrlSource
 
+const silentLogger = { info: () => {}, warn: () => {} }
+
 describe('urlCache', () => {
   beforeEach(() => {
     jest.useFakeTimers()
@@ -32,28 +35,28 @@ describe('urlCache', () => {
 
   describe('getUrl', () => {
     it('returns empty string for null entryId', async () => {
-      const cache = createUrlCache()
+      const cache = createUrlCache({ logger: silentLogger })
       const source = createMockSource()
       expect(await cache.getUrl(source, null)).toBe('')
       expect(source.fetchUrlById).not.toHaveBeenCalled()
     })
 
     it('returns empty string for undefined entryId', async () => {
-      const cache = createUrlCache()
+      const cache = createUrlCache({ logger: silentLogger })
       const source = createMockSource()
       expect(await cache.getUrl(source, undefined)).toBe('')
       expect(source.fetchUrlById).not.toHaveBeenCalled()
     })
 
     it('returns empty string for empty string entryId', async () => {
-      const cache = createUrlCache()
+      const cache = createUrlCache({ logger: silentLogger })
       const source = createMockSource()
       expect(await cache.getUrl(source, '')).toBe('')
       expect(source.fetchUrlById).not.toHaveBeenCalled()
     })
 
     it('fetches from source and caches when not cached', async () => {
-      const cache = createUrlCache({ ttlMs: 60_000 })
+      const cache = createUrlCache({ ttlMs: 60_000, logger: silentLogger })
       const source = createMockSource({
         fetchUrlById: mockFetchUrlById().mockResolvedValue('https://example.com/1'),
       })
@@ -65,7 +68,7 @@ describe('urlCache', () => {
     })
 
     it('returns cached url without calling source on second get', async () => {
-      const cache = createUrlCache({ ttlMs: 60_000 })
+      const cache = createUrlCache({ ttlMs: 60_000, logger: silentLogger })
       const source = createMockSource({
         fetchUrlById: mockFetchUrlById().mockResolvedValue('https://example.com/1'),
       })
@@ -79,7 +82,7 @@ describe('urlCache', () => {
     })
 
     it('does not cache empty url from fetch', async () => {
-      const cache = createUrlCache({ ttlMs: 60_000 })
+      const cache = createUrlCache({ ttlMs: 60_000, logger: silentLogger })
       const source = createMockSource({
         fetchUrlById: mockFetchUrlById().mockResolvedValue(''),
       })
@@ -94,7 +97,7 @@ describe('urlCache', () => {
     })
 
     it('refetches when entry has expired', async () => {
-      const cache = createUrlCache({ ttlMs: 1000 })
+      const cache = createUrlCache({ ttlMs: 1000, logger: silentLogger })
       const source = createMockSource({
         fetchUrlById: mockFetchUrlById()
           .mockResolvedValueOnce('https://example.com/1')
@@ -114,7 +117,7 @@ describe('urlCache', () => {
 
   describe('setUrl', () => {
     it('stores url and makes it available via getUrl', async () => {
-      const cache = createUrlCache({ ttlMs: 60_000 })
+      const cache = createUrlCache({ ttlMs: 60_000, logger: silentLogger })
       const source = createMockSource()
 
       cache.setUrl('42', 'https://example.com/42')
@@ -127,7 +130,7 @@ describe('urlCache', () => {
 
   describe('clear', () => {
     it('removes all cached entries', async () => {
-      const cache = createUrlCache({ ttlMs: 60_000 })
+      const cache = createUrlCache({ ttlMs: 60_000, logger: silentLogger })
       const source = createMockSource({
         fetchUrlById: mockFetchUrlById().mockResolvedValue('https://example.com/1'),
       })
@@ -143,7 +146,7 @@ describe('urlCache', () => {
 
   describe('remove', () => {
     it('removes specified entry ids', async () => {
-      const cache = createUrlCache({ ttlMs: 60_000 })
+      const cache = createUrlCache({ ttlMs: 60_000, logger: silentLogger })
       const source = createMockSource({
         fetchUrlById: mockFetchUrlById((id: string) =>
           Promise.resolve(`https://example.com/${id}`)
@@ -162,7 +165,7 @@ describe('urlCache', () => {
     })
 
     it('removes multiple ids', async () => {
-      const cache = createUrlCache({ ttlMs: 60_000 })
+      const cache = createUrlCache({ ttlMs: 60_000, logger: silentLogger })
       const source = createMockSource({
         fetchUrlById: mockFetchUrlById((id: string) =>
           Promise.resolve(`https://example.com/${id}`)
@@ -196,7 +199,7 @@ describe('urlCache', () => {
         Promise.resolve(`https://example.com/${id}`)
       )
 
-      const cache = createUrlCache({ ttlMs: 60_000 })
+      const cache = createUrlCache({ ttlMs: 60_000, logger: silentLogger })
       const source = createMockSource({ listIds, fetchUrlById })
 
       await cache.preload(source)
@@ -225,7 +228,7 @@ describe('urlCache', () => {
         Promise.resolve(`https://example.com/${id}`)
       )
 
-      const cache = createUrlCache({ ttlMs: 60_000 })
+      const cache = createUrlCache({ ttlMs: 60_000, logger: silentLogger })
       const source = createMockSource({ listIds, fetchUrlById })
 
       await cache.preload(source)
@@ -250,7 +253,7 @@ describe('urlCache', () => {
         return `https://example.com/${id}`
       })
 
-      const cache = createUrlCache({ concurrency: 2, ttlMs: 60_000 })
+      const cache = createUrlCache({ concurrency: 2, ttlMs: 60_000, logger: silentLogger })
       const source = createMockSource({ listIds, fetchUrlById })
 
       const preloadPromise = cache.preload(source)
@@ -298,7 +301,7 @@ describe('urlCache', () => {
         Promise.resolve(`https://example.com/${id}`)
       )
 
-      const cache = createUrlCache({ ttlMs: 60_000 })
+      const cache = createUrlCache({ ttlMs: 60_000, logger: silentLogger })
       const source = createMockSource({ listIds, fetchUrlById })
 
       await cache.preload(source)
@@ -323,6 +326,7 @@ describe('urlCache', () => {
       const cache = createUrlCache({
         ttlMs: 60_000,
         refreshIntervalMs: 10_000,
+        logger: silentLogger,
       })
       const source = createMockSource({ listIds, fetchUrlById })
 
@@ -348,6 +352,7 @@ describe('urlCache', () => {
       const cache = createUrlCache({
         ttlMs: 60_000,
         refreshIntervalMs: 5_000,
+        logger: silentLogger,
       })
       const source = createMockSource({ listIds, fetchUrlById })
 
@@ -384,7 +389,7 @@ describe('urlCache', () => {
 
   describe('options', () => {
     it('uses custom ttlMs', async () => {
-      const cache = createUrlCache({ ttlMs: 500 })
+      const cache = createUrlCache({ ttlMs: 500, logger: silentLogger })
       const source = createMockSource({
         fetchUrlById: mockFetchUrlById().mockResolvedValue('https://example.com/1'),
       })

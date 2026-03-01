@@ -9,7 +9,7 @@ test.describe('Photo flows', () => {
 
   test('view single photo when gallery has photos', async ({ page }) => {
     await page.goto('/photos');
-    const photoLinks = page.locator('a[href^="/photos/"]').filter({ hasNot: page.locator('a[href="/photos/photo/new"]') });
+    const photoLinks = page.locator('a[href^="/photos/"]').filter({ hasNot: page.locator('a[href="/photos/new"]') });
     const count = await photoLinks.count();
 
     if (count > 0) {
@@ -19,7 +19,7 @@ test.describe('Photo flows', () => {
   });
 
   test('unauthenticated user is redirected from upload page', async ({ page }) => {
-    await page.goto('/photos/photo/new');
+    await page.goto('/photos/new');
     await expect(page).toHaveURL(/\/login/);
   });
 
@@ -30,7 +30,7 @@ test.describe('Photo flows', () => {
     test.skip(!username || !password, 'E2E_LOGIN and E2E_PASSWORD must be set for this test');
 
     await loginAsAdmin(page);
-    await page.goto('/photos/photo/new');
+    await page.goto('/photos/new');
     await expect(page).not.toHaveURL(/\/login/);
     await expect(page.getByRole('heading', { name: 'Добавить фото' })).toBeVisible();
   });

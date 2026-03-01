@@ -126,7 +126,7 @@ describe('getImageDimensions', () => {
 
     const ImageMock = jest.fn(() => {
       const img = mockImg
-      setTimeout(() => img.onload?.(), 0)
+      queueMicrotask(() => img.onload?.())
       return img
     })
     global.Image = ImageMock as unknown as typeof Image
@@ -151,7 +151,7 @@ describe('getImageDimensions', () => {
 
     const ImageMock = jest.fn(() => {
       const img = mockImg
-      setTimeout(() => img.onerror?.(), 0)
+      queueMicrotask(() => img.onerror?.())
       return img
     })
     global.Image = ImageMock as unknown as typeof Image
@@ -275,7 +275,7 @@ describe('buildMeta', () => {
     }
     global.Image = jest.fn(() => {
       const img = { ...mockImg }
-      setTimeout(() => img.onload?.(), 0)
+      queueMicrotask(() => img.onload?.())
       return img
     }) as unknown as typeof Image
 
@@ -317,7 +317,7 @@ describe('buildMeta', () => {
         addEventListener: jest.fn(),
         removeEventListener: jest.fn(),
       }
-      setTimeout(() => img.onload?.(), 0)
+      queueMicrotask(() => img.onload?.())
       return img
     }) as unknown as typeof Image
 
@@ -346,7 +346,7 @@ describe('buildMeta', () => {
         addEventListener: jest.fn(),
         removeEventListener: jest.fn(),
       }
-      setTimeout(() => img.onload?.(), 0)
+      queueMicrotask(() => img.onload?.())
       return img
     }) as unknown as typeof Image
 

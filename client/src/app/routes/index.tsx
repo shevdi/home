@@ -42,7 +42,7 @@ export function RoutesList() {
                 <Route path='edit' element={<EditPhotoPage />} />
               </Route>
               <Route element={<RequireAuth allowedRoles={['admin']} />}>
-                <Route path='photo/new' element={<UploadPhotoPage />} />
+                <Route path='new' element={<UploadPhotoPage />} />
               </Route>
             </Route>
             <Route path='login'>

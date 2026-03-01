@@ -1,4 +1,5 @@
 import '@testing-library/jest-dom'
+import { cleanup } from '@testing-library/react'
 import { TextDecoder, TextEncoder } from 'node:util'
 
 if (!global.TextEncoder) {
@@ -12,3 +13,5 @@ if (!global.TextDecoder) {
 if (!global.fetch) {
   global.fetch = jest.fn()
 }
+
+afterEach(cleanup)

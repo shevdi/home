@@ -39,7 +39,7 @@ test.describe('Navigation', () => {
     await page.goto('/photos');
     await expect(page.getByRole('heading', { name: 'Фото' })).toBeVisible();
 
-    const photoLinks = page.locator('a[href^="/photos/"]').filter({ hasNot: page.locator('a[href="/photos/photo/new"]') });
+    const photoLinks = page.locator('a[href^="/photos/"]').filter({ hasNot: page.locator('a[href="/photos/new"]') });
     const count = await photoLinks.count();
     if (count > 0) {
       await photoLinks.first().click();

@@ -43,7 +43,7 @@ export function PhotosPage() {
     <>
       {isAdmin && (
         <TopBar>
-          <AddLink to='photo/new'>Добавить фото</AddLink>
+          <AddLink to='new'>Добавить фото</AddLink>
         </TopBar>
       )}
 

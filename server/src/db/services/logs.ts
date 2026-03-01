@@ -30,7 +30,12 @@ export async function writeLog(entry: LogEntry): Promise<void> {
       context: entry.context,
     })
   } catch (dbErr) {
-    console.error('Failed to write log to DB:', dbErr)
+    // Skip logging Mongoose buffering timeout (expected when no DB in tests)
+    const msg =
+      (dbErr instanceof Error && dbErr.message) || String(dbErr ?? '')
+    if (!msg.includes('buffering timed out')) {
+      console.error('Failed to write log to DB:', dbErr)
+    }
   }
 }
 

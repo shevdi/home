@@ -68,7 +68,7 @@ describe('UploadPhoto', () => {
     expect(container).toMatchSnapshot()
   })
 
-  it.only('submits files and shows success message', async () => {
+  it('submits files and shows success message', async () => {
     const uploadPhoto = jest.fn().mockResolvedValue({
       data: { ok: true, successCount: 1, errorsCount: 0, totalCount: 1 },
     })
