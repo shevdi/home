@@ -13,7 +13,10 @@
     "docker:up:dev": "docker compose -f docker-compose.dev.yml up --build",
     "docker:up": "docker compose up --build",
     "docker:down": "docker compose down",
-    "copy:types": "node scripts/copyFiles.cjs"
+    "copy:types": "node scripts/copyFiles.cjs",
+    "e2e": "npm run test --prefix e2e",
+    "e2e:debug": "npm run test:debug --prefix e2e",
+    "e2e:headed": "npm run test:headed --prefix e2e"
   },
   "copyFiles": [
     {

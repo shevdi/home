@@ -3,6 +3,7 @@ import { login, refresh, logout } from '../services/auth'
 import requestLimiter from '../middlewares/requestLimiter'
 
 const loginLimiter = requestLimiter({
+  max: parseInt(process.env.RATE_LIMIT_LOGIN_MAX || '5', 10),
   message: 'Слишком много попыток входа, попробуйте позже'
 })
 
