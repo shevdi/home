@@ -50,6 +50,9 @@ export const mockPhotos = [
       model: 'ZB602KL',
       takenAt: '2019-04-17T10:32:32.000Z',
     },
+    location: {
+      value: { country: ['Россия'], city: ['Санкт-Петербург'] },
+    },
     createdAt: '2026-01-28T14:57:34.534+00:00',
     updatedAt: '2026-01-28T14:57:34.534+00:00',
     __v: 0,
@@ -73,6 +76,9 @@ export const mockPhotos = [
       make: 'Xiaomi',
       model: 'Redmi Note 8 Pro',
       takenAt: '2023-01-17T07:26:41.000Z',
+    },
+    location: {
+      value: { country: ['Вьетнам'], city: ['Хошимин'] },
     },
     createdAt: '2026-01-06T12:02:34.534+00:00',
     updatedAt: '2026-02-01T13:15:34.534+00:00',
@@ -127,6 +133,9 @@ export const mockPhotos = [
       make: 'Xiaomi',
       model: 'Redmi Note 8 Pro',
       takenAt: '2023-01-17T07:57:59.000Z',
+    },
+    location: {
+      value: { country: ['Вьетнам'], city: ['Хошимин'] },
     },
     createdAt: '2026-01-26T12:03:34.534+00:00',
     updatedAt: '2026-02-03T18:11:14.534+00:00',

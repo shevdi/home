@@ -38,6 +38,18 @@ export async function resetPhotos(request: APIRequestContext): Promise<void> {
   }
 }
 
+export async function getPhotosFromApi(request: APIRequestContext): Promise<any[]> {
+  const token = await apiLogin(request);
+  const response = await request.get(`${API_URL}/photos`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (!response.ok()) {
+    throw new Error(`Get photos failed: ${response.status()} ${await response.text()}`);
+  }
+  const body = await response.json();
+  return body.photos;
+}
+
 export async function seedUser(request: APIRequestContext): Promise<void> {
   const username = process.env.E2E_LOGIN;
   const password = process.env.E2E_PASSWORD;

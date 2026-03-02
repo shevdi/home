@@ -2,6 +2,7 @@ import express, { type Request, type Response } from 'express'
 import bcrypt from 'bcrypt'
 import { Photo } from '../db/models/link'
 import { User } from '../db/models/user'
+import { cacheClear } from '../middlewares/cache'
 
 const router = express.Router()
 
@@ -13,6 +14,7 @@ router.post('/seed-photos', async (req: Request, res: Response): Promise<any> =>
     }
     await Photo.deleteMany({})
     await Photo.insertMany(photos)
+    cacheClear('photos')
     return res.json({ ok: true, count: photos.length })
   } catch (err) {
     return res.status(500).json({ error: String(err) })
@@ -22,6 +24,7 @@ router.post('/seed-photos', async (req: Request, res: Response): Promise<any> =>
 router.post('/reset-photos', async (_req: Request, res: Response): Promise<any> => {
   try {
     await Photo.deleteMany({})
+    cacheClear('photos')
     return res.json({ ok: true })
   } catch (err) {
     return res.status(500).json({ error: String(err) })

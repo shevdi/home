@@ -13,7 +13,7 @@ test.describe('Login flow', () => {
     await expect(page.getByText('Неверный логин или пароль')).toBeVisible({ timeout: 10000 });
   });
 
-  test('redirects to home on successful login', async ({ page }) => {
+  test('redirects to home on successful login and logs out', async ({ page }) => {
     const username = process.env.E2E_LOGIN;
     const password = process.env.E2E_PASSWORD;
 
@@ -25,5 +25,10 @@ test.describe('Login flow', () => {
 
     await expect(page).toHaveURL(/\/(home)?$/);
     await expect(page.getByRole('link', { name: 'Редактировать' })).toBeVisible();
+
+    await page.getByRole('button', { name: 'Настройки' }).click();
+    await page.getByRole('button', { name: 'Выйти' }).click();
+
+    await expect(page.getByRole('button', { name: 'Выйти' })).not.toBeVisible();
   });
 });

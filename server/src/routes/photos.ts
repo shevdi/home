@@ -77,8 +77,6 @@ router.get(`/`, optionalAuth, cache, async (req: Request & Partial<IUserInfo>, r
       getPhotosCount(search)
     ])
 
-    console.log('photos', photos)
-
     const results = await Promise.all(photos
       .map(async (item) => {
         const [smSizeUrl, mdSizeUrl, fullSizeUrl] = await Promise.all([
