@@ -3,6 +3,7 @@
 /.cursor
 /openspec
 /node_modules/
+/mock-server/node_modules/
 /e2e/node_modules/
 /e2e/test-results/
 

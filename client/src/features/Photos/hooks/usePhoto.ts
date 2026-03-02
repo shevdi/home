@@ -13,7 +13,7 @@ export const usePhoto = () => {
   const photoId = location.pathname.split('/')[2]
   const search = useSelector(selectSearch)
   const shouldUseInfinite = useSelector(selectIsInitializedInfiniteQuery)
-  const { data: photo, isLoading: isPhotoLoading } = useGetPhotoQuery(photoId, {
+  const { data: photo, isLoading: isPhotoLoading, isError: isPhotoError } = useGetPhotoQuery(photoId, {
     skip: shouldUseInfinite,
   })
   const {
@@ -36,9 +36,15 @@ export const usePhoto = () => {
       },
     },
   )
+  const resolvedPhoto = shouldUseInfinite ? infinityPhoto : photo
+  const isNotFound = shouldUseInfinite
+    ? (!isInfiniteLoading && !infinityPhoto)
+    : isPhotoError
+
   return {
-    photo: shouldUseInfinite ? infinityPhoto : photo,
+    photo: resolvedPhoto,
     neighbours,
     isLoading: shouldUseInfinite ? isInfiniteLoading : isPhotoLoading,
+    isNotFound: !!isNotFound,
   }
 }

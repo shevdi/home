@@ -6,6 +6,7 @@ import { buildSearchParams } from '@/shared/utils'
 import { Loader, MapEmbed, TagList } from '@/shared/ui'
 import { formatDate } from '../utils/uploadPhotoMeta'
 import { PhotosNavigation } from './PhotosNavigation'
+import { PhotoNotFound } from './PhotoNotFound'
 import { usePhoto } from '../hooks/usePhoto'
 
 export function Photo() {
@@ -14,7 +15,11 @@ export function Photo() {
     pathname: '/photos',
     search,
   }
-  const { photo, neighbours, isLoading } = usePhoto()
+  const { photo, neighbours, isLoading, isNotFound } = usePhoto()
+
+  if (isNotFound) {
+    return <PhotoNotFound />
+  }
 
   const takenAt = photo?.meta?.takenAt
   const dateStr = takenAt ? takenAt.split('T')[0] : null
