@@ -1,0 +1,51 @@
+import type { APIRequestContext } from '@playwright/test';
+
+export const API_URL = 'http://localhost:3001/api/v1';
+
+export async function apiLogin(request: APIRequestContext): Promise<string> {
+  const username = process.env.E2E_LOGIN;
+  const password = process.env.E2E_PASSWORD;
+
+  if (!username || !password) {
+    throw new Error('E2E_LOGIN and E2E_PASSWORD must be set');
+  }
+
+  const response = await request.post(`${API_URL}/auth`, {
+    data: { username, password },
+  });
+
+  if (!response.ok()) {
+    throw new Error(`Login failed: ${response.status()} ${await response.text()}`);
+  }
+
+  const body = await response.json();
+  return body.accessToken;
+}
+
+export async function seedPhotos(request: APIRequestContext, photos: unknown[]): Promise<void> {
+  const response = await request.post(`${API_URL}/__test/seed-photos`, {
+    data: { photos },
+  });
+  if (!response.ok()) {
+    throw new Error(`Seed photos failed: ${response.status()} ${await response.text()}`);
+  }
+}
+
+export async function resetPhotos(request: APIRequestContext): Promise<void> {
+  const response = await request.post(`${API_URL}/__test/reset-photos`);
+  if (!response.ok()) {
+    throw new Error(`Reset photos failed: ${response.status()} ${await response.text()}`);
+  }
+}
+
+export async function seedUser(request: APIRequestContext): Promise<void> {
+  const username = process.env.E2E_LOGIN;
+  const password = process.env.E2E_PASSWORD;
+
+  const response = await request.post(`${API_URL}/__test/seed-user`, {
+    data: { username, password, roles: ['admin'] },
+  });
+  if (!response.ok()) {
+    throw new Error(`Seed user failed: ${response.status()} ${await response.text()}`);
+  }
+}

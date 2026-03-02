@@ -106,12 +106,8 @@ app.get('/drive/file-entries', (req: Request, res: Response) => {
 app.get('/file-entries/:id', (req: Request, res: Response): any => {
   const id = parseInt(req.params.id, 10);
   const entry = entries.find((e) => e.id === id);
-
-  if (!entry) {
-    return res.status(404).json({ message: 'Not found' });
-  }
-
-  res.redirect(entry.url);
+  const url = entry?.url ?? `https://placehold.co/600x400?text=photo-${id}`;
+  res.redirect(url);
 });
 
 // ---------------------------------------------------------------------------

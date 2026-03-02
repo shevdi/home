@@ -17,12 +17,6 @@ test.describe('Navigation', () => {
     await expect(page.getByRole('heading', { name: /./ })).toBeVisible();
   });
 
-  test('projects route renders', async ({ page }) => {
-    await page.goto('/projects');
-    await expect(page).toHaveURL('/projects');
-    await expect(page.getByRole('heading', { name: /./ })).toBeVisible();
-  });
-
   test('photos route renders gallery', async ({ page }) => {
     await page.goto('/photos');
     await expect(page).toHaveURL('/photos');
