@@ -25,7 +25,8 @@ export async function nominatimReverseGeocode(lat: number, lon: number): Promise
   }
 
   try {
-    const url = new URL('https://nominatim.openstreetmap.org/reverse')
+    const baseUrl = process.env.NOMINATIM_URL || 'https://nominatim.openstreetmap.org'
+    const url = new URL(`${baseUrl}/reverse`)
     url.searchParams.set('format', 'jsonv2')
     url.searchParams.set('lat', String(lat))
     url.searchParams.set('lon', String(lon))

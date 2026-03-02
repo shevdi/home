@@ -3,8 +3,13 @@ import { loginAsAdmin } from './helpers/auth';
 
 test.describe('Photo flows', () => {
   test('view photo gallery', async ({ page }) => {
+
     await page.goto('/photos');
     await expect(page.getByRole('heading', { name: 'Фото' })).toBeVisible();
+
+    const photos = page.locator('figure img');
+    await expect(photos.first()).toBeVisible({ timeout: 15000 });
+    await expect(photos).toHaveCount(3);
   });
 
   test('view single photo when gallery has photos', async ({ page }) => {

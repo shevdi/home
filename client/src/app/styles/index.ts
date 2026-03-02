@@ -1,4 +1,4 @@
-export { ThemeProps } from './theme-types'
+export type { ThemeProps } from './theme-types'
 import darkThemeInitial from './theme-dark.json'
 import lightThemeInitial from './theme-light.json'
 import commonThemeInitial from './theme-common.json'

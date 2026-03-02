@@ -5,5 +5,9 @@ export default defineConfig({
   use: {
     baseURL: 'http://localhost:3000',
     headless: true,
+    screenshot: 'on',
+    video: {
+      mode: 'on',
+    }
   },
 });

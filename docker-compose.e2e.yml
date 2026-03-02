@@ -1,0 +1,75 @@
+services:
+  home-database:
+    image: mongo
+    command: ["mongod", "--quiet"]
+    ports:
+      - "27017:27017"
+  mock-server:
+    build:
+      context: ./mock-server
+      dockerfile: Dockerfile
+    environment:
+      - PORT=3004
+    ports:
+      - "3004:3004"
+  home-backend:
+    build:
+      context: ./server
+      dockerfile: Dockerfile.dev
+    environment:
+      - PORT=3001
+      - DATABASE_URL=mongodb://host.docker.internal:27017/home
+      - NODE_ENV=development
+      - DRIME_URL=localhost:3004
+      - DRIME_TOKEN=mock-token
+      - DRIME_EMAIL=mock@test.com
+      - DRIME_PASS=mock-pass
+      - DADATA_URL=localhost:3004
+      - DADATA_API_KEY=mock-key
+      - NOMINATIM_URL=localhost:3004
+      - ACCESS_TOKEN_SECRET=641cd63c198fa8a94b4404aabd882432869c10fc9e955291e482a02c08e1c5bd23fa53b01459cc4c94f6eddb931a86ec31afc0c28d1feab855d69d4c950dbceb
+      - REFRESH_TOKEN_SECRET=0b6d2e7c19beb9acccb483d9e4f016d37573907007d518720f4d56a6501e865d64ba1ad20eceaf7df868f1b446256f1648845a03c9cc81d9e20b2bf19398a3b5
+      - E2E_LOGIN=shevdi
+      - E2E_PASSWORD=pass
+    ports:
+      - "3001:3001"
+    depends_on:
+      - home-database
+      - mock-server
+    develop:
+      watch:
+        - action: sync
+          path: ./server
+          target: /app
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: ./server/package.json
+        - action: rebuild
+          path: ./server/package-lock.json
+  home-frontend:
+    build:
+      context: ./client
+      dockerfile: Dockerfile.dev
+      args:
+        BACKEND_URL: http://localhost:3001/api/v1
+    environment:
+      - BACKEND_URL=http://localhost:3001/api/v1
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true
+    ports:
+      - "3000:3000"
+      - "8080:8080"
+    depends_on:
+      - home-backend
+    develop:
+      watch:
+        - action: sync
+          path: ./client
+          target: /app
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: ./client/package.json
+        - action: rebuild
+          path: ./client/package-lock.json

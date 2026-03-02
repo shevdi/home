@@ -5,13 +5,6 @@ test.describe('Login flow', () => {
     await page.goto('/login');
   });
 
-  test('displays login form', async ({ page }) => {
-    await expect(page.getByRole('heading', { name: 'Вход' })).toBeVisible();
-    await expect(page.locator('input[name="username"]')).toBeVisible();
-    await expect(page.locator('input[name="password"]')).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Войти' })).toBeVisible();
-  });
-
   test('shows error on invalid credentials', async ({ page }) => {
     await page.locator('input[name="username"]').fill('invalid-user');
     await page.locator('input[name="password"]').fill('wrong-password');

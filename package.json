@@ -16,7 +16,9 @@
     "copy:types": "node scripts/copyFiles.cjs",
     "e2e": "npm run test --prefix e2e",
     "e2e:debug": "npm run test:debug --prefix e2e",
-    "e2e:headed": "npm run test:headed --prefix e2e"
+    "e2e:headed": "npm run test:headed --prefix e2e",
+    "docker:up:e2e": "docker compose -f docker-compose.e2e.yml up --build",
+    "e2e:mock": "docker compose -f docker-compose.e2e.yml up --build -d && npm run e2e"
   },
   "copyFiles": [
     {

@@ -23,7 +23,8 @@ export async function dadataReverseGeocode(
   }
 
   try {
-    const response = await fetch('https://suggestions.dadata.ru/suggestions/api/4_1/rs/geolocate/address', {
+    const baseUrl = process.env.DADATA_URL || 'https://suggestions.dadata.ru'
+    const response = await fetch(`${baseUrl}/suggestions/api/4_1/rs/geolocate/address`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
