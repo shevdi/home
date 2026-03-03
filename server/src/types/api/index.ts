@@ -1,4 +1,4 @@
-import { Roles } from "../common";
+import type { Roles } from '@shevdi-home/shared';
 
 export interface User {
   id: number;

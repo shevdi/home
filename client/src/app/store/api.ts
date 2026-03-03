@@ -1,5 +1,7 @@
 import { setCredentials } from '@/features/Auth/model/authSlice';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import type { BaseQueryFn, BaseQueryApi } from '@reduxjs/toolkit/query'
+import type { RootState } from './store'
 
 const baseQuery = fetchBaseQuery({
   baseUrl: `${process.env.BACKEND_URL}`,
@@ -7,8 +9,7 @@ const baseQuery = fetchBaseQuery({
   credentials: "include",
   cache: "no-store",
   prepareHeaders: (headers, { getState }) => {
-    /* eslint @typescript-eslint/no-explicit-any: "off" */
-    const token = (getState() as any).auth?.token;
+    const token = (getState() as RootState).auth?.token;
     if (token) {
       headers.set('authorization', `Bearer ${token}`);
     }
@@ -16,18 +17,19 @@ const baseQuery = fetchBaseQuery({
   },
 })
 
-const baseQueryWithReauth = async (args: any, api: any, extraOptions: any) => {
-  let result = await baseQuery(args, api, extraOptions)
+const baseQueryWithReauth: BaseQueryFn = async (args, api, extraOptions) => {
+  let result = await baseQuery(args, api as BaseQueryApi, extraOptions)
 
   if (result?.error?.status === 403) {
-    const refreshResult = await baseQuery('/auth/refresh', api, extraOptions)
+    const refreshResult = await baseQuery('/auth/refresh', api as BaseQueryApi, extraOptions)
 
     if (refreshResult?.data) {
       api.dispatch(setCredentials({ ...refreshResult.data }))
-      result = await baseQuery(args, api, extraOptions)
+      result = await baseQuery(args, api as BaseQueryApi, extraOptions)
     } else {
       if (refreshResult?.error?.status === 403) {
-        (refreshResult.error as any).data.message = 'Ваш токен истек'
+        const err = refreshResult.error as { data?: { message?: string } };
+        if (err?.data) err.data.message = 'Ваш токен истек'
       }
       return refreshResult
     }

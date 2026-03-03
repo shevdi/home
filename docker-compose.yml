@@ -5,7 +5,8 @@ services:
       - "27017:27017"
   home-backend:
     build:
-      context: ./server
+      context: .
+      dockerfile: server/Dockerfile.dev
     environment:
       - PORT=3001
       - DATABASE_URL=mongodb://host.docker.internal:27017/home
@@ -15,7 +16,8 @@ services:
       - home-database
   home-frontend:
     build:
-      context: ./client
+      context: .
+      dockerfile: client/Dockerfile.dev
       args:
         BACKEND_URL: http://localhost:3001/api/v1
     environment:

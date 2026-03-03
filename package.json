@@ -3,17 +3,23 @@
   "version": "0.0.0",
   "description": "shevdi home",
   "type": "module",
+  "workspaces": [
+    "client",
+    "server",
+    "mock-server",
+    "e2e",
+    "shared"
+  ],
   "scripts": {
     "build": "npm run build --prefix client",
     "dev": "concurrently \"npm run dev --prefix server\" \"npm run dev --prefix client\"",
     "start": "concurrently \"npm run start --prefix server\" \"npm run start --prefix client\"",
-    "typecheck": "react-router typegen && tsc",
+    "typecheck": "npm run typecheck --prefix client",
     "lint": "docker-compose exec home-frontend npm run lint",
     "docker:build": "docker compose build",
     "docker:up:dev": "docker compose -f docker-compose.dev.yml up --build",
     "docker:up": "docker compose -f docker-compose.dev.yml up --build",
     "docker:down": "docker compose down",
-    "copy:types": "node scripts/copyFiles.cjs",
     "e2e": "npm run test --prefix e2e",
     "e2e:debug": "npm run test:debug --prefix e2e",
     "e2e:headed": "npm run test:headed --prefix e2e",
@@ -21,16 +27,6 @@
     "e2e:mock": "docker compose -f docker-compose.e2e.yml up --build -d && npm run e2e",
     "e2e:report": "docker compose -f docker-compose.e2e.yml up --build -d && npm run e2e && npm run test:report --prefix e2e && npm run report:open --prefix e2e"
   },
-  "copyFiles": [
-    {
-      "src": "../shared/types",
-      "dest": "../client/src/shared/types/common"
-    },
-    {
-      "src": "../shared/types",
-      "dest": "../server/src/types/common"
-    }
-  ],
   "keywords": [
     "nodejs",
     "express",

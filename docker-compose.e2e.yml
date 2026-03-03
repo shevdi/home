@@ -6,16 +6,16 @@ services:
       - "27017:27017"
   mock-server:
     build:
-      context: ./mock-server
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: mock-server/Dockerfile
     environment:
       - PORT=3004
     ports:
       - "3004:3004"
   home-backend:
     build:
-      context: ./server
-      dockerfile: Dockerfile.dev
+      context: .
+      dockerfile: server/Dockerfile.dev
     environment:
       - PORT=3001
       - DATABASE_URL=mongodb://host.docker.internal:27017/home_e2e
@@ -50,8 +50,8 @@ services:
           path: ./server/package-lock.json
   home-frontend:
     build:
-      context: ./client
-      dockerfile: Dockerfile.dev
+      context: .
+      dockerfile: client/Dockerfile.dev
       args:
         BACKEND_URL: http://localhost:3001/api/v1
     environment:

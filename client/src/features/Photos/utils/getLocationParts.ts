@@ -1,4 +1,4 @@
-import type { ILocation } from '@/shared/types/common/links'
+import type { ILocation } from '@/shared/types'
 
 export type LocationParts = { city: string | null; country: string | null }
 

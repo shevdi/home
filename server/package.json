@@ -5,10 +5,11 @@
   "type": "module",
   "main": "dist/index.ts",
   "scripts": {
-    "start": "node --experimental-transform-types --experimental-strip-types src/index.ts",
-    "dev": "nodemon --experimental-transform-types --experimental-strip-types src/index.ts",
+    "start": "tsx src/index.ts",
+    "dev": "nodemon --exec tsx src/index.ts",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --detectOpenHandles",
-    "test:integration": "node --experimental-vm-modules node_modules/jest/bin/jest.js photos.integration.test --runInBand"
+    "test:integration": "node --experimental-vm-modules node_modules/jest/bin/jest.js photos.integration.test --runInBand",
+    "lint": "eslint src"
   },
   "keywords": [
     "nodejs",
@@ -19,6 +20,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "@shevdi-home/shared": "file:../shared",
     "@types/bcrypt": "^6.0.0",
     "@types/multer": "^2.0.0",
     "axios": "^1.13.2",
@@ -54,6 +56,11 @@
     "supertest": "^7.2.2",
     "ts-jest": "^29.4.6",
     "ts-node": "^10.9.2",
-    "typescript": "^5.3.3"
+    "tsx": "^4.19.2",
+    "typescript": "^5.3.3",
+    "@eslint/js": "^9.15.0",
+    "eslint": "^9.15.0",
+    "eslint-config-prettier": "^10.1.8",
+    "typescript-eslint": "^8.40.0"
   }
 }

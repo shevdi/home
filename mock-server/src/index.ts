@@ -33,6 +33,7 @@ type FileEntry = {
 
 let nextId = 100;
 let entries: FileEntry[] = [];
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- used for cache-busting simulation
 let requestCounter = 0;
 
 function createEntry(name: string, parentId: number = 1): FileEntry {
@@ -104,7 +105,7 @@ app.get('/drive/file-entries', (req: Request, res: Response) => {
 // Drime: GET /file-entries/:id
 // ---------------------------------------------------------------------------
 
-app.get('/file-entries/:id', (req: Request, res: Response): any => {
+app.get('/file-entries/:id', (req: Request, res: Response): void => {
   requestCounter++;
   const id = parseInt(req.params.id, 10);
   const entry = entries.find((e) => e.id === id);

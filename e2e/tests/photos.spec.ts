@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import type { ILink } from '@shevdi-home/shared';
 import { seedPhotos, resetPhotos, getPhotosFromApi, resetMock } from './helpers/api';
 import { loginAsAdmin } from './helpers/auth';
 import { mockPhotos } from './fixtures/photo-mocks';
@@ -65,7 +66,7 @@ test.describe('Photo flows', () => {
     test('fails to open private photo by direct link', async ({ page, request }) => {
       const privatePhoto = await test.step('Get private photo from API', async () => {
         const photos = await getPhotosFromApi(request);
-        return photos.find((p: any) => p.private);
+        return photos.find((p: ILink) => p.private);
       });
 
       await test.step('Navigate to private photo URL', async () => {
@@ -118,7 +119,7 @@ test.describe('Photo flows', () => {
     test('opens private photo', async ({ page, request }) => {
       const privatePhoto = await test.step('Get private photo from API', async () => {
         const photos = await getPhotosFromApi(request);
-        return photos.find((p: any) => p.private);
+        return photos.find((p: ILink) => p.private);
       });
 
       await test.step('Navigate to private photo URL', async () => {
@@ -244,7 +245,7 @@ test.describe('Photo flows', () => {
     test('full-size link points to correct URL', async ({ page, request }) => {
       const photo = await test.step('Get public photo with fullSizeUrl from API', async () => {
         const photos = await getPhotosFromApi(request);
-        return photos.find((p: any) => !p.private && p.fullSizeUrl);
+        return photos.find((p: ILink) => !p.private && p.fullSizeUrl);
       });
 
       await test.step('Open photo detail page', async () => {
@@ -260,7 +261,7 @@ test.describe('Photo flows', () => {
     test('photo detail shows date and tags', async ({ page, request }) => {
       const photo = await test.step('Get photo with metadata from API', async () => {
         const photos = await getPhotosFromApi(request);
-        return photos.find((p: any) => p.meta?.takenAt && p.tags?.length > 0 && !p.private);
+        return photos.find((p: ILink) => p.meta?.takenAt && p.tags?.length > 0 && !p.private);
       });
 
       await test.step('Open photo detail page', async () => {
@@ -279,7 +280,7 @@ test.describe('Photo flows', () => {
       const photo = await test.step('Get photo without metadata from API', async () => {
         const photos = await getPhotosFromApi(request);
         return photos.find(
-          (p: any) => !p.meta?.takenAt && (!p.tags || p.tags.length === 0) && !p.private,
+          (p: ILink) => !p.meta?.takenAt && (!p.tags || p.tags.length === 0) && !p.private,
         );
       });
 

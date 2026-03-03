@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import type { ILink } from '@shevdi-home/shared';
 import { seedPhotos, resetPhotos, resetMock, apiLogin, extractUrlVersion, API_URL } from './helpers/api';
 import { loginAsAdmin } from './helpers/auth';
 import { mockPhotos } from './fixtures/photo-mocks';
@@ -7,7 +8,7 @@ const GALLERY_PHOTO = 'figure a[href^="/photos/"]';
 
 interface CapturedResponse {
   status: number;
-  body: any;
+  body: unknown;
   servedAt: string | null;
 }
 
@@ -19,7 +20,7 @@ function captureApiResponse(page: import('@playwright/test').Page, urlPattern: s
     const url = response.url();
     const matches = typeof urlPattern === 'string' ? url.includes(urlPattern) : urlPattern.test(url);
     if (matches && response.request().method() === 'GET') {
-      let body: any = null;
+      let body: unknown = null;
       try {
         body = await response.json();
       } catch { /* empty */ }
@@ -37,7 +38,7 @@ function captureApiResponse(page: import('@playwright/test').Page, urlPattern: s
   return promise;
 }
 
-function getPhotoVersions(photos: any[]): Map<string, string | null> {
+function getPhotoVersions(photos: ILink[]): Map<string, string | null> {
   const versions = new Map<string, string | null>();
   for (const photo of photos) {
     if (photo.smSizeUrl) {
@@ -75,7 +76,7 @@ test.describe('Photo gallery caching', () => {
       expect(response1.body?.photos?.length).toBeGreaterThan(0);
       expect(response1.servedAt).not.toBeNull();
 
-      const versions1 = getPhotoVersions(response1.body.photos);
+      const versions1 = getPhotoVersions((response1.body as { photos: ILink[] }).photos);
       expect(versions1.size).toBeGreaterThan(0);
       for (const v of versions1.values()) {
         expect(v).not.toBeNull();
@@ -97,7 +98,7 @@ test.describe('Photo gallery caching', () => {
 
     await test.step('Edit photo via API to bust response cache', async () => {
       const token = await apiLogin(request);
-      const photoToEdit = response1.body.photos[0];
+      const photoToEdit = (response1.body as { photos: ILink[] }).photos[0];
       const editResponse = await request.put(`${API_URL}/photos/${photoToEdit._id}`, {
         headers: { Authorization: `Bearer ${token}` },
         data: { title: 'Cache test edit', tags: photoToEdit.tags ?? [] },
@@ -115,7 +116,7 @@ test.describe('Photo gallery caching', () => {
       expect(response4.servedAt).not.toEqual(response1.servedAt);
       expect(response4.body?.photos?.length).toBeGreaterThan(0);
 
-      const versions4 = getPhotoVersions(response4.body.photos);
+      const versions4 = getPhotoVersions((response4.body as { photos: ILink[] }).photos);
       expect(versions1).toEqual(versions4)
       // for (const [key, v1] of versions1) {
       //   const v4 = versions4.get(key);
@@ -137,7 +138,7 @@ test.describe('Photo gallery caching', () => {
       expect(response5.servedAt).not.toEqual(response1.servedAt);
       expect(response5.body?.photos?.length).toBeGreaterThan(0);
 
-      const versions5 = getPhotoVersions(response5.body.photos);
+      const versions5 = getPhotoVersions((response5.body as { photos: ILink[] }).photos);
       expect(versions1).toEqual(versions5)
       // for (const [key, v1] of versions1) {
       //   const v5 = versions5.get(key);

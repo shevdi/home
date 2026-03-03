@@ -1,5 +1,6 @@
 import { test } from '@playwright/test';
 import type { APIRequestContext } from '@playwright/test';
+import type { ILink } from '@shevdi-home/shared';
 
 export const API_URL = 'http://localhost:3001/api/v1';
 
@@ -43,7 +44,7 @@ export async function resetPhotos(request: APIRequestContext): Promise<void> {
   });
 }
 
-export async function getPhotosFromApi(request: APIRequestContext): Promise<any[]> {
+export async function getPhotosFromApi(request: APIRequestContext): Promise<ILink[]> {
   return test.step('Get photos from API', async () => {
     const token = await apiLogin(request);
     const response = await request.get(`${API_URL}/photos`, {
@@ -53,7 +54,7 @@ export async function getPhotosFromApi(request: APIRequestContext): Promise<any[
       throw new Error(`Get photos failed: ${response.status()} ${await response.text()}`);
     }
     const body = await response.json();
-    return body.photos;
+    return body.photos as ILink[];
   });
 }
 

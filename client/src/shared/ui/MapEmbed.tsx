@@ -1,6 +1,6 @@
 import { Link } from 'react-router'
 import styled from 'styled-components'
-import type { ILocation } from '@/shared/types/common/links'
+import type { ILocation } from '@/shared/types'
 import { buildSearchParams } from '@/shared/utils'
 
 type MapEmbedProps = {

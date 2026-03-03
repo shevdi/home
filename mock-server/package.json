@@ -5,9 +5,11 @@
   "type": "module",
   "scripts": {
     "start": "node --experimental-transform-types --experimental-strip-types src/index.ts",
-    "dev": "nodemon --experimental-transform-types --experimental-strip-types src/index.ts"
+    "dev": "nodemon --experimental-transform-types --experimental-strip-types src/index.ts",
+    "lint": "eslint src"
   },
   "dependencies": {
+    "@shevdi-home/shared": "file:../shared",
     "cors": "^2.8.5",
     "express": "^4.18.2",
     "multer": "^2.0.2",
@@ -19,6 +21,10 @@
     "@types/multer": "^2.0.0",
     "@types/node": "^20.10.5",
     "nodemon": "^3.0.2",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "@eslint/js": "^9.15.0",
+    "eslint": "^9.15.0",
+    "eslint-config-prettier": "^10.1.8",
+    "typescript-eslint": "^8.40.0"
   }
 }

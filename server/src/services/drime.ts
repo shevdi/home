@@ -319,7 +319,7 @@ export const createDrimeService = (deps: DrimeServiceDeps = {}): DrimeService =>
       return { url: responseUrlFrom(response) };
     } catch (err) {
       logError(err, { service: 'drime', action: 'updateFile', url })
-      return Promise.resolve(err as any);
+      return Promise.reject(err);
     }
   }
 
@@ -354,7 +354,7 @@ export const createDrimeService = (deps: DrimeServiceDeps = {}): DrimeService =>
       throw Error('no file uploaded')
     }
 
-    const blob = new Blob([file.buffer as any], {
+    const blob = new Blob([file], {
       type: mimetype,
     });
 

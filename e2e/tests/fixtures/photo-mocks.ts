@@ -1,4 +1,6 @@
-export const mockPhotos = [
+import type { ILink } from '@shevdi-home/shared'
+
+export const mockPhotos: Partial<ILink>[] = [
   {
     name: 'IMG_20200128_085233.jpg',
     smSizeUrl: 'http://placeholder/sm/1',

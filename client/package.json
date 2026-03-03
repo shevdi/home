@@ -20,6 +20,7 @@
   "author": "shevdi",
   "license": "MIT",
   "dependencies": {
+    "@shevdi-home/shared": "file:../shared",
     "@hookform/resolvers": "^5.2.2",
     "@react-router/node": "7.8.0",
     "@react-router/serve": "7.8.0",

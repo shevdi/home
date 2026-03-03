@@ -2,12 +2,12 @@ import { photoFolderNames } from '../../config'
 
 export interface DrimeTokenApiResponse {
   success: boolean;
-  data?: any;
+  data?: unknown;
   message?: string;
   user?: {
     access_token: string
   }
-  request: any
+  request?: unknown
 }
 
 export interface DrimeFolder {

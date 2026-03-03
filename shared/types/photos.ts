@@ -2,7 +2,7 @@ import { ILink } from "./links";
 
 export interface IPhotos {
   name?: string;
-  descriptopn?: string;
+  description?: string;
   src: string;
   links: ILink[]
 }
