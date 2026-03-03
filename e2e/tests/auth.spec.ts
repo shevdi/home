@@ -6,11 +6,15 @@ test.describe('Login flow', () => {
   });
 
   test('shows error on invalid credentials', async ({ page }) => {
-    await page.locator('input[name="username"]').fill('invalid-user');
-    await page.locator('input[name="password"]').fill('wrong-password');
-    await page.getByRole('button', { name: 'Войти' }).click();
+    await test.step('Submit invalid credentials', async () => {
+      await page.locator('input[name="username"]').fill('invalid-user');
+      await page.locator('input[name="password"]').fill('wrong-password');
+      await page.getByRole('button', { name: 'Войти' }).click();
+    });
 
-    await expect(page.getByText('Неверный логин или пароль')).toBeVisible({ timeout: 10000 });
+    await test.step('Error message is shown', async () => {
+      await expect(page.getByText('Неверный логин или пароль')).toBeVisible({ timeout: 10000 });
+    });
   });
 
   test('redirects to home on successful login and logs out', async ({ page }) => {
@@ -19,16 +23,24 @@ test.describe('Login flow', () => {
 
     test.skip(!username || !password, 'E2E_LOGIN and E2E_PASSWORD must be set for this test');
 
-    await page.locator('input[name="username"]').fill(username!);
-    await page.locator('input[name="password"]').fill(password!);
-    await page.getByRole('button', { name: 'Войти' }).click();
+    await test.step('Fill credentials and submit', async () => {
+      await page.locator('input[name="username"]').fill(username!);
+      await page.locator('input[name="password"]').fill(password!);
+      await page.getByRole('button', { name: 'Войти' }).click();
+    });
 
-    await expect(page).toHaveURL(/\/(home)?$/);
-    await expect(page.getByRole('link', { name: 'Редактировать' })).toBeVisible();
+    await test.step('Logged-in state is confirmed', async () => {
+      await expect(page).toHaveURL(/\/(home)?$/);
+      await expect(page.getByRole('link', { name: 'Редактировать' })).toBeVisible();
+    });
 
-    await page.getByRole('button', { name: 'Настройки' }).click();
-    await page.getByRole('button', { name: 'Выйти' }).click();
+    await test.step('Log out via settings', async () => {
+      await page.getByRole('button', { name: 'Настройки' }).click();
+      await page.getByRole('button', { name: 'Выйти' }).click();
+    });
 
-    await expect(page.getByRole('button', { name: 'Выйти' })).not.toBeVisible();
+    await test.step('Logout is confirmed', async () => {
+      await expect(page.getByRole('button', { name: 'Выйти' })).not.toBeVisible();
+    });
   });
 });

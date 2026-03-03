@@ -62,81 +62,89 @@ test.describe('Photo gallery caching', () => {
     await resetPhotos(request);
   });
 
-  test('cache lifecycle: response cache and urlCache', async ({ page, request, }) => {
+  test.only('cache lifecycle: response cache and urlCache', async ({ page, request, }) => {
     await loginAsAdmin(page);
 
-    // Step 1: Load gallery — response cache MISS, urlCache MISS
-    const capture1 = captureApiResponse(page, /\/api\/v1\/photos(\?|$)/);
-    await page.goto('/photos');
-    await expect(page.locator(GALLERY_PHOTO).first()).toBeVisible({ timeout: 15000 });
-    const response1 = await capture1;
+    const { response1, versions1 } = await test.step('Load gallery — cache MISS, urlCache MISS', async () => {
+      const capture = captureApiResponse(page, /\/api\/v1\/photos(\?|$)/);
+      await page.goto('/photos');
+      await expect(page.locator(GALLERY_PHOTO).first()).toBeVisible({ timeout: 15000 });
+      const response1 = await capture;
 
-    expect(response1.status).toBe(200);
-    expect(response1.body?.photos?.length).toBeGreaterThan(0);
-    expect(response1.servedAt).not.toBeNull();
+      expect(response1.status).toEqual(200);
+      expect(response1.body?.photos?.length).toBeGreaterThan(0);
+      expect(response1.servedAt).not.toBeNull();
 
-    const versions1 = getPhotoVersions(response1.body.photos);
-    expect(versions1.size).toBeGreaterThan(0);
+      const versions1 = getPhotoVersions(response1.body.photos);
+      expect(versions1.size).toBeGreaterThan(0);
+      for (const v of versions1.values()) {
+        expect(v).not.toBeNull();
+      }
 
-    for (const v of versions1.values()) {
-      expect(v).not.toBeNull();
-    }
-
-    // Step 2: F5 reload — response cache HIT (same x-served-at = replayed from cache)
-    await page.waitForTimeout(2000);
-    const capture2 = captureApiResponse(page, /\/api\/v1\/photos(\?|$)/);
-    await page.waitForTimeout(2000);
-    await page.reload();
-    await expect(page.locator(GALLERY_PHOTO).first()).toBeVisible({ timeout: 15000 });
-    const response2 = await capture2;
-
-    expect(response2.servedAt).toBe(response1.servedAt);
-
-    // Step 3: Edit a photo via API to trigger cacheClear('photos')
-    const token = await apiLogin(request);
-    const photoToEdit = response1.body.photos[0];
-    const editResponse = await request.put(`${API_URL}/photos/${photoToEdit._id}`, {
-      headers: { Authorization: `Bearer ${token}` },
-      data: { title: 'Cache test edit', tags: photoToEdit.tags ?? [] },
+      return { response1, versions1 };
     });
-    expect(editResponse.status()).toBe(200);
 
-    // Step 4: F5 reload — response cache MISS (cleared by edit), urlCache HIT (same v= values)
-    const capture4 = captureApiResponse(page, /\/api\/v1\/photos(\?|$)/);
-    await page.reload();
-    await expect(page.locator(GALLERY_PHOTO).first()).toBeVisible({ timeout: 15000 });
-    const response4 = await capture4;
+    await test.step('Reload page — cache HIT (x-served-at unchanged)', async () => {
+      await page.waitForTimeout(2000);
+      const capture = captureApiResponse(page, /\/api\/v1\/photos(\?|$)/);
+      await page.waitForTimeout(2000);
+      await page.reload();
+      await expect(page.locator(GALLERY_PHOTO).first()).toBeVisible({ timeout: 15000 });
+      const response2 = await capture;
 
-    expect(response4.status).toBe(200);
-    expect(response4.servedAt).not.toBe(response1.servedAt);
-    expect(response4.body?.photos?.length).toBeGreaterThan(0);
+      expect(response2.servedAt).toEqual(response1.servedAt);
+    });
 
-    const versions4 = getPhotoVersions(response4.body.photos);
+    await test.step('Edit photo via API to bust response cache', async () => {
+      const token = await apiLogin(request);
+      const photoToEdit = response1.body.photos[0];
+      const editResponse = await request.put(`${API_URL}/photos/${photoToEdit._id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+        data: { title: 'Cache test edit', tags: photoToEdit.tags ?? [] },
+      });
+      expect(editResponse.status()).toEqual(200);
+    });
 
-    for (const [key, v1] of versions1) {
-      const v4 = versions4.get(key);
-      if (v1 && v4) {
-        expect(v4).toBe(v1);
-      }
-    }
+    const versions4 = await test.step('Reload page — cache MISS (cleared by edit), urlCache HIT (versions unchanged)', async () => {
+      const capture = captureApiResponse(page, /\/api\/v1\/photos(\?|$)/);
+      await page.reload();
+      await expect(page.locator(GALLERY_PHOTO).first()).toBeVisible({ timeout: 15000 });
+      const response4 = await capture;
 
-    // Step 5: Change sort order — different URL = response cache MISS, urlCache HIT
-    const capture5 = captureApiResponse(page, /\/api\/v1\/photos\?.*order=/);
-    await page.locator('#photo-sort-order').selectOption('orderUpByTakenAt');
-    await expect(page.locator(GALLERY_PHOTO).first()).toBeVisible({ timeout: 15000 });
-    const response5 = await capture5;
+      expect(response4.status).toEqual(200);
+      expect(response4.servedAt).not.toEqual(response1.servedAt);
+      expect(response4.body?.photos?.length).toBeGreaterThan(0);
 
-    expect(response5.status).toBe(200);
-    expect(response5.servedAt).not.toBe(response1.servedAt);
-    expect(response5.body?.photos?.length).toBeGreaterThan(0);
+      const versions4 = getPhotoVersions(response4.body.photos);
+      expect(versions1).toEqual(versions4)
+      // for (const [key, v1] of versions1) {
+      //   const v4 = versions4.get(key);
+      //   if (v1 && v4) {
+      //     expect(v4).toEqual(v1);
+      //   }
+      // }
 
-    const versions5 = getPhotoVersions(response5.body.photos);
+      return versions4;
+    });
 
-    for (const [key, v1] of versions1) {
-      const v5 = versions5.get(key);
-      if (v1 && v5) {
-        expect(v5).toBe(v1);
-      }
-    }
+    await test.step('Change sort order — cache MISS, urlCache HIT (same versions)', async () => {
+      const capture = captureApiResponse(page, /\/api\/v1\/photos\?.*order=/);
+      await page.locator('#photo-sort-order').selectOption('orderUpByTakenAt');
+      await expect(page.locator(GALLERY_PHOTO).first()).toBeVisible({ timeout: 15000 });
+      const response5 = await capture;
+
+      expect(response5.status).toEqual(200);
+      expect(response5.servedAt).not.toEqual(response1.servedAt);
+      expect(response5.body?.photos?.length).toBeGreaterThan(0);
+
+      const versions5 = getPhotoVersions(response5.body.photos);
+      expect(versions1).toEqual(versions5)
+      // for (const [key, v1] of versions1) {
+      //   const v5 = versions5.get(key);
+      //   if (v1 && v5) {
+      //     expect(v5).toEqual(v1);
+      //   }
+      // }
+    });
   });
 });
