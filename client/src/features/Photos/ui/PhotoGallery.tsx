@@ -14,6 +14,7 @@ export function PhotoGallery() {
         ...search,
       },
       {
+        refetchOnMountOrArgChange: true,
         selectFromResult: ({ data, ...rest }) => ({
           data:
             data?.pages.flatMap((page) => page.photos).filter((item) => (filters.private ? item.private : true)) ?? [],

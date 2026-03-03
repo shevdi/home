@@ -6,12 +6,14 @@ const createReq = (overrides: Partial<{
   originalUrl: string
   url: string
   path: string
+  headers: Record<string, string>
 }> = {}) =>
   ({
     method: 'GET',
     originalUrl: '/api/photos',
     url: '/api/photos',
     path: '/api/photos',
+    headers: {},
     ...overrides,
   }) as any
 
@@ -231,6 +233,92 @@ describe('cache middleware', () => {
 
       middleware(req2, res2, jest.fn())
       expect(res2.end).toHaveBeenCalledWith('from-path')
+    })
+  })
+
+  describe('conditional requests (If-None-Match / 304)', () => {
+    it('returns 304 when If-None-Match matches cached ETag', () => {
+      const middleware = cacheMiddleware('5m')
+      const req1 = createReq({ originalUrl: '/api/data' })
+      const res1 = createRes()
+
+      middleware(req1, res1, jest.fn())
+      res1.setHeader('etag', '"abc123"')
+      res1.end(JSON.stringify({ id: 1 }))
+
+      const req2 = createReq({
+        originalUrl: '/api/data',
+        headers: { 'if-none-match': '"abc123"' },
+      })
+      const res2 = createRes()
+      const next2 = jest.fn()
+
+      middleware(req2, res2, next2)
+
+      expect(next2).not.toHaveBeenCalled()
+      expect(res2.status).toHaveBeenCalledWith(304)
+      expect(res2.end).toHaveBeenCalledWith()
+    })
+
+    it('returns full response when If-None-Match does not match', () => {
+      const middleware = cacheMiddleware('5m')
+      const req1 = createReq({ originalUrl: '/api/data' })
+      const res1 = createRes()
+
+      middleware(req1, res1, jest.fn())
+      res1.setHeader('etag', '"abc123"')
+      res1.end(JSON.stringify({ id: 1 }))
+
+      const req2 = createReq({
+        originalUrl: '/api/data',
+        headers: { 'if-none-match': '"different"' },
+      })
+      const res2 = createRes()
+      const next2 = jest.fn()
+
+      middleware(req2, res2, next2)
+
+      expect(next2).not.toHaveBeenCalled()
+      expect(res2.status).toHaveBeenCalledWith(200)
+      expect(res2.end).toHaveBeenCalledWith(JSON.stringify({ id: 1 }))
+    })
+
+    it('returns full response when no If-None-Match header is sent', () => {
+      const middleware = cacheMiddleware('5m')
+      const req1 = createReq({ originalUrl: '/api/data' })
+      const res1 = createRes()
+
+      middleware(req1, res1, jest.fn())
+      res1.setHeader('etag', '"abc123"')
+      res1.end('body')
+
+      const req2 = createReq({ originalUrl: '/api/data' })
+      const res2 = createRes()
+
+      middleware(req2, res2, jest.fn())
+
+      expect(res2.status).toHaveBeenCalledWith(200)
+      expect(res2.end).toHaveBeenCalledWith('body')
+    })
+
+    it('returns full response when cached entry has no ETag', () => {
+      const middleware = cacheMiddleware('5m')
+      const req1 = createReq({ originalUrl: '/no-etag' })
+      const res1 = createRes()
+
+      middleware(req1, res1, jest.fn())
+      res1.end('no etag body')
+
+      const req2 = createReq({
+        originalUrl: '/no-etag',
+        headers: { 'if-none-match': '"something"' },
+      })
+      const res2 = createRes()
+
+      middleware(req2, res2, jest.fn())
+
+      expect(res2.status).toHaveBeenCalledWith(200)
+      expect(res2.end).toHaveBeenCalledWith('no etag body')
     })
   })
 

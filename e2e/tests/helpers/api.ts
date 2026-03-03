@@ -50,6 +50,24 @@ export async function getPhotosFromApi(request: APIRequestContext): Promise<any[
   return body.photos;
 }
 
+const MOCK_URL = 'http://localhost:3004';
+
+export async function resetMock(request: APIRequestContext): Promise<void> {
+  const response = await request.post(`${MOCK_URL}/__reset`);
+  if (!response.ok()) {
+    throw new Error(`Reset mock failed: ${response.status()} ${await response.text()}`);
+  }
+}
+
+export function extractUrlVersion(url: string): string | null {
+  try {
+    const parsed = new URL(url);
+    return parsed.searchParams.get('v');
+  } catch {
+    return null;
+  }
+}
+
 export async function seedUser(request: APIRequestContext): Promise<void> {
   const username = process.env.E2E_LOGIN;
   const password = process.env.E2E_PASSWORD;

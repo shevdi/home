@@ -9,9 +9,13 @@
   "scripts": {
     "test": "playwright test",
     "test:debug": "playwright test --debug",
-    "test:headed": "playwright test --headed"
+    "test:headed": "playwright test --headed",
+    "test:report": "allure generate allure-results --clean -o allure-report",
+    "report:open": "allure open allure-report"
   },
   "devDependencies": {
-    "@playwright/test": "^1.58.2"
+    "@playwright/test": "^1.58.2",
+    "allure-playwright": "^3.5.0",
+    "allure-commandline": "^2.37.0"
   }
 }

@@ -99,6 +99,10 @@ export function cacheMiddleware(
     const cached = store.entries.get(key)
 
     if (cached && cached.expiresAt > Date.now()) {
+      const ifNoneMatch = req.headers['if-none-match']
+      if (ifNoneMatch && cached.data.headers['etag'] === ifNoneMatch) {
+        return res.status(304).end()
+      }
       const ttlSeconds = Math.max(0, (cached.expiresAt - Date.now()) / 1000)
       return sendCached(res, cached.data, ttlSeconds)
     }
@@ -147,6 +151,7 @@ export function cacheMiddleware(
         : (callback ? originalEnd(chunk, callback) : originalEnd(chunk))
     }
     res.end = wrappedEnd as typeof res.end
+    res.setHeader('x-served-at', Date.now().toString())
 
     next()
   }

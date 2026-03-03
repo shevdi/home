@@ -3,7 +3,7 @@
 exports[`Photo renders full photo with all elements when using infinite query 1`] = `
 <div>
   <div
-    class="sc-hLQRIK dXJOUu"
+    class="sc-gLLvbB cUVaLu"
   >
     <div
       class="sc-beySbL gwaTTc"
@@ -39,16 +39,16 @@ exports[`Photo renders full photo with all elements when using infinite query 1`
     </div>
     <img
       alt="Test Photo"
-      class="sc-gLLvbB jKIHpG"
+      class="sc-qZqnL hoVQLr"
       src="/photo-md.jpg"
     />
     <h1
-      class="sc-eDLJxb huvoTm"
+      class="sc-iBdmCa dbTUhH"
     >
       Test Photo
     </h1>
     <div
-      class="sc-jTQDnk lVBww"
+      class="sc-fsYeqr cnebvg"
     >
       <a
         data-discover="true"
@@ -79,7 +79,7 @@ exports[`Photo renders full photo with all elements when using infinite query 1`
 exports[`Photo renders loader when loading 1`] = `
 <div>
   <div
-    class="sc-hLQRIK dXJOUu"
+    class="sc-gLLvbB cUVaLu"
   >
     <div
       class="sc-beySbL gwaTTc"
@@ -94,7 +94,7 @@ exports[`Photo renders loader when loading 1`] = `
       loader
     </div>
     <h1
-      class="sc-eDLJxb huvoTm"
+      class="sc-iBdmCa dbTUhH"
     />
   </div>
 </div>
@@ -103,7 +103,7 @@ exports[`Photo renders loader when loading 1`] = `
 exports[`Photo renders photo with GPS coordinates and MapEmbed 1`] = `
 <div>
   <div
-    class="sc-hLQRIK dXJOUu"
+    class="sc-gLLvbB cUVaLu"
   >
     <div
       class="sc-beySbL gwaTTc"
@@ -123,11 +123,11 @@ exports[`Photo renders photo with GPS coordinates and MapEmbed 1`] = `
     </div>
     <img
       alt="Test Photo"
-      class="sc-gLLvbB jKIHpG"
+      class="sc-qZqnL hoVQLr"
       src="/photo-md.jpg"
     />
     <h1
-      class="sc-eDLJxb huvoTm"
+      class="sc-iBdmCa dbTUhH"
     >
       Test Photo
     </h1>
@@ -146,7 +146,7 @@ exports[`Photo renders photo with GPS coordinates and MapEmbed 1`] = `
 exports[`Photo renders photo with basic info 1`] = `
 <div>
   <div
-    class="sc-hLQRIK dXJOUu"
+    class="sc-gLLvbB cUVaLu"
   >
     <div
       class="sc-beySbL gwaTTc"
@@ -166,11 +166,11 @@ exports[`Photo renders photo with basic info 1`] = `
     </div>
     <img
       alt="Test Photo"
-      class="sc-gLLvbB jKIHpG"
+      class="sc-qZqnL hoVQLr"
       src="/photo-md.jpg"
     />
     <h1
-      class="sc-eDLJxb huvoTm"
+      class="sc-iBdmCa dbTUhH"
     >
       Test Photo
     </h1>
@@ -181,7 +181,7 @@ exports[`Photo renders photo with basic info 1`] = `
 exports[`Photo renders photo with neighbours navigation 1`] = `
 <div>
   <div
-    class="sc-hLQRIK dXJOUu"
+    class="sc-gLLvbB cUVaLu"
   >
     <div
       class="sc-beySbL gwaTTc"
@@ -217,11 +217,11 @@ exports[`Photo renders photo with neighbours navigation 1`] = `
     </div>
     <img
       alt="Test Photo"
-      class="sc-gLLvbB jKIHpG"
+      class="sc-qZqnL hoVQLr"
       src="/photo-md.jpg"
     />
     <h1
-      class="sc-eDLJxb huvoTm"
+      class="sc-iBdmCa dbTUhH"
     >
       Test Photo
     </h1>
@@ -232,7 +232,7 @@ exports[`Photo renders photo with neighbours navigation 1`] = `
 exports[`Photo renders photo with tags 1`] = `
 <div>
   <div
-    class="sc-hLQRIK dXJOUu"
+    class="sc-gLLvbB cUVaLu"
   >
     <div
       class="sc-beySbL gwaTTc"
@@ -252,11 +252,11 @@ exports[`Photo renders photo with tags 1`] = `
     </div>
     <img
       alt="Test Photo"
-      class="sc-gLLvbB jKIHpG"
+      class="sc-qZqnL hoVQLr"
       src="/photo-md.jpg"
     />
     <h1
-      class="sc-eDLJxb huvoTm"
+      class="sc-iBdmCa dbTUhH"
     >
       Test Photo
     </h1>
@@ -277,7 +277,7 @@ exports[`Photo renders photo with tags 1`] = `
 exports[`Photo renders photo with takenAt date 1`] = `
 <div>
   <div
-    class="sc-hLQRIK dXJOUu"
+    class="sc-gLLvbB cUVaLu"
   >
     <div
       class="sc-beySbL gwaTTc"
@@ -297,16 +297,16 @@ exports[`Photo renders photo with takenAt date 1`] = `
     </div>
     <img
       alt="Test Photo"
-      class="sc-gLLvbB jKIHpG"
+      class="sc-qZqnL hoVQLr"
       src="/photo-md.jpg"
     />
     <h1
-      class="sc-eDLJxb huvoTm"
+      class="sc-iBdmCa dbTUhH"
     >
       Test Photo
     </h1>
     <div
-      class="sc-jTQDnk lVBww"
+      class="sc-fsYeqr cnebvg"
     >
       <a
         data-discover="true"

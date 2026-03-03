@@ -2,6 +2,10 @@ import { defineConfig } from '@playwright/test';
 
 export default defineConfig({
   testDir: './tests',
+  reporter: [
+    ['list'],
+    ['allure-playwright', { outputFolder: 'allure-results' }],
+  ],
   use: {
     baseURL: 'http://localhost:3000',
     headless: true,
@@ -10,4 +14,15 @@ export default defineConfig({
       mode: 'on',
     }
   },
+  projects: [
+    {
+      name: 'main',
+      testIgnore: /photos-cache/,
+    },
+    {
+      name: 'cache',
+      testMatch: /photos-cache/,
+      dependencies: ['main'],
+    },
+  ],
 });

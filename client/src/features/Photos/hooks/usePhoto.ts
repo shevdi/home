@@ -23,6 +23,7 @@ export const usePhoto = () => {
     { ...search },
     {
       initialPageParam: 1,
+      refetchOnMountOrArgChange: true,
       skip: !shouldUseInfinite,
       selectFromResult: ({ data, ...rest }) => {
         const photos = data?.pages.flatMap((pageItem) => pageItem.photos) ?? []
