@@ -17,7 +17,7 @@ import { createUrlCache, type UrlSource } from '../services/urlCache.ts';
 import { dadataReverseGeocode, nominatimReverseGeocode } from '../services';
 import { getLocationValue, normalizeTags, parseBoolean, queryBuilder } from '../utils';
 import { logError } from '../db/services/logs';
-import { IUserInfo } from '@/types';
+import { RequestWithAuth } from '@/types';
 import { optionalAuth } from '../middlewares/optionalAuth';
 import { verifyJWT } from '../middlewares/verifyJWT';
 import { cacheClear, cacheMiddleware } from '../middlewares/cache';
@@ -52,7 +52,7 @@ urlCache.preload(urlSource).catch((err) => {
 })
 urlCache.startRefresh(urlSource)
 
-router.get(`/`, optionalAuth, cache, async (req: Request & Partial<IUserInfo>, res: Response): Promise<any> => {
+router.get(`/`, optionalAuth, cache, async (req: RequestWithAuth, res: Response) => {
   try {
     const pageParam = <string>req.query.page
     const dateFromParam = <string>req.query.dateFrom
@@ -63,7 +63,7 @@ router.get(`/`, optionalAuth, cache, async (req: Request & Partial<IUserInfo>, r
     const cityParam = req.query.city
     const pageSize = req.query.page ? 5 : 100 // Number of photos per page
 
-    const isAdmin = Boolean(req.roles?.includes('admin'))
+    const isAdmin = Boolean(req.auth?.roles?.includes('admin'))
     const builder = queryBuilder()
       .dateRange('meta.takenAt', dateFromParam, dateToParam)
       .allIn('tags', tagsParam, (v) => normalizeTags(v) ?? [])
@@ -132,7 +132,7 @@ const upload = multer({
   storage: multer.memoryStorage()
 });
 
-router.post(`/upload`, upload.array("files", 50), async (req: Request, res: Response): Promise<any> => {
+router.post(`/upload`, upload.array("files", 50), async (req: Request, res: Response) => {
   try {
     const files = req.files as Express.Multer.File[];
     const isPrivate = parseBoolean(req.body?.private as string | undefined)
@@ -238,14 +238,14 @@ router.post(`/upload`, upload.array("files", 50), async (req: Request, res: Resp
   }
 })
 
-router.get(`/:id`, optionalAuth, cache, async (req: Request & Partial<IUserInfo>, res: Response): Promise<any> => {
+router.get(`/:id`, optionalAuth, cache, async (req: RequestWithAuth, res: Response) => {
   try {
     const photo = await getPhotoById(req.params.id)
 
     if (!photo) {
       return res.status(404).json({ message: 'Photo not found' })
     }
-    if (photo.private && (!req.roles || !req.roles.includes('admin'))) {
+    if (photo.private && (!req.auth?.roles || !req.auth.roles.includes('admin'))) {
       return res.status(403).json({ message: 'Forbidden' })
     }
     const [mdSizeUrl, fullSizeUrl] = await Promise.all([
@@ -268,7 +268,7 @@ router.get(`/:id`, optionalAuth, cache, async (req: Request & Partial<IUserInfo>
   }
 })
 
-router.put(`/:id`, verifyJWT, async (req: Request, res: Response): Promise<any> => {
+router.put(`/:id`, verifyJWT, async (req: Request, res: Response) => {
   try {
     const normalizedTags = normalizeTags(req.body?.tags)
     const updateData = normalizedTags === undefined ? req.body : { ...req.body, tags: normalizedTags }
@@ -294,7 +294,7 @@ router.put(`/:id`, verifyJWT, async (req: Request, res: Response): Promise<any> 
   }
 })
 
-router.delete(`/:id`, verifyJWT, async (req: Request, res: Response): Promise<any> => {
+router.delete(`/:id`, verifyJWT, async (req: Request, res: Response) => {
   try {
     const photo = await getPhotoById(req.params.id)
 

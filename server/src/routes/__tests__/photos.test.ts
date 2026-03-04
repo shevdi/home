@@ -54,9 +54,9 @@ jest.unstable_mockModule('../../middlewares/cache.js', () => ({
 }))
 
 jest.unstable_mockModule('../../middlewares/optionalAuth.js', () => ({
-  optionalAuth: (req: { headers?: { authorization?: string }; roles?: string[] }, _res: unknown, next: () => void) => {
+  optionalAuth: (req: { headers?: { authorization?: string }; auth?: { roles?: string[] } }, _res: unknown, next: () => void) => {
     if (req.headers?.authorization) {
-      req.roles = ['admin']
+      req.auth = { roles: ['admin'] }
     }
     next()
   },

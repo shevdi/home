@@ -1,4 +1,8 @@
 import { describe, it, expect, beforeAll, beforeEach, jest } from '@jest/globals'
+import type { Request, Response } from 'express'
+import type { RequestWithAuth } from '@/types'
+
+type JwtVerifyCallback = (err: Error | null, decoded: { username?: string; UserInfo?: { username?: string; roles?: string[] } } | null) => void
 
 jest.unstable_mockModule('jsonwebtoken', () => ({
   default: {
@@ -12,18 +16,18 @@ const jwtMock = (await import('jsonwebtoken')).default as unknown as {
   verify: jest.Mock
 }
 
-const createRes = () => {
+const createRes = (): Response => {
   const res = {
     status: jest.fn(),
     json: jest.fn()
-  } as any
+  }
   res.status.mockReturnValue(res)
   res.json.mockReturnValue(res)
-  return res
+  return res as unknown as Response
 }
 
 beforeAll(async () => {
-  ;({ verifyJWT } = await import('../verifyJWT.js'))
+  ; ({ verifyJWT } = await import('../verifyJWT.js'))
 })
 
 beforeEach(() => {
@@ -33,7 +37,7 @@ beforeEach(() => {
 
 describe('verifyJWT middleware', () => {
   it('returns 401 when authorization header missing and no jwt cookie', () => {
-    const req = { headers: {} } as any
+    const req = { headers: {} } as unknown as Request
     const res = createRes()
     const next = jest.fn()
 
@@ -45,7 +49,7 @@ describe('verifyJWT middleware', () => {
   })
 
   it('returns 403 when authorization header missing but jwt cookie exists', () => {
-    const req = { headers: { cookie: 'jwt=token' } } as any
+    const req = { headers: { cookie: 'jwt=token' } } as unknown as Request
     const res = createRes()
     const next = jest.fn()
 
@@ -57,7 +61,7 @@ describe('verifyJWT middleware', () => {
   })
 
   it('returns 401 when authorization header is not Bearer', () => {
-    const req = { headers: { authorization: 'Token abc' } } as any
+    const req = { headers: { authorization: 'Token abc' } } as unknown as Request
     const res = createRes()
     const next = jest.fn()
 
@@ -70,10 +74,10 @@ describe('verifyJWT middleware', () => {
 
   it('returns 403 when jwt verification fails', () => {
     jwtMock.verify.mockImplementation((...args) => {
-      const cb = args[2] as (err: Error | null, decoded: any) => void
+      const cb = args[2] as JwtVerifyCallback
       cb(new Error('invalid'), null)
     })
-    const req = { headers: { authorization: 'Bearer token' } } as any
+    const req = { headers: { authorization: 'Bearer token' } } as unknown as Request
     const res = createRes()
     const next = jest.fn()
 
@@ -91,17 +95,17 @@ describe('verifyJWT middleware', () => {
 
   it('sets user info and calls next when jwt valid', () => {
     jwtMock.verify.mockImplementation((...args) => {
-      const cb = args[2] as (err: Error | null, decoded: any) => void
+      const cb = args[2] as JwtVerifyCallback
       cb(null, { UserInfo: { username: 'user', roles: ['admin'] } })
     })
-    const req = { headers: { authorization: 'Bearer token' } } as any
+    const req = { headers: { authorization: 'Bearer token' } } as unknown as RequestWithAuth
     const res = createRes()
     const next = jest.fn()
 
     verifyJWT(req, res, next)
 
-    expect(req.username).toBe('user')
-    expect(req.roles).toEqual(['admin'])
+    expect(req.auth?.username).toBe('user')
+    expect(req.auth?.roles).toEqual(['admin'])
     expect(next).toHaveBeenCalledTimes(1)
   })
 })

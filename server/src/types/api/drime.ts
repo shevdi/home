@@ -42,7 +42,7 @@ export interface DrimeFolder {
   owner_id: number,
   hash: string,
   url: null,
-  users: Object
+  users: object
 }
 
 export interface DrimeFileEntry {
@@ -69,5 +69,5 @@ export interface DrimeFileEntry {
   hash: string,
   url: string,
   parent: DrimeFolder,
-  users: Object
+  users: object
 }

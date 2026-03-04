@@ -1,4 +1,8 @@
 import { describe, it, expect, beforeAll, beforeEach, jest } from '@jest/globals'
+import type { Response } from 'express'
+import type { RequestWithAuth } from '@/types'
+
+type JwtVerifyCallback = (err: Error | null, decoded: { username?: string; UserInfo?: { username?: string; roles?: string[] } } | null) => void
 
 jest.unstable_mockModule('jsonwebtoken', () => ({
   default: {
@@ -23,8 +27,8 @@ beforeEach(() => {
 
 describe('optionalAuth middleware', () => {
   it('calls next when authorization header missing', () => {
-    const req = { headers: {} } as any
-    const res = {} as any
+    const req = { headers: {} } as unknown as RequestWithAuth
+    const res = {} as unknown as Response
     const next = jest.fn()
 
     optionalAuth(req, res, next)
@@ -34,8 +38,8 @@ describe('optionalAuth middleware', () => {
   })
 
   it('calls next when authorization header is not Bearer', () => {
-    const req = { headers: { authorization: 'Token abc' } } as any
-    const res = {} as any
+    const req = { headers: { authorization: 'Token abc' } } as unknown as RequestWithAuth
+    const res = {} as unknown as Response
     const next = jest.fn()
 
     optionalAuth(req, res, next)
@@ -46,11 +50,11 @@ describe('optionalAuth middleware', () => {
 
   it('calls next when jwt verification fails', () => {
     jwtMock.verify.mockImplementation((...args) => {
-      const cb = args[2] as (err: Error | null, decoded: any) => void
+      const cb = args[2] as JwtVerifyCallback
       cb(new Error('invalid'), null)
     })
-    const req = { headers: { authorization: 'Bearer token' } } as any
-    const res = {} as any
+    const req = { headers: { authorization: 'Bearer token' } } as unknown as RequestWithAuth
+    const res = {} as unknown as Response
     const next = jest.fn()
 
     optionalAuth(req, res, next)
@@ -60,18 +64,17 @@ describe('optionalAuth middleware', () => {
       'access-secret',
       expect.any(Function)
     )
-    expect(req.username).toBeUndefined()
-    expect(req.roles).toBeUndefined()
+    expect(req.auth).toBeUndefined()
     expect(next).toHaveBeenCalledTimes(1)
   })
 
   it('sets user info and calls next when jwt valid', () => {
     jwtMock.verify.mockImplementation((...args) => {
-      const cb = args[2] as (err: Error | null, decoded: any) => void
+      const cb = args[2] as JwtVerifyCallback
       cb(null, { UserInfo: { username: 'user', roles: ['admin'] } })
     })
-    const req = { headers: { Authorization: 'Bearer token' } } as any
-    const res = {} as any
+    const req = { headers: { Authorization: 'Bearer token' } } as unknown as RequestWithAuth
+    const res = {} as unknown as Response
     const next = jest.fn()
 
     optionalAuth(req, res, next)
@@ -81,8 +84,8 @@ describe('optionalAuth middleware', () => {
       'access-secret',
       expect.any(Function)
     )
-    expect(req.username).toBe('user')
-    expect(req.roles).toEqual(['admin'])
+    expect(req.auth?.username).toBe('user')
+    expect(req.auth?.roles).toEqual(['admin'])
     expect(next).toHaveBeenCalledTimes(1)
   })
 })

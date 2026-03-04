@@ -5,6 +5,7 @@
  * Run: npm run test:integration
  */
 import { describe, it, expect, beforeAll, afterAll, beforeEach, jest } from '@jest/globals'
+import type { ILink } from '@/types'
 
 jest.setTimeout(15_000)
 import mongoose from 'mongoose'
@@ -32,7 +33,7 @@ describe('photos service (integration)', () => {
 
   beforeEach(async () => {
     await Photo.deleteMany({})
-    await Photo.insertMany(mockPhotos as any[])
+    await Photo.insertMany(mockPhotos as Record<string, unknown>[])
   })
 
   describe('addNewPhoto', () => {
@@ -44,7 +45,7 @@ describe('photos service (integration)', () => {
         smSizeUrl: 'https://example.com/sm.jpg',
         mdSizeUrl: 'https://example.com/md.jpg',
         fullSizeUrl: 'https://example.com/full.jpg'
-      } as any)
+      } as ILink)
 
       const finalCount = await Photo.countDocuments({})
 
@@ -63,7 +64,7 @@ describe('photos service (integration)', () => {
       const found = await photosService.getPhotoById(id)
       expect(found).not.toBeNull()
       expect(found?.name ?? found?.title).toBe(
-        (existing as any).name ?? (existing as any).title
+        (existing as { name?: string; title?: string }).name ?? (existing as { name?: string; title?: string }).title
       )
 
       const missing = await photosService.getPhotoById(
@@ -236,7 +237,7 @@ describe('photos service (integration)', () => {
       const updated = await photosService.updatePhotoById(id, {
         title: 'Updated title',
         description: 'New description'
-      } as any)
+      } as Partial<ILink>)
 
       expect(updated?.title).toBe('Updated title')
       expect(updated?.description).toBe('New description')

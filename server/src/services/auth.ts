@@ -60,7 +60,7 @@ export const refresh = (req: Request, res: Response) => {
   jwt.verify(
     refreshToken,
     process.env.REFRESH_TOKEN_SECRET as string,
-    async (err: any, decoded: any) => {
+    async (err: jwt.VerifyErrors | null, decoded: jwt.JwtPayload | string | undefined) => {
       if (err) {
         return res.status(403).json({ message: 'Токен недействителен' })
       }

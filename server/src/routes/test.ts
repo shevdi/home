@@ -6,7 +6,7 @@ import { cacheClear } from '../middlewares/cache'
 
 const router = express.Router()
 
-router.post('/seed-photos', async (req: Request, res: Response): Promise<any> => {
+router.post('/seed-photos', async (req: Request, res: Response) => {
   try {
     const photos = req.body?.photos
     if (!Array.isArray(photos)) {
@@ -21,7 +21,7 @@ router.post('/seed-photos', async (req: Request, res: Response): Promise<any> =>
   }
 })
 
-router.post('/reset-photos', async (_req: Request, res: Response): Promise<any> => {
+router.post('/reset-photos', async (_req: Request, res: Response) => {
   try {
     await Photo.deleteMany({})
     cacheClear('photos')
@@ -31,7 +31,7 @@ router.post('/reset-photos', async (_req: Request, res: Response): Promise<any> 
   }
 })
 
-router.post('/seed-user', async (req: Request, res: Response): Promise<any> => {
+router.post('/seed-user', async (req: Request, res: Response) => {
   try {
     const { username, password, roles = ['admin'] } = req.body
     if (!username || !password) {

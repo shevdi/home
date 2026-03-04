@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeAll, beforeEach, jest } from '@jest/globals'
-import { AxiosError } from 'axios'
+import { AxiosError, AxiosInstance, AxiosResponse } from 'axios'
 
 jest.unstable_mockModule('sharp', () => ({
   default: () => ({
@@ -13,9 +13,9 @@ jest.unstable_mockModule('sharp', () => ({
 
 let createDrimeService: typeof import('../drime.js').createDrimeService
 
-type AnyMock = jest.MockedFunction<(...args: any[]) => any>
+type JestMockFn = jest.MockedFunction<(...args: unknown[]) => unknown>
 
-const createMock = () => jest.fn() as AnyMock
+const createMock = (): JestMockFn => jest.fn() as JestMockFn
 
 beforeAll(async () => {
   ({ createDrimeService } = await import('../drime.js'))
@@ -29,7 +29,7 @@ const createAxiosError = (status?: number, code?: string) => {
       statusText: 'error',
       headers: {},
       config: {}
-    } as any
+    } as unknown as AxiosResponse
   }
   if (code) {
     error.code = code
@@ -48,7 +48,7 @@ describe('drime service', () => {
     post.mockResolvedValue({
       data: { user: { access_token: 'access-token' } }
     })
-    const client = { post } as any
+    const client = { post } as unknown as AxiosInstance
 
     const service = createDrimeService({
       client,
@@ -88,7 +88,7 @@ describe('drime service', () => {
     post.mockResolvedValue({
       data: { user: { access_token: 'access-token' } }
     })
-    const client = { post, request } as any
+    const client = { post, request } as unknown as AxiosInstance
 
     const sleepMock = createMock()
     sleepMock.mockResolvedValue(undefined)
@@ -118,7 +118,7 @@ describe('drime service', () => {
     post.mockResolvedValue({
       data: { user: { access_token: 'access-token' } }
     })
-    const client = { post, postForm } as any
+    const client = { post, postForm } as unknown as AxiosInstance
 
     const sleepMock = createMock()
     sleepMock.mockResolvedValue(undefined)

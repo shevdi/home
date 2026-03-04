@@ -1,8 +1,8 @@
-import { DecodedJwtPayload, IUserInfo } from '@/types'
-import { NextFunction, Request, Response } from 'express'
+import { DecodedJwtPayload, RequestWithAuth } from '@/types'
+import { NextFunction, Response } from 'express'
 import jwt, { VerifyCallback } from 'jsonwebtoken'
 
-export const verifyJWT = (req: Request & Partial<IUserInfo>, res: Response, next: NextFunction) => {
+export const verifyJWT = (req: RequestWithAuth, res: Response, next: NextFunction) => {
   const authHeader = (req.headers.authorization || req.headers.Authorization) as string
   if (!authHeader) {
     if (!req.headers.cookie?.includes('jwt')) {
@@ -21,8 +21,10 @@ export const verifyJWT = (req: Request & Partial<IUserInfo>, res: Response, next
     process.env.ACCESS_TOKEN_SECRET as string,
     ((err, decoded: DecodedJwtPayload) => {
       if (err) return res.status(403).json({ message: 'Forbidden' })
-      req.username = decoded?.UserInfo?.username
-      req.roles = decoded?.UserInfo?.roles
+      req.auth = {
+        username: decoded?.UserInfo?.username,
+        roles: decoded?.UserInfo?.roles,
+      }
       next()
     }) as VerifyCallback
   )

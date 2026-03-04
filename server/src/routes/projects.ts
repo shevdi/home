@@ -5,7 +5,7 @@ import {
 import { logError } from '../db/services/logs'
 
 export function projectsRoutes(app: Application, apiVersion: string) {
-  app.get(`${apiVersion}/projects`, async (req: Request, res: Response): Promise<any> => {
+  app.get(`${apiVersion}/projects`, async (req: Request, res: Response): Promise<void> => {
     try {
       const projects = await listAllProjects()
       return res.json(projects)

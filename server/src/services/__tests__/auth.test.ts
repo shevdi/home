@@ -1,4 +1,11 @@
 import { describe, it, expect, beforeAll, beforeEach, jest } from '@jest/globals'
+import type { Request, Response } from 'express'
+
+type JwtVerifyCallback = (err: Error | null, decoded: { username?: string; UserInfo?: { username?: string; roles?: string[] } } | null) => void
+/** Mock for async functions; use Promise<T> so mockResolvedValue(value) accepts T */
+type JestMockFn<T = unknown> = jest.MockedFunction<(...args: unknown[]) => Promise<T>>
+/** Mock for callback-style functions (e.g. jwt.verify) */
+type JestMockFnCallback = jest.MockedFunction<(...args: unknown[]) => void>
 
 jest.unstable_mockModule('bcrypt', () => ({
   default: {
@@ -30,8 +37,6 @@ const jwtMock = (await import('jsonwebtoken')).default as unknown as {
 }
 const usersService = await import('../../db/services/users.js')
 
-type AnyMock = jest.MockedFunction<(...args: any[]) => any>
-
 const createRes = () => {
   const res = {
     status: jest.fn(),
@@ -39,17 +44,17 @@ const createRes = () => {
     cookie: jest.fn(),
     clearCookie: jest.fn(),
     sendStatus: jest.fn()
-  } as any
+  }
   res.status.mockReturnValue(res)
   res.json.mockReturnValue(res)
   res.cookie.mockReturnValue(res)
   res.clearCookie.mockReturnValue(res)
   res.sendStatus.mockReturnValue(res)
-  return res
+  return res as unknown as Response
 }
 
 beforeAll(async () => {
-  ;({ login, refresh, logout } = await import('../auth.js'))
+  ; ({ login, refresh, logout } = await import('../auth.js'))
 })
 
 beforeEach(() => {
@@ -60,7 +65,7 @@ beforeEach(() => {
 
 describe('auth service', () => {
   it('returns 400 when username or password missing', async () => {
-    const req = { body: {} } as any
+    const req = { body: {} } as unknown as Request
     const res = createRes()
 
     await login(req, res)
@@ -70,10 +75,10 @@ describe('auth service', () => {
   })
 
   it('returns 401 when user not found or inactive', async () => {
-    ;(usersService.getUserByName as AnyMock).mockResolvedValue({
+    ; (usersService.getUserByName as JestMockFn).mockResolvedValue({
       active: false
     })
-    const req = { body: { username: 'user', password: 'pass' } } as any
+    const req = { body: { username: 'user', password: 'pass' } } as unknown as Request
     const res = createRes()
 
     await login(req, res)
@@ -83,16 +88,14 @@ describe('auth service', () => {
   })
 
   it('returns 401 when password does not match', async () => {
-    ;(usersService.getUserByName as AnyMock).mockResolvedValue({
+    ; (usersService.getUserByName as JestMockFn).mockResolvedValue({
       name: 'user',
       roles: ['user'],
       password: 'hash',
       active: true
     })
-    ;(
-      bcryptMock.compare as jest.MockedFunction<(...args: any[]) => any>
-    ).mockResolvedValue(false)
-    const req = { body: { username: 'user', password: 'pass' } } as any
+      ; (bcryptMock.compare as JestMockFn).mockResolvedValue(false)
+    const req = { body: { username: 'user', password: 'pass' } } as unknown as Request
     const res = createRes()
 
     await login(req, res)
@@ -102,19 +105,17 @@ describe('auth service', () => {
   })
 
   it('sets refresh cookie and returns access token on login', async () => {
-    ;(usersService.getUserByName as AnyMock).mockResolvedValue({
+    ; (usersService.getUserByName as JestMockFn).mockResolvedValue({
       name: 'user',
       roles: ['admin'],
       password: 'hash',
       active: true
     })
-    ;(
-      bcryptMock.compare as jest.MockedFunction<(...args: any[]) => any>
-    ).mockResolvedValue(true)
+      ; (bcryptMock.compare as JestMockFn).mockResolvedValue(true)
     jwtMock.sign
       .mockReturnValueOnce('access-token')
       .mockReturnValueOnce('refresh-token')
-    const req = { body: { username: 'user', password: 'pass' } } as any
+    const req = { body: { username: 'user', password: 'pass' } } as unknown as Request
     const res = createRes()
 
     await login(req, res)
@@ -129,7 +130,7 @@ describe('auth service', () => {
   })
 
   it('returns 401 when refresh cookie missing', () => {
-    const req = { cookies: {} } as any
+    const req = { cookies: {} } as unknown as Request
     const res = createRes()
 
     refresh(req, res)
@@ -139,13 +140,11 @@ describe('auth service', () => {
   })
 
   it('returns 403 when refresh token is invalid', async () => {
-    ;(
-      jwtMock.verify as jest.MockedFunction<(...args: any[]) => any>
-    ).mockImplementation((...args) => {
-      const cb = args[2] as (err: Error | null, decoded: any) => void
+    ; (jwtMock.verify as JestMockFnCallback).mockImplementation((...args) => {
+      const cb = args[2] as JwtVerifyCallback
       cb(new Error('invalid'), null)
     })
-    const req = { cookies: { jwt: 'token' } } as any
+    const req = { cookies: { jwt: 'token' } } as unknown as Request
     const res = createRes()
 
     await refresh(req, res)
@@ -155,14 +154,12 @@ describe('auth service', () => {
   })
 
   it('returns 401 when refresh token user missing', async () => {
-    ;(
-      jwtMock.verify as jest.MockedFunction<(...args: any[]) => any>
-    ).mockImplementation((...args) => {
-      const cb = args[2] as (err: Error | null, decoded: any) => void
+    ; (jwtMock.verify as JestMockFnCallback).mockImplementation((...args) => {
+      const cb = args[2] as JwtVerifyCallback
       cb(null, { username: 'user' })
     })
-    ;(usersService.getUserByName as AnyMock).mockResolvedValue(null)
-    const req = { cookies: { jwt: 'token' } } as any
+      ; (usersService.getUserByName as JestMockFn).mockResolvedValue(null)
+    const req = { cookies: { jwt: 'token' } } as unknown as Request
     const res = createRes()
 
     await refresh(req, res)
@@ -172,18 +169,16 @@ describe('auth service', () => {
   })
 
   it('returns access token when refresh token valid', async () => {
-    ;(
-      jwtMock.verify as jest.MockedFunction<(...args: any[]) => any>
-    ).mockImplementation((...args) => {
-      const cb = args[2] as (err: Error | null, decoded: any) => void
+    jwtMock.verify.mockImplementation((...args) => {
+      const cb = args[2] as JwtVerifyCallback
       cb(null, { username: 'user' })
-    })
-    ;(usersService.getUserByName as AnyMock).mockResolvedValue({
+    });
+    (usersService.getUserByName as JestMockFn).mockResolvedValue({
       name: 'user',
       roles: ['user']
     })
     jwtMock.sign.mockReturnValueOnce('new-access-token')
-    const req = { cookies: { jwt: 'token' } } as any
+    const req = { cookies: { jwt: 'token' } } as unknown as Request
     const res = createRes()
 
     await refresh(req, res)
@@ -192,7 +187,7 @@ describe('auth service', () => {
   })
 
   it('returns 204 when logout without cookie', () => {
-    const req = { cookies: {} } as any
+    const req = { cookies: {} } as unknown as Request
     const res = createRes()
 
     logout(req, res)
@@ -201,7 +196,7 @@ describe('auth service', () => {
   })
 
   it('clears cookie and returns message on logout', () => {
-    const req = { cookies: { jwt: 'token' } } as any
+    const req = { cookies: { jwt: 'token' } } as unknown as Request
     const res = createRes()
 
     logout(req, res)

@@ -70,7 +70,7 @@ test.describe('Photo flows', () => {
       });
 
       await test.step('Navigate to private photo URL', async () => {
-        await page.goto(`/photos/${privatePhoto._id}`);
+        await page.goto(`/photos/${privatePhoto?._id}`);
       });
 
       await test.step('Not-found message is shown', async () => {
@@ -123,7 +123,7 @@ test.describe('Photo flows', () => {
       });
 
       await test.step('Navigate to private photo URL', async () => {
-        await page.goto(`/photos/${privatePhoto._id}`);
+        await page.goto(`/photos/${privatePhoto?._id}`);
       });
 
       await test.step('Private photo is accessible', async () => {
@@ -249,28 +249,32 @@ test.describe('Photo flows', () => {
       });
 
       await test.step('Open photo detail page', async () => {
+        if (!photo?._id) throw new Error('Photo id is not found');
         await page.goto(`/photos/${photo._id}`);
         await expect(page.getByRole('link', { name: 'Полный размер' })).toBeVisible({ timeout: 10000 });
       });
 
       await test.step('Full-size link href matches photo.fullSizeUrl', async () => {
-        await expect(page.getByRole('link', { name: 'Полный размер' })).toHaveAttribute('href', photo.fullSizeUrl);
+        const url = photo?.fullSizeUrl;
+        if (!url) throw new Error('Photo with fullSizeUrl is not found');
+        await expect(page.getByRole('link', { name: 'Полный размер' })).toHaveAttribute('href', url);
       });
     });
 
     test('photo detail shows date and tags', async ({ page, request }) => {
       const photo = await test.step('Get photo with metadata from API', async () => {
         const photos = await getPhotosFromApi(request);
-        return photos.find((p: ILink) => p.meta?.takenAt && p.tags?.length > 0 && !p.private);
+        return photos.find((p: ILink) => p.meta?.takenAt && (p.tags?.length ?? 0) > 0 && !p.private);
       });
 
       await test.step('Open photo detail page', async () => {
-        await page.goto(`/photos/${photo._id}`);
+        if (!photo?._id) throw new Error('Photo id is not found');
+        await page.goto(`/photos/${photo?._id}`);
         await expect(page.locator('a[href*="dateFrom="]')).toBeVisible({ timeout: 10000 });
       });
 
       await test.step('Date link and tags are visible', async () => {
-        for (const tag of photo.tags) {
+        for (const tag of photo?.tags ?? []) {
           await expect(page.locator('span', { hasText: tag })).toBeVisible();
         }
       });
@@ -285,8 +289,9 @@ test.describe('Photo flows', () => {
       });
 
       await test.step('Open photo detail page', async () => {
+        if (!photo?._id) throw new Error('Photo id is not found');
         await page.goto(`/photos/${photo._id}`);
-        await expect(page.getByText(photo.title || photo.name)).toBeVisible({ timeout: 10000 });
+        await expect(page.getByText(photo.title || photo.name || '')).toBeVisible({ timeout: 10000 });
       });
 
       await test.step('Date link and tag list are not shown', async () => {

@@ -9,7 +9,7 @@
     "test": "jest",
     "test:update": "jest --updateSnapshot",
     "typecheck": "react-router typegen && tsc",
-    "lint": "npx eslint src"
+    "lint": "npx eslint src __mocks__ \"*.ts\""
   },
   "keywords": [
     "nodejs",

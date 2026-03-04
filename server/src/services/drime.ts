@@ -31,8 +31,8 @@ export const createDrimeClient = ({
       // Attach auth header and default content type.
       const accessToken = getAccessToken()
       const headers = AxiosHeaders.from(config.headers ?? {})
-      !headers['Content-Type'] && headers.set('Content-Type', 'application/json')
-      accessToken && headers.set('Authorization', `Bearer ${accessToken}`)
+      if (!headers['Content-Type']) headers.set('Content-Type', 'application/json')
+      if (accessToken) headers.set('Authorization', `Bearer ${accessToken}`)
       config.headers = headers
       return config
     },
@@ -149,8 +149,8 @@ export const createDrimeService = (deps: DrimeServiceDeps = {}): DrimeService =>
     const url = '/auth/login'
     const body = { email: process.env.DRIME_EMAIL, password: process.env.DRIME_PASS, token_name: token };
 
-    tokenRequestInFlight = (async () => {
-      const response = await client.post<null, DrimeTokenApiResponse>(url, body, {
+    tokenRequestInFlight = (async (): Promise<DrimeTokenApiResponse> => {
+      const response = await client.post<DrimeTokenApiResponse>(url, body, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json"
@@ -354,7 +354,7 @@ export const createDrimeService = (deps: DrimeServiceDeps = {}): DrimeService =>
       throw Error('no file uploaded')
     }
 
-    const blob = new Blob([file], {
+    const blob = new Blob([new Uint8Array(file)], {
       type: mimetype,
     });
 

@@ -8,7 +8,7 @@ const GALLERY_PHOTO = 'figure a[href^="/photos/"]';
 
 interface CapturedResponse {
   status: number;
-  body: unknown;
+  body: { photos?: ILink[] };
   servedAt: string | null;
 }
 
@@ -27,7 +27,7 @@ function captureApiResponse(page: import('@playwright/test').Page, urlPattern: s
       const headers = await response.allHeaders();
       resolve({
         status: response.status(),
-        body,
+        body: body || [],
         servedAt: headers['x-served-at'] ?? null,
       });
       page.off('response', handler);
@@ -73,10 +73,10 @@ test.describe('Photo gallery caching', () => {
       const response1 = await capture;
 
       expect(response1.status).toEqual(200);
-      expect(response1.body?.photos?.length).toBeGreaterThan(0);
+      expect((response1.body)?.photos?.length).toBeGreaterThan(0);
       expect(response1.servedAt).not.toBeNull();
 
-      const versions1 = getPhotoVersions((response1.body as { photos: ILink[] }).photos);
+      const versions1 = getPhotoVersions((response1.body).photos || []);
       expect(versions1.size).toBeGreaterThan(0);
       for (const v of versions1.values()) {
         expect(v).not.toBeNull();
@@ -106,7 +106,7 @@ test.describe('Photo gallery caching', () => {
       expect(editResponse.status()).toEqual(200);
     });
 
-    const versions4 = await test.step('Reload page — cache MISS (cleared by edit), urlCache HIT (versions unchanged)', async () => {
+    await test.step('Reload page — cache MISS (cleared by edit), urlCache HIT (versions unchanged)', async () => {
       const capture = captureApiResponse(page, /\/api\/v1\/photos(\?|$)/);
       await page.reload();
       await expect(page.locator(GALLERY_PHOTO).first()).toBeVisible({ timeout: 15000 });
@@ -114,16 +114,10 @@ test.describe('Photo gallery caching', () => {
 
       expect(response4.status).toEqual(200);
       expect(response4.servedAt).not.toEqual(response1.servedAt);
-      expect(response4.body?.photos?.length).toBeGreaterThan(0);
+      expect((response4.body)?.photos?.length).toBeGreaterThan(0);
 
       const versions4 = getPhotoVersions((response4.body as { photos: ILink[] }).photos);
       expect(versions1).toEqual(versions4)
-      // for (const [key, v1] of versions1) {
-      //   const v4 = versions4.get(key);
-      //   if (v1 && v4) {
-      //     expect(v4).toEqual(v1);
-      //   }
-      // }
 
       return versions4;
     });
@@ -136,16 +130,10 @@ test.describe('Photo gallery caching', () => {
 
       expect(response5.status).toEqual(200);
       expect(response5.servedAt).not.toEqual(response1.servedAt);
-      expect(response5.body?.photos?.length).toBeGreaterThan(0);
+      expect((response5.body)?.photos?.length).toBeGreaterThan(0);
 
       const versions5 = getPhotoVersions((response5.body as { photos: ILink[] }).photos);
       expect(versions1).toEqual(versions5)
-      // for (const [key, v1] of versions1) {
-      //   const v5 = versions5.get(key);
-      //   if (v1 && v5) {
-      //     expect(v5).toEqual(v1);
-      //   }
-      // }
     });
   });
 });

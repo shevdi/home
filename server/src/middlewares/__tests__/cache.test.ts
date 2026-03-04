@@ -1,13 +1,15 @@
 import { describe, it, expect, beforeEach, afterEach, jest } from '@jest/globals'
 import { cacheMiddleware, cacheClear } from '../cache.js'
 
+import type { Request, Response } from 'express'
+
 const createReq = (overrides: Partial<{
   method: string
   originalUrl: string
   url: string
   path: string
   headers: Record<string, string>
-}> = {}) =>
+}> = {}): Request =>
   ({
     method: 'GET',
     originalUrl: '/api/photos',
@@ -15,9 +17,9 @@ const createReq = (overrides: Partial<{
     path: '/api/photos',
     headers: {},
     ...overrides,
-  }) as any
+  }) as unknown as Request
 
-const createRes = () => {
+const createRes = (): Response => {
   const headers: Record<string, string> = {}
   const res = {
     statusCode: 200,
@@ -35,8 +37,8 @@ const createRes = () => {
       callback?.()
       return res
     }),
-  } as any
-  return res
+  }
+  return res as unknown as Response
 }
 
 describe('cache middleware', () => {

@@ -65,9 +65,11 @@ function sendCached(res: Response, entry: CacheEntry, ttlSeconds: number): void 
   Object.entries(headers).forEach(([name, value]) => {
     res.setHeader(name, value)
   })
-  entry.encoding
-    ? res.end(entry.body, entry.encoding)
-    : res.end(entry.body)
+  if (entry.encoding) {
+    res.end(entry.body, entry.encoding)
+  } else {
+    res.end(entry.body)
+  }
 }
 
 export function cacheClear(target?: string): void {
