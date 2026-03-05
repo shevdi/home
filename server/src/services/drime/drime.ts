@@ -1,9 +1,17 @@
-import sharp from 'sharp';
-import { photoFolderNames } from '../config';
-import { env } from '../config/env.js';
-import { DrimeFileEntry, DrimeTokenApiResponse } from '../types/api';
-import axios, { AxiosError, AxiosHeaders, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
-import { logError } from '../db/services/logs';
+import sharp from 'sharp'
+import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios'
+import { photoFolderNames } from '../../config'
+import { env } from '../../config/env.js'
+import { logError } from '../../db/services/logs'
+import {
+  type DrimeFileEntry,
+  type DrimeFileEntriesListResponse,
+  type DrimeService,
+  type DrimeServiceDeps,
+  type DrimeTokenApiResponse,
+  type UploadPhotoInput
+} from './drime.types.js'
+import { createDrimeClient } from './drimeClient'
 
 const DEFAULT_TOKEN = env.DRIME_TOKEN
 const DEFAULT_TOKEN_TTL_MS = 5 * 60 * 1000
@@ -11,83 +19,11 @@ const DEFAULT_RETRY_MAX_ATTEMPTS = 3
 const DEFAULT_RETRY_BASE_DELAY_MS = 300
 const DEFAULT_RETRY_MAX_DELAY_MS = 2000
 
-export type DrimeClientDeps = {
-  axiosInstance?: typeof axios
-  baseURL?: string
-  getAccessToken?: () => string | undefined
-}
-
-export const createDrimeClient = ({
-  axiosInstance = axios,
-  baseURL = process.env.DRIME_URL,
-  getAccessToken = () => undefined
-}: DrimeClientDeps = {}): AxiosInstance => {
-  const client = axiosInstance.create({
-    baseURL,
-    timeout: 30000,
-  })
-
-  client.interceptors.request.use(
-    config => {
-      // Attach auth header and default content type.
-      const accessToken = getAccessToken()
-      const headers = AxiosHeaders.from(config.headers ?? {})
-      if (!headers['Content-Type']) headers.set('Content-Type', 'application/json')
-      if (accessToken) headers.set('Authorization', `Bearer ${accessToken}`)
-      config.headers = headers
-      return config
-    },
-    error => {
-      return Promise.reject(error);
-    }
-  )
-
-  return client
-}
-
 const getPhotoFolder = (size?: number) =>
   size ? (size < 500 ? photoFolderNames.sm : photoFolderNames.md) : photoFolderNames.full
 
-type UploadPhotoInput = {
-  fileName: string
-  mimetype: string
-  folder?: string
-}
-
-type RetryConfig = {
-  maxAttempts?: number
-  baseDelayMs?: number
-  maxDelayMs?: number
-}
-
-type TokenConfig = {
-  token?: string
-  ttlMs?: number
-}
-
-type DrimeServiceDeps = {
-  client?: AxiosInstance
-  clientDeps?: DrimeClientDeps
-  retryConfig?: RetryConfig
-  tokenConfig?: TokenConfig
-  now?: () => number
-  sleep?: (ms: number) => Promise<void>
-}
-
-type DrimeFileEntriesListResponse = {
-  data?: Array<{ id: number; url?: string }>
-  meta?: { last_page?: number; current_page?: number }
-}
-
-type DrimeService = {
-  cropPhotoAndUpload: (file: Express.Multer.File, size?: number) => Promise<{ url: string; photoData: DrimeFileEntry }>
-  getToken: () => Promise<DrimeTokenApiResponse>
-  getFiles: (url?: string) => Promise<{ url: string }>
-  getFilesList: (page?: number) => Promise<DrimeFileEntriesListResponse>
-  updateFile: (url: string, data: DrimeFileEntry) => Promise<{ url: string }>
-  uploadFile: (file: Buffer<ArrayBufferLike>, input: UploadPhotoInput) => Promise<DrimeFileEntry>
-  deleteFile: (entryIds: string[], deleteForever?: boolean) => Promise<void>
-}
+export { createDrimeClient } from './drimeClient'
+export type { DrimeClientDeps } from './drime.types'
 
 export const createDrimeService = (deps: DrimeServiceDeps = {}): DrimeService => {
   const {
@@ -115,17 +51,15 @@ export const createDrimeService = (deps: DrimeServiceDeps = {}): DrimeService =>
   })
 
   const cropPhotoAndUpload = async (file: Express.Multer.File, size?: number) => {
-    // Store resized files by size tier (sm/md/full).
     const folder = getPhotoFolder(size)
     const cropped = !size
       ? file.buffer
       : await sharp(file.buffer)
-        .rotate() // Auto-rotate based on EXIF orientation and remove orientation tag
+        .rotate()
         .resize(size, null, {
           fit: 'cover',
           position: 'center'
         })
-        // .jpeg({ quality: 80 })
         .toBuffer()
     const photoData = await uploadFile(cropped, {
       fileName: `${file.originalname}`,
@@ -137,7 +71,6 @@ export const createDrimeService = (deps: DrimeServiceDeps = {}): DrimeService =>
   }
 
   const getToken = async () => {
-    // Avoid duplicate logins by reusing a cached token and in-flight request.
     const currentTime = now()
     if (cachedToken && cachedTokenExpiresAt > currentTime) {
       return cachedToken
@@ -148,13 +81,13 @@ export const createDrimeService = (deps: DrimeServiceDeps = {}): DrimeService =>
     }
 
     const url = '/auth/login'
-    const body = { email: process.env.DRIME_EMAIL, password: process.env.DRIME_PASS, token_name: token };
+    const body = { email: process.env.DRIME_EMAIL, password: process.env.DRIME_PASS, token_name: token }
 
     tokenRequestInFlight = (async (): Promise<DrimeTokenApiResponse> => {
       const response = await client.post<DrimeTokenApiResponse>(url, body, {
         headers: {
           Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json"
+          'Content-Type': 'application/json'
         }
       })
 
@@ -180,7 +113,6 @@ export const createDrimeService = (deps: DrimeServiceDeps = {}): DrimeService =>
   }
 
   const getRetryAfterMs = (error: AxiosError) => {
-    // Honor Retry-After header when provided by the server.
     const retryAfter = error.response?.headers?.['retry-after']
     if (!retryAfter) return null
     const asNumber = Number(retryAfter)
@@ -208,7 +140,6 @@ export const createDrimeService = (deps: DrimeServiceDeps = {}): DrimeService =>
   }
 
   const shouldRetry = (error: AxiosError, method?: string, allowNonIdempotent?: boolean) => {
-    // Only retry idempotent/safe methods unless explicitly allowed.
     const normalizedMethod = method?.toLowerCase() ?? 'get'
     const isSafeMethod = normalizedMethod === 'get' || normalizedMethod === 'head' || normalizedMethod === 'options'
     const isIdempotent = isSafeMethod || normalizedMethod === 'put' || normalizedMethod === 'delete'
@@ -217,7 +148,6 @@ export const createDrimeService = (deps: DrimeServiceDeps = {}): DrimeService =>
   }
 
   const getRetryDelayMs = (attempt: number, error: AxiosError) => {
-    // Exponential backoff with jitter, capped by max delay.
     const retryAfterMs = getRetryAfterMs(error)
     if (retryAfterMs !== null) return retryAfterMs
     const exponential = retryBaseDelayMs * Math.pow(2, attempt)
@@ -230,7 +160,6 @@ export const createDrimeService = (deps: DrimeServiceDeps = {}): DrimeService =>
     method?: string,
     allowNonIdempotent?: boolean
   ) => {
-    // Retry transient errors with backoff.
     let attempt = 0
     while (true) {
       try {
@@ -253,7 +182,6 @@ export const createDrimeService = (deps: DrimeServiceDeps = {}): DrimeService =>
     config: AxiosRequestConfig,
     options?: { allowNonIdempotent?: boolean }
   ) => {
-    // Ensure auth and apply retry for transient failures.
     await ensureToken()
     return withRetry(
       () => client.request<T>(config),
@@ -268,7 +196,6 @@ export const createDrimeService = (deps: DrimeServiceDeps = {}): DrimeService =>
     config?: AxiosRequestConfig,
     options?: { allowNonIdempotent?: boolean }
   ) => {
-    // Use postForm for multipart uploads; client.request() would serialize FormData as JSON.
     await ensureToken()
     return withRetry(
       () => client.postForm<T>(url, data, config),
@@ -281,7 +208,7 @@ export const createDrimeService = (deps: DrimeServiceDeps = {}): DrimeService =>
     try {
       const response = await authedRequest<{ url: string }>({
         method: 'get',
-        url,
+        url
       })
       return { url: responseUrlFrom(response) }
     } catch (err) {
@@ -297,7 +224,7 @@ export const createDrimeService = (deps: DrimeServiceDeps = {}): DrimeService =>
       const response = await authedRequest<DrimeFileEntriesListResponse>({
         method: 'get',
         url: '/drive/file-entries',
-        params: { perPage: 10, page },
+        params: { perPage: 10, page }
       })
       return response.data
     } catch (err) {
@@ -312,14 +239,12 @@ export const createDrimeService = (deps: DrimeServiceDeps = {}): DrimeService =>
         method: 'put',
         url,
         data,
-        params: {
-
-        },
+        params: {}
       })
-      return { url: responseUrlFrom(response) };
+      return { url: responseUrlFrom(response) }
     } catch (err) {
       logError(err, { service: 'drime', action: 'updateFile', url })
-      return Promise.reject(err);
+      return Promise.reject(err)
     }
   }
 
@@ -355,10 +280,10 @@ export const createDrimeService = (deps: DrimeServiceDeps = {}): DrimeService =>
     }
 
     const blob = new Blob([new Uint8Array(file)], {
-      type: mimetype,
-    });
+      type: mimetype
+    })
 
-    const formData = new FormData();
+    const formData = new FormData()
     formData.append('file', blob, fileName)
     formData.append('parentId', folder)
     formData.append('relativePath', `${folder}/`)
@@ -370,7 +295,7 @@ export const createDrimeService = (deps: DrimeServiceDeps = {}): DrimeService =>
       { allowNonIdempotent: true }
     )
 
-    return response.data.fileEntry;
+    return response.data.fileEntry
   }
 
   return {

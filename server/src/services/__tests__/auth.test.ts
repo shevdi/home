@@ -3,9 +3,9 @@ import type { Request, Response } from 'express'
 
 type JwtVerifyCallback = (err: Error | null, decoded: { username?: string; UserInfo?: { username?: string; roles?: string[] } } | null) => void
 
-let login: typeof import('../auth.js').login
-let refresh: typeof import('../auth.js').refresh
-let logout: typeof import('../auth.js').logout
+let login: typeof import('../auth/index.js').login
+let refresh: typeof import('../auth/index.js').refresh
+let logout: typeof import('../auth/index.js').logout
 let bcryptModule: typeof import('bcrypt')
 let jwtModule: typeof import('jsonwebtoken')
 let usersModule: typeof import('../../db/services/users.js')
@@ -30,7 +30,7 @@ beforeAll(async () => {
   bcryptModule = await import('bcrypt')
   jwtModule = await import('jsonwebtoken')
   usersModule = await import('../../db/services/users.js')
-  ; ({ login, refresh, logout } = await import('../auth.js'))
+  ; ({ login, refresh, logout } = await import('../auth/index.js'))
 })
 
 beforeEach(() => {

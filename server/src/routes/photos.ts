@@ -12,16 +12,16 @@ import {
   getPhotoById,
   updatePhotoById,
 } from '../db/services/photos.ts'
-import drime from '../services/drime.ts';
+import drime from '../services/drime'
 import { createUrlCache, type UrlSource } from '../services/urlCache.ts';
 import { dadataReverseGeocode, nominatimReverseGeocode } from '../services';
 import { getLocationValue, hasStatus, normalizeTags, queryBuilder } from '../utils';
 import { logError } from '../db/services/logs';
-import { RequestWithAuth } from '@/types';
 import { photosQuerySchema, uploadBodySchema, uploadMetaSchema } from './photos.schema.js';
 import { optionalAuth } from '../middlewares/optionalAuth';
 import { verifyJWT } from '../middlewares/verifyJWT';
 import { cacheClear, cacheMiddleware } from '../middlewares/cache';
+import type { RequestWithAuth } from '@/services/auth';
 
 const router = express.Router()
 

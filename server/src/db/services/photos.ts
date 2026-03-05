@@ -1,8 +1,8 @@
-import { ILink, IPhotoSearch } from '@/types';
 import { SortOrder } from 'mongoose';
 import { Photo } from '../models/link'
 import { FilterQuery } from 'mongoose';
 import { logError } from './logs';
+import { ILink, IPhotoSearch } from '@shevdi-home/shared';
 
 export async function getAllPhotos(filters: FilterQuery<IPhotoSearch>) {
   try {

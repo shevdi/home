@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeAll, beforeEach, afterEach, jest } from '@jest/globals'
+import type { RequestWithAuth } from '@/services/auth';
 import type { Request, Response } from 'express'
-import type { RequestWithAuth } from '@/types'
 
 type JwtVerifyCallback = (err: Error | null, decoded: { username?: string; UserInfo?: { username?: string; roles?: string[] } } | null) => void
 
@@ -20,7 +20,7 @@ const createRes = (): Response => {
 beforeAll(async () => {
   const mod = await import('jsonwebtoken')
   jwtModule = mod
-  ; ({ verifyJWT } = await import('../verifyJWT.js'))
+    ; ({ verifyJWT } = await import('../verifyJWT.js'))
 })
 
 const getJwt = () => (jwtModule as { default?: typeof jwtModule }).default ?? jwtModule

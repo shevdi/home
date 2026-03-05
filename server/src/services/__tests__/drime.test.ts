@@ -11,14 +11,12 @@ jest.unstable_mockModule('sharp', () => ({
   })
 }))
 
-let createDrimeService: typeof import('../drime.js').createDrimeService
+let createDrimeService: typeof import('../drime').createDrimeService
 
-type JestMockFn = jest.MockedFunction<(...args: unknown[]) => unknown>
-
-const createMock = (): JestMockFn => jest.fn() as JestMockFn
+const createMock = (): jest.Mock<(...args: []) => never> => jest.fn()
 
 beforeAll(async () => {
-  ({ createDrimeService } = await import('../drime.js'))
+  ({ createDrimeService } = await import('../drime'))
 })
 
 const createAxiosError = (status?: number, code?: string) => {
