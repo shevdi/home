@@ -1,10 +1,6 @@
-import type { ReverseGeocodeResponse } from '../services/nominatim'
+import type { ILocationValue } from '@shevdi-home/shared'
+import type { NominatimReverseResponse } from '@shevdi-home/shared'
 import type { DaDataGeolocateResponse } from '../services/dadata'
-
-export type LocationValue = {
-  country: string[]
-  city: string[]
-}
 
 const CYRILLIC_REGEX = /[\u0400-\u04FF]/
 const LATIN_REGEX = /[a-zA-Z]/
@@ -29,7 +25,7 @@ function buildUniqueOrderedArray(values: string[]): string[] {
   return result.sort((a, b) => getScriptPriority(a) - getScriptPriority(b))
 }
 
-function extractNominatimCountry(nominatim: ReverseGeocodeResponse | null | undefined): string[] {
+function extractNominatimCountry(nominatim: NominatimReverseResponse | null | undefined): string[] {
   const values: string[] = []
   const addr = nominatim?.address
   if (!addr) return values
@@ -40,7 +36,7 @@ function extractNominatimCountry(nominatim: ReverseGeocodeResponse | null | unde
   return values
 }
 
-function extractNominatimCity(nominatim: ReverseGeocodeResponse | null | undefined): string[] {
+function extractNominatimCity(nominatim: NominatimReverseResponse | null | undefined): string[] {
   const values: string[] = []
   const addr = nominatim?.address
   if (!addr) return values
@@ -82,9 +78,9 @@ function extractDaDataCity(dadata: DaDataGeolocateResponse | null | undefined): 
 }
 
 export function getLocationValue(sources: [
-  ReverseGeocodeResponse | null | undefined,
+  NominatimReverseResponse | null | undefined,
   DaDataGeolocateResponse | null | undefined
-]): LocationValue {
+]): ILocationValue {
   const [nominatim, dadata] = sources
 
   const countryValues = [

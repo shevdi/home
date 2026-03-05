@@ -1,4 +1,8 @@
-export type MongoFilter = Record<string, unknown>
+export type MongoFilter = {
+  $nor?: object[]
+  $and?: object[]
+  [key: string]: unknown
+}
 
 type ArrayNormalizer = (value: unknown) => string[] | undefined
 
@@ -9,7 +13,7 @@ export const queryBuilder = () => {
   const filter: MongoFilter = {}
   return {
     excludeWhere(field: string, value: unknown) {
-      filter.$nor = (filter.$nor as object[] ?? []).concat({ [field]: value })
+      filter.$nor = (filter.$nor ?? []).concat({ [field]: value })
       return this
     },
     dateRange(field: string, dateFrom?: string, dateTo?: string) {
@@ -63,7 +67,7 @@ export const queryBuilder = () => {
         andConditions.push({ $or: cityOrConditions })
       }
       if (andConditions.length > 0) {
-        filter.$and = (filter.$and as object[] ?? []).concat(andConditions)
+        filter.$and = (filter.$and ?? []).concat(andConditions)
       }
       return this
     },

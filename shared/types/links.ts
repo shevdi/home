@@ -16,10 +16,15 @@ export interface ILocationValue {
   city: string[]
 }
 
+/** Nominatim reverse geocode response shape; address contains location fields */
+export interface INominatimAddress {
+  address?: Record<string, string | undefined>
+}
+
 export interface ILocation {
   value?: ILocationValue
-  dadata?: Record<string, string | undefined | null>,
-  nominatim?: Record<string, unknown | undefined | null>
+  dadata?: Record<string, string | undefined | null>
+  nominatim?: INominatimAddress & Record<string, unknown>
 }
 
 export interface ILink {

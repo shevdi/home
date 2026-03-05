@@ -14,7 +14,7 @@ const mockGetFiles = jest.fn<(...args: unknown[]) => Promise<{ url: string }>>()
 const mockCropPhotoAndUpload = jest.fn<(...args: unknown[]) => Promise<{ url: string; photoData: { id: number; name: string } }>>()
 const mockDeleteFile = jest.fn<(...args: unknown[]) => Promise<void>>()
 
-jest.unstable_mockModule('../../db/services/photos.js', () => ({
+jest.unstable_mockModule('../../db/services/photos', () => ({
   getPhotosPaginated: (...args: unknown[]) => mockGetPhotosPaginated(...args),
   getPhotosCount: (...args: unknown[]) => mockGetPhotosCount(...args),
   getPhotoById: (...args: unknown[]) => mockGetPhotoById(...args),
@@ -23,7 +23,7 @@ jest.unstable_mockModule('../../db/services/photos.js', () => ({
   addNewPhoto: (...args: unknown[]) => mockAddNewPhoto(...args),
 }))
 
-jest.unstable_mockModule('../../services/drime.js', () => ({
+jest.unstable_mockModule('../../services/drime', () => ({
   default: {
     getFiles: (...args: unknown[]) => mockGetFiles(...args),
     getFileEntriesList: () => Promise.resolve({ data: [], meta: { last_page: 1 } }),
@@ -33,10 +33,10 @@ jest.unstable_mockModule('../../services/drime.js', () => ({
   createDrimeService: () => ({}),
 }))
 
-jest.unstable_mockModule('../../services/nominatim.js', () => ({
+jest.unstable_mockModule('../../services/nominatim', () => ({
   nominatimReverseGeocode: () => Promise.resolve(null),
 }))
-jest.unstable_mockModule('../../services/dadata.js', () => ({
+jest.unstable_mockModule('../../services/dadata', () => ({
   dadataReverseGeocode: () => Promise.resolve(null),
 }))
 
@@ -48,12 +48,12 @@ jest.unstable_mockModule('sharp', () => ({
 
 const passThrough = (_req: unknown, _res: unknown, next: () => void) => next()
 const passThroughCache = (_req: unknown, _res: unknown, next: () => void) => next()
-jest.unstable_mockModule('../../middlewares/cache.js', () => ({
+jest.unstable_mockModule('../../middlewares/cache', () => ({
   cacheMiddleware: () => passThroughCache,
   cacheClear: () => { },
 }))
 
-jest.unstable_mockModule('../../middlewares/optionalAuth.js', () => ({
+jest.unstable_mockModule('../../middlewares/optionalAuth', () => ({
   optionalAuth: (req: { headers?: { authorization?: string }; auth?: { roles?: string[] } }, _res: unknown, next: () => void) => {
     if (req.headers?.authorization) {
       req.auth = { roles: ['admin'] }
@@ -61,11 +61,11 @@ jest.unstable_mockModule('../../middlewares/optionalAuth.js', () => ({
     next()
   },
 }))
-jest.unstable_mockModule('../../middlewares/verifyJWT.js', () => ({
+jest.unstable_mockModule('../../middlewares/verifyJWT', () => ({
   verifyJWT: passThrough,
 }))
 
-jest.unstable_mockModule('../../services/urlCache.js', () => ({
+jest.unstable_mockModule('../../services/urlCache', () => ({
   createUrlCache: () => ({
     getUrl: (source: { fetchUrlById: (id: string) => Promise<string> }, entryId: string | null | undefined) =>
       entryId ? source.fetchUrlById(entryId) : Promise.resolve(''),
@@ -79,7 +79,7 @@ jest.unstable_mockModule('../../services/urlCache.js', () => ({
 let photosRouter: { default: express.Router }
 
 beforeAll(async () => {
-  photosRouter = await import('../photos.js')
+  photosRouter = await import('../photos')
 })
 
 const mockPhotoUrls = {

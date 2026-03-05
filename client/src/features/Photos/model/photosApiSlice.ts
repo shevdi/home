@@ -1,6 +1,6 @@
 import { apiSlice } from '@/app/store/api'
 import type { FetchBaseQueryError, FetchBaseQueryMeta, QueryReturnValue } from '@reduxjs/toolkit/query'
-import { ILink, PhotoOrder } from '@/shared/types'
+import type { ILink, IPhotosResponse, PhotoSearchParams } from '@shevdi-home/shared'
 import { buildSearchParams } from '@/shared/utils'
 
 export interface UploadResponse {
@@ -10,33 +10,6 @@ export interface UploadResponse {
   totalCount?: number
   results?: Array<{ ok: boolean; fileName: string; error?: string }>
   error?: string
-}
-
-interface PhotoSearch {
-  dateFrom?: string | null
-  dateTo?: string | null
-  order?: PhotoOrder
-  tags?: string[]
-}
-
-interface PhotosResponse {
-  photos: ILink[]
-  pagination: {
-    currentPage: number
-    totalPages: number
-    totalCount: number
-    pageSize: number
-  }
-}
-
-type InfinitePhotosResponse = {
-  photos: ILink[]
-  pagination: {
-    currentPage: number
-    totalPages: number
-    totalCount: number
-    pageSize: number
-  }
 }
 
 let lastInfiniteSearchKey: string | null = null
@@ -56,7 +29,7 @@ const getInfiniteQueryAbortController = (searchKey: string) => {
 
 export const photosApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    getPhotos: builder.query<PhotosResponse, PhotoSearch | void>({
+    getPhotos: builder.query<IPhotosResponse, PhotoSearchParams | void>({
       query: (search) => {
         const queryString = buildSearchParams(search)
         return `photos${queryString ? `?${queryString}` : ''}`
@@ -72,8 +45,8 @@ export const photosApiSlice = apiSlice.injectEndpoints({
       }
     }),
     getInfinitePhotoWithMax: builder.infiniteQuery<
-      InfinitePhotosResponse,
-      PhotoSearch | void,
+      IPhotosResponse,
+      PhotoSearchParams | void,
       number
     >({
       keepUnusedDataFor: 60 * 10,
@@ -109,7 +82,7 @@ export const photosApiSlice = apiSlice.injectEndpoints({
           signal: abortController.signal,
         })
         return result as QueryReturnValue<
-          InfinitePhotosResponse,
+          IPhotosResponse,
           FetchBaseQueryError,
           FetchBaseQueryMeta | undefined
         >

@@ -1,6 +1,12 @@
-import { IPhotoSearchParams } from "../types"
+import type { PhotoSearchParams } from '@shevdi-home/shared'
 
-export const buildSearchParams = (search?: IPhotoSearchParams | void, pageParam?: number) => {
+/** Input for buildSearchParams - accepts partial search with optional null for dates */
+export type BuildSearchParamsInput = Partial<Omit<PhotoSearchParams, 'dateFrom' | 'dateTo'>> & {
+  dateFrom?: string
+  dateTo?: string
+}
+
+export const buildSearchParams = (search?: BuildSearchParamsInput | void, pageParam?: number) => {
   const params = new URLSearchParams()
   if (pageParam !== undefined) {
     params.append('page', pageParam.toString())

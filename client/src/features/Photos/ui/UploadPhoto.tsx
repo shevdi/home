@@ -67,7 +67,7 @@ const IMAGE_ACCEPT = {
 } as const
 
 const schema = z.object({
-  files: z.array(z.instanceof(File)).min(1, 'Пожалуйста, выберите файлы'),
+  files: z.array(z.instanceof(File)).min(1, { error: 'Пожалуйста, выберите файлы' }),
   private: z.boolean(),
   country: z.array(z.string()),
   city: z.array(z.string()),

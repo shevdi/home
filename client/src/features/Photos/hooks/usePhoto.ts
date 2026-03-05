@@ -16,11 +16,8 @@ export const usePhoto = () => {
   const { data: photo, isLoading: isPhotoLoading, isError: isPhotoError } = useGetPhotoQuery(photoId, {
     skip: shouldUseInfinite,
   })
-  const {
-    data: { infinityPhoto, neighbours },
-    isLoading: isInfiniteLoading,
-  } = useGetInfinitePhotoWithMaxInfiniteQuery(
-    { ...search },
+  const { data: infiniteResult, isLoading: isInfiniteLoading } = useGetInfinitePhotoWithMaxInfiniteQuery(
+    { ...search, page: 1 },
     {
       initialPageParam: 1,
       refetchOnMountOrArgChange: true,
@@ -37,6 +34,9 @@ export const usePhoto = () => {
       },
     },
   )
+  type SelectedResult = { infinityPhoto?: typeof photo; neighbours: (typeof photo)[] }
+  const infinityPhoto = (infiniteResult as SelectedResult | undefined)?.infinityPhoto
+  const neighbours = (infiniteResult as SelectedResult | undefined)?.neighbours ?? []
   const resolvedPhoto = shouldUseInfinite ? infinityPhoto : photo
   const isNotFound = shouldUseInfinite
     ? (!isInfiniteLoading && !infinityPhoto)

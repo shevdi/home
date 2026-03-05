@@ -1,10 +1,11 @@
 import sharp from 'sharp';
 import { photoFolderNames } from '../config';
+import { env } from '../config/env.js';
 import { DrimeFileEntry, DrimeTokenApiResponse } from '../types/api';
 import axios, { AxiosError, AxiosHeaders, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { logError } from '../db/services/logs';
 
-const DEFAULT_TOKEN = process.env.DRIME_TOKEN as string
+const DEFAULT_TOKEN = env.DRIME_TOKEN
 const DEFAULT_TOKEN_TTL_MS = 5 * 60 * 1000
 const DEFAULT_RETRY_MAX_ATTEMPTS = 3
 const DEFAULT_RETRY_BASE_DELAY_MS = 300
@@ -235,11 +236,11 @@ export const createDrimeService = (deps: DrimeServiceDeps = {}): DrimeService =>
       try {
         return await operation()
       } catch (err) {
-        const error = err as AxiosError
-        if (!shouldRetry(error, method, allowNonIdempotent) || attempt >= retryMaxAttempts) {
-          throw error
+        if (!axios.isAxiosError(err)) throw err
+        if (!shouldRetry(err, method, allowNonIdempotent) || attempt >= retryMaxAttempts) {
+          throw err
         }
-        const delayMs = getRetryDelayMs(attempt, error)
+        const delayMs = getRetryDelayMs(attempt, err)
         attempt += 1
         await sleepFn(delayMs)
       }
@@ -284,8 +285,7 @@ export const createDrimeService = (deps: DrimeServiceDeps = {}): DrimeService =>
       })
       return { url: responseUrlFrom(response) }
     } catch (err) {
-      const axiosErr = err as AxiosError
-      if (axiosErr.response?.status === 404) {
+      if (axios.isAxiosError(err) && err.response?.status === 404) {
         return { url: '' }
       }
       throw err

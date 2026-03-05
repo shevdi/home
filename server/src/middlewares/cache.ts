@@ -111,7 +111,7 @@ export function cacheMiddleware(
 
     const originalEnd = res.end.bind(res)
 
-    const wrappedEnd = (
+    const wrappedEnd: Response['end'] = (
       chunk?: unknown,
       encodingOrCb?: BufferEncoding | (() => void),
       cb?: () => void
@@ -152,7 +152,7 @@ export function cacheMiddleware(
         ? originalEnd(chunk, encoding, callback)
         : (callback ? originalEnd(chunk, callback) : originalEnd(chunk))
     }
-    res.end = wrappedEnd as typeof res.end
+    res.end = wrappedEnd
     res.setHeader('x-served-at', Date.now().toString())
 
     next()

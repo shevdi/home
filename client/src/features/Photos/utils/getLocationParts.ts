@@ -5,8 +5,7 @@ export type LocationParts = { city: string | null; country: string | null }
 export function getLocationParts(location?: ILocation): LocationParts {
   if (!location) return { city: null, country: null }
 
-  const dadata = location.dadata as Record<string, string | undefined | null> | undefined
-  const nominatim = location.nominatim as { address?: Record<string, string | undefined> } | undefined
+  const { dadata, nominatim } = location
 
   const fromDadata = (): LocationParts | null => {
     if (!dadata) return null

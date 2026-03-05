@@ -1,3 +1,4 @@
 export * from '@shevdi-home/shared'
-export type { PhotoOrder, IPhotoSearchParams, IPhotoSearch } from './photos'
+export type { PhotoOrder, IPhotoSearch } from './photos'
+export type { PhotoSearchParams as IPhotoSearchParams } from '@shevdi-home/shared'
 export * from './config'

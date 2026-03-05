@@ -1,32 +1,32 @@
-import { describe, it, expect, beforeAll, beforeEach, jest } from '@jest/globals'
+import { describe, it, expect, beforeAll, beforeEach, afterEach, jest } from '@jest/globals'
 import type { Response } from 'express'
 import type { RequestWithAuth } from '@/types'
 
 type JwtVerifyCallback = (err: Error | null, decoded: { username?: string; UserInfo?: { username?: string; roles?: string[] } } | null) => void
 
-jest.unstable_mockModule('jsonwebtoken', () => ({
-  default: {
-    verify: jest.fn()
-  }
-}))
-
 let optionalAuth: typeof import('../optionalAuth.js').optionalAuth
-
-const jwtMock = (await import('jsonwebtoken')).default as unknown as {
-  verify: jest.Mock
-}
+let jwtModule: Awaited<typeof import('jsonwebtoken')>
 
 beforeAll(async () => {
+  const mod = await import('jsonwebtoken')
+  jwtModule = mod
   ;({ optionalAuth } = await import('../optionalAuth.js'))
 })
 
+const getJwt = () => (jwtModule as { default?: typeof jwtModule }).default ?? jwtModule
+
 beforeEach(() => {
-  jest.clearAllMocks()
+  jest.restoreAllMocks()
   process.env.ACCESS_TOKEN_SECRET = 'access-secret'
+})
+
+afterEach(() => {
+  jest.restoreAllMocks()
 })
 
 describe('optionalAuth middleware', () => {
   it('calls next when authorization header missing', () => {
+    const verifySpy = jest.spyOn(getJwt(), 'verify')
     const req = { headers: {} } as unknown as RequestWithAuth
     const res = {} as unknown as Response
     const next = jest.fn()
@@ -34,10 +34,11 @@ describe('optionalAuth middleware', () => {
     optionalAuth(req, res, next)
 
     expect(next).toHaveBeenCalledTimes(1)
-    expect(jwtMock.verify).not.toHaveBeenCalled()
+    expect(verifySpy).not.toHaveBeenCalled()
   })
 
   it('calls next when authorization header is not Bearer', () => {
+    const verifySpy = jest.spyOn(getJwt(), 'verify')
     const req = { headers: { authorization: 'Token abc' } } as unknown as RequestWithAuth
     const res = {} as unknown as Response
     const next = jest.fn()
@@ -45,11 +46,11 @@ describe('optionalAuth middleware', () => {
     optionalAuth(req, res, next)
 
     expect(next).toHaveBeenCalledTimes(1)
-    expect(jwtMock.verify).not.toHaveBeenCalled()
+    expect(verifySpy).not.toHaveBeenCalled()
   })
 
   it('calls next when jwt verification fails', () => {
-    jwtMock.verify.mockImplementation((...args) => {
+    const verifySpy = jest.spyOn(getJwt(), 'verify').mockImplementation((...args: unknown[]) => {
       const cb = args[2] as JwtVerifyCallback
       cb(new Error('invalid'), null)
     })
@@ -59,7 +60,7 @@ describe('optionalAuth middleware', () => {
 
     optionalAuth(req, res, next)
 
-    expect(jwtMock.verify).toHaveBeenCalledWith(
+    expect(verifySpy).toHaveBeenCalledWith(
       'token',
       'access-secret',
       expect.any(Function)
@@ -69,7 +70,7 @@ describe('optionalAuth middleware', () => {
   })
 
   it('sets user info and calls next when jwt valid', () => {
-    jwtMock.verify.mockImplementation((...args) => {
+    const verifySpy = jest.spyOn(getJwt(), 'verify').mockImplementation((...args: unknown[]) => {
       const cb = args[2] as JwtVerifyCallback
       cb(null, { UserInfo: { username: 'user', roles: ['admin'] } })
     })
@@ -79,7 +80,7 @@ describe('optionalAuth middleware', () => {
 
     optionalAuth(req, res, next)
 
-    expect(jwtMock.verify).toHaveBeenCalledWith(
+    expect(verifySpy).toHaveBeenCalledWith(
       'token',
       'access-secret',
       expect.any(Function)

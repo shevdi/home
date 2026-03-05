@@ -12,6 +12,7 @@ export function PhotoGallery() {
     useGetInfinitePhotoWithMaxInfiniteQuery(
       {
         ...search,
+        page: 1,
       },
       {
         refetchOnMountOrArgChange: true,

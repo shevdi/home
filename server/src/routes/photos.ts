@@ -15,9 +15,10 @@ import {
 import drime from '../services/drime.ts';
 import { createUrlCache, type UrlSource } from '../services/urlCache.ts';
 import { dadataReverseGeocode, nominatimReverseGeocode } from '../services';
-import { getLocationValue, normalizeTags, parseBoolean, queryBuilder } from '../utils';
+import { getLocationValue, hasStatus, normalizeTags, queryBuilder } from '../utils';
 import { logError } from '../db/services/logs';
 import { RequestWithAuth } from '@/types';
+import { photosQuerySchema, uploadBodySchema, uploadMetaSchema } from './photos.schema.js';
 import { optionalAuth } from '../middlewares/optionalAuth';
 import { verifyJWT } from '../middlewares/verifyJWT';
 import { cacheClear, cacheMiddleware } from '../middlewares/cache';
@@ -28,7 +29,7 @@ const getErrorStatus = (err: unknown): number | undefined => {
   if (axios.isAxiosError(err)) {
     return err.response?.status;
   }
-  return (err as { status?: number })?.status;
+  return hasStatus(err) ? err.status : undefined;
 }
 
 const sortTypes: Record<string, Record<string, SortOrder>> = {
@@ -54,13 +55,25 @@ urlCache.startRefresh(urlSource)
 
 router.get(`/`, optionalAuth, cache, async (req: RequestWithAuth, res: Response) => {
   try {
-    const pageParam = <string>req.query.page
-    const dateFromParam = <string>req.query.dateFrom
-    const dateToParam = <string>req.query.dateTo
-    const orderParam = <string>req.query.order
-    const tagsParam = req.query.tags
-    const countryParam = req.query.country
-    const cityParam = req.query.city
+    const parsed = photosQuerySchema.safeParse(req.query)
+    const {
+      page: pageParam,
+      dateFrom: dateFromParam,
+      dateTo: dateToParam,
+      order: orderParam,
+      tags: tagsParam,
+      country: countryParam,
+      city: cityParam,
+    } = parsed.success ? parsed.data : {
+      page: 1,
+      dateFrom: undefined,
+      dateTo: undefined,
+      order: undefined,
+      tags: [],
+      country: [],
+      city: [],
+    }
+
     const pageSize = req.query.page ? 5 : 100 // Number of photos per page
 
     const isAdmin = Boolean(req.auth?.roles?.includes('admin'))
@@ -70,8 +83,8 @@ router.get(`/`, optionalAuth, cache, async (req: RequestWithAuth, res: Response)
       .locationMatch(normalizeTags(countryParam) ?? [], normalizeTags(cityParam) ?? [])
     const search = (isAdmin ? builder : builder.excludeWhere('private', true)).build()
 
-    const page = pageParam ? parseInt(pageParam) : 1
-    const sort = sortTypes[orderParam]
+    const page = typeof pageParam === 'number' ? pageParam : 1
+    const sort = orderParam ? sortTypes[orderParam] : undefined
     const [photos, totalCount] = await Promise.all([
       getPhotosPaginated(page, pageSize, search, sort),
       getPhotosCount(search)
@@ -134,22 +147,21 @@ const upload = multer({
 
 router.post(`/upload`, upload.array("files", 50), async (req: Request, res: Response) => {
   try {
-    const files = req.files as Express.Multer.File[];
-    const isPrivate = parseBoolean(req.body?.private as string | undefined)
-    const tags = normalizeTags(req.body?.tags)
-    const userCountry = normalizeTags(req.body?.country) ?? []
-    const userCity = normalizeTags(req.body?.city) ?? []
-    const metaRaw = req.body?.meta as string | undefined
-    const metaList = metaRaw
-      ? (JSON.parse(metaRaw) as Array<{
-        gpsLatitude?: number
-        gpsLongitude?: number
-        gpsAltitude?: number
-        make?: string
-        model?: string
-        takenAt?: string
-      }>)
-      : []
+    const files = Array.isArray(req.files) ? req.files : req.file ? [req.file] : []
+    const bodyParsed = uploadBodySchema.safeParse(req.body)
+    const body = bodyParsed.success ? bodyParsed.data : {
+      private: undefined,
+      tags: [],
+      country: [],
+      city: [],
+      meta: [],
+    }
+    const isPrivate = body.private
+    const tags = normalizeTags(body.tags)
+    const userCountry = normalizeTags(body.country) ?? []
+    const userCity = normalizeTags(body.city) ?? []
+    const metaParsed = uploadMetaSchema.safeParse(body.meta)
+    const metaList = metaParsed.success ? metaParsed.data : []
 
     if (!files || files.length === 0) {
       return res.status(400).json({ ok: false, error: 'No files provided' })

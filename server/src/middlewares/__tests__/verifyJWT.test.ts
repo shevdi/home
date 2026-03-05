@@ -1,20 +1,11 @@
-import { describe, it, expect, beforeAll, beforeEach, jest } from '@jest/globals'
+import { describe, it, expect, beforeAll, beforeEach, afterEach, jest } from '@jest/globals'
 import type { Request, Response } from 'express'
 import type { RequestWithAuth } from '@/types'
 
 type JwtVerifyCallback = (err: Error | null, decoded: { username?: string; UserInfo?: { username?: string; roles?: string[] } } | null) => void
 
-jest.unstable_mockModule('jsonwebtoken', () => ({
-  default: {
-    verify: jest.fn()
-  }
-}))
-
 let verifyJWT: typeof import('../verifyJWT.js').verifyJWT
-
-const jwtMock = (await import('jsonwebtoken')).default as unknown as {
-  verify: jest.Mock
-}
+let jwtModule: Awaited<typeof import('jsonwebtoken')>
 
 const createRes = (): Response => {
   const res = {
@@ -27,12 +18,20 @@ const createRes = (): Response => {
 }
 
 beforeAll(async () => {
+  const mod = await import('jsonwebtoken')
+  jwtModule = mod
   ; ({ verifyJWT } = await import('../verifyJWT.js'))
 })
 
+const getJwt = () => (jwtModule as { default?: typeof jwtModule }).default ?? jwtModule
+
 beforeEach(() => {
-  jest.clearAllMocks()
+  jest.restoreAllMocks()
   process.env.ACCESS_TOKEN_SECRET = 'access-secret'
+})
+
+afterEach(() => {
+  jest.restoreAllMocks()
 })
 
 describe('verifyJWT middleware', () => {
@@ -73,7 +72,7 @@ describe('verifyJWT middleware', () => {
   })
 
   it('returns 403 when jwt verification fails', () => {
-    jwtMock.verify.mockImplementation((...args) => {
+    const verifySpy = jest.spyOn(getJwt(), 'verify').mockImplementation((...args: unknown[]) => {
       const cb = args[2] as JwtVerifyCallback
       cb(new Error('invalid'), null)
     })
@@ -83,7 +82,7 @@ describe('verifyJWT middleware', () => {
 
     verifyJWT(req, res, next)
 
-    expect(jwtMock.verify).toHaveBeenCalledWith(
+    expect(verifySpy).toHaveBeenCalledWith(
       'token',
       'access-secret',
       expect.any(Function)
@@ -94,7 +93,7 @@ describe('verifyJWT middleware', () => {
   })
 
   it('sets user info and calls next when jwt valid', () => {
-    jwtMock.verify.mockImplementation((...args) => {
+    jest.spyOn(getJwt(), 'verify').mockImplementation((...args: unknown[]) => {
       const cb = args[2] as JwtVerifyCallback
       cb(null, { UserInfo: { username: 'user', roles: ['admin'] } })
     })

@@ -1,25 +1,6 @@
-export type ReverseGeocodeAddress = Record<string, string>
+import type { NominatimReverseResponse } from '@shevdi-home/shared'
 
-export type ReverseGeocodeResponse = {
-  place_id?: number
-  licence?: string
-  osm_type?: string
-  osm_id?: string
-  boundingbox?: string[]
-  lat?: string
-  lon?: string
-  display_name?: string
-  name?: string
-  category?: string
-  type?: string
-  place_rank?: number
-  importance?: number
-  icon?: string
-  address?: ReverseGeocodeAddress
-  extratags?: Record<string, string>
-}
-
-export async function nominatimReverseGeocode(lat: number, lon: number): Promise<ReverseGeocodeResponse | null> {
+export async function nominatimReverseGeocode(lat: number, lon: number): Promise<NominatimReverseResponse | null> {
   if (!Number.isFinite(lat) || !Number.isFinite(lon)) {
     return null
   }
@@ -44,7 +25,7 @@ export async function nominatimReverseGeocode(lat: number, lon: number): Promise
       return null
     }
 
-    const data: ReverseGeocodeResponse = await response.json()
+    const data: NominatimReverseResponse = await response.json()
     return data
   } catch {
     return null

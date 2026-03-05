@@ -1,3 +1,5 @@
+export * from './authHeader'
+export * from './errors'
 export * from './parseBoolean'
 export * from './normalizeTags'
 export * from './queryBuilder'

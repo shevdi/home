@@ -80,14 +80,21 @@ describe('photosApiSlice', () => {
       await store.dispatch(
         photosApiSlice.endpoints.getPhotos.initiate({
           dateFrom: '2024-01-01',
+          dateTo: undefined,
           order: 'orderDownByTakenAt',
+          page: 1,
+          tags: [],
+          country: [],
+          city: [],
         }),
       )
 
-      expect(mockBuildSearchParams).toHaveBeenCalledWith({
-        dateFrom: '2024-01-01',
-        order: 'orderDownByTakenAt',
-      })
+      expect(mockBuildSearchParams).toHaveBeenCalledWith(
+        expect.objectContaining({
+          dateFrom: '2024-01-01',
+          order: 'orderDownByTakenAt',
+        }),
+      )
       const urlArg = mockBaseQuery.mock.calls[0][0]
       expect(urlArg).toContain('dateFrom=2024-01-01')
     })
@@ -134,13 +141,21 @@ describe('photosApiSlice', () => {
     it('passes pageParam to buildSearchParams for query string', async () => {
       await store.dispatch(
         photosApiSlice.endpoints.getInfinitePhotoWithMax.initiate(
-          { dateFrom: '2024-01-01' },
+          {
+            dateFrom: '2024-01-01',
+            dateTo: undefined,
+            order: undefined,
+            page: 1,
+            tags: [],
+            country: [],
+            city: [],
+          },
           { pageParam: 2 } as never,
         ),
       )
 
       expect(mockBuildSearchParams).toHaveBeenCalledWith(
-        { dateFrom: '2024-01-01' },
+        expect.objectContaining({ dateFrom: '2024-01-01' }),
         expect.any(Number),
       )
     })

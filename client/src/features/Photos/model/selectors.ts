@@ -11,6 +11,6 @@ export const selectSearchCountry = (state: RootState) => state.photos.search.cou
 export const selectSearchCity = (state: RootState) => state.photos.search.city
 export const selectIsInitializedInfiniteQuery = (state: RootState) => {
   const search = selectSearch(state)
-  const queryState = photosApiSlice.endpoints.getInfinitePhotoWithMax.select(search)(state)
+  const queryState = photosApiSlice.endpoints.getInfinitePhotoWithMax.select({ ...search, page: 1 })(state)
   return queryState?.status !== 'uninitialized'
 }

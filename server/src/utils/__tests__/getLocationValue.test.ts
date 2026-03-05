@@ -1,6 +1,6 @@
 import { describe, it, expect } from '@jest/globals'
 import { getLocationValue } from '../getLocationValue'
-import type { ReverseGeocodeResponse } from '../../services/nominatim'
+import type { NominatimReverseResponse } from '@shevdi-home/shared'
 import type { DaDataGeolocateResponse } from '../../services/dadata'
 
 describe('getLocationValue', () => {
@@ -15,7 +15,7 @@ describe('getLocationValue', () => {
   })
 
   it('extracts country and city from Nominatim', () => {
-    const nominatim: ReverseGeocodeResponse = {
+    const nominatim: NominatimReverseResponse = {
       address: {
         country: 'Russia',
         city: 'Tomsk',
@@ -45,7 +45,7 @@ describe('getLocationValue', () => {
   })
 
   it('merges unique values from both sources and orders Russian first, then English', () => {
-    const nominatim: ReverseGeocodeResponse = {
+    const nominatim: NominatimReverseResponse = {
       address: {
         country: 'Russia',
         city: 'Tomsk',
@@ -69,7 +69,7 @@ describe('getLocationValue', () => {
   })
 
   it('deduplicates identical values', () => {
-    const nominatim: ReverseGeocodeResponse = {
+    const nominatim: NominatimReverseResponse = {
       address: {
         country: 'Russia',
         city: 'Moscow',
@@ -93,7 +93,7 @@ describe('getLocationValue', () => {
   })
 
   it('extracts city from Nominatim town/village when city is absent', () => {
-    const nominatim: ReverseGeocodeResponse = {
+    const nominatim: NominatimReverseResponse = {
       address: {
         country: 'Russia',
         town: 'Small Town',

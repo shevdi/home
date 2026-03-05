@@ -1,23 +1,7 @@
 import { useEffect, useState } from 'react'
+import type { NominatimReverseResponse } from '@shevdi-home/shared'
 
-type ReverseGeocodeAddress = {
-  country?: string
-  city?: string
-  town?: string
-  village?: string
-  hamlet?: string
-  street?: string
-  road?: string
-  house_number?: string
-}
-
-type ReverseGeocodeResult = {
-  display_name?: string
-  name?: string
-  address?: ReverseGeocodeAddress
-}
-
-const buildAddressLabel = (data: ReverseGeocodeResult): string | null => {
+const buildAddressLabel = (data: NominatimReverseResponse): string | null => {
   const address = data.address
   if (!address) {
     return data.display_name ?? data.name ?? null
@@ -57,7 +41,7 @@ export const useReverseGeocode = (lat: number, lon: number, enabled = true) => {
           setLabel(null)
           return
         }
-        const data: ReverseGeocodeResult = await response.json()
+        const data: NominatimReverseResponse = await response.json()
         setLabel(buildAddressLabel(data))
       } catch (error) {
         if (error instanceof DOMException && error.name === 'AbortError') {

@@ -1,6 +1,8 @@
 import { DecodedJwtPayload, RequestWithAuth } from '@/types'
 import { NextFunction, Response } from 'express'
 import jwt, { VerifyCallback } from 'jsonwebtoken'
+import { env } from '../config/env.js'
+import { getAuthHeader } from '../utils/authHeader.js'
 
 /**
  * Optional authentication middleware that extracts user info from JWT if present,
@@ -8,17 +10,16 @@ import jwt, { VerifyCallback } from 'jsonwebtoken'
  * User info is attached to req.auth if authentication succeeds.
  */
 export const optionalAuth = (req: RequestWithAuth, res: Response, next: NextFunction) => {
-  const authHeader = (req.headers.authorization || req.headers.Authorization) as string
+  const authHeader = getAuthHeader(req)
 
-  // If no authorization header, proceed without user info
-  if (!authHeader || (typeof authHeader === 'string' && !authHeader?.startsWith('Bearer '))) {
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return next()
   }
 
   const token = authHeader.split(' ')[1]
   jwt.verify(
     token,
-    process.env.ACCESS_TOKEN_SECRET as string,
+    env.ACCESS_TOKEN_SECRET,
     ((err, decoded: DecodedJwtPayload) => {
       // If token is invalid, proceed without user info (don't block)
       if (err) {

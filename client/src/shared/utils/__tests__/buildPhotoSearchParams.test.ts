@@ -72,7 +72,7 @@ describe('buildSearchParams', () => {
   })
 
   it('ignores null/undefined dateFrom and dateTo', () => {
-    expect(buildSearchParams({ dateFrom: null, dateTo: null })).toBe('')
+    expect(buildSearchParams({ dateFrom: undefined, dateTo: undefined })).toBe('')
   })
 
   it('handles search as void', () => {

@@ -9,25 +9,9 @@ import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { getErrorMessage } from '@/shared/utils'
 
-const Section = styled.section`
-  max-width: 360px;
-  margin: 3rem auto;
-  padding: 2rem;
-  background: var(--surface-elevated);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-md);
-  border: 1px solid var(--input-border);
-`
-
-const Head = styled.h1`
-  text-align: center;
-  font-size: 1.5rem;
-  margin: 0 0 1.5rem;
-`
-
 const schema = z.object({
-  username: z.string().nonempty('Поле должно быть заполнено'),
-  password: z.string().nonempty('Поле должно быть заполнено'),
+  username: z.string().min(1, { error: 'Поле должно быть заполнено' }),
+  password: z.string().min(1, { error: 'Поле должно быть заполнено' }),
 })
 
 type FormFields = z.infer<typeof schema>
@@ -86,3 +70,19 @@ export function Login() {
     </Section>
   )
 }
+
+const Section = styled.section`
+  max-width: 360px;
+  margin: 3rem auto;
+  padding: 2rem;
+  background: var(--surface-elevated);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--input-border);
+`
+
+const Head = styled.h1`
+  text-align: center;
+  font-size: 1.5rem;
+  margin: 0 0 1.5rem;
+`

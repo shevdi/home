@@ -9,13 +9,15 @@ function createWrapper(initialSearch = '') {
   }
 }
 
+const DEFAULT_QUERY_PARAMS = { page: 1, tags: [], country: [], city: [] }
+
 describe('useQueryParams', () => {
-  it('returns empty queryParams when URL has no search params', () => {
+  it('returns default queryParams when URL has no search params', () => {
     const { result } = renderHook(() => useQueryParams(), {
       wrapper: createWrapper(),
     })
 
-    expect(result.current.queryParams).toEqual({})
+    expect(result.current.queryParams).toEqual(DEFAULT_QUERY_PARAMS)
     expect(result.current.stringSearchParams).toBe('')
   })
 
@@ -24,10 +26,10 @@ describe('useQueryParams', () => {
       wrapper: createWrapper('?dateFrom=2024-01&dateTo=2024-12'),
     })
 
-    expect(result.current.queryParams).toEqual({
+    expect(result.current.queryParams).toEqual(expect.objectContaining({
       dateFrom: '2024-01',
       dateTo: '2024-12',
-    })
+    }))
     expect(result.current.stringSearchParams).toBe('dateFrom=2024-01&dateTo=2024-12')
   })
 
@@ -36,9 +38,9 @@ describe('useQueryParams', () => {
       wrapper: createWrapper('?order=orderDownByTakenAt'),
     })
 
-    expect(result.current.queryParams).toEqual({
+    expect(result.current.queryParams).toEqual(expect.objectContaining({
       order: 'orderDownByTakenAt',
-    })
+    }))
   })
 
   it('parses tags as array from comma-separated value', () => {
@@ -46,9 +48,9 @@ describe('useQueryParams', () => {
       wrapper: createWrapper('?tags=foo,bar,baz'),
     })
 
-    expect(result.current.queryParams).toEqual({
+    expect(result.current.queryParams).toEqual(expect.objectContaining({
       tags: ['foo', 'bar', 'baz'],
-    })
+    }))
   })
 
   it('parses single tag', () => {
@@ -56,9 +58,9 @@ describe('useQueryParams', () => {
       wrapper: createWrapper('?tags=only'),
     })
 
-    expect(result.current.queryParams).toEqual({
+    expect(result.current.queryParams).toEqual(expect.objectContaining({
       tags: ['only'],
-    })
+    }))
   })
 
   it('parses multiple params including tags', () => {
@@ -66,11 +68,11 @@ describe('useQueryParams', () => {
       wrapper: createWrapper('?dateFrom=2024-01&tags=a,b&order=orderUpByTakenAt'),
     })
 
-    expect(result.current.queryParams).toEqual({
+    expect(result.current.queryParams).toEqual(expect.objectContaining({
       dateFrom: '2024-01',
       tags: ['a', 'b'],
       order: 'orderUpByTakenAt',
-    })
+    }))
   })
 
   it('setQueryParams adds new params', () => {
@@ -82,10 +84,10 @@ describe('useQueryParams', () => {
       result.current.setQueryParams({ dateFrom: '2024-01', dateTo: '2024-12' })
     })
 
-    expect(result.current.queryParams).toEqual({
+    expect(result.current.queryParams).toEqual(expect.objectContaining({
       dateFrom: '2024-01',
       dateTo: '2024-12',
-    })
+    }))
     expect(result.current.stringSearchParams).toContain('dateFrom=2024-01')
     expect(result.current.stringSearchParams).toContain('dateTo=2024-12')
   })
@@ -99,9 +101,9 @@ describe('useQueryParams', () => {
       result.current.setQueryParams({ tags: ['foo', 'bar'] })
     })
 
-    expect(result.current.queryParams).toEqual({
+    expect(result.current.queryParams).toEqual(expect.objectContaining({
       tags: ['foo', 'bar'],
-    })
+    }))
     expect(result.current.stringSearchParams).toBe('tags=foo%2Cbar')
   })
 
@@ -114,9 +116,9 @@ describe('useQueryParams', () => {
       result.current.setQueryParams({ dateFrom: null })
     })
 
-    expect(result.current.queryParams).toEqual({
+    expect(result.current.queryParams).toEqual(expect.objectContaining({
       dateTo: '2024-12',
-    })
+    }))
     expect(result.current.stringSearchParams).not.toContain('dateFrom')
   })
 
@@ -129,7 +131,7 @@ describe('useQueryParams', () => {
       result.current.setQueryParams({ dateFrom: undefined })
     })
 
-    expect(result.current.queryParams).toEqual({})
+    expect(result.current.queryParams).toEqual(DEFAULT_QUERY_PARAMS)
   })
 
   it('setQueryParams removes param when value is empty string', () => {
@@ -141,7 +143,7 @@ describe('useQueryParams', () => {
       result.current.setQueryParams({ dateFrom: '' })
     })
 
-    expect(result.current.queryParams).toEqual({})
+    expect(result.current.queryParams).toEqual(DEFAULT_QUERY_PARAMS)
   })
 
   it('setQueryParams removes param when value is empty array', () => {
@@ -153,7 +155,7 @@ describe('useQueryParams', () => {
       result.current.setQueryParams({ tags: [] })
     })
 
-    expect(result.current.queryParams).toEqual({})
+    expect(result.current.queryParams).toEqual(DEFAULT_QUERY_PARAMS)
   })
 
   it('setQueryParams updates existing params', () => {
@@ -165,9 +167,9 @@ describe('useQueryParams', () => {
       result.current.setQueryParams({ dateFrom: '2024-06' })
     })
 
-    expect(result.current.queryParams).toEqual({
+    expect(result.current.queryParams).toEqual(expect.objectContaining({
       dateFrom: '2024-06',
-    })
+    }))
   })
 
   it('setQueryParams can update multiple params at once', () => {
@@ -183,10 +185,10 @@ describe('useQueryParams', () => {
       })
     })
 
-    expect(result.current.queryParams).toEqual({
+    expect(result.current.queryParams).toEqual(expect.objectContaining({
       dateFrom: '2024-06',
       dateTo: '2024-12',
       order: 'orderDownByTakenAt',
-    })
+    }))
   })
 })

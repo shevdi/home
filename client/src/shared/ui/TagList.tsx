@@ -1,6 +1,6 @@
 import { NavLink } from 'react-router'
 import styled from 'styled-components'
-import { IPhotoSearchParams } from '../types'
+import type { BuildSearchParamsInput } from '../utils/buildSearchParams'
 import { buildSearchParams } from '../utils'
 
 interface IProps {
@@ -8,12 +8,12 @@ interface IProps {
   position?: 'left' | 'center' | 'right'
   url?: {
     pathname: string
-    search: IPhotoSearchParams
+    search: BuildSearchParamsInput
   }
   onClick?: (tagToRemove: string) => void
 }
 
-const replaceTagInSearch = (search: IPhotoSearchParams, tag: string) => {
+const replaceTagInSearch = (search: BuildSearchParamsInput, tag: string) => {
   return buildSearchParams({ ...search, tags: [tag] })
 }
 

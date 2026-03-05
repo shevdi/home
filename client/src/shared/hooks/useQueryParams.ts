@@ -1,20 +1,26 @@
 import { useSearchParams } from 'react-router'
-import { PhotoOrder } from '../types'
+import { photoSearchParamsSchema } from '@shevdi-home/shared'
 
+export type PhotoSearch = import('@shevdi-home/shared').PhotoSearchParams
 
-interface PhotoSearch {
-  dateFrom?: string | null
-  dateTo?: string | null
-  order?: PhotoOrder
-  tags?: string[]
-  country?: string[]
-  city?: string[]
+const DEFAULT_PARAMS = {
+  page: 1,
+  dateFrom: undefined as string | undefined,
+  dateTo: undefined as string | undefined,
+  order: undefined as import('@shevdi-home/shared').PhotoOrder | undefined,
+  tags: [] as string[],
+  country: [] as string[],
+  city: [] as string[],
+}
+
+function parsePhotoSearch(raw: Record<string, string | string[]>): PhotoSearch {
+  const result = photoSearchParamsSchema.safeParse(raw)
+  return result.success ? result.data : DEFAULT_PARAMS
 }
 
 export const useQueryParams = () => {
   const [searchParams, setSearchParams] = useSearchParams()
 
-  // Helper function for updating multiple params
   const setQueryParams = (updates: Record<string, string | string[] | null | undefined>, replace = true) => {
     setSearchParams(
       (searchParams) => {
@@ -36,16 +42,19 @@ export const useQueryParams = () => {
   }
 
   const arrayParams = ['tags', 'country', 'city']
-  const queryParams = Array.from(searchParams.entries()).reduce((prev, [key, val]) => {
-    if (arrayParams.includes(key) && val) {
-      return { ...prev, [key]: val.split(',').filter(Boolean) }
-    }
-    return { ...prev, [key]: val }
-  }, {} as Record<string, string | string[]>)
+  const queryParams = Array.from(searchParams.entries()).reduce<Record<string, string | string[]>>(
+    (prev, [key, val]) => {
+      if (arrayParams.includes(key) && val) {
+        return { ...prev, [key]: val.split(',').filter(Boolean) }
+      }
+      return { ...prev, [key]: val }
+    },
+    {},
+  )
 
   return {
     stringSearchParams: searchParams.toString(),
-    queryParams: queryParams as PhotoSearch,
+    queryParams: parsePhotoSearch(queryParams),
     setQueryParams,
   }
 }

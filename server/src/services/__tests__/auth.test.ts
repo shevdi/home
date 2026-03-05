@@ -1,41 +1,14 @@
-import { describe, it, expect, beforeAll, beforeEach, jest } from '@jest/globals'
+import { describe, it, expect, beforeAll, beforeEach, afterEach, jest } from '@jest/globals'
 import type { Request, Response } from 'express'
 
 type JwtVerifyCallback = (err: Error | null, decoded: { username?: string; UserInfo?: { username?: string; roles?: string[] } } | null) => void
-/** Mock for async functions; use Promise<T> so mockResolvedValue(value) accepts T */
-type JestMockFn<T = unknown> = jest.MockedFunction<(...args: unknown[]) => Promise<T>>
-/** Mock for callback-style functions (e.g. jwt.verify) */
-type JestMockFnCallback = jest.MockedFunction<(...args: unknown[]) => void>
-
-jest.unstable_mockModule('bcrypt', () => ({
-  default: {
-    compare: jest.fn()
-  }
-}))
-
-jest.unstable_mockModule('jsonwebtoken', () => ({
-  default: {
-    sign: jest.fn(),
-    verify: jest.fn()
-  }
-}))
-
-jest.unstable_mockModule('../../db/services/users.js', () => ({
-  getUserByName: jest.fn()
-}))
 
 let login: typeof import('../auth.js').login
 let refresh: typeof import('../auth.js').refresh
 let logout: typeof import('../auth.js').logout
-
-const bcryptMock = (await import('bcrypt')).default as unknown as {
-  compare: jest.Mock
-}
-const jwtMock = (await import('jsonwebtoken')).default as unknown as {
-  sign: jest.Mock
-  verify: jest.Mock
-}
-const usersService = await import('../../db/services/users.js')
+let bcryptModule: typeof import('bcrypt')
+let jwtModule: typeof import('jsonwebtoken')
+let usersModule: typeof import('../../db/services/users.js')
 
 const createRes = () => {
   const res = {
@@ -54,13 +27,20 @@ const createRes = () => {
 }
 
 beforeAll(async () => {
+  bcryptModule = await import('bcrypt')
+  jwtModule = await import('jsonwebtoken')
+  usersModule = await import('../../db/services/users.js')
   ; ({ login, refresh, logout } = await import('../auth.js'))
 })
 
 beforeEach(() => {
-  jest.clearAllMocks()
+  jest.restoreAllMocks()
   process.env.ACCESS_TOKEN_SECRET = 'access-secret'
   process.env.REFRESH_TOKEN_SECRET = 'refresh-secret'
+})
+
+afterEach(() => {
+  jest.restoreAllMocks()
 })
 
 describe('auth service', () => {
@@ -75,9 +55,9 @@ describe('auth service', () => {
   })
 
   it('returns 401 when user not found or inactive', async () => {
-    ; (usersService.getUserByName as JestMockFn).mockResolvedValue({
+    jest.spyOn(usersModule, 'getUserByName').mockResolvedValue({
       active: false
-    })
+    } as never)
     const req = { body: { username: 'user', password: 'pass' } } as unknown as Request
     const res = createRes()
 
@@ -88,13 +68,13 @@ describe('auth service', () => {
   })
 
   it('returns 401 when password does not match', async () => {
-    ; (usersService.getUserByName as JestMockFn).mockResolvedValue({
+    jest.spyOn(usersModule, 'getUserByName').mockResolvedValue({
       name: 'user',
       roles: ['user'],
       password: 'hash',
       active: true
-    })
-      ; (bcryptMock.compare as JestMockFn).mockResolvedValue(false)
+    } as never)
+    jest.spyOn((bcryptModule as unknown as { default: { compare: (...args: unknown[]) => Promise<boolean> } }).default, 'compare').mockResolvedValue(false as never)
     const req = { body: { username: 'user', password: 'pass' } } as unknown as Request
     const res = createRes()
 
@@ -105,16 +85,16 @@ describe('auth service', () => {
   })
 
   it('sets refresh cookie and returns access token on login', async () => {
-    ; (usersService.getUserByName as JestMockFn).mockResolvedValue({
+    jest.spyOn(usersModule, 'getUserByName').mockResolvedValue({
       name: 'user',
       roles: ['admin'],
       password: 'hash',
       active: true
-    })
-      ; (bcryptMock.compare as JestMockFn).mockResolvedValue(true)
-    jwtMock.sign
-      .mockReturnValueOnce('access-token')
-      .mockReturnValueOnce('refresh-token')
+    } as never)
+    jest.spyOn((bcryptModule as unknown as { default: { compare: (...args: unknown[]) => Promise<boolean> } }).default, 'compare').mockResolvedValue(true as never)
+    jest.spyOn((jwtModule as unknown as { default: { sign: (...args: unknown[]) => string; verify: (...args: unknown[]) => void } }).default, 'sign')
+      .mockReturnValueOnce('access-token' as never)
+      .mockReturnValueOnce('refresh-token' as never)
     const req = { body: { username: 'user', password: 'pass' } } as unknown as Request
     const res = createRes()
 
@@ -140,7 +120,7 @@ describe('auth service', () => {
   })
 
   it('returns 403 when refresh token is invalid', async () => {
-    ; (jwtMock.verify as JestMockFnCallback).mockImplementation((...args) => {
+    jest.spyOn((jwtModule as unknown as { default: { sign: (...args: unknown[]) => string; verify: (...args: unknown[]) => void } }).default, 'verify').mockImplementation((...args: unknown[]) => {
       const cb = args[2] as JwtVerifyCallback
       cb(new Error('invalid'), null)
     })
@@ -154,11 +134,11 @@ describe('auth service', () => {
   })
 
   it('returns 401 when refresh token user missing', async () => {
-    ; (jwtMock.verify as JestMockFnCallback).mockImplementation((...args) => {
+    jest.spyOn((jwtModule as unknown as { default: { sign: (...args: unknown[]) => string; verify: (...args: unknown[]) => void } }).default, 'verify').mockImplementation((...args: unknown[]) => {
       const cb = args[2] as JwtVerifyCallback
       cb(null, { username: 'user' })
     })
-      ; (usersService.getUserByName as JestMockFn).mockResolvedValue(null)
+    jest.spyOn(usersModule, 'getUserByName').mockResolvedValue(null as never)
     const req = { cookies: { jwt: 'token' } } as unknown as Request
     const res = createRes()
 
@@ -169,15 +149,15 @@ describe('auth service', () => {
   })
 
   it('returns access token when refresh token valid', async () => {
-    jwtMock.verify.mockImplementation((...args) => {
+    jest.spyOn((jwtModule as unknown as { default: { sign: (...args: unknown[]) => string; verify: (...args: unknown[]) => void } }).default, 'verify').mockImplementation((...args: unknown[]) => {
       const cb = args[2] as JwtVerifyCallback
       cb(null, { username: 'user' })
-    });
-    (usersService.getUserByName as JestMockFn).mockResolvedValue({
+    })
+    jest.spyOn(usersModule, 'getUserByName').mockResolvedValue({
       name: 'user',
       roles: ['user']
-    })
-    jwtMock.sign.mockReturnValueOnce('new-access-token')
+    } as never)
+    jest.spyOn((jwtModule as unknown as { default: { sign: (...args: unknown[]) => string; verify: (...args: unknown[]) => void } }).default, 'sign').mockReturnValueOnce('new-access-token' as never)
     const req = { cookies: { jwt: 'token' } } as unknown as Request
     const res = createRes()
 

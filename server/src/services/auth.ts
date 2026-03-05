@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt'
 import { Request, Response } from 'express'
 import jwt from 'jsonwebtoken'
+import { env } from '../config/env.js'
 import {
   getUserByName
 } from '../db/services/users.ts'
@@ -30,13 +31,13 @@ export const login = async (req: Request, res: Response) => {
         "roles": foundUser.roles
       }
     },
-    process.env.ACCESS_TOKEN_SECRET as string,
+    env.ACCESS_TOKEN_SECRET,
     { expiresIn: '15m' }
   )
 
   const refreshToken = jwt.sign(
     { "username": foundUser.name },
-    process.env.REFRESH_TOKEN_SECRET as string,
+    env.REFRESH_TOKEN_SECRET,
     { expiresIn: '7d' }
   )
 
@@ -59,13 +60,13 @@ export const refresh = (req: Request, res: Response) => {
 
   jwt.verify(
     refreshToken,
-    process.env.REFRESH_TOKEN_SECRET as string,
+    env.REFRESH_TOKEN_SECRET,
     async (err: jwt.VerifyErrors | null, decoded: jwt.JwtPayload | string | undefined) => {
       if (err) {
         return res.status(403).json({ message: 'Токен недействителен' })
       }
 
-      const foundUser = await getUserByName(decoded?.username)
+      const foundUser = await getUserByName(typeof decoded === 'string' ? undefined : decoded?.username)
 
       if (!foundUser) return res.status(401).json({ message: 'Пользователь не найден' })
 
@@ -76,7 +77,7 @@ export const refresh = (req: Request, res: Response) => {
             "roles": foundUser.roles
           }
         },
-        process.env.ACCESS_TOKEN_SECRET as string,
+        env.ACCESS_TOKEN_SECRET,
         { expiresIn: '15m' }
       )
 

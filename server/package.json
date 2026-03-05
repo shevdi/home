@@ -7,8 +7,8 @@
   "scripts": {
     "start": "tsx src/index.ts",
     "dev": "nodemon --exec tsx src/index.ts",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --detectOpenHandles",
-    "test:integration": "node --experimental-vm-modules node_modules/jest/bin/jest.js photos.integration.test --runInBand",
+    "test": "jest --detectOpenHandles",
+    "test:integration": "node --experimental-vm-modules ../node_modules/jest/bin/jest.js photos.integration.test --runInBand",
     "lint": "eslint src"
   },
   "keywords": [
@@ -37,6 +37,7 @@
     "mongoose": "^8.16.0",
     "multer": "^2.0.2",
     "sharp": "^0.34.5",
+    "zod": "^4.3.6",
     "stream": "^0.0.3"
   },
   "devDependencies": {

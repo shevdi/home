@@ -1,16 +1,18 @@
 import { DecodedJwtPayload, RequestWithAuth } from '@/types'
 import { NextFunction, Response } from 'express'
 import jwt, { VerifyCallback } from 'jsonwebtoken'
+import { env } from '../config/env.js'
+import { getAuthHeader } from '../utils/authHeader.js'
 
 export const verifyJWT = (req: RequestWithAuth, res: Response, next: NextFunction) => {
-  const authHeader = (req.headers.authorization || req.headers.Authorization) as string
+  const authHeader = getAuthHeader(req)
   if (!authHeader) {
     if (!req.headers.cookie?.includes('jwt')) {
       return res.status(401).json({ message: 'Unauthorized' })
     }
     return res.status(403).json({ message: 'Forbidden' })
   }
-  if (typeof authHeader === 'string' && !authHeader?.startsWith('Bearer ')) {
+  if (!authHeader.startsWith('Bearer ')) {
     return res.status(401).json({ message: 'Unauthorized' })
   }
 
@@ -18,7 +20,7 @@ export const verifyJWT = (req: RequestWithAuth, res: Response, next: NextFunctio
 
   jwt.verify(
     token,
-    process.env.ACCESS_TOKEN_SECRET as string,
+    env.ACCESS_TOKEN_SECRET,
     ((err, decoded: DecodedJwtPayload) => {
       if (err) return res.status(403).json({ message: 'Forbidden' })
       req.auth = {
