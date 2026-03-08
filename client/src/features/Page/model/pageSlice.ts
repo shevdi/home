@@ -1,5 +1,5 @@
 import { apiSlice } from '@/app/store/api'
-import { IPage } from '@/shared/types'
+import { IPage } from '@shevdi-home/shared';
 
 export const pagesSlice = apiSlice.injectEndpoints({
   endpoints: (build) => ({

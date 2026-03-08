@@ -167,12 +167,17 @@ router.post(`/upload`, upload.array("files", 50), async (req: Request, res: Resp
       return res.status(400).json({ ok: false, error: 'No files provided' })
     }
 
-    // Process files sequentially
-    const results = []
-    for (const file of files) {
+    res.setHeader('Content-Type', 'text/event-stream')
+    res.setHeader('Cache-Control', 'no-cache')
+    res.setHeader('Connection', 'keep-alive')
+    res.flushHeaders()
+
+    const results: Array<{ ok: boolean; fileName: string; photo?: unknown; error?: string }> = []
+    for (let fileIndex = 0; fileIndex < files.length; fileIndex++) {
+      const file = files[fileIndex]
       try {
         const metadata = await sharp(file.buffer).metadata()
-        const gpsMeta = metaList[results.length]
+        const gpsMeta = metaList[fileIndex]
         const meta = {
           ...metadata,
           ...gpsMeta,
@@ -221,24 +226,29 @@ router.post(`/upload`, upload.array("files", 50), async (req: Request, res: Resp
           },
           meta,
         })
-        results.push({ ok: true, photo: addedPhoto })
+        const result = { ok: true, fileName: file.originalname, photo: addedPhoto }
+        results.push(result)
+        res.write(`data: ${JSON.stringify({ type: 'progress', fileIndex, result })}\n\n`)
       } catch (err) {
         logError(err, { route: 'photos', action: 'upload', fileName: file.originalname })
-        console.error(`Error uploading file ${file.originalname}:`, err);
-        results.push({ ok: false, fileName: file.originalname, error: err instanceof Error ? err.message : 'Unknown error' })
+        console.error(`Error uploading file ${file.originalname}:`, err)
+        const result = {
+          ok: false,
+          fileName: file.originalname,
+          error: err instanceof Error ? err.message : 'Unknown error',
+        }
+        results.push(result)
+        res.write(`data: ${JSON.stringify({ type: 'progress', fileIndex, result })}\n\n`)
       }
     }
 
-    const successCount = results.filter(r => r.ok).length
-    const errorsCount = results.filter(r => !r.ok).length
+    const successCount = results.filter((r) => r.ok).length
+    const errorsCount = results.filter((r) => !r.ok).length
     cacheClear('photos')
-    res.json({
-      ok: successCount > 0,
-      successCount,
-      errorsCount,
-      totalCount: files.length,
-      results
-    })
+    res.write(
+      `data: ${JSON.stringify({ type: 'complete', successCount, errorsCount, totalCount: files.length })}\n\n`,
+    )
+    res.end()
   } catch (err) {
     logError(err, { route: 'photos', action: 'upload' })
     const status = getErrorStatus(err);

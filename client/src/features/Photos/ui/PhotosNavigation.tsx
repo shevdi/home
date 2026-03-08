@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import { Link } from 'react-router'
-import { ILink } from '@/shared/types'
+import { ILink } from '@shevdi-home/shared'
 
 interface PhotosNavigationProps {
   photo: ILink | null | undefined

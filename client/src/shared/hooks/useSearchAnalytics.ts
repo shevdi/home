@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { reachGoal } from '@/shared/analytics'
-import type { PhotoOrder } from '@/shared/types'
+import type { PhotoOrder } from '@shevdi-home/shared'
 
 interface SearchParams {
   dateFrom?: string

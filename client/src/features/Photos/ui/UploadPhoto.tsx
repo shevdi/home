@@ -1,57 +1,26 @@
 import { KeyboardEvent, useCallback, useMemo, useState } from 'react'
-import styled from 'styled-components'
+import styled, { keyframes } from 'styled-components'
 import { z } from 'zod'
 import { SubmitHandler, useForm, Controller } from 'react-hook-form'
 import { useDropzone } from 'react-dropzone'
 import { Button, Checkbox, ErrMessage, Input, TagList } from '@/shared/ui'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { UploadResponse, useUploadPhotosMutation } from '../model'
+import { useAppDispatch, useAppSelector } from '@/app/store'
 import { buildMeta, FileMeta } from '../utils/uploadPhotoMeta'
+import { getFileId, resetUpload, uploadPhotosThunk } from '../model'
 import { FileData } from './FileData'
 import { getErrorMessage } from '@/shared/utils'
+
+const dotPulse = keyframes`
+  0%, 80%, 100% { opacity: 0.3; }
+  40% { opacity: 1; }
+`
 
 const getFileLabel = (count: number) => {
   if (count === 0) return 'Загрузить фото'
   if (count === 1) return '1 файл выбран'
   if (count < 5) return `${count} файла выбрано`
   return `${count} файлов выбрано`
-}
-
-const buildMetaPayload = ({ gps, make, model, takenAt }: FileMeta) => ({
-  gpsLatitude: gps?.lat,
-  gpsLongitude: gps?.lon,
-  gpsAltitude: gps?.alt,
-  make,
-  model,
-  takenAt,
-})
-
-const buildUploadFormData = (
-  files: File[],
-  isPrivate: boolean,
-  meta: FileMeta[],
-  country: string[],
-  city: string[],
-  tags: string[],
-) => {
-  const formData = new FormData()
-  formData.append('private', isPrivate.toString())
-  formData.append('meta', JSON.stringify(meta.map(buildMetaPayload)))
-  if (country.length > 0) formData.append('country', country.join(','))
-  if (city.length > 0) formData.append('city', city.join(','))
-  if (tags.length > 0) formData.append('tags', tags.join(','))
-  files.forEach((file) => {
-    formData.append('files', file)
-  })
-  return formData
-}
-
-const getUploadMessage = (response?: { data?: UploadResponse }) => {
-  const data = response?.data
-  if (!data) return ''
-  const { successCount, errorsCount, totalCount } = data
-  if ([successCount, errorsCount, totalCount].some((value) => typeof value !== 'number')) return ''
-  return `Загружено: ${successCount} из ${totalCount}. Ошибок: ${errorsCount}`
 }
 
 const getSubmitLabel = (count: number, isProcessed: boolean) => {
@@ -80,9 +49,17 @@ const schema = z.object({
 type FormFields = z.infer<typeof schema>
 
 export function UploadPhoto() {
-  const [uploadPhoto, { isLoading }] = useUploadPhotosMutation()
+  const dispatch = useAppDispatch()
   const [fileMeta, setFileMeta] = useState<FileMeta[]>([])
-  const [uploadMessage, setUploadMessage] = useState('')
+  const { files: uploadFiles, isUploading } = useAppSelector((state) => state.upload)
+
+  const uploadStatusById = useMemo(() => {
+    const map = new Map<string, { status: 'pending' | 'uploading' | 'success' | 'error'; photoId?: string; error?: string }>()
+    for (const f of uploadFiles) {
+      map.set(f.id, { status: f.status, photoId: f.photoId, error: f.error })
+    }
+    return map
+  }, [uploadFiles])
 
   const {
     control,
@@ -92,7 +69,7 @@ export function UploadPhoto() {
     watch,
     register,
     getValues,
-    formState: { isSubmitting, errors },
+    formState: { errors },
   } = useForm<FormFields>({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -111,7 +88,7 @@ export function UploadPhoto() {
   const country = watch('country') || []
   const city = watch('city') || []
   const tags = watch('tags') || []
-  const isProcessed = isLoading || isSubmitting
+  const isProcessed = isUploading
 
   const fileLabel = useMemo(() => getFileLabel(files.length), [files.length])
 
@@ -151,11 +128,11 @@ export function UploadPhoto() {
 
   const handleDrop = useCallback(
     async (acceptedFiles: File[]) => {
+      dispatch(resetUpload())
       setValue('files', acceptedFiles, { shouldValidate: true })
       setFileMeta(acceptedFiles.length ? await buildMeta(acceptedFiles) : [])
-      setUploadMessage('')
     },
-    [setValue],
+    [dispatch, setValue],
   )
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -175,23 +152,20 @@ export function UploadPhoto() {
     }
 
     const metaForSubmit = await buildMeta(data.files)
-    setFileMeta(metaForSubmit)
-    const formData = buildUploadFormData(
-      data.files,
-      data.private,
-      metaForSubmit,
-      data.country ?? [],
-      data.city ?? [],
-      data.tags ?? [],
-    )
 
     try {
-      const response = await uploadPhoto(formData)
-
-      const nextMessage = getUploadMessage(response)
-      if (nextMessage) {
-        setUploadMessage(nextMessage)
-      }
+      await dispatch(
+        uploadPhotosThunk({
+          files: data.files,
+          meta: metaForSubmit,
+          options: {
+            isPrivate: data.private,
+            country: data.country ?? [],
+            city: data.city ?? [],
+            tags: data.tags ?? [],
+          },
+        }),
+      ).unwrap()
     } catch (error: unknown) {
       const message = getErrorMessage(error)
       setError('root', {
@@ -216,7 +190,15 @@ export function UploadPhoto() {
           </DropzoneArea>
           {errors.files?.message && <ErrorText>{errors.files?.message}</ErrorText>}
         </DropzoneWrapper>
-        {uploadMessage && <UploadMessage>{uploadMessage}</UploadMessage>}
+        {isUploading && (
+          <ProgressIndicator>
+            <DotsAnimation>
+              <span>.</span>
+              <span>.</span>
+              <span>.</span>
+            </DotsAnimation>
+          </ProgressIndicator>
+        )}
         <CheckboxContainer>
           <Controller
             control={control}
@@ -286,16 +268,43 @@ export function UploadPhoto() {
             )}
           />
         </FieldWrapper>
-        {files.length > 0 && (
+        {(files.length > 0 || uploadFiles.length > 0) && (
           <FileList>
-            {files.map((file, index) => {
-              const meta = fileMeta[index]
-              return <FileData key={`${file.name}-${index}`} file={file} meta={meta} />
-            })}
+            {files.length > 0
+              ? files.map((file, index) => {
+                  const fileId = getFileId(file)
+                  const statusInfo = uploadStatusById.get(fileId)
+                  return (
+                    <FileData
+                      key={fileId}
+                      file={file}
+                      name={file.name}
+                      meta={fileMeta[index]}
+                      status={statusInfo?.status}
+                      photoId={statusInfo?.photoId}
+                      error={statusInfo?.error}
+                    />
+                  )
+                })
+              : uploadFiles.map((entry) => (
+                  <FileData
+                    key={entry.id}
+                    name={entry.name}
+                    meta={entry.meta}
+                    status={entry.status}
+                    photoId={entry.photoId}
+                    error={entry.error}
+                    thumbnailUrl={entry.thumbnailUrl}
+                    thumbnailDataUrl={entry.thumbnailDataUrl}
+                  />
+                ))}
           </FileList>
         )}
-        <Button type='submit' disabled={isProcessed || files.length === 0}>
-          {getSubmitLabel(files.length, isProcessed)}
+        <Button
+          type='submit'
+          disabled={isProcessed || (files.length === 0 && uploadFiles.length === 0)}
+        >
+          {getSubmitLabel(Math.max(files.length, uploadFiles.length), isProcessed)}
         </Button>
       </form>
     </PageContainer>
@@ -337,13 +346,38 @@ const ErrorText = styled.div`
   min-height: 1rem;
 `
 
+const ProgressIndicator = styled.div`
+  margin: 0.5rem 0;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+`
+
+const DotsAnimation = styled.span`
+  display: inline-flex;
+  gap: 2px;
+
+  span {
+    animation: ${dotPulse} 1.4s ease-in-out infinite both;
+  }
+  span:nth-child(1) {
+    animation-delay: 0s;
+  }
+  span:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+  span:nth-child(3) {
+    animation-delay: 0.4s;
+  }
+`
+
 const FileList = styled.div`
   margin: 1rem 0;
   padding: 1rem;
-  background-color: #f5f5f5;
-  border-radius: 6px;
-  max-height: 200px;
+  background-color: var(--input-bg);
+  border-radius: var(--radius-md);
+  max-height: 300px;
   overflow-y: auto;
+  border: 1px solid var(--input-border);
 `
 
 const CheckboxContainer = styled.div`
@@ -352,10 +386,4 @@ const CheckboxContainer = styled.div`
 
 const FieldWrapper = styled.div`
   margin-bottom: 1rem;
-`
-
-const UploadMessage = styled.div`
-  margin-top: 0.5rem;
-  font-size: 0.85rem;
-  color: #2e7d32;
 `
