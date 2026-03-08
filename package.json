@@ -15,7 +15,6 @@
     "dev": "concurrently \"npm run dev --prefix server\" \"npm run dev --prefix client\"",
     "start": "concurrently \"npm run start --prefix server\" \"npm run start --prefix client\"",
     "typecheck": "npm run typecheck --prefix client",
-    "test": "npm run test --workspaces --if-present",
     "lint": "npm run lint --workspaces --if-present",
     "docker:build": "docker compose build",
     "docker:up:dev": "docker compose -f docker-compose.dev.yml up --build",

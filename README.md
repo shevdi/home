@@ -23,13 +23,3 @@ Open http://localhost:3000 in your browser.
 ## E2E Tests
 
 Run Playwright E2E tests with `npm run e2e`. **The dev server must be running** (`npm run dev`) in a separate terminal first. See [e2e/README.md](e2e/README.md) for details.
-
-## Releases
-
-- [Changelog](docs/CHANGELOG.md) — cumulative release history
-- [Release notes](docs/releases/) — per-version notes and E2E Allure reports
-
-### GitHub setup
-
-1. **GitHub Pages**: Settings → Pages → Source: Deploy from branch → Branch: `main`, folder: `/docs`
-2. **Branch protection**: Require CI to pass before merging into `main`
