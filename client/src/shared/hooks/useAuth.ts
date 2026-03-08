@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux'
 import { jwtDecode } from 'jwt-decode'
 import { selectCurrentToken } from '@/features/Auth'
-import { DecodedJwtPayload } from '../types'
+import { DecodedJwtPayload } from '@shevdi-home/shared'
 
 export const useAuth = () => {
   const token = useSelector(selectCurrentToken)

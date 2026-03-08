@@ -4,7 +4,7 @@ import z from 'zod'
 import styled from 'styled-components'
 import { useDispatch, useSelector } from 'react-redux'
 import { CalendarPopover, Dropdown, Input, TagList } from '@/shared/ui'
-import { PhotoOrder } from '@/shared/types'
+import { PhotoOrder } from '@shevdi-home/shared'
 import {
   setSearch,
   setOrderSearch,

@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { ILink } from '@/shared/types'
+import { ILink } from '@shevdi-home/shared'
 import { Link } from 'react-router'
 import { formatDate } from '../utils/uploadPhotoMeta'
 import { PrivateBadge } from './PrivateBadge'

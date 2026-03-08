@@ -1,4 +1,4 @@
-import type { ILocation } from '@/shared/types'
+import type { ILocation } from '@shevdi-home/shared'
 
 export type LocationParts = { city: string | null; country: string | null }
 

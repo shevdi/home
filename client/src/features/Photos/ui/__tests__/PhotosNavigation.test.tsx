@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import { MemoryRouter } from 'react-router'
-import { ILink } from '@/shared/types'
+import { ILink } from '@shevdi-home/shared'
 import { PhotosNavigation } from '../PhotosNavigation'
 
 const minimalLink = (overrides: Partial<ILink> = {}): ILink => ({

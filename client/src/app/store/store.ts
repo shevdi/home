@@ -2,7 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import { themeReducer } from "@/features/ThemeSwitch";
 import { pagesSlice } from "@/features/Page";
 import { authReducer } from "@/features";
-import { photosReducer } from "@/features/Photos";
+import { photosReducer, uploadReducer } from "@/features/Photos";
 import { apiSlice } from './api'
 
 export const store = configureStore({
@@ -11,6 +11,7 @@ export const store = configureStore({
     page: pagesSlice.reducer,
     auth: authReducer,
     photos: photosReducer,
+    upload: uploadReducer,
     [apiSlice.reducerPath]: apiSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>

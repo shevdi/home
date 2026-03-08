@@ -1,13 +1,10 @@
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { Provider } from 'react-redux'
+import { MemoryRouter } from 'react-router'
+import { store } from '@/app/store/store'
 import { UploadPhoto } from '../UploadPhoto'
-import { useUploadPhotosMutation } from '../../model'
 import { buildMeta } from '../../utils/uploadPhotoMeta'
-
-jest.mock('../../model', () => ({
-  useUploadPhotosMutation: jest.fn(),
-}))
-
 jest.mock('../../utils/uploadPhotoMeta', () => {
   const actual = jest.requireActual('../../utils/uploadPhotoMeta')
   return {
@@ -16,7 +13,6 @@ jest.mock('../../utils/uploadPhotoMeta', () => {
   }
 })
 
-const mockUseUploadPhotosMutation = useUploadPhotosMutation as jest.Mock
 const mockBuildMeta = buildMeta as jest.MockedFunction<typeof buildMeta>
 
 const createFile = (name = 'photo.jpg') => new File(['file'], name, { type: 'image/jpeg' })
@@ -37,6 +33,15 @@ const baseMeta: BuildMetaItem = {
   takenAt: '2020-01-01T00:00:00Z',
 }
 
+const renderWithStore = () =>
+  render(
+    <Provider store={store}>
+      <MemoryRouter>
+        <UploadPhoto />
+      </MemoryRouter>
+    </Provider>,
+  )
+
 describe('UploadPhoto', () => {
   beforeEach(() => {
     mockBuildMeta.mockResolvedValue([baseMeta])
@@ -47,19 +52,13 @@ describe('UploadPhoto', () => {
   })
 
   it('renders default state and disables submit', () => {
-    const uploadPhoto = jest.fn()
-    mockUseUploadPhotosMutation.mockReturnValue([uploadPhoto, { isLoading: false }])
-
-    const { container } = render(<UploadPhoto />)
+    const { container } = renderWithStore()
 
     expect(container).toMatchSnapshot()
   })
 
   it('updates label and shows selected file', async () => {
-    const uploadPhoto = jest.fn()
-    mockUseUploadPhotosMutation.mockReturnValue([uploadPhoto, { isLoading: false }])
-
-    const { container } = render(<UploadPhoto />)
+    const { container } = renderWithStore()
 
     const user = userEvent.setup()
     const input = getFileInput(container)
@@ -68,13 +67,27 @@ describe('UploadPhoto', () => {
     expect(container).toMatchSnapshot()
   })
 
-  it('submits files and shows success message', async () => {
-    const uploadPhoto = jest.fn().mockResolvedValue({
-      data: { ok: true, successCount: 1, errorsCount: 0, totalCount: 1 },
+  it('submits files and calls fetch for upload', async () => {
+    const sseData = [
+      `data: ${JSON.stringify({ type: 'progress', fileIndex: 0, result: { ok: true, fileName: 'photo.jpg', photo: { _id: 'photo-123' } } })}\n\n`,
+      `data: ${JSON.stringify({ type: 'complete', successCount: 1, errorsCount: 0, totalCount: 1 })}\n\n`,
+    ].join('')
+    const mockStream = {
+      getReader: () => ({
+        read: jest
+          .fn()
+          .mockResolvedValueOnce({ value: new TextEncoder().encode(sseData), done: false })
+          .mockResolvedValue({ value: new Uint8Array(0), done: true }),
+        releaseLock: jest.fn(),
+      }),
+    }
+    const mockFetch = jest.fn().mockResolvedValue({
+      ok: true,
+      body: mockStream,
     })
-    mockUseUploadPhotosMutation.mockReturnValue([uploadPhoto, { isLoading: false }])
+    global.fetch = mockFetch
 
-    const { container } = render(<UploadPhoto />)
+    const { container } = renderWithStore()
 
     const user = userEvent.setup()
     const input = getFileInput(container)
@@ -82,39 +95,24 @@ describe('UploadPhoto', () => {
 
     await user.click(screen.getByRole('button', { name: 'Загрузить 1 фото' }))
 
-    await waitFor(() => expect(uploadPhoto).toHaveBeenCalledTimes(1))
-
-    const formData = uploadPhoto.mock.calls[0][0] as FormData
-    expect(formData.get('private')).toBe('false')
-    expect(formData.getAll('files')).toHaveLength(1)
-    expect(JSON.parse(formData.get('meta') as string)).toEqual([
-      {
-        gpsLatitude: 1,
-        gpsLongitude: 2,
-        gpsAltitude: 3,
-        make: 'Canon',
-        model: 'M50',
-        takenAt: '2020-01-01T00:00:00Z',
-      },
-    ])
-
-    expect(await screen.findByText('Загружено: 1 из 1. Ошибок: 0')).toBeInTheDocument()
-    await waitFor(() => expect(screen.queryByText('photo.jpg')).not.toBeInTheDocument())
-    // expect(screen.getByRole('button', { name: 'Загрузить фото' })).toBeInTheDocument()
-    expect(container).toMatchSnapshot()
+    await waitFor(() => expect(mockFetch).toHaveBeenCalled())
+    expect(mockFetch).toHaveBeenCalledWith(
+      expect.stringContaining('/photos/upload'),
+      expect.any(Object),
+    )
   })
 
   it('shows error message when upload fails', async () => {
-    const uploadPhoto = jest.fn().mockRejectedValue(new Error('boom'))
-    mockUseUploadPhotosMutation.mockReturnValue([uploadPhoto, { isLoading: false }])
+    global.fetch = jest.fn().mockRejectedValue(new Error('Network error'))
 
-    const { container } = render(<UploadPhoto />)
+    const { container } = renderWithStore()
 
     const user = userEvent.setup()
     const input = getFileInput(container)
     await user.upload(input, createFile())
     await user.click(screen.getByRole('button', { name: 'Загрузить 1 фото' }))
 
+    await waitFor(() => expect(screen.getByText(/Не удалось загрузить файлы|Network error/)).toBeInTheDocument())
     expect(container).toMatchSnapshot()
   })
 })

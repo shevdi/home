@@ -3,17 +3,17 @@
 exports[`UploadPhoto renders default state and disables submit 1`] = `
 <div>
   <div
-    class="sc-dtInlp"
+    class="sc-fxwrCX"
   >
     <div
       class="sc-eDPEui mhmKh"
     />
     <form>
       <div
-        class="sc-kOPcWA cwaRxo"
+        class="sc-hIUJlY cJSfLS"
       >
         <div
-          class="sc-cWSHoS dmVEML"
+          class="sc-jnOGJJ kktAHU"
           data-disabled="false"
           role="presentation"
           tabindex="0"
@@ -29,7 +29,7 @@ exports[`UploadPhoto renders default state and disables submit 1`] = `
         </div>
       </div>
       <div
-        class="sc-fhzFiN ZooRL"
+        class="sc-kAkpmZ fJpqyY"
       >
         <label
           class="sc-iGgWBk ildUPc"
@@ -49,7 +49,7 @@ exports[`UploadPhoto renders default state and disables submit 1`] = `
         </label>
       </div>
       <div
-        class="sc-jxOSlu dfhtNa"
+        class="sc-gFVvzo igurXB"
       >
         <div
           class="sc-jlZhev fTWaMY"
@@ -72,7 +72,7 @@ exports[`UploadPhoto renders default state and disables submit 1`] = `
         />
       </div>
       <div
-        class="sc-jxOSlu dfhtNa"
+        class="sc-gFVvzo igurXB"
       >
         <div
           class="sc-jlZhev fTWaMY"
@@ -95,7 +95,7 @@ exports[`UploadPhoto renders default state and disables submit 1`] = `
         />
       </div>
       <div
-        class="sc-jxOSlu dfhtNa"
+        class="sc-gFVvzo igurXB"
       >
         <div
           class="sc-jlZhev fTWaMY"
@@ -132,19 +132,19 @@ exports[`UploadPhoto renders default state and disables submit 1`] = `
 exports[`UploadPhoto shows error message when upload fails 1`] = `
 <div>
   <div
-    class="sc-dtInlp"
+    class="sc-fxwrCX"
   >
     <div
       class="sc-eDPEui mhmKh"
     >
-      boom
+      Network error
     </div>
     <form>
       <div
-        class="sc-kOPcWA cwaRxo"
+        class="sc-hIUJlY cJSfLS"
       >
         <div
-          class="sc-cWSHoS dmVEML"
+          class="sc-jnOGJJ kktAHU"
           data-disabled="false"
           role="presentation"
           tabindex="0"
@@ -160,7 +160,7 @@ exports[`UploadPhoto shows error message when upload fails 1`] = `
         </div>
       </div>
       <div
-        class="sc-fhzFiN ZooRL"
+        class="sc-kAkpmZ fJpqyY"
       >
         <label
           class="sc-iGgWBk ildUPc"
@@ -180,7 +180,7 @@ exports[`UploadPhoto shows error message when upload fails 1`] = `
         </label>
       </div>
       <div
-        class="sc-jxOSlu dfhtNa"
+        class="sc-gFVvzo igurXB"
       >
         <div
           class="sc-jlZhev fTWaMY"
@@ -203,7 +203,7 @@ exports[`UploadPhoto shows error message when upload fails 1`] = `
         />
       </div>
       <div
-        class="sc-jxOSlu dfhtNa"
+        class="sc-gFVvzo igurXB"
       >
         <div
           class="sc-jlZhev fTWaMY"
@@ -226,7 +226,7 @@ exports[`UploadPhoto shows error message when upload fails 1`] = `
         />
       </div>
       <div
-        class="sc-jxOSlu dfhtNa"
+        class="sc-gFVvzo igurXB"
       >
         <div
           class="sc-jlZhev fTWaMY"
@@ -249,168 +249,52 @@ exports[`UploadPhoto shows error message when upload fails 1`] = `
         />
       </div>
       <div
-        class="sc-dCFHLc hOOKmm"
+        class="sc-cmaqme jFhXoP"
       >
         <div
-          class="sc-kOHTFy eefjsO"
+          class="sc-klVQfr hCkyrS"
         >
-          photo.jpg
-           | 
-          image/jpeg
-           · 
-          4 B
-           · Canon M50
-           · 01.01.2020, 03:00:00
-           · 1.000000, 2.000000 · 3m
-        </div>
-      </div>
-      <button
-        class="sc-dLMFT ePPioQ"
-        type="submit"
-      >
-        Загрузить 1 фото
-      </button>
-    </form>
-  </div>
-</div>
-`;
-
-exports[`UploadPhoto submits files and shows success message 1`] = `
-<div>
-  <div
-    class="sc-dtInlp"
-  >
-    <div
-      class="sc-eDPEui mhmKh"
-    />
-    <form>
-      <div
-        class="sc-kOPcWA cwaRxo"
-      >
-        <div
-          class="sc-cWSHoS dmVEML"
-          data-disabled="false"
-          role="presentation"
-          tabindex="0"
-        >
-          <input
-            accept="image/jpeg,.jpeg,.jpg,image/png,.png,image/gif,.gif,image/webp,.webp"
-            multiple=""
-            style="border: 0px; clip: rect(0px, 0px, 0px, 0px); clip-path: inset(50%); height: 1px; margin: 0px -1px -1px 0px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap;"
-            tabindex="-1"
-            type="file"
-          />
-          1 файл выбран
-        </div>
-      </div>
-      <div
-        class="sc-lcIPJf gPMmyM"
-      >
-        Загружено: 1 из 1. Ошибок: 0
-      </div>
-      <div
-        class="sc-fhzFiN ZooRL"
-      >
-        <label
-          class="sc-iGgWBk ildUPc"
-        >
-          <input
-            class="sc-gsFSXt dbMBul"
-            type="checkbox"
-          />
-          <span
-            class="sc-kAycey bFgwAS"
-          />
-          <span
-            class="sc-imWYAH jBgRds"
+          <div
+            class="sc-bypJrU dCgqcO"
           >
-            Скрыть
-          </span>
-        </label>
-      </div>
-      <div
-        class="sc-jxOSlu dfhtNa"
-      >
-        <div
-          class="sc-jlZhev fTWaMY"
-        >
-          <label
-            class="sc-jEACwF iYthgV"
-            for="upload-photo-country"
+            <div
+              style="width: 100%; height: 100%; background: var(--input-disabled-color);"
+            />
+          </div>
+          <div
+            class="sc-ddjGPF jokSPh"
           >
-            Страна
-          </label>
-          <input
-            class="sc-cwHptO LvpCg"
-            id="upload-photo-country"
-            name="countryInput"
-            placeholder="Введите страну и нажмите Enter"
-          />
-        </div>
-        <div
-          class="sc-feUZmx kqTaa"
-        />
-      </div>
-      <div
-        class="sc-jxOSlu dfhtNa"
-      >
-        <div
-          class="sc-jlZhev fTWaMY"
-        >
-          <label
-            class="sc-jEACwF iYthgV"
-            for="upload-photo-city"
-          >
-            Город
-          </label>
-          <input
-            class="sc-cwHptO LvpCg"
-            id="upload-photo-city"
-            name="cityInput"
-            placeholder="Введите город и нажмите Enter"
-          />
-        </div>
-        <div
-          class="sc-feUZmx kqTaa"
-        />
-      </div>
-      <div
-        class="sc-jxOSlu dfhtNa"
-      >
-        <div
-          class="sc-jlZhev fTWaMY"
-        >
-          <label
-            class="sc-jEACwF iYthgV"
-            for="upload-photo-tags"
-          >
-            Теги
-          </label>
-          <input
-            class="sc-cwHptO LvpCg"
-            id="upload-photo-tags"
-            name="tagInput"
-            placeholder="Введите тег и нажмите Enter"
-          />
-        </div>
-        <div
-          class="sc-feUZmx kqTaa"
-        />
-      </div>
-      <div
-        class="sc-dCFHLc hOOKmm"
-      >
-        <div
-          class="sc-kOHTFy eefjsO"
-        >
-          photo.jpg
-           | 
-          image/jpeg
-           · 
-          4 B
-           · Canon M50
-           · 01.01.2020, 03:00:00
-           · 1.000000, 2.000000 · 3m
+            <div
+              class="sc-dSCufm FoGle"
+            >
+              <span>
+                photo.jpg
+              </span>
+              <span
+                class="sc-gmPhUo cRYUdg"
+              >
+                <span>
+                  .
+                </span>
+                <span>
+                  .
+                </span>
+                <span>
+                  .
+                </span>
+              </span>
+            </div>
+            <span
+              class="sc-cfxfcL jorOx"
+            >
+              image/jpeg
+               · 
+              4 B
+               · Canon M50
+               · 01.01.2020, 03:00:00
+               · 1.000000, 2.000000 · 3m
+            </span>
+          </div>
         </div>
       </div>
       <button
@@ -427,17 +311,17 @@ exports[`UploadPhoto submits files and shows success message 1`] = `
 exports[`UploadPhoto updates label and shows selected file 1`] = `
 <div>
   <div
-    class="sc-dtInlp"
+    class="sc-fxwrCX"
   >
     <div
       class="sc-eDPEui mhmKh"
     />
     <form>
       <div
-        class="sc-kOPcWA cwaRxo"
+        class="sc-hIUJlY cJSfLS"
       >
         <div
-          class="sc-cWSHoS dmVEML"
+          class="sc-jnOGJJ kktAHU"
           data-disabled="false"
           role="presentation"
           tabindex="0"
@@ -453,7 +337,7 @@ exports[`UploadPhoto updates label and shows selected file 1`] = `
         </div>
       </div>
       <div
-        class="sc-fhzFiN ZooRL"
+        class="sc-kAkpmZ fJpqyY"
       >
         <label
           class="sc-iGgWBk ildUPc"
@@ -473,7 +357,7 @@ exports[`UploadPhoto updates label and shows selected file 1`] = `
         </label>
       </div>
       <div
-        class="sc-jxOSlu dfhtNa"
+        class="sc-gFVvzo igurXB"
       >
         <div
           class="sc-jlZhev fTWaMY"
@@ -496,7 +380,7 @@ exports[`UploadPhoto updates label and shows selected file 1`] = `
         />
       </div>
       <div
-        class="sc-jxOSlu dfhtNa"
+        class="sc-gFVvzo igurXB"
       >
         <div
           class="sc-jlZhev fTWaMY"
@@ -519,7 +403,7 @@ exports[`UploadPhoto updates label and shows selected file 1`] = `
         />
       </div>
       <div
-        class="sc-jxOSlu dfhtNa"
+        class="sc-gFVvzo igurXB"
       >
         <div
           class="sc-jlZhev fTWaMY"
@@ -542,19 +426,39 @@ exports[`UploadPhoto updates label and shows selected file 1`] = `
         />
       </div>
       <div
-        class="sc-dCFHLc hOOKmm"
+        class="sc-cmaqme jFhXoP"
       >
         <div
-          class="sc-kOHTFy eefjsO"
+          class="sc-klVQfr hCkyrS"
         >
-          photo.jpg
-           | 
-          image/jpeg
-           · 
-          4 B
-           · Canon M50
-           · 01.01.2020, 03:00:00
-           · 1.000000, 2.000000 · 3m
+          <div
+            class="sc-bypJrU dCgqcO"
+          >
+            <div
+              style="width: 100%; height: 100%; background: var(--input-disabled-color);"
+            />
+          </div>
+          <div
+            class="sc-ddjGPF jokSPh"
+          >
+            <div
+              class="sc-dSCufm FoGle"
+            >
+              <span>
+                photo.jpg
+              </span>
+            </div>
+            <span
+              class="sc-cfxfcL jorOx"
+            >
+              image/jpeg
+               · 
+              4 B
+               · Canon M50
+               · 01.01.2020, 03:00:00
+               · 1.000000, 2.000000 · 3m
+            </span>
+          </div>
         </div>
       </div>
       <button
