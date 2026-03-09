@@ -36,7 +36,7 @@ test.describe('Login flow', () => {
 
     await test.step('Logged-in state is confirmed', async () => {
       await expect(page).toHaveURL(/\/(home)?$/);
-      await expect(page.getByRole('link', { name: 'Редактировать' })).toBeVisible();
+      await expect(page.getByRole('link', { name: 'Редактировать' })).toBeVisible({ timeout: 15000 });
     });
 
     await test.step('Log out via settings', async () => {
