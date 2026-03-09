@@ -292,7 +292,7 @@ test.describe('Photo flows', () => {
       await test.step('Open photo detail page', async () => {
         if (!photo?._id) throw new Error('Photo id is not found');
         await page.goto(`/photos/${photo._id}`);
-        await expect(page.getByText(photo.title || photo.name || '')).toBeVisible({ timeout: 10000 });
+        await expect(page.getByRole('link', { name: 'Полный размер' })).toBeVisible({ timeout: 10000 });
       });
 
       await test.step('Date link and tag list are not shown', async () => {
