@@ -10,7 +10,7 @@ COPY client ./client
 
 RUN npm install
 
-# Flatten: client runs from /app
+# Flatten: client runs from /app (watch sync target)
 RUN cp -r client/. .
 
 # Build at image build time so app is ready when container starts
