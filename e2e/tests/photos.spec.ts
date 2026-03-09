@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import type { ILink } from '@shevdi-home/shared';
-import { seedPhotos, resetPhotos, getPhotosFromApi, resetMock } from './helpers/api';
+import { seedPhotos, resetPhotos, getPhotosFromApi, resetMock, seedUser } from './helpers/api';
 import { loginAsAdmin } from './helpers/auth';
 import { mockPhotos } from './fixtures/photo-mocks';
 
@@ -8,6 +8,7 @@ const GALLERY_PHOTO = 'figure a[href^="/photos/"]';
 
 test.describe('Photo flows', () => {
   test.beforeAll(async ({ request }) => {
+    await seedUser(request);
     await resetPhotos(request);
     await resetMock(request);
   });

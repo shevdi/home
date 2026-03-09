@@ -1,6 +1,11 @@
 import { test, expect } from '@playwright/test';
+import { seedUser } from './helpers/api';
 
 test.describe('Login flow', () => {
+  test.beforeAll(async ({ request }) => {
+    await seedUser(request);
+  });
+
   test.beforeEach(async ({ page }) => {
     await page.goto('/login');
   });
