@@ -1,0 +1,26 @@
+FROM node:22-alpine
+
+ARG BACKEND_URL=http://localhost:3001/api/v1
+WORKDIR /app
+
+# Root package files for workspace resolution
+COPY package.json package-lock.json ./
+COPY shared ./shared
+COPY client ./client
+
+RUN npm install
+
+# Flatten: client runs from /app
+RUN cp -r client/. .
+
+# Build at image build time so app is ready when container starts
+ENV BACKEND_URL=${BACKEND_URL}
+RUN npm run build
+
+# Install serve for static file hosting
+RUN npm install -g serve
+
+EXPOSE 3000
+
+# Serve pre-built static files (no compilation on first request)
+CMD ["serve", "-s", "dist", "-l", "3000"]

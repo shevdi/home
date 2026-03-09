@@ -51,26 +51,10 @@ services:
   home-frontend:
     build:
       context: .
-      dockerfile: client/Dockerfile.dev
+      dockerfile: client/Dockerfile.e2e
       args:
         BACKEND_URL: http://localhost:3001/api/v1
-    environment:
-      - BACKEND_URL=http://localhost:3001/api/v1
-      - NODE_ENV=development
-      - CHOKIDAR_USEPOLLING=true
     ports:
       - "3000:3000"
-      - "8080:8080"
     depends_on:
       - home-backend
-    develop:
-      watch:
-        - action: sync
-          path: ./client
-          target: /app
-          ignore:
-            - node_modules/
-        - action: rebuild
-          path: ./client/package.json
-        - action: rebuild
-          path: ./client/package-lock.json
