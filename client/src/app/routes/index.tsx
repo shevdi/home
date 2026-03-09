@@ -1,11 +1,9 @@
 import { BrowserRouter, Routes, Route } from 'react-router'
 import {
-  ProjectsPage,
   WelcomePage,
   LoginPage,
   EditWelcomePage,
   NotFoundPage,
-  EditProjectsPage,
   PhotosPage,
   PhotoPage,
   EditPhotoPage,
@@ -27,12 +25,6 @@ export function RoutesList() {
               <Route index element={<WelcomePage />} />
               <Route element={<RequireAuth allowedRoles={['admin']} />}>
                 <Route path='edit' element={<EditWelcomePage />} />
-              </Route>
-            </Route>
-            <Route path='projects'>
-              <Route index element={<ProjectsPage />} />
-              <Route element={<RequireAuth allowedRoles={['admin']} />}>
-                <Route path='edit' element={<EditProjectsPage />} />
               </Route>
             </Route>
             <Route path='photos'>
