@@ -1,5 +1,4 @@
-export { WelcomePage } from './Welcome'
-export { EditWelcomePage } from './Welcome'
+export { WelcomePage, EditWelcomePage } from './Welcome'
 export { PhotoPage, PhotosPage, EditPhotoPage, UploadPhotoPage } from './Photos'
 export { LoginPage } from './Login/Login'
 export { NotFoundPage } from './NotFound/NotFound'
