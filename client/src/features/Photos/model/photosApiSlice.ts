@@ -1,16 +1,7 @@
 import { apiSlice } from '@/app/store/api'
 import type { FetchBaseQueryError, FetchBaseQueryMeta, QueryReturnValue } from '@reduxjs/toolkit/query'
-import type { ILink, IPhotosResponse, PhotoSearchParams } from '@shevdi-home/shared'
+import type { ILink, IPhotosResponse, PhotoSearchParams, UploadResponse } from '@shevdi-home/shared'
 import { buildSearchParams } from '@/shared/utils'
-
-export interface UploadResponse {
-  ok: boolean
-  successCount?: number
-  errorsCount?: number
-  totalCount?: number
-  results?: Array<{ ok: boolean; fileName: string; error?: string }>
-  error?: string
-}
 
 let lastInfiniteSearchKey: string | null = null
 let lastInfiniteAbortControllers: AbortController[] = []

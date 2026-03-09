@@ -1,4 +1,7 @@
 export * from './selectors'
 export * from './photosApiSlice'
 export * from './photosSlice'
+export * from './uploadSlice'
+export * from './uploadThunk'
 export { default as photosReducer } from './photosSlice'
+export { uploadReducer } from './uploadSlice'

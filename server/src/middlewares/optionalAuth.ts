@@ -1,8 +1,9 @@
-import { DecodedJwtPayload, RequestWithAuth } from '@/types'
 import { NextFunction, Response } from 'express'
 import jwt, { VerifyCallback } from 'jsonwebtoken'
 import { env } from '../config/env.js'
 import { getAuthHeader } from '../utils/authHeader.js'
+import { RequestWithAuth } from '@/services/auth'
+import { DecodedJwtPayload } from '@shevdi-home/shared'
 
 /**
  * Optional authentication middleware that extracts user info from JWT if present,

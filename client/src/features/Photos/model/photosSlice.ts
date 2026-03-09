@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { PhotoOrder } from '@/shared/types'
+import { PhotoOrder } from '@shevdi-home/shared'
 
 interface PhotosState {
   filter: {
