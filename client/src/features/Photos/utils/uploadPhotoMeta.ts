@@ -33,11 +33,23 @@ export const formatGps = (gps?: FileMeta['gps']) => {
   return `${lat}, ${lon}${Number.isFinite(gps.alt) ? ` · ${gps.alt}m` : ''}`
 }
 
+const DATE_LOCALE = 'ru-RU'
+const DATE_TIMEZONE = 'Europe/Moscow'
+
 export const formatDate = (value?: string) => {
   if (!value) return ''
   const date = new Date(value)
   if (Number.isNaN(date.getTime())) return value
-  return date.toLocaleString()
+  return new Intl.DateTimeFormat(DATE_LOCALE, {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false,
+    timeZone: DATE_TIMEZONE,
+  }).format(date)
 }
 
 export const getImageDimensions = (file: File) =>
