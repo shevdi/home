@@ -18,7 +18,7 @@ services:
       dockerfile: server/Dockerfile.dev
     environment:
       - PORT=3001
-      - DATABASE_URL=mongodb://host.docker.internal:27017/home_e2e
+      - DATABASE_URL=mongodb://home-database:27017/home_e2e
       - NODE_ENV=development
       - DRIME_URL=http://mock-server:3004
       - DRIME_TOKEN=mock-token
