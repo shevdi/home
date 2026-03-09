@@ -5,6 +5,17 @@ import { loginAsAdmin } from './helpers/auth';
 import { mockPhotos } from './fixtures/photo-mocks';
 
 const GALLERY_PHOTO = 'figure a[href^="/photos/"]';
+const PHOTOS_API_PATTERN = /\/api\/v1\/photos(\?|$)/;
+
+async function waitForPhotosAndGallery(page: import('@playwright/test').Page) {
+  const responsePromise = page.waitForResponse(
+    (resp) => PHOTOS_API_PATTERN.test(resp.url()) && resp.status() === 200,
+    { timeout: 30000 },
+  );
+  await page.goto('/photos');
+  await responsePromise;
+  await expect(page.locator(GALLERY_PHOTO).first()).toBeVisible({ timeout: 20000 });
+}
 
 test.describe('Photo flows', () => {
   test.beforeAll(async ({ request }) => {
@@ -28,8 +39,7 @@ test.describe('Photo flows', () => {
   test.describe('unauthenticated user', () => {
     test('views photo gallery', async ({ page }) => {
       await test.step('Open photo gallery', async () => {
-        await page.goto('/photos');
-        await expect(page.locator(GALLERY_PHOTO).first()).toBeVisible({ timeout: 15000 });
+        await waitForPhotosAndGallery(page);
       });
 
       await test.step('Public photos visible, private badge absent', async () => {
@@ -39,8 +49,7 @@ test.describe('Photo flows', () => {
 
     test('goes to photo by click', async ({ page }) => {
       await test.step('Open gallery and wait for photos', async () => {
-        await page.goto('/photos');
-        await expect(page.locator(GALLERY_PHOTO).first()).toBeVisible({ timeout: 15000 });
+        await waitForPhotosAndGallery(page);
       });
 
       await test.step('Click first photo', async () => {
@@ -87,8 +96,7 @@ test.describe('Photo flows', () => {
 
     test('views photo gallery', async ({ page }) => {
       await test.step('Open gallery', async () => {
-        await page.goto('/photos');
-        await expect(page.locator(GALLERY_PHOTO).first()).toBeVisible({ timeout: 15000 });
+        await waitForPhotosAndGallery(page);
       });
 
       await test.step('Enable private filter', async () => {
@@ -102,8 +110,7 @@ test.describe('Photo flows', () => {
 
     test('goes to photo by click', async ({ page }) => {
       await test.step('Open gallery and wait for photos', async () => {
-        await page.goto('/photos');
-        await expect(page.locator(GALLERY_PHOTO).first()).toBeVisible({ timeout: 15000 });
+        await waitForPhotosAndGallery(page);
       });
 
       await test.step('Click first photo', async () => {
@@ -195,8 +202,7 @@ test.describe('Photo flows', () => {
   test.describe('search and filter', () => {
     test('filters by tag', async ({ page }) => {
       await test.step('Open gallery', async () => {
-        await page.goto('/photos');
-        await expect(page.locator(GALLERY_PHOTO).first()).toBeVisible({ timeout: 15000 });
+        await waitForPhotosAndGallery(page);
       });
 
       await test.step('Filter by tag вьетнам', async () => {
@@ -211,8 +217,7 @@ test.describe('Photo flows', () => {
 
     test('filters by non-existent tag shows empty gallery', async ({ page }) => {
       await test.step('Open gallery', async () => {
-        await page.goto('/photos');
-        await expect(page.locator(GALLERY_PHOTO).first()).toBeVisible({ timeout: 15000 });
+        await waitForPhotosAndGallery(page);
       });
 
       await test.step('Filter by non-existent tag', async () => {
@@ -227,8 +232,7 @@ test.describe('Photo flows', () => {
 
     test('filters by country', async ({ page }) => {
       await test.step('Open gallery', async () => {
-        await page.goto('/photos');
-        await expect(page.locator(GALLERY_PHOTO).first()).toBeVisible({ timeout: 15000 });
+        await waitForPhotosAndGallery(page);
       });
 
       await test.step('Filter by country Вьетнам', async () => {

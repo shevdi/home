@@ -40,7 +40,7 @@ test.describe('Login flow', () => {
     });
 
     await test.step('Log out via settings', async () => {
-      await page.getByRole('button', { name: 'Настройки' }).click();
+      await page.getByLabel('Настройки').click();
       await page.getByRole('button', { name: 'Выйти' }).click();
     });
 
