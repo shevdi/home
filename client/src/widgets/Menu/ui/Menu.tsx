@@ -15,10 +15,9 @@ export function Menu(): ReactElement {
     setModalOpen(!isModalOpen)
   }
 
-  // TODO ModalButtondoes not work without data-testid in github actions CI/CD pipeline
   return (
     <ModalContainer>
-      <ModalButton onClick={toggleModal} aria-label='Настройки' data-testid='settings-button'>
+      <ModalButton onClick={toggleModal} aria-label='Настройки'>
         <Gear />
       </ModalButton>
 
