@@ -11,6 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - CI and release workflow with GitHub Actions
 
+## [0.0.13] - 2026-03-10
+
+### Added
+- Release v0.0.13
+
+
 ## [0.0.8] - 2026-03-10
 
 ### Added
