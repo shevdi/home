@@ -12,7 +12,18 @@ async function waitForPhotosAndGallery(page: import('@playwright/test').Page) {
     (resp) => PHOTOS_API_PATTERN.test(resp.url()) && resp.status() === 200,
     { timeout: 30000 },
   );
-  await page.goto('/photos');
+  await page.goto('/photos', { waitUntil: 'domcontentloaded' });
+  await responsePromise;
+  await expect(page.locator(GALLERY_PHOTO).first()).toBeVisible({ timeout: 20000 });
+}
+
+/** Navigate to /photos via header link (client-side nav) to preserve auth state. Use after loginAsAdmin. */
+async function waitForPhotosAndGalleryViaNav(page: import('@playwright/test').Page) {
+  const responsePromise = page.waitForResponse(
+    (resp) => PHOTOS_API_PATTERN.test(resp.url()) && resp.status() === 200,
+    { timeout: 30000 },
+  );
+  await page.getByRole('link', { name: 'Фото' }).click();
   await responsePromise;
   await expect(page.locator(GALLERY_PHOTO).first()).toBeVisible({ timeout: 20000 });
 }
@@ -96,7 +107,7 @@ test.describe('Photo flows', () => {
 
     test('views photo gallery', async ({ page }) => {
       await test.step('Open gallery', async () => {
-        await waitForPhotosAndGallery(page);
+        await waitForPhotosAndGalleryViaNav(page);
       });
 
       await test.step('Enable private filter', async () => {
@@ -110,7 +121,7 @@ test.describe('Photo flows', () => {
 
     test('goes to photo by click', async ({ page }) => {
       await test.step('Open gallery and wait for photos', async () => {
-        await waitForPhotosAndGallery(page);
+        await waitForPhotosAndGalleryViaNav(page);
       });
 
       await test.step('Click first photo', async () => {
@@ -130,8 +141,11 @@ test.describe('Photo flows', () => {
         return photos.find((p: ILink) => p.private);
       });
 
-      await test.step('Navigate to private photo URL', async () => {
-        await page.goto(`/photos/${privatePhoto?._id}`);
+      await test.step('Open gallery and navigate to private photo', async () => {
+        await waitForPhotosAndGalleryViaNav(page);
+        await page.getByText('Приватные').click();
+        await expect(page.locator(`a[href^="/photos/${privatePhoto?._id}"]`)).toBeVisible({ timeout: 5000 });
+        await page.locator(`a[href^="/photos/${privatePhoto?._id}"]`).first().click();
       });
 
       await test.step('Private photo is accessible', async () => {
@@ -151,7 +165,9 @@ test.describe('Photo flows', () => {
       });
 
       await test.step('Navigate to edit page', async () => {
-        await page.goto(`/photos/${photo._id}/edit`);
+        await waitForPhotosAndGalleryViaNav(page);
+        await page.locator(`a[href^="/photos/${photo._id}"]`).first().click();
+        await page.getByRole('link', { name: 'Редактировать' }).click();
         await expect(page.locator('input[name="title"]')).toBeVisible({ timeout: 10000 });
       });
 
@@ -176,7 +192,9 @@ test.describe('Photo flows', () => {
       });
 
       await test.step('Navigate to edit page', async () => {
-        await page.goto(`/photos/${photo._id}/edit`);
+        await waitForPhotosAndGalleryViaNav(page);
+        await page.locator(`a[href^="/photos/${photo._id}"]`).first().click();
+        await page.getByRole('link', { name: 'Редактировать' }).click();
         await expect(page.getByRole('button', { name: 'Удалить' })).toBeVisible({ timeout: 10000 });
       });
 

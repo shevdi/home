@@ -2,9 +2,10 @@ import { setCredentials } from '@/features/Auth/model/authSlice';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import type { BaseQueryFn, BaseQueryApi } from '@reduxjs/toolkit/query'
 import type { RootState } from './store'
+import { getBackendUrl } from '@/shared/utils/getBackendUrl'
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: `${process.env.BACKEND_URL}`,
+  baseUrl: getBackendUrl(),
   mode: "cors",
   credentials: "include",
   cache: "no-store",

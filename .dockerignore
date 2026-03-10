@@ -1,0 +1,12 @@
+**/node_modules
+.git
+.gitignore
+*.log
+coverage
+.react-router
+client/dist
+e2e/test-results
+e2e/allure-results
+e2e/allure-report
+.vscode
+.DS_Store

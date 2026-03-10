@@ -14,6 +14,7 @@ import {
 import { createThumbnailDataUrl } from '../utils/createThumbnailDataUrl'
 import type { FileMeta } from '../utils/uploadPhotoMeta'
 import type { UploadProgressEvent, UploadCompleteEvent } from '@shevdi-home/shared'
+import { getBackendUrl } from '@/shared/utils/getBackendUrl'
 
 const BATCH_SIZE = 5
 
@@ -170,7 +171,7 @@ export async function uploadPhotosInBatches(
   dispatch: Dispatch,
   getState: () => RootState,
 ): Promise<void> {
-  const baseUrl = process.env.BACKEND_URL ?? ''
+  const baseUrl = getBackendUrl();
   const token = (getState().auth as { token?: string })?.token
 
   const fileEntries: UploadFileEntry[] = files.map((file, i) => ({

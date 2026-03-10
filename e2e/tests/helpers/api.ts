@@ -2,7 +2,7 @@ import { test } from '@playwright/test';
 import type { APIRequestContext } from '@playwright/test';
 import type { ILink } from '@shevdi-home/shared';
 
-export const API_URL = 'http://localhost:3001/api/v1';
+export const API_URL = process.env.E2E_API_URL || 'http://localhost:3001/api/v1';
 
 export async function apiLogin(request: APIRequestContext): Promise<string> {
   const username = process.env.E2E_LOGIN;
@@ -58,7 +58,7 @@ export async function getPhotosFromApi(request: APIRequestContext): Promise<ILin
   });
 }
 
-const MOCK_URL = 'http://localhost:3004';
+const MOCK_URL = process.env.E2E_MOCK_URL || 'http://localhost:3004';
 
 export async function resetMock(request: APIRequestContext): Promise<void> {
   await test.step('Reset mock server', async () => {

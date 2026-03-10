@@ -34,6 +34,12 @@ services:
       - RATE_LIMIT_LOGIN_MAX=50
     ports:
       - "3001:3001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/api/v1/health"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
     depends_on:
       - home-database
       - mock-server
@@ -53,8 +59,35 @@ services:
       context: .
       dockerfile: client/Dockerfile.e2e
       args:
-        BACKEND_URL: http://localhost:3001/api/v1
+        BACKEND_URL: http://home-backend:3001/api/v1
     ports:
       - "3000:3000"
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:3000"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
     depends_on:
-      - home-backend
+      home-backend:
+        condition: service_healthy
+  e2e:
+    build:
+      context: .
+      dockerfile: e2e/Dockerfile
+    volumes:
+      - ./e2e/allure-results:/app/e2e/allure-results
+      - ./e2e/test-results:/app/e2e/test-results
+    environment:
+      - E2E_BASE_URL=http://home-frontend:3000
+      - E2E_API_URL=http://home-backend:3001/api/v1
+      - E2E_MOCK_URL=http://mock-server:3004
+      - E2E_LOGIN=shevdi
+      - E2E_PASSWORD=pass
+    depends_on:
+      home-frontend:
+        condition: service_healthy
+    ipc: host
+    init: true
+    profiles:
+      - test

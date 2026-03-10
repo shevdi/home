@@ -2,7 +2,23 @@
 
 End-to-end tests for the home-auth app using Playwright.
 
-## Prerequisites
+## Running tests
+
+### Fully in Docker (recommended)
+
+Runs the app stack and tests entirely in Docker. No local Node or Playwright setup required:
+
+```bash
+npm run docker:e2e
+```
+
+To tear down the stack after a run:
+
+```bash
+npm run docker:e2e:down
+```
+
+### On host (dev server required)
 
 - **Dev server must be running** before executing E2E tests. Start it with:
   ```bash
@@ -15,8 +31,6 @@ End-to-end tests for the home-auth app using Playwright.
   E2E_LOGIN=admin E2E_PASSWORD=yourpassword npm run e2e
   ```
   Tests that require authentication will be skipped if these are not set.
-
-## Running tests
 
 From the project root:
 
