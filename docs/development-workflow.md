@@ -35,22 +35,16 @@ git push origin release/1.1.1
 - Unit tests (client, server)
 - E2E tests (Docker stack + Playwright)
 
-### 3. Push when ready (tag created automatically)
+### 3. Push the version tag when ready
 
-When the release is ready, push the branch. On the **first push** to `release/X.Y.Z`, the Create Release Tag workflow automatically creates and pushes tag `vX.Y.Z`, which triggers the Release workflow.
-
-```bash
-git push origin release/1.1.1
-```
-
-If you need to release again from the same branch (e.g. after fixes), push the tag manually:
+When the release is ready, create and push a tag `vX.Y.Z`:
 
 ```bash
 git tag v1.1.1
 git push origin v1.1.1
 ```
 
-Optionally run `npm version 1.1.1 --no-git-tag-version` before pushing to keep package.json in sync locally; the Release workflow will set it from the tag regardless.
+Optionally run `npm version 1.1.1 --no-git-tag-version` before tagging to keep package.json in sync locally; the Release workflow will set it from the tag regardless.
 
 **Release** workflow runs on tag push. It:
 
@@ -76,11 +70,10 @@ The tag uses the `v` prefix; the branch name does not.
 
 ## GitHub Actions
 
-| Workflow           | Trigger              | Purpose                                              |
-|--------------------|----------------------|------------------------------------------------------|
-| CI                 | Push/PR to main, release/* | Lint, unit tests, E2E tests                          |
-| Create Release Tag | Push to release/*   | Creates tag vX.Y.Z on first push (if tag missing)   |
-| Release            | Push tag v*          | Full release: tests, docs, merge to main             |
+| Workflow | Trigger              | Purpose                                      |
+|----------|----------------------|----------------------------------------------|
+| CI       | Push/PR to main, release/* | Lint, unit tests, E2E tests                  |
+| Release  | Push tag v*          | Full release: tests, docs, merge to main     |
 
 ## See Also
 
