@@ -13,14 +13,21 @@ RUN npm install
 # Copy other file to my current directory
 COPY . .
 
+# BACKEND_URL must be passed at build time (e.g. --build-arg BACKEND_URL=https://api.example.com)
+ARG BACKEND_URL
+ENV BACKEND_URL=$BACKEND_URL
+
 # Build optimise static file
 RUN npm run build
 
 # Stage-2
 FROM nginx:1.25.2-alpine-slim
 
-# Copy static file to my nignx folder for serve static contain
-COPY --from=builder /app/build /usr/share/nginx/html
+# Copy custom nginx config for SPA routing (prevents redirect cycle)
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Copy static file to nginx folder for serve static content
+COPY --from=builder /app/dist /usr/share/nginx/html
 
 # Open the port for react
 EXPOSE 80

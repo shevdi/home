@@ -10,4 +10,5 @@
 /.react-router/
 /build/
 /client/dist
+/client/.env
 docker-compose.dev.yml

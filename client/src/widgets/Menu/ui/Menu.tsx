@@ -17,7 +17,7 @@ export function Menu(): ReactElement {
 
   return (
     <ModalContainer>
-      <ModalButton onClick={toggleModal} aria-label='Настройки'>
+      <ModalButton onClick={toggleModal} aria-label="Настройки">
         <Gear />
       </ModalButton>
 

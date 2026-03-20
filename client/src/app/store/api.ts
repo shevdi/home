@@ -3,6 +3,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import type { BaseQueryFn, BaseQueryApi } from '@reduxjs/toolkit/query'
 import type { RootState } from './store'
 import { getBackendUrl } from '@/shared/utils/getBackendUrl'
+import { reachGoal } from '@/shared/analytics'
 
 const baseQuery = fetchBaseQuery({
   baseUrl: getBackendUrl(),
@@ -21,7 +22,8 @@ const baseQuery = fetchBaseQuery({
 const baseQueryWithReauth: BaseQueryFn = async (args, api, extraOptions) => {
   let result = await baseQuery(args, api as BaseQueryApi, extraOptions)
 
-  if (result?.error?.status === 403) {
+  const hasToken = !!(api.getState() as RootState).auth?.token
+  if (result?.error?.status === 403 && hasToken) {
     const refreshResult = await baseQuery('/auth/refresh', api as BaseQueryApi, extraOptions)
 
     if (refreshResult?.data) {
@@ -36,6 +38,10 @@ const baseQueryWithReauth: BaseQueryFn = async (args, api, extraOptions) => {
     }
   }
 
+  if (result?.error) {
+    const status = (result.error as { status?: number })?.status
+    if (status) reachGoal('api_error', { status })
+  }
   return result
 }
 

@@ -11,8 +11,8 @@ const commonConfig: Configuration = {
   plugins: [
     new webpack.EnvironmentPlugin({
       NODE_ENV: 'development',
-      BACKEND_URL: process.env.BACKEND_URL || 'https://home-server-shevdi.amvera.io/api/v1',
-      YANDEX_METRIKA_ID: process.env.YANDEX_METRIKA_ID || ''
+      BACKEND_URL: process.env.BACKEND_URL,
+      YANDEX_METRIKA_ID: process.env.YANDEX_METRIKA_ID
       // BACKEND_URL: 'http://localhost:3001/api/v1'
     }),
     new HtmlWebpackPlugin({
