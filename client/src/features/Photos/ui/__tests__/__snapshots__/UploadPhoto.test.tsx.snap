@@ -3,17 +3,17 @@
 exports[`UploadPhoto renders default state and disables submit 1`] = `
 <div>
   <div
-    class="sc-fxwrCX"
+    class="sc-hIUJlY"
   >
     <div
       class="sc-eDPEui mhmKh"
     />
     <form>
       <div
-        class="sc-hIUJlY cJSfLS"
+        class="sc-jnOGJJ kxVVvt"
       >
         <div
-          class="sc-jnOGJJ kktAHU"
+          class="sc-dZoeqx dQLAYR"
           data-disabled="false"
           role="presentation"
           tabindex="0"
@@ -29,7 +29,7 @@ exports[`UploadPhoto renders default state and disables submit 1`] = `
         </div>
       </div>
       <div
-        class="sc-kAkpmZ fJpqyY"
+        class="sc-gFVvzo hRbIgO"
       >
         <label
           class="sc-iGgWBk ildUPc"
@@ -49,7 +49,7 @@ exports[`UploadPhoto renders default state and disables submit 1`] = `
         </label>
       </div>
       <div
-        class="sc-gFVvzo igurXB"
+        class="sc-brPLxv hdeOEr"
       >
         <div
           class="sc-jlZhev fTWaMY"
@@ -72,7 +72,7 @@ exports[`UploadPhoto renders default state and disables submit 1`] = `
         />
       </div>
       <div
-        class="sc-gFVvzo igurXB"
+        class="sc-brPLxv hdeOEr"
       >
         <div
           class="sc-jlZhev fTWaMY"
@@ -95,7 +95,7 @@ exports[`UploadPhoto renders default state and disables submit 1`] = `
         />
       </div>
       <div
-        class="sc-gFVvzo igurXB"
+        class="sc-brPLxv hdeOEr"
       >
         <div
           class="sc-jlZhev fTWaMY"
@@ -132,7 +132,7 @@ exports[`UploadPhoto renders default state and disables submit 1`] = `
 exports[`UploadPhoto shows error message when upload fails 1`] = `
 <div>
   <div
-    class="sc-fxwrCX"
+    class="sc-hIUJlY"
   >
     <div
       class="sc-eDPEui mhmKh"
@@ -141,10 +141,10 @@ exports[`UploadPhoto shows error message when upload fails 1`] = `
     </div>
     <form>
       <div
-        class="sc-hIUJlY cJSfLS"
+        class="sc-jnOGJJ kxVVvt"
       >
         <div
-          class="sc-jnOGJJ kktAHU"
+          class="sc-dZoeqx dQLAYR"
           data-disabled="false"
           role="presentation"
           tabindex="0"
@@ -160,7 +160,7 @@ exports[`UploadPhoto shows error message when upload fails 1`] = `
         </div>
       </div>
       <div
-        class="sc-kAkpmZ fJpqyY"
+        class="sc-gFVvzo hRbIgO"
       >
         <label
           class="sc-iGgWBk ildUPc"
@@ -180,7 +180,7 @@ exports[`UploadPhoto shows error message when upload fails 1`] = `
         </label>
       </div>
       <div
-        class="sc-gFVvzo igurXB"
+        class="sc-brPLxv hdeOEr"
       >
         <div
           class="sc-jlZhev fTWaMY"
@@ -203,7 +203,7 @@ exports[`UploadPhoto shows error message when upload fails 1`] = `
         />
       </div>
       <div
-        class="sc-gFVvzo igurXB"
+        class="sc-brPLxv hdeOEr"
       >
         <div
           class="sc-jlZhev fTWaMY"
@@ -226,7 +226,7 @@ exports[`UploadPhoto shows error message when upload fails 1`] = `
         />
       </div>
       <div
-        class="sc-gFVvzo igurXB"
+        class="sc-brPLxv hdeOEr"
       >
         <div
           class="sc-jlZhev fTWaMY"
@@ -249,7 +249,7 @@ exports[`UploadPhoto shows error message when upload fails 1`] = `
         />
       </div>
       <div
-        class="sc-cmaqme jFhXoP"
+        class="sc-kAkpmZ gTaxFf"
       >
         <div
           class="sc-klVQfr hCkyrS"
@@ -295,6 +295,13 @@ exports[`UploadPhoto shows error message when upload fails 1`] = `
                · 1.000000, 2.000000 · 3m
             </span>
           </div>
+          <button
+            aria-label="Удалить файл photo.jpg"
+            class="sc-fxwrCX dIYcHA"
+            type="button"
+          >
+            ×
+          </button>
         </div>
       </div>
       <button
@@ -311,17 +318,17 @@ exports[`UploadPhoto shows error message when upload fails 1`] = `
 exports[`UploadPhoto updates label and shows selected file 1`] = `
 <div>
   <div
-    class="sc-fxwrCX"
+    class="sc-hIUJlY"
   >
     <div
       class="sc-eDPEui mhmKh"
     />
     <form>
       <div
-        class="sc-hIUJlY cJSfLS"
+        class="sc-jnOGJJ kxVVvt"
       >
         <div
-          class="sc-jnOGJJ kktAHU"
+          class="sc-dZoeqx dQLAYR"
           data-disabled="false"
           role="presentation"
           tabindex="0"
@@ -337,7 +344,7 @@ exports[`UploadPhoto updates label and shows selected file 1`] = `
         </div>
       </div>
       <div
-        class="sc-kAkpmZ fJpqyY"
+        class="sc-gFVvzo hRbIgO"
       >
         <label
           class="sc-iGgWBk ildUPc"
@@ -357,7 +364,7 @@ exports[`UploadPhoto updates label and shows selected file 1`] = `
         </label>
       </div>
       <div
-        class="sc-gFVvzo igurXB"
+        class="sc-brPLxv hdeOEr"
       >
         <div
           class="sc-jlZhev fTWaMY"
@@ -380,7 +387,7 @@ exports[`UploadPhoto updates label and shows selected file 1`] = `
         />
       </div>
       <div
-        class="sc-gFVvzo igurXB"
+        class="sc-brPLxv hdeOEr"
       >
         <div
           class="sc-jlZhev fTWaMY"
@@ -403,7 +410,7 @@ exports[`UploadPhoto updates label and shows selected file 1`] = `
         />
       </div>
       <div
-        class="sc-gFVvzo igurXB"
+        class="sc-brPLxv hdeOEr"
       >
         <div
           class="sc-jlZhev fTWaMY"
@@ -426,7 +433,7 @@ exports[`UploadPhoto updates label and shows selected file 1`] = `
         />
       </div>
       <div
-        class="sc-cmaqme jFhXoP"
+        class="sc-kAkpmZ gTaxFf"
       >
         <div
           class="sc-klVQfr hCkyrS"
@@ -459,6 +466,13 @@ exports[`UploadPhoto updates label and shows selected file 1`] = `
                · 1.000000, 2.000000 · 3m
             </span>
           </div>
+          <button
+            aria-label="Удалить файл photo.jpg"
+            class="sc-fxwrCX dIYcHA"
+            type="button"
+          >
+            ×
+          </button>
         </div>
       </div>
       <button

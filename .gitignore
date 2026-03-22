@@ -11,4 +11,5 @@
 /build/
 /client/dist
 /client/.env
+/server/.env
 docker-compose.dev.yml

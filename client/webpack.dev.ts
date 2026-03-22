@@ -1,5 +1,6 @@
 import path from 'path'
 import { merge } from 'webpack-merge'
+import webpack from 'webpack'
 import commonConfig from './webpack.common'
 import { Configuration } from 'webpack';
 import { Configuration as DevServerConfiguration } from 'webpack-dev-server';
@@ -10,6 +11,11 @@ interface CustomConfiguration extends Configuration {
 
 const devConfig: CustomConfiguration = merge(commonConfig, {
   mode: 'development',
+  plugins: [
+    new webpack.EnvironmentPlugin({
+      YANDEX_METRIKA_ID: '',
+    }),
+  ],
   output: {
     filename: "[name].js",
   },

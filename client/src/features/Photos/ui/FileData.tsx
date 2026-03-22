@@ -17,6 +17,8 @@ type FileDataProps = {
   thumbnailUrl?: string
   /** Data URL thumbnail - for pending/uploading, persists across navigation */
   thumbnailDataUrl?: string
+  /** Remove from staged list (e.g. before upload) */
+  onRemove?: () => void
 }
 
 export const FileData = ({
@@ -28,6 +30,7 @@ export const FileData = ({
   error,
   thumbnailUrl,
   thumbnailDataUrl,
+  onRemove,
 }: FileDataProps) => {
   const [localThumbUrl, setLocalThumbUrl] = useState<string | null>(null)
 
@@ -62,6 +65,18 @@ export const FileData = ({
         </FileNameRow>
         {meta && <FileMetaComponent meta={meta} />}
       </FileContent>
+      {onRemove && (
+        <RemoveFileButton
+          type='button'
+          onClick={(e) => {
+            e.stopPropagation()
+            onRemove()
+          }}
+          aria-label={`Удалить файл ${name}`}
+        >
+          ×
+        </RemoveFileButton>
+      )}
     </FileItem>
   )
 }
@@ -101,4 +116,21 @@ const FileNameRow = styled.div`
   align-items: center;
   gap: 0.5rem;
   flex-wrap: wrap;
+`
+
+const RemoveFileButton = styled.button`
+  flex-shrink: 0;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0.15rem 0.25rem;
+  opacity: 0.85;
+
+  &:hover {
+    opacity: 1;
+    color: var(--text-color);
+  }
 `

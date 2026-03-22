@@ -12,8 +12,6 @@ const commonConfig: Configuration = {
     new webpack.EnvironmentPlugin({
       NODE_ENV: 'development',
       BACKEND_URL: process.env.BACKEND_URL,
-      YANDEX_METRIKA_ID: process.env.YANDEX_METRIKA_ID
-      // BACKEND_URL: 'http://localhost:3001/api/v1'
     }),
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, "public", "index.html"),

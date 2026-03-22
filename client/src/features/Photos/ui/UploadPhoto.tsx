@@ -7,7 +7,7 @@ import { Button, Checkbox, ErrMessage, Input, TagList } from '@/shared/ui'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useAppDispatch, useAppSelector } from '@/app/store'
 import { buildMeta, FileMeta } from '../utils/uploadPhotoMeta'
-import { getFileId, resetUpload, uploadPhotosThunk } from '../model'
+import { getFileId, removeUploadFile, resetUpload, uploadPhotosThunk } from '../model'
 import { FileData } from './FileData'
 import { getErrorMessage } from '@/shared/utils'
 
@@ -54,7 +54,10 @@ export function UploadPhoto() {
   const { files: uploadFiles, isUploading } = useAppSelector((state) => state.upload)
 
   const uploadStatusById = useMemo(() => {
-    const map = new Map<string, { status: 'pending' | 'uploading' | 'success' | 'error'; photoId?: string; error?: string }>()
+    const map = new Map<
+      string,
+      { status: 'pending' | 'uploading' | 'success' | 'error'; photoId?: string; error?: string }
+    >()
     for (const f of uploadFiles) {
       map.set(f.id, { status: f.status, photoId: f.photoId, error: f.error })
     }
@@ -84,6 +87,7 @@ export function UploadPhoto() {
     },
   })
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const files = watch('files') || []
   const country = watch('country') || []
   const city = watch('city') || []
@@ -135,6 +139,17 @@ export function UploadPhoto() {
     [dispatch, setValue],
   )
 
+  const removeFileAt = useCallback(
+    (index: number) => {
+      if (isUploading) return
+      const next = files.filter((_, i) => i !== index)
+      setValue('files', next, { shouldValidate: true, shouldDirty: true })
+      setFileMeta((prev) => prev.filter((_, i) => i !== index))
+      if (next.length === 0) dispatch(resetUpload())
+    },
+    [dispatch, files, isUploading, setValue],
+  )
+
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop: (acceptedFiles) => void handleDrop(acceptedFiles),
     accept: IMAGE_ACCEPT,
@@ -142,15 +157,7 @@ export function UploadPhoto() {
     multiple: true,
   })
 
-  const onSubmit: SubmitHandler<FormFields> = async (submitData) => {
-    const { success, data } = schema.safeParse(submitData)
-    if (!success) {
-      setError('files', {
-        message: 'Пожалуйста, выберите файлы',
-      })
-      return
-    }
-
+  const onSubmit: SubmitHandler<FormFields> = async (data) => {
     const metaForSubmit = await buildMeta(data.files)
 
     try {
@@ -283,6 +290,7 @@ export function UploadPhoto() {
                       status={statusInfo?.status}
                       photoId={statusInfo?.photoId}
                       error={statusInfo?.error}
+                      onRemove={isProcessed ? undefined : () => removeFileAt(index)}
                     />
                   )
                 })
@@ -296,15 +304,13 @@ export function UploadPhoto() {
                     error={entry.error}
                     thumbnailUrl={entry.thumbnailUrl}
                     thumbnailDataUrl={entry.thumbnailDataUrl}
+                    onRemove={isProcessed ? undefined : () => dispatch(removeUploadFile(entry.id))}
                   />
                 ))}
           </FileList>
         )}
-        <Button
-          type='submit'
-          disabled={isProcessed || (files.length === 0 && uploadFiles.length === 0)}
-        >
-          {getSubmitLabel(Math.max(files.length, uploadFiles.length), isProcessed)}
+        <Button type='submit' disabled={isProcessed || files.length === 0}>
+          {getSubmitLabel(files.length, isProcessed)}
         </Button>
       </form>
     </PageContainer>

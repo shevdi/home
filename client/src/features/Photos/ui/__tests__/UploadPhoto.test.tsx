@@ -4,6 +4,7 @@ import { Provider } from 'react-redux'
 import { MemoryRouter } from 'react-router'
 import { store } from '@/app/store/store'
 import { UploadPhoto } from '../UploadPhoto'
+import { finishUpload, resetUpload, startUpload } from '../../model'
 import { buildMeta } from '../../utils/uploadPhotoMeta'
 jest.mock('../../utils/uploadPhotoMeta', () => {
   const actual = jest.requireActual('../../utils/uploadPhotoMeta')
@@ -33,6 +34,12 @@ const baseMeta: BuildMetaItem = {
   takenAt: '2020-01-01T00:00:00Z',
 }
 
+const secondMeta: BuildMetaItem = {
+  ...baseMeta,
+  name: 'other.jpg',
+  lastModified: 456,
+}
+
 const renderWithStore = () =>
   render(
     <Provider store={store}>
@@ -44,6 +51,7 @@ const renderWithStore = () =>
 
 describe('UploadPhoto', () => {
   beforeEach(() => {
+    store.dispatch(resetUpload())
     mockBuildMeta.mockResolvedValue([baseMeta])
   })
 
@@ -65,6 +73,55 @@ describe('UploadPhoto', () => {
     await user.upload(input, createFile())
 
     expect(container).toMatchSnapshot()
+  })
+
+  it('removes one staged file when remove is clicked', async () => {
+    mockBuildMeta.mockResolvedValue([baseMeta, secondMeta])
+    const { container } = renderWithStore()
+
+    const user = userEvent.setup()
+    const input = getFileInput(container)
+    await user.upload(input, [createFile('photo.jpg'), createFile('other.jpg')])
+
+    await waitFor(() => {
+      expect(screen.getByText('photo.jpg')).toBeInTheDocument()
+      expect(screen.getByText('other.jpg')).toBeInTheDocument()
+    })
+
+    await user.click(screen.getByRole('button', { name: 'Удалить файл photo.jpg' }))
+
+    expect(screen.queryByText('photo.jpg')).not.toBeInTheDocument()
+    expect(screen.getByText('other.jpg')).toBeInTheDocument()
+    expect(screen.getByText('1 файл выбран')).toBeInTheDocument()
+  })
+
+  it('shows remove for list from Redux when form has no staged files', async () => {
+    store.dispatch(
+      startUpload({
+        uploadId: 'test-upload',
+        files: [
+          {
+            id: 'persisted-id',
+            name: 'saved.jpg',
+            status: 'success',
+            photoId: 'photo-99',
+            meta: baseMeta,
+          },
+        ],
+      }),
+    )
+    store.dispatch(finishUpload())
+
+    renderWithStore()
+
+    expect(screen.getByText('saved.jpg')).toBeInTheDocument()
+    const removeBtn = screen.getByRole('button', { name: 'Удалить файл saved.jpg' })
+    expect(removeBtn).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Загрузить фото' })).toBeDisabled()
+
+    const user = userEvent.setup()
+    await user.click(removeBtn)
+    expect(screen.queryByText('saved.jpg')).not.toBeInTheDocument()
   })
 
   it('submits files and calls fetch for upload', async () => {
@@ -96,10 +153,7 @@ describe('UploadPhoto', () => {
     await user.click(screen.getByRole('button', { name: 'Загрузить 1 фото' }))
 
     await waitFor(() => expect(mockFetch).toHaveBeenCalled())
-    expect(mockFetch).toHaveBeenCalledWith(
-      expect.stringContaining('/photos/upload'),
-      expect.any(Object),
-    )
+    expect(mockFetch).toHaveBeenCalledWith(expect.stringContaining('/photos/upload'), expect.any(Object))
   })
 
   it('shows error message when upload fails', async () => {

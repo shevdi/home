@@ -84,6 +84,14 @@ const uploadSlice = createSlice({
       state.uploadId = null
       state.isUploading = false
     },
+    removeUploadFile: (state, action: PayloadAction<string>) => {
+      state.files = state.files.filter((f) => f.id !== action.payload)
+      if (state.files.length === 0) {
+        state.uploadId = null
+        state.isUploading = false
+        state.currentBatchIndex = 0
+      }
+    },
     resetUpload: () => initialState,
   },
 })
@@ -95,6 +103,7 @@ export const {
   setFileThumbnail,
   setFileError,
   finishUpload,
+  removeUploadFile,
   resetUpload,
 } = uploadSlice.actions
 
