@@ -3,12 +3,22 @@ FROM node:22-alpine
 ARG BACKEND_URL=http://localhost:3001/api/v1
 WORKDIR /app
 
-# Root package files for workspace resolution
+# 1) Only manifests first — this layer stays cached when only source changes
 COPY package.json package-lock.json ./
-COPY shared ./shared
-COPY client ./client
+COPY client/package.json ./client/package.json
+COPY server/package.json ./server/package.json
+COPY mock-server/package.json ./mock-server/package.json
+COPY e2e/package.json ./e2e/package.json
+COPY shared/package.json ./shared/package.json
+COPY ui-kit/package.json ./ui-kit/package.json
 
-RUN npm install
+# 2) Install once; ci is faster than install (no resolver) and matches the lockfile
+RUN npm ci --no-audit --no-fund
+
+# 3) Application source (invalidates only when these trees change)
+COPY shared ./shared
+COPY ui-kit ./ui-kit
+COPY client ./client
 
 # Flatten: client runs from /app (watch sync target)
 RUN cp -r client/. .

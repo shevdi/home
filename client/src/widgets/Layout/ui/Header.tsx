@@ -49,7 +49,6 @@ const Nav = styled.nav`
   justify-content: space-between;
   align-items: center;
   padding: 0.75rem 1.5rem;
-  max-width: 1200px;
   margin: 0 auto;
 `
 

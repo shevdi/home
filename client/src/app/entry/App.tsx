@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { ThemeProvider } from 'styled-components'
 import { Provider } from 'react-redux'
 import { RootState, store } from '@/app/store/store'
@@ -6,6 +7,9 @@ import { darkTheme, lightTheme, DarkGlobalStyle, LightGlobalStyle, GlobalStyle }
 
 function TP({ children }: React.PropsWithChildren) {
   const theme = useAppSelector((state: RootState) => state.config.theme)
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme === 'dark' ? 'dark' : 'light'
+  }, [theme])
   return (
     <ThemeProvider theme={theme === 'dark' ? darkTheme : lightTheme}>
       <GlobalStyle />

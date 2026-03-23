@@ -1,3 +1,4 @@
+import '@shevdi-home/ui-kit/style.css'
 import React from 'react'
 import { createRoot } from 'react-dom/client'
 import { App } from '@/app/entry/App'

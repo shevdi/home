@@ -8,10 +8,12 @@
     "server",
     "mock-server",
     "e2e",
-    "shared"
+    "shared",
+    "ui-kit"
   ],
   "scripts": {
-    "build": "npm run build --prefix client",
+    "build": "npm run build:ui-kit && npm run build --prefix client",
+    "build:ui-kit": "npm run build --workspace=@shevdi-home/ui-kit",
     "dev": "concurrently \"npm run dev --prefix server\" \"npm run dev --prefix client\"",
     "start": "concurrently \"npm run start --prefix server\" \"npm run start --prefix client\"",
     "typecheck": "npm run typecheck --prefix client",

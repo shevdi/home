@@ -2,30 +2,6 @@ import { createGlobalStyle } from 'styled-components'
 import bgLight from '../../assets/background-light.jpg'
 
 export const LightGlobalStyle = createGlobalStyle`
-  :root {
-    --modal-back-color: rgba(250, 248, 245, 0.96);
-    --nav-back-color: #1a2a2e;
-    --nav-back-color-end: #1e2d32;
-    --nav-font-color: #f5f3ef;
-    --link-color: #2d2a26;
-    --input-bg: rgba(255, 255, 255, 1);
-    --input-border: rgba(0, 62, 31, 0.8);
-    --input-focus: rgba(0, 62, 31, 1);
-    --input-focus-shadow: rgba(0, 62, 31, 0.2);
-    --input-disabled-color: #cacede;
-    --text-color: #2d2a26;
-    --text-muted: #6b6560;
-    --surface: #faf8f5;
-    --surface-elevated: rgba(255, 255, 255, 0.92);
-    --dropdown-over-nav: rgba(255, 255, 255, 0.98);
-    --accent: #003e1f;
-    --accent-hover: #003e1f;
-    --circle: #d5f2e3;
-    --glass-bg: rgba(255, 255, 255, 0.75);
-    --glass-border: rgba(255, 255, 255, 0.5);
-    --glass-shadow: 0 4px 24px rgba(0, 0, 0, 0.06), 0 1px 0 rgba(255, 255, 255, 0.5) inset;
-  }
-
   body {
     color: var(--text-color);
     margin: 0;

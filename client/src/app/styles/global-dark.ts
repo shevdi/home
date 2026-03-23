@@ -2,30 +2,6 @@ import { createGlobalStyle } from 'styled-components'
 import bgDark from '../../assets/background-dark.jpg'
 
 export const DarkGlobalStyle = createGlobalStyle`
-  :root {
-    --modal-back-color: rgba(15, 22, 28, 0.97);
-    --nav-back-color: #0f1619;
-    --nav-back-color-end: #151d22;
-    --nav-font-color: #e8e4df;
-    --link-color: #e8e4df;
-    --input-bg: rgba(26, 35, 42, 1);
-    --input-border: rgba(213, 242, 227, 0.8);
-    --input-focus: rgba(213, 242, 227, 1);
-    --input-focus-shadow: rgba(213, 242, 227, 0.2);
-    --input-disabled-color: #606473;
-    --text-color: #e8e4df;
-    --text-muted: #9ca3af;
-    --surface: #0a0f12;
-    --surface-elevated: rgba(26, 35, 42, 0.95);
-    --dropdown-over-nav: rgba(26, 35, 42, 0.98);
-    --accent: #73ba9b;
-    --accent-hover: #73ba9b;
-    --circle: #003e1f;
-    --glass-bg: rgba(26, 35, 42, 0.7);
-    --glass-border: rgba(255, 255, 255, 0.06);
-    --glass-shadow: 0 4px 24px rgba(0, 0, 0, 0.3), 0 1px 0 rgba(255, 255, 255, 0.03) inset;
-  }
-
   body {
     color: var(--text-color);
     margin: 0;

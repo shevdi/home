@@ -1,0 +1,77 @@
+/* Design tokens: shared sizes + theme colors. Theme switches via html[data-theme="light"|"dark"] */
+
+:root {
+  --error-color: #c70c50;
+  --warning-color: #ba2d0b;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.25s ease;
+
+  /* Size scale (used by components) */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --font-size-sm: 0.875rem;
+  --font-size-md: 0.95rem;
+  --font-size-label: 0.9rem;
+  --control-min-height: 2.7rem;
+}
+
+/* Light theme (default) */
+:root,
+html[data-theme='light'] {
+  --modal-back-color: rgba(250, 248, 245, 0.96);
+  --nav-back-color: #1a2a2e;
+  --nav-back-color-end: #1e2d32;
+  --nav-font-color: #f5f3ef;
+  --link-color: #2d2a26;
+  --input-bg: rgba(255, 255, 255, 1);
+  --input-border: rgba(0, 62, 31, 0.8);
+  --input-focus: rgba(0, 62, 31, 1);
+  --input-focus-shadow: rgba(0, 62, 31, 0.2);
+  --input-disabled-color: #cacede;
+  --text-color: #2d2a26;
+  --text-muted: #6b6560;
+  --surface: #faf8f5;
+  --surface-elevated: rgba(255, 255, 255, 0.92);
+  --dropdown-over-nav: rgba(255, 255, 255, 0.98);
+  --accent: red;
+  --accent-hover: #003e1f;
+  --circle: #d5f2e3;
+  --glass-bg: rgba(255, 255, 255, 0.75);
+  --glass-border: rgba(255, 255, 255, 0.5);
+  --glass-shadow: 0 4px 24px rgba(0, 0, 0, 0.06), 0 1px 0 rgba(255, 255, 255, 0.5) inset;
+}
+
+html[data-theme='dark'] {
+  --modal-back-color: rgba(15, 22, 28, 0.97);
+  --nav-back-color: #0f1619;
+  --nav-back-color-end: #151d22;
+  --nav-font-color: #e8e4df;
+  --link-color: #e8e4df;
+  --input-bg: rgba(26, 35, 42, 1);
+  --input-border: rgba(213, 242, 227, 0.8);
+  --input-focus: rgba(213, 242, 227, 1);
+  --input-focus-shadow: rgba(213, 242, 227, 0.2);
+  --input-disabled-color: #606473;
+  --text-color: #e8e4df;
+  --text-muted: #9ca3af;
+  --surface: #0a0f12;
+  --surface-elevated: rgba(26, 35, 42, 0.95);
+  --dropdown-over-nav: rgba(26, 35, 42, 0.98);
+  --accent: #73ba9b;
+  --accent-hover: #73ba9b;
+  --circle: #003e1f;
+  --glass-bg: rgba(26, 35, 42, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.06);
+  --glass-shadow: 0 4px 24px rgba(0, 0, 0, 0.3), 0 1px 0 rgba(255, 255, 255, 0.03) inset;
+}

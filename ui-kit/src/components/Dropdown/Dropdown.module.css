@@ -1,0 +1,90 @@
+.wrapper {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  font-size: var(--font-size-label);
+  color: var(--text-muted);
+}
+
+.hiddenSelect {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+  width: 0;
+  height: 0;
+}
+
+.trigger {
+  width: 100%;
+  min-height: var(--control-min-height);
+  padding: 0.65rem 1rem;
+  border: 1px solid var(--input-border);
+  border-radius: var(--radius-lg);
+  font-size: var(--font-size-md);
+  font-family: inherit;
+  color: var(--text-color);
+  background-color: var(--input-bg);
+  text-align: left;
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b6560' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  padding-right: 2.25rem;
+}
+
+.trigger:focus {
+  outline: none;
+  border-color: var(--input-focus);
+  box-shadow: 0 0 0 3px var(--input-focus-shadow);
+}
+
+.trigger:disabled {
+  background-color: var(--input-disabled-color);
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.trigger:hover:not(:disabled) {
+  border-color: var(--text-muted);
+}
+
+.options {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin: 0.25rem 0 0;
+  padding: 0.25rem;
+  list-style: none;
+  background-color: var(--input-bg);
+  border: 1px solid var(--input-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  z-index: 100;
+}
+
+.option {
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-size: var(--font-size-md);
+  color: var(--text-color);
+  transition: background-color var(--transition-fast);
+}
+
+.option:hover {
+  background-color: var(--input-focus-shadow);
+}
+
+.optionSelected {
+  font-weight: 600;
+}
