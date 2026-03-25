@@ -1,10 +1,10 @@
-import { KeyboardEvent, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import z from 'zod'
 import styled from 'styled-components'
 import { useDispatch, useSelector } from 'react-redux'
 import { DateRangeCalendar } from '@/shared/ui/DateRangeCalendar'
-import { Dropdown, LabeledInput, TagList } from '@/shared/ui'
+import { Dropdown, Field, TaggedInput } from '@/shared/ui'
 import { PhotoOrder } from '@shevdi-home/shared'
 import {
   setSearch,
@@ -77,7 +77,7 @@ export const Search = () => {
   const normalizedOrderParamValue = ORDER_PARAMS.includes(orderParamValue as PhotoOrder)
     ? (queryParams.order as PhotoOrder)
     : undefined
-  const { register, setValue, getValues, watch } = useForm<FormFields>({
+  const { register, setValue, watch } = useForm<FormFields>({
     resolver: zodResolver(schema),
     values: {
       order: normalizedOrderParamValue ?? order ?? '',
@@ -116,50 +116,6 @@ export const Search = () => {
         ? `${toDMY(dateFrom)} — ${toDMY(getTodayYMD())}`
         : ''
 
-  const handleCountryKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter') {
-      event.preventDefault()
-      const trimmed = (getValues('countryInput') ?? '').trim()
-      if (!trimmed) return
-      if (country.includes(trimmed)) {
-        setValue('countryInput', '')
-        return
-      }
-      const nextCountries = [...country, trimmed]
-      dispatch(setCountrySearch(nextCountries))
-      setQueryParams({ dateFrom, dateTo, order, tags, country: nextCountries, city })
-      setValue('countryInput', '')
-    }
-  }
-
-  const handleRemoveCountry = (toRemove: string) => {
-    const nextCountries = country.filter((c) => c !== toRemove)
-    dispatch(setCountrySearch(nextCountries))
-    setQueryParams({ dateFrom, dateTo, order, tags, country: nextCountries, city })
-  }
-
-  const handleCityKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter') {
-      event.preventDefault()
-      const trimmed = (getValues('cityInput') ?? '').trim()
-      if (!trimmed) return
-      if (city.includes(trimmed)) {
-        setValue('cityInput', '')
-        return
-      }
-      const nextCities = [...city, trimmed]
-      dispatch(setCitySearch(nextCities))
-      setQueryParams({ dateFrom, dateTo, order, tags, country, city: nextCities })
-      setValue('cityInput', '')
-    }
-  }
-
-  const handleRemoveCity = (toRemove: string) => {
-    const nextCities = city.filter((c) => c !== toRemove)
-    dispatch(setCitySearch(nextCities))
-    setQueryParams({ dateFrom, dateTo, order, tags, country, city: nextCities })
-  }
-
   const handleCalendarChange = (value: Date | [Date | null, Date | null] | null) => {
     const range = Array.isArray(value) ? value : value ? [value, value] : [null, null]
     const [from, to] = range
@@ -180,30 +136,6 @@ export const Search = () => {
     setValue('dateFrom', '')
     setValue('dateTo', '')
     setCalendarOpen(false)
-  }
-
-  const handleTagKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter') {
-      event.preventDefault()
-      const trimmed = (getValues('tagInput') ?? '').trim()
-      if (!trimmed) return
-      if (tags.includes(trimmed)) {
-        setValue('tagInput', '')
-        return
-      }
-      const nextTags = [...tags, trimmed]
-      dispatch(setTagsSearch(nextTags))
-      setQueryParams({ dateFrom, dateTo, order, tags: nextTags, country, city })
-      setValue('tags', nextTags)
-      setValue('tagInput', '')
-    }
-  }
-
-  const handleRemoveTag = (tagToRemove: string) => {
-    const nextTags = tags.filter((tag) => tag !== tagToRemove)
-    dispatch(setTagsSearch(nextTags))
-    setQueryParams({ dateFrom, dateTo, order, tags: nextTags, country, city })
-    setValue('tags', nextTags)
   }
 
   const handleOrderChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -238,34 +170,50 @@ export const Search = () => {
           onClear={handleClearDates}
         />
         <FieldWrapper>
-          <LabeledInput
-            label='Страна'
-            id='photo-filter-country'
-            placeholder='Введите страну и нажмите Enter'
-            {...register('countryInput')}
-            onKeyDown={handleCountryKeyDown}
-          />
-          <TagList tags={country} onClick={handleRemoveCountry} />
+          <Field label='Страна'>
+            <TaggedInput
+              id='photo-filter-country'
+              tags={country}
+              onTagsChange={(next) => {
+                dispatch(setCountrySearch(next))
+                setQueryParams({ dateFrom, dateTo, order, tags, country: next, city })
+              }}
+              inputValue={watch('countryInput') ?? ''}
+              onInputValueChange={(v) => setValue('countryInput', v)}
+              placeholder='Введите страну и нажмите Enter'
+            />
+          </Field>
         </FieldWrapper>
         <FieldWrapper>
-          <LabeledInput
-            label='Город'
-            id='photo-filter-city'
-            placeholder='Введите город и нажмите Enter'
-            {...register('cityInput')}
-            onKeyDown={handleCityKeyDown}
-          />
-          <TagList tags={city} onClick={handleRemoveCity} />
+          <Field label='Город'>
+            <TaggedInput
+              id='photo-filter-city'
+              tags={city}
+              onTagsChange={(next) => {
+                dispatch(setCitySearch(next))
+                setQueryParams({ dateFrom, dateTo, order, tags, country, city: next })
+              }}
+              inputValue={watch('cityInput') ?? ''}
+              onInputValueChange={(v) => setValue('cityInput', v)}
+              placeholder='Введите город и нажмите Enter'
+            />
+          </Field>
         </FieldWrapper>
         <FieldWrapper>
-          <LabeledInput
-            label='Теги'
-            id='photo-filter-tags'
-            placeholder='Введите тег и нажмите Enter'
-            {...register('tagInput')}
-            onKeyDown={handleTagKeyDown}
-          />
-          <TagList tags={tags} onClick={handleRemoveTag} />
+          <Field label='Теги'>
+            <TaggedInput
+              id='photo-filter-tags'
+              tags={tags}
+              onTagsChange={(next) => {
+                dispatch(setTagsSearch(next))
+                setQueryParams({ dateFrom, dateTo, order, tags: next, country, city })
+                setValue('tags', next)
+              }}
+              inputValue={watch('tagInput') ?? ''}
+              onInputValueChange={(v) => setValue('tagInput', v)}
+              placeholder='Введите тег и нажмите Enter'
+            />
+          </Field>
         </FieldWrapper>
       </SearchCard>
     </SearchContainer>

@@ -1,9 +1,9 @@
-import { KeyboardEvent, useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import styled, { keyframes } from 'styled-components'
 import { z } from 'zod'
 import { SubmitHandler, useForm, Controller } from 'react-hook-form'
 import { useDropzone } from 'react-dropzone'
-import { Button, Checkbox, ErrMessage, LabeledInput, TagList } from '@/shared/ui'
+import { Button, Checkbox, ErrMessage, Field, TaggedInput } from '@/shared/ui'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useAppDispatch, useAppSelector } from '@/app/store'
 import { buildMeta, FileMeta } from '../utils/uploadPhotoMeta'
@@ -70,8 +70,6 @@ export function UploadPhoto() {
     setError,
     setValue,
     watch,
-    register,
-    getValues,
     formState: { errors },
   } = useForm<FormFields>({
     resolver: zodResolver(schema),
@@ -95,40 +93,6 @@ export function UploadPhoto() {
   const isProcessed = isUploading
 
   const fileLabel = useMemo(() => getFileLabel(files.length), [files.length])
-
-  const handleCountryKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter') {
-      event.preventDefault()
-      const trimmed = (getValues('countryInput') ?? '').trim()
-      if (!trimmed) return
-      const countries = [...country]
-      countries.unshift(trimmed)
-      setValue('country', Array.from(new Set(countries)), { shouldValidate: true, shouldDirty: true })
-      setValue('countryInput', '')
-    }
-  }
-
-  const handleCityKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter') {
-      event.preventDefault()
-      const trimmed = (getValues('cityInput') ?? '').trim()
-      if (!trimmed) return
-      const cities = [...city]
-      cities.unshift(trimmed)
-      setValue('city', Array.from(new Set(cities)), { shouldValidate: true, shouldDirty: true })
-      setValue('cityInput', '')
-    }
-  }
-
-  const handleTagKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter') {
-      event.preventDefault()
-      const trimmed = (getValues('tagInput') ?? '').trim()
-      if (!trimmed || tags.includes(trimmed)) return
-      setValue('tags', [...tags, trimmed])
-      setValue('tagInput', '')
-    }
-  }
 
   const handleDrop = useCallback(
     async (acceptedFiles: File[]) => {
@@ -216,64 +180,47 @@ export function UploadPhoto() {
           />
         </CheckboxContainer>
         <FieldWrapper>
-          <LabeledInput
-            label='Страна'
-            id='upload-photo-country'
-            placeholder='Введите страну и нажмите Enter'
-            disabled={isProcessed}
-            {...register('countryInput')}
-            onKeyDown={handleCountryKeyDown}
-          />
-          <Controller
-            control={control}
-            name='country'
-            render={({ field }) => (
-              <TagList
-                tags={field.value ?? []}
-                onClick={(t) => field.onChange((field.value ?? []).filter((c) => c !== t))}
-              />
-            )}
-          />
+          <Field label='Страна'>
+            <TaggedInput
+              id='upload-photo-country'
+              tags={country}
+              onTagsChange={(next) =>
+                setValue('country', next, { shouldValidate: true, shouldDirty: true })
+              }
+              inputValue={watch('countryInput') ?? ''}
+              onInputValueChange={(v) => setValue('countryInput', v, { shouldDirty: true })}
+              placeholder='Введите страну и нажмите Enter'
+              insertAt='start'
+              disabled={isProcessed}
+            />
+          </Field>
         </FieldWrapper>
         <FieldWrapper>
-          <LabeledInput
-            label='Город'
-            id='upload-photo-city'
-            placeholder='Введите город и нажмите Enter'
-            disabled={isProcessed}
-            {...register('cityInput')}
-            onKeyDown={handleCityKeyDown}
-          />
-          <Controller
-            control={control}
-            name='city'
-            render={({ field }) => (
-              <TagList
-                tags={field.value ?? []}
-                onClick={(t) => field.onChange((field.value ?? []).filter((c) => c !== t))}
-              />
-            )}
-          />
+          <Field label='Город'>
+            <TaggedInput
+              id='upload-photo-city'
+              tags={city}
+              onTagsChange={(next) => setValue('city', next, { shouldValidate: true, shouldDirty: true })}
+              inputValue={watch('cityInput') ?? ''}
+              onInputValueChange={(v) => setValue('cityInput', v, { shouldDirty: true })}
+              placeholder='Введите город и нажмите Enter'
+              insertAt='start'
+              disabled={isProcessed}
+            />
+          </Field>
         </FieldWrapper>
         <FieldWrapper>
-          <LabeledInput
-            label='Теги'
-            id='upload-photo-tags'
-            placeholder='Введите тег и нажмите Enter'
-            disabled={isProcessed}
-            {...register('tagInput')}
-            onKeyDown={handleTagKeyDown}
-          />
-          <Controller
-            control={control}
-            name='tags'
-            render={({ field }) => (
-              <TagList
-                tags={field.value ?? []}
-                onClick={(t) => field.onChange((field.value ?? []).filter((tag) => tag !== t))}
-              />
-            )}
-          />
+          <Field label='Теги'>
+            <TaggedInput
+              id='upload-photo-tags'
+              tags={tags}
+              onTagsChange={(next) => setValue('tags', next, { shouldValidate: true, shouldDirty: true })}
+              inputValue={watch('tagInput') ?? ''}
+              onInputValueChange={(v) => setValue('tagInput', v, { shouldDirty: true })}
+              placeholder='Введите тег и нажмите Enter'
+              disabled={isProcessed}
+            />
+          </Field>
         </FieldWrapper>
         {(files.length > 0 || uploadFiles.length > 0) && (
           <FileList>

@@ -1,11 +1,11 @@
-import { type KeyboardEvent, useEffect } from 'react'
+import { useEffect } from 'react'
 import styled from 'styled-components'
 import { useChangePhotoMutation } from '../model'
 import { useLocation } from 'react-router'
 import z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
-import { Button, Checkbox, ErrMessage, LabeledInput, Loader, TagList } from '@/shared/ui'
+import { Button, Checkbox, ErrMessage, Field, Input, Loader, TaggedInput } from '@/shared/ui'
 import { getErrorMessage } from '@/shared/utils'
 import { DeletePhoto } from './DeletePhoto'
 import { PhotosNavigation } from './PhotosNavigation'
@@ -39,7 +39,6 @@ export function EditPhoto() {
     setError,
     setValue,
     watch,
-    getValues,
     formState: { isSubmitting, errors },
   } = useForm<FormFields>({
     resolver: zodResolver(schema),
@@ -72,68 +71,9 @@ export function EditPhoto() {
     }
   }, [photo, reset])
 
-  const tagInput = watch('tagsInput') ?? ''
   const tags = watch('tags') ?? []
   const country = watch('country') ?? []
   const city = watch('city') ?? []
-
-  // TODO Fix bug
-  const handleCountryKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
-    if (event.key !== 'Enter') return
-    event.preventDefault()
-    const trimmed = (getValues('countryInput') ?? '').trim()
-    if (!trimmed) return
-    const countries = [...city]
-    countries.unshift(trimmed)
-    setValue('country', Array.from(new Set(countries)), { shouldValidate: true, shouldDirty: true })
-    setValue('countryInput', '')
-  }
-
-  const handleCityKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
-    if (event.key !== 'Enter') return
-    event.preventDefault()
-    const trimmed = (getValues('cityInput') ?? '').trim()
-    if (!trimmed) return
-    const cities = [...city]
-    cities.unshift(trimmed)
-    setValue('city', Array.from(new Set(cities)), { shouldValidate: true, shouldDirty: true })
-    setValue('cityInput', '')
-  }
-
-  const handleTagKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
-    if (event.key !== 'Enter') return
-    event.preventDefault()
-    const trimmed = tagInput.trim()
-    if (!trimmed) return
-    if (tags.includes(trimmed)) {
-      setValue('tagsInput', '')
-      return
-    }
-    const nextTags = [...tags, trimmed]
-    setValue('tags', nextTags, { shouldValidate: true, shouldDirty: true })
-    setValue('tagsInput', '')
-  }
-
-  const handleRemoveTag = (tagToRemove: string) => {
-    const nextTags = tags.filter((tag) => tag !== tagToRemove)
-    setValue('tags', nextTags, { shouldValidate: true, shouldDirty: true })
-  }
-
-  const handleRemoveCountry = (toRemove: string) => {
-    setValue(
-      'country',
-      country.filter((c) => c !== toRemove),
-      { shouldValidate: true, shouldDirty: true },
-    )
-  }
-
-  const handleRemoveCity = (toRemove: string) => {
-    setValue(
-      'city',
-      city.filter((c) => c !== toRemove),
-      { shouldValidate: true, shouldDirty: true },
-    )
-  }
 
   const onSubmit: SubmitHandler<FormFields> = async (data) => {
     try {
@@ -207,35 +147,48 @@ export function EditPhoto() {
                 />
               )}
             />
-            <LabeledInput label='Заголовок' {...register('title')} />
-            <LabeledInput
-              label='Приоритет'
-              {...register('priority', {
-                valueAsNumber: true,
-              })}
-              type='number'
-            />
-            <LabeledInput
-              label='Страна'
-              placeholder='Введите страну и нажмите Enter'
-              {...register('countryInput')}
-              onKeyDown={handleCountryKeyDown}
-            />
-            <TagList tags={country} onClick={handleRemoveCountry} />
-            <LabeledInput
-              label='Город'
-              placeholder='Введите город и нажмите Enter'
-              {...register('cityInput')}
-              onKeyDown={handleCityKeyDown}
-            />
-            <TagList tags={city} onClick={handleRemoveCity} />
-            <LabeledInput
-              label='Теги'
-              placeholder='Введите тег и нажмите Enter'
-              {...register('tagsInput')}
-              onKeyDown={handleTagKeyDown}
-            />
-            <TagList tags={tags} onClick={handleRemoveTag} />
+            <Field label='Заголовок'>
+              <Input {...register('title')} />
+            </Field>
+            <Field label='Приоритет'>
+              <Input
+                {...register('priority', {
+                  valueAsNumber: true,
+                })}
+                type='number'
+              />
+            </Field>
+            <Field label='Страна'>
+              <TaggedInput
+                tags={country}
+                onTagsChange={(next) =>
+                  setValue('country', next, { shouldValidate: true, shouldDirty: true })
+                }
+                inputValue={watch('countryInput') ?? ''}
+                onInputValueChange={(v) => setValue('countryInput', v, { shouldDirty: true })}
+                placeholder='Введите страну и нажмите Enter'
+                insertAt='start'
+              />
+            </Field>
+            <Field label='Город'>
+              <TaggedInput
+                tags={city}
+                onTagsChange={(next) => setValue('city', next, { shouldValidate: true, shouldDirty: true })}
+                inputValue={watch('cityInput') ?? ''}
+                onInputValueChange={(v) => setValue('cityInput', v, { shouldDirty: true })}
+                placeholder='Введите город и нажмите Enter'
+                insertAt='start'
+              />
+            </Field>
+            <Field label='Теги'>
+              <TaggedInput
+                tags={tags}
+                onTagsChange={(next) => setValue('tags', next, { shouldValidate: true, shouldDirty: true })}
+                inputValue={watch('tagsInput') ?? ''}
+                onInputValueChange={(v) => setValue('tagsInput', v, { shouldDirty: true })}
+                placeholder='Введите тег и нажмите Enter'
+              />
+            </Field>
             <Button type='submit' display='block' margin='1rem auto' disabled={isSubmitting}>
               Сохранить
             </Button>

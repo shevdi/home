@@ -37,19 +37,33 @@ jest.mock('@/shared/ui', () => ({
     </label>
   ),
   ErrMessage: ({ children }: { children?: React.ReactNode }) => <div data-testid='err-message'>{children}</div>,
-  LabeledInput: ({ label, ...props }: { label: string; [key: string]: unknown }) => (
+  Field: ({ label, children }: { label: string; children: React.ReactNode }) => (
     <div>
       <label>{label}</label>
-      <input {...props} />
+      {children}
     </div>
   ),
+  Input: (props: React.InputHTMLAttributes<HTMLInputElement>) => <input {...props} />,
   Loader: () => <div data-testid='loader'>loader</div>,
-  TagList: ({ tags, onClick }: { tags: string[]; onClick?: (tag: string) => void }) => (
-    <div data-testid='tag-list'>
-      {tags?.map((tag) => (
-        <span key={tag} onClick={() => onClick?.(tag)}>
-          {tag}
-        </span>
+  TaggedInput: ({
+    tags,
+    inputValue,
+    onInputValueChange,
+    placeholder,
+  }: {
+    tags: string[]
+    inputValue: string
+    onInputValueChange: (v: string) => void
+    placeholder?: string
+  }) => (
+    <div data-testid='tagged-input'>
+      <input
+        value={inputValue}
+        onChange={(e) => onInputValueChange(e.target.value)}
+        placeholder={placeholder}
+      />
+      {tags?.map((tag: string) => (
+        <span key={tag}>{tag}</span>
       ))}
     </div>
   ),

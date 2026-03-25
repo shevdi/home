@@ -8,6 +8,7 @@ export {
   LabeledInput,
   LabeledFileInput,
   TagChips,
+  TaggedInput,
   UploadLabel,
   Checkbox,
   Dropdown,
@@ -16,6 +17,7 @@ export {
   Loader,
   Calendar,
   Popover,
+  useLabeledFieldOutsideClick,
 } from '@shevdi-home/ui-kit'
 export type {
   ButtonProps,
@@ -36,6 +38,7 @@ export type {
   ErrorProps,
   LoaderProps,
   TagChipsProps,
+  TaggedInputProps,
   CalendarViewProps,
   PopoverContentProps,
 } from '@shevdi-home/ui-kit'

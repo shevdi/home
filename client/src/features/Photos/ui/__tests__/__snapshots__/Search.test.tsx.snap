@@ -57,44 +57,62 @@ exports[`Search renders search form with default state 1`] = `
       <div
         class="sc-eqUAAB"
       >
-        <label>
-          Страна
-          <input
-            id="photo-filter-country"
-            name="countryInput"
-            placeholder="Введите страну и нажмите Enter"
-            type="text"
-          />
-        </label>
-        <div />
+        <div>
+          <label
+            for="photo-filter-country"
+          >
+            Страна
+          </label>
+          <div
+            data-testid="tagged-input"
+          >
+            <input
+              id="photo-filter-country"
+              placeholder="Введите страну и нажмите Enter"
+              value=""
+            />
+          </div>
+        </div>
       </div>
       <div
         class="sc-eqUAAB"
       >
-        <label>
-          Город
-          <input
-            id="photo-filter-city"
-            name="cityInput"
-            placeholder="Введите город и нажмите Enter"
-            type="text"
-          />
-        </label>
-        <div />
+        <div>
+          <label
+            for="photo-filter-city"
+          >
+            Город
+          </label>
+          <div
+            data-testid="tagged-input"
+          >
+            <input
+              id="photo-filter-city"
+              placeholder="Введите город и нажмите Enter"
+              value=""
+            />
+          </div>
+        </div>
       </div>
       <div
         class="sc-eqUAAB"
       >
-        <label>
-          Теги
-          <input
-            id="photo-filter-tags"
-            name="tagInput"
-            placeholder="Введите тег и нажмите Enter"
-            type="text"
-          />
-        </label>
-        <div />
+        <div>
+          <label
+            for="photo-filter-tags"
+          >
+            Теги
+          </label>
+          <div
+            data-testid="tagged-input"
+          >
+            <input
+              id="photo-filter-tags"
+              placeholder="Введите тег и нажмите Enter"
+              value=""
+            />
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -158,71 +176,88 @@ exports[`Search renders with different queryParams renders with all params 1`] =
       <div
         class="sc-eqUAAB"
       >
-        <label>
-          Страна
-          <input
-            id="photo-filter-country"
-            name="countryInput"
-            placeholder="Введите страну и нажмите Enter"
-            type="text"
-          />
-        </label>
-        <div />
-      </div>
-      <div
-        class="sc-eqUAAB"
-      >
-        <label>
-          Город
-          <input
-            id="photo-filter-city"
-            name="cityInput"
-            placeholder="Введите город и нажмите Enter"
-            type="text"
-          />
-        </label>
-        <div />
-      </div>
-      <div
-        class="sc-eqUAAB"
-      >
-        <label>
-          Теги
-          <input
-            id="photo-filter-tags"
-            name="tagInput"
-            placeholder="Введите тег и нажмите Enter"
-            type="text"
-          />
-        </label>
         <div>
-          <span>
-            foo
-            <button
-              aria-label="Удалить тег foo"
-              type="button"
-            >
-              ×
-            </button>
-          </span>
-          <span>
-            bar
-            <button
-              aria-label="Удалить тег bar"
-              type="button"
-            >
-              ×
-            </button>
-          </span>
-          <span>
-            baz
-            <button
-              aria-label="Удалить тег baz"
-              type="button"
-            >
-              ×
-            </button>
-          </span>
+          <label
+            for="photo-filter-country"
+          >
+            Страна
+          </label>
+          <div
+            data-testid="tagged-input"
+          >
+            <input
+              id="photo-filter-country"
+              placeholder="Введите страну и нажмите Enter"
+              value=""
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        class="sc-eqUAAB"
+      >
+        <div>
+          <label
+            for="photo-filter-city"
+          >
+            Город
+          </label>
+          <div
+            data-testid="tagged-input"
+          >
+            <input
+              id="photo-filter-city"
+              placeholder="Введите город и нажмите Enter"
+              value=""
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        class="sc-eqUAAB"
+      >
+        <div>
+          <label
+            for="photo-filter-tags"
+          >
+            Теги
+          </label>
+          <div
+            data-testid="tagged-input"
+          >
+            <input
+              id="photo-filter-tags"
+              placeholder="Введите тег и нажмите Enter"
+              value=""
+            />
+            <span>
+              foo
+              <button
+                aria-label="Удалить тег foo"
+                type="button"
+              >
+                ×
+              </button>
+            </span>
+            <span>
+              bar
+              <button
+                aria-label="Удалить тег bar"
+                type="button"
+              >
+                ×
+              </button>
+            </span>
+            <span>
+              baz
+              <button
+                aria-label="Удалить тег baz"
+                type="button"
+              >
+                ×
+              </button>
+            </span>
+          </div>
         </div>
       </div>
     </div>
@@ -287,44 +322,62 @@ exports[`Search renders with different queryParams renders with date range param
       <div
         class="sc-eqUAAB"
       >
-        <label>
-          Страна
-          <input
-            id="photo-filter-country"
-            name="countryInput"
-            placeholder="Введите страну и нажмите Enter"
-            type="text"
-          />
-        </label>
-        <div />
+        <div>
+          <label
+            for="photo-filter-country"
+          >
+            Страна
+          </label>
+          <div
+            data-testid="tagged-input"
+          >
+            <input
+              id="photo-filter-country"
+              placeholder="Введите страну и нажмите Enter"
+              value=""
+            />
+          </div>
+        </div>
       </div>
       <div
         class="sc-eqUAAB"
       >
-        <label>
-          Город
-          <input
-            id="photo-filter-city"
-            name="cityInput"
-            placeholder="Введите город и нажмите Enter"
-            type="text"
-          />
-        </label>
-        <div />
+        <div>
+          <label
+            for="photo-filter-city"
+          >
+            Город
+          </label>
+          <div
+            data-testid="tagged-input"
+          >
+            <input
+              id="photo-filter-city"
+              placeholder="Введите город и нажмите Enter"
+              value=""
+            />
+          </div>
+        </div>
       </div>
       <div
         class="sc-eqUAAB"
       >
-        <label>
-          Теги
-          <input
-            id="photo-filter-tags"
-            name="tagInput"
-            placeholder="Введите тег и нажмите Enter"
-            type="text"
-          />
-        </label>
-        <div />
+        <div>
+          <label
+            for="photo-filter-tags"
+          >
+            Теги
+          </label>
+          <div
+            data-testid="tagged-input"
+          >
+            <input
+              id="photo-filter-tags"
+              placeholder="Введите тег и нажмите Enter"
+              value=""
+            />
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -388,44 +441,62 @@ exports[`Search renders with different queryParams renders with order param 1`] 
       <div
         class="sc-eqUAAB"
       >
-        <label>
-          Страна
-          <input
-            id="photo-filter-country"
-            name="countryInput"
-            placeholder="Введите страну и нажмите Enter"
-            type="text"
-          />
-        </label>
-        <div />
+        <div>
+          <label
+            for="photo-filter-country"
+          >
+            Страна
+          </label>
+          <div
+            data-testid="tagged-input"
+          >
+            <input
+              id="photo-filter-country"
+              placeholder="Введите страну и нажмите Enter"
+              value=""
+            />
+          </div>
+        </div>
       </div>
       <div
         class="sc-eqUAAB"
       >
-        <label>
-          Город
-          <input
-            id="photo-filter-city"
-            name="cityInput"
-            placeholder="Введите город и нажмите Enter"
-            type="text"
-          />
-        </label>
-        <div />
+        <div>
+          <label
+            for="photo-filter-city"
+          >
+            Город
+          </label>
+          <div
+            data-testid="tagged-input"
+          >
+            <input
+              id="photo-filter-city"
+              placeholder="Введите город и нажмите Enter"
+              value=""
+            />
+          </div>
+        </div>
       </div>
       <div
         class="sc-eqUAAB"
       >
-        <label>
-          Теги
-          <input
-            id="photo-filter-tags"
-            name="tagInput"
-            placeholder="Введите тег и нажмите Enter"
-            type="text"
-          />
-        </label>
-        <div />
+        <div>
+          <label
+            for="photo-filter-tags"
+          >
+            Теги
+          </label>
+          <div
+            data-testid="tagged-input"
+          >
+            <input
+              id="photo-filter-tags"
+              placeholder="Введите тег и нажмите Enter"
+              value=""
+            />
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -489,62 +560,79 @@ exports[`Search renders with different queryParams renders with tags param 1`] =
       <div
         class="sc-eqUAAB"
       >
-        <label>
-          Страна
-          <input
-            id="photo-filter-country"
-            name="countryInput"
-            placeholder="Введите страну и нажмите Enter"
-            type="text"
-          />
-        </label>
-        <div />
-      </div>
-      <div
-        class="sc-eqUAAB"
-      >
-        <label>
-          Город
-          <input
-            id="photo-filter-city"
-            name="cityInput"
-            placeholder="Введите город и нажмите Enter"
-            type="text"
-          />
-        </label>
-        <div />
-      </div>
-      <div
-        class="sc-eqUAAB"
-      >
-        <label>
-          Теги
-          <input
-            id="photo-filter-tags"
-            name="tagInput"
-            placeholder="Введите тег и нажмите Enter"
-            type="text"
-          />
-        </label>
         <div>
-          <span>
-            landscape
-            <button
-              aria-label="Удалить тег landscape"
-              type="button"
-            >
-              ×
-            </button>
-          </span>
-          <span>
-            portrait
-            <button
-              aria-label="Удалить тег portrait"
-              type="button"
-            >
-              ×
-            </button>
-          </span>
+          <label
+            for="photo-filter-country"
+          >
+            Страна
+          </label>
+          <div
+            data-testid="tagged-input"
+          >
+            <input
+              id="photo-filter-country"
+              placeholder="Введите страну и нажмите Enter"
+              value=""
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        class="sc-eqUAAB"
+      >
+        <div>
+          <label
+            for="photo-filter-city"
+          >
+            Город
+          </label>
+          <div
+            data-testid="tagged-input"
+          >
+            <input
+              id="photo-filter-city"
+              placeholder="Введите город и нажмите Enter"
+              value=""
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        class="sc-eqUAAB"
+      >
+        <div>
+          <label
+            for="photo-filter-tags"
+          >
+            Теги
+          </label>
+          <div
+            data-testid="tagged-input"
+          >
+            <input
+              id="photo-filter-tags"
+              placeholder="Введите тег и нажмите Enter"
+              value=""
+            />
+            <span>
+              landscape
+              <button
+                aria-label="Удалить тег landscape"
+                type="button"
+              >
+                ×
+              </button>
+            </span>
+            <span>
+              portrait
+              <button
+                aria-label="Удалить тег portrait"
+                type="button"
+              >
+                ×
+              </button>
+            </span>
+          </div>
         </div>
       </div>
     </div>

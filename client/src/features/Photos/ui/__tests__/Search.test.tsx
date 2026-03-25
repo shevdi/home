@@ -56,12 +56,66 @@ jest.mock('@/shared/ui', () => ({
       {label}
     </label>
   ),
-  LabeledInput: ({ label, type, ...props }: { label: string; type?: string } & Record<string, unknown>) => (
-    <label>
-      {label}
-      <input type={type ?? 'text'} {...props} />
-    </label>
-  ),
+  Field: ({ label, children }: { label: string; children: React.ReactElement<{ id?: string }> }) => {
+    const id = children.props.id ?? `mock-field-${String(label)}`
+    return (
+      <div>
+        <label htmlFor={id}>{label}</label>
+        {React.cloneElement(children, { id } as never)}
+      </div>
+    )
+  },
+  TaggedInput: ({
+    tags,
+    inputValue,
+    onInputValueChange,
+    onTagsChange,
+    id,
+    placeholder,
+  }: {
+    tags?: unknown
+    inputValue: string
+    onInputValueChange: (v: string) => void
+    onTagsChange?: (next: string[]) => void
+    id?: string
+    placeholder?: string
+  }) => {
+    const list = Array.isArray(tags) ? tags : []
+    return (
+      <div data-testid='tagged-input'>
+        <input
+          id={id}
+          value={inputValue}
+          onChange={(e) => onInputValueChange(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key !== 'Enter') return
+            e.preventDefault()
+            const trimmed = inputValue.trim()
+            if (!trimmed) return
+            if (list.includes(trimmed)) {
+              onInputValueChange('')
+              return
+            }
+            onTagsChange?.([...list, trimmed])
+            onInputValueChange('')
+          }}
+          placeholder={placeholder}
+        />
+        {list.map((tag: string) => (
+          <span key={tag}>
+            {tag}
+            <button
+              type='button'
+              aria-label={`Удалить тег ${tag}`}
+              onClick={() => onTagsChange?.(list.filter((t) => t !== tag))}
+            >
+              ×
+            </button>
+          </span>
+        ))}
+      </div>
+    )
+  },
   Dropdown: ({
     label,
     options = [],
@@ -96,29 +150,6 @@ jest.mock('@/shared/ui', () => ({
       </select>
     </div>
   ),
-  TagList: ({
-    tags,
-    onClick,
-  }: {
-    tags?: string[] | string
-    onClick?: (tag: string) => void
-  }) => {
-    const list = Array.isArray(tags) ? tags : tags ? [String(tags)] : []
-    return (
-    <div>
-      {list.map((tag) => (
-        <span key={tag}>
-          {tag}
-          {onClick ? (
-            <button type='button' aria-label={`Удалить тег ${tag}`} onClick={() => onClick(tag)}>
-              ×
-            </button>
-          ) : null}
-        </span>
-      ))}
-    </div>
-    )
-  },
 }))
 
 const mockUseDispatch = useDispatch as unknown as jest.Mock
@@ -266,7 +297,7 @@ describe('Search', () => {
       const tagInput = screen.getByLabelText('Теги')
       await userEvent.type(tagInput, 'landscape{Enter}')
 
-      expect(dispatch).toHaveBeenCalledWith(setTagsSearch(['landscape']))
+      expect(dispatch.mock.calls).toEqual(expect.arrayContaining([[setTagsSearch(['landscape'])]]))
       expect(mockSetQueryParams).toHaveBeenCalledWith(expect.objectContaining({ tags: ['landscape'] }))
     })
 
@@ -281,8 +312,8 @@ describe('Search', () => {
             dateTo: null,
             order: 'orderDownByTakenAt',
             tags: ['landscape'],
-            country: '',
-            city: '',
+            country: [],
+            city: [],
           }
         }
         return undefined
@@ -329,8 +360,8 @@ describe('Search', () => {
             dateTo: null,
             order: 'orderDownByTakenAt',
             tags: ['foo', 'bar'],
-            country: '',
-            city: '',
+            country: [],
+            city: [],
           }
         }
         return undefined

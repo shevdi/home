@@ -5,10 +5,10 @@ import { Button } from '../../components/Button/Button'
 import { Checkbox } from '../../components/Checkbox/Checkbox'
 import { Field } from '../../components/Field/Field'
 import { Input } from '../../components/Input/Input'
-import { TagChips } from '../../components/TagChips/TagChips'
+import { TaggedInput } from '../../components/TaggedInput/TaggedInput'
 
 /**
- * Visual reference: photo edit form (Field + Input + Checkbox + TagChips).
+ * Visual reference: photo edit form (Field + Input + Checkbox + TaggedInput).
  * TagList (router links) stays in the client — chips only here.
  */
 const meta: Meta = {
@@ -49,9 +49,14 @@ export const Default: Story = {
           </Field>
           <Checkbox checked={false} label="Приватное" onChange={() => {}} />
           <Field label="Теги">
-            <Input name="tagsInput" placeholder="Введите тег и нажмите Enter" />
+            <TaggedInput
+              tags={['landscape', 'sunset']}
+              onTagsChange={() => {}}
+              inputValue=""
+              onInputValueChange={() => {}}
+              placeholder="Введите тег и нажмите Enter"
+            />
           </Field>
-          <TagChips tags={['landscape', 'sunset']} position="left" />
           <Button display="block" type="submit" margin="1rem auto 0">
             Сохранить
           </Button>
@@ -64,6 +69,7 @@ export const Default: Story = {
 export const InteractiveTags: Story = {
   render: function InteractiveTagsStory() {
     const [tags, setTags] = useState<string[]>(['draft'])
+    const [draft, setDraft] = useState('')
     return (
       <section style={card}>
         <form
@@ -75,21 +81,14 @@ export const InteractiveTags: Story = {
             <Input name="title" defaultValue="Без названия" />
           </Field>
           <Field label="Теги">
-            <Input
-              name="tagsInput"
+            <TaggedInput
+              tags={tags}
+              onTagsChange={setTags}
+              inputValue={draft}
+              onInputValueChange={setDraft}
               placeholder="Добавьте тег"
-              onKeyDown={(e) => {
-                if (e.key !== 'Enter') return
-                e.preventDefault()
-                const input = e.currentTarget
-                const v = input.value.trim()
-                if (!v || tags.includes(v)) return
-                setTags((prev) => [...prev, v])
-                input.value = ''
-              }}
             />
           </Field>
-          <TagChips tags={tags} onRemove={(tag) => setTags((t) => t.filter((x) => x !== tag))} />
           <Button type="button" display="block" margin="1rem auto 0" onClick={() => setTags([])}>
             Очистить теги
           </Button>

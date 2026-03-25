@@ -60,65 +60,86 @@ exports[`UploadPhoto renders default state and disables submit 1`] = `
       <div
         class="sc-dAbbOM juffzi"
       >
-        <div>
+        <div
+          class=""
+        >
           <label
-            for="upload-photo-country"
+            class=""
+            for="«r0»-control"
           >
             Страна
           </label>
-          <input
+          <div
             class=""
-            id="upload-photo-country"
-            name="countryInput"
-            placeholder="Введите страну и нажмите Enter"
-            type="text"
-          />
+          >
+            <input
+              class=""
+              id="upload-photo-country"
+              placeholder="Введите страну и нажмите Enter"
+              type="text"
+              value=""
+            />
+            <div
+              class="undefined undefined"
+            />
+          </div>
         </div>
-        <div
-          class="undefined undefined"
-        />
       </div>
       <div
         class="sc-dAbbOM juffzi"
       >
-        <div>
+        <div
+          class=""
+        >
           <label
-            for="upload-photo-city"
+            class=""
+            for="«r1»-control"
           >
             Город
           </label>
-          <input
+          <div
             class=""
-            id="upload-photo-city"
-            name="cityInput"
-            placeholder="Введите город и нажмите Enter"
-            type="text"
-          />
+          >
+            <input
+              class=""
+              id="upload-photo-city"
+              placeholder="Введите город и нажмите Enter"
+              type="text"
+              value=""
+            />
+            <div
+              class="undefined undefined"
+            />
+          </div>
         </div>
-        <div
-          class="undefined undefined"
-        />
       </div>
       <div
         class="sc-dAbbOM juffzi"
       >
-        <div>
+        <div
+          class=""
+        >
           <label
-            for="upload-photo-tags"
+            class=""
+            for="«r2»-control"
           >
             Теги
           </label>
-          <input
+          <div
             class=""
-            id="upload-photo-tags"
-            name="tagInput"
-            placeholder="Введите тег и нажмите Enter"
-            type="text"
-          />
+          >
+            <input
+              class=""
+              id="upload-photo-tags"
+              placeholder="Введите тег и нажмите Enter"
+              type="text"
+              value=""
+            />
+            <div
+              class="undefined undefined"
+            />
+          </div>
         </div>
-        <div
-          class="undefined undefined"
-        />
       </div>
       <button
         class=""
@@ -195,65 +216,86 @@ exports[`UploadPhoto shows error message when upload fails 1`] = `
       <div
         class="sc-dAbbOM juffzi"
       >
-        <div>
+        <div
+          class=""
+        >
           <label
-            for="upload-photo-country"
+            class=""
+            for="«rf»-control"
           >
             Страна
           </label>
-          <input
+          <div
             class=""
-            id="upload-photo-country"
-            name="countryInput"
-            placeholder="Введите страну и нажмите Enter"
-            type="text"
-          />
+          >
+            <input
+              class=""
+              id="upload-photo-country"
+              placeholder="Введите страну и нажмите Enter"
+              type="text"
+              value=""
+            />
+            <div
+              class="undefined undefined"
+            />
+          </div>
         </div>
-        <div
-          class="undefined undefined"
-        />
       </div>
       <div
         class="sc-dAbbOM juffzi"
       >
-        <div>
+        <div
+          class=""
+        >
           <label
-            for="upload-photo-city"
+            class=""
+            for="«rg»-control"
           >
             Город
           </label>
-          <input
+          <div
             class=""
-            id="upload-photo-city"
-            name="cityInput"
-            placeholder="Введите город и нажмите Enter"
-            type="text"
-          />
+          >
+            <input
+              class=""
+              id="upload-photo-city"
+              placeholder="Введите город и нажмите Enter"
+              type="text"
+              value=""
+            />
+            <div
+              class="undefined undefined"
+            />
+          </div>
         </div>
-        <div
-          class="undefined undefined"
-        />
       </div>
       <div
         class="sc-dAbbOM juffzi"
       >
-        <div>
+        <div
+          class=""
+        >
           <label
-            for="upload-photo-tags"
+            class=""
+            for="«rh»-control"
           >
             Теги
           </label>
-          <input
+          <div
             class=""
-            id="upload-photo-tags"
-            name="tagInput"
-            placeholder="Введите тег и нажмите Enter"
-            type="text"
-          />
+          >
+            <input
+              class=""
+              id="upload-photo-tags"
+              placeholder="Введите тег и нажмите Enter"
+              type="text"
+              value=""
+            />
+            <div
+              class="undefined undefined"
+            />
+          </div>
         </div>
-        <div
-          class="undefined undefined"
-        />
       </div>
       <div
         class="sc-gFqAkO fdwPkA"
@@ -383,65 +425,86 @@ exports[`UploadPhoto updates label and shows selected file 1`] = `
       <div
         class="sc-dAbbOM juffzi"
       >
-        <div>
+        <div
+          class=""
+        >
           <label
-            for="upload-photo-country"
+            class=""
+            for="«r3»-control"
           >
             Страна
           </label>
-          <input
+          <div
             class=""
-            id="upload-photo-country"
-            name="countryInput"
-            placeholder="Введите страну и нажмите Enter"
-            type="text"
-          />
+          >
+            <input
+              class=""
+              id="upload-photo-country"
+              placeholder="Введите страну и нажмите Enter"
+              type="text"
+              value=""
+            />
+            <div
+              class="undefined undefined"
+            />
+          </div>
         </div>
-        <div
-          class="undefined undefined"
-        />
       </div>
       <div
         class="sc-dAbbOM juffzi"
       >
-        <div>
+        <div
+          class=""
+        >
           <label
-            for="upload-photo-city"
+            class=""
+            for="«r4»-control"
           >
             Город
           </label>
-          <input
+          <div
             class=""
-            id="upload-photo-city"
-            name="cityInput"
-            placeholder="Введите город и нажмите Enter"
-            type="text"
-          />
+          >
+            <input
+              class=""
+              id="upload-photo-city"
+              placeholder="Введите город и нажмите Enter"
+              type="text"
+              value=""
+            />
+            <div
+              class="undefined undefined"
+            />
+          </div>
         </div>
-        <div
-          class="undefined undefined"
-        />
       </div>
       <div
         class="sc-dAbbOM juffzi"
       >
-        <div>
+        <div
+          class=""
+        >
           <label
-            for="upload-photo-tags"
+            class=""
+            for="«r5»-control"
           >
             Теги
           </label>
-          <input
+          <div
             class=""
-            id="upload-photo-tags"
-            name="tagInput"
-            placeholder="Введите тег и нажмите Enter"
-            type="text"
-          />
+          >
+            <input
+              class=""
+              id="upload-photo-tags"
+              placeholder="Введите тег и нажмите Enter"
+              type="text"
+              value=""
+            />
+            <div
+              class="undefined undefined"
+            />
+          </div>
         </div>
-        <div
-          class="undefined undefined"
-        />
       </div>
       <div
         class="sc-gFqAkO fdwPkA"

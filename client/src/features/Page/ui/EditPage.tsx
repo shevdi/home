@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import { useChangePageMutation, useGetPageQuery } from '../model/pageSlice'
 import { useLocation, useNavigate } from 'react-router'
-import { Button, ErrMessage, LabeledInput } from '@/shared/ui'
+import { Button, ErrMessage, Field, Input, useLabeledFieldOutsideClick } from '@/shared/ui'
 import { useState } from 'react'
 import z from 'zod'
 import { SubmitHandler, useForm } from 'react-hook-form'
@@ -20,6 +20,19 @@ const PageHeader = styled.h1`
 
 const PageText = styled.div`
   text-align: center;
+`
+
+/** Keeps layout unchanged while exposing a label for `Field` + assistive tech. */
+const VisuallyHiddenLabel = styled.span`
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 `
 
 const schema = z.object({
@@ -54,6 +67,9 @@ export function EditPage({ url }: IPageProps) {
     switchTitleEdited(false)
   }
 
+  const titleFieldRef = useLabeledFieldOutsideClick(() => switchTitleEdited(false))
+  const textFieldRef = useLabeledFieldOutsideClick(() => switchTextEdited(false))
+
   const {
     register,
     handleSubmit,
@@ -87,12 +103,20 @@ export function EditPage({ url }: IPageProps) {
     <PageContainer>
       <form onSubmit={handleSubmit(onSubmit)}>
         {isTitleEdited ? (
-          <LabeledInput label='' onOutsideClick={switchTitleEdited} {...register('title')} />
+          <div ref={titleFieldRef}>
+            <Field label={<VisuallyHiddenLabel>Заголовок страницы</VisuallyHiddenLabel>}>
+              <Input {...register('title')} />
+            </Field>
+          </div>
         ) : (
           <PageHeader onClick={startTitleEdited}>{title}</PageHeader>
         )}
         {isTextEdited ? (
-          <LabeledInput label='' onOutsideClick={switchTextEdited} {...register('text')} />
+          <div ref={textFieldRef}>
+            <Field label={<VisuallyHiddenLabel>Текст страницы</VisuallyHiddenLabel>}>
+              <Input {...register('text')} />
+            </Field>
+          </div>
         ) : (
           <PageText onClick={startTextEdited}>{text}</PageText>
         )}

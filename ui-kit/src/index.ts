@@ -19,6 +19,7 @@ export type { InputProps } from './components/Input/Input'
 
 export { LabeledInput } from './components/LabeledInput/LabeledInput'
 export type { LabeledInputProps } from './components/LabeledInput/LabeledInput'
+export { useLabeledFieldOutsideClick } from './components/LabeledInput/useLabeledFieldOutsideClick'
 export { LabeledFileInput } from './components/LabeledInput/LabeledFileInput'
 export type { LabeledFileInputProps } from './components/LabeledInput/LabeledFileInput'
 
@@ -41,6 +42,9 @@ export type { LoaderProps } from './components/Loader/Loader'
 
 export { TagChips } from './components/TagChips/TagChips'
 export type { TagChipsProps } from './components/TagChips/TagChips'
+
+export { TaggedInput } from './components/TaggedInput/TaggedInput'
+export type { TaggedInputProps } from './components/TaggedInput/TaggedInput'
 
 export { Calendar } from './components/Calendar/Calendar'
 export type { CalendarViewProps } from './components/Calendar/Calendar'
