@@ -236,7 +236,7 @@ export function EditPhoto() {
               onKeyDown={handleTagKeyDown}
             />
             <TagList tags={tags} onClick={handleRemoveTag} />
-            <Button display='block' margin='1rem auto' disabled={isSubmitting}>
+            <Button type='submit' display='block' margin='1rem auto' disabled={isSubmitting}>
               Сохранить
             </Button>
           </form>

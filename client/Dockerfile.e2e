@@ -6,9 +6,13 @@ WORKDIR /app
 # Root package files for workspace resolution
 COPY package.json package-lock.json ./
 COPY shared ./shared
+COPY ui-kit ./ui-kit
 COPY client ./client
 
 RUN npm install
+
+# ui-kit publishes dist/; ensure it exists (dist is gitignored and may be absent in CI)
+RUN npm run build --workspace=@shevdi-home/ui-kit
 
 # Flatten: client runs from /app (watch sync target)
 RUN cp -r client/. .

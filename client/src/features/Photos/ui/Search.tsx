@@ -1,9 +1,10 @@
-import { KeyboardEvent, useEffect, useRef, useState } from 'react'
+import { KeyboardEvent, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import z from 'zod'
 import styled from 'styled-components'
 import { useDispatch, useSelector } from 'react-redux'
-import { CalendarPopover, Dropdown, Input, TagList } from '@/shared/ui'
+import { DateRangeCalendar } from '@/shared/ui/DateRangeCalendar'
+import { Dropdown, Input, TagList } from '@/shared/ui'
 import { PhotoOrder } from '@shevdi-home/shared'
 import {
   setSearch,
@@ -104,7 +105,6 @@ export const Search = () => {
   }, [])
 
   const [calendarOpen, setCalendarOpen] = useState(false)
-  const calendarRef = useRef<HTMLDivElement>(null)
 
   const calendarValue: [Date | null, Date | null] =
     dateFrom && dateTo ? [toDate(dateFrom), toDate(dateTo)] : dateFrom ? [toDate(dateFrom), null] : [null, null]
@@ -182,16 +182,6 @@ export const Search = () => {
     setCalendarOpen(false)
   }
 
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (calendarRef.current && !calendarRef.current.contains(e.target as Node)) {
-        setCalendarOpen(false)
-      }
-    }
-    if (calendarOpen) document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [calendarOpen])
-
   const handleTagKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
       event.preventDefault()
@@ -236,21 +226,17 @@ export const Search = () => {
             options={ORDER_OPTIONS}
           />
         </FieldWrapper>
-        <DateRangeWrapper ref={calendarRef}>
-          <DateRangeLabel htmlFor='photo-filter-date'>Период</DateRangeLabel>
-          <DateRangeInput
-            id='photo-filter-date'
-            type='text'
-            readOnly
-            value={shownCalendarValue}
-            placeholder='Выберите период'
-            onClick={() => setCalendarOpen((o) => !o)}
-            aria-expanded={calendarOpen}
-          />
-          {calendarOpen && (
-            <CalendarPopover value={calendarValue} onChange={handleCalendarChange} onClear={handleClearDates} />
-          )}
-        </DateRangeWrapper>
+        <DateRangeCalendar
+          label='Период'
+          inputId='photo-filter-date'
+          open={calendarOpen}
+          onOpenChange={setCalendarOpen}
+          displayValue={shownCalendarValue}
+          placeholder='Выберите период'
+          calendarValue={calendarValue}
+          onCalendarChange={handleCalendarChange}
+          onClear={handleClearDates}
+        />
         <FieldWrapper>
           <Input
             label='Страна'
@@ -306,45 +292,3 @@ const SearchCard = styled.div`
 `
 
 const FieldWrapper = styled.div``
-
-const DateRangeWrapper = styled.div`
-  position: relative;
-  margin-bottom: 1rem;
-`
-
-const DateRangeLabel = styled.label`
-  display: block;
-  margin-bottom: 0.5rem;
-  font-weight: 500;
-  font-size: 0.9rem;
-  color: var(--text-muted);
-`
-
-const DateRangeInput = styled.input`
-  width: 100%;
-  padding: 0.65rem 1rem;
-  border: 1px solid var(--input-border);
-  border-radius: var(--radius-md);
-  font-size: 0.95rem;
-  font-family: inherit;
-  color: var(--text-color);
-  background-color: var(--input-bg);
-  cursor: pointer;
-  transition:
-    border-color var(--transition-fast),
-    box-shadow var(--transition-fast);
-
-  &::placeholder {
-    color: var(--text-muted);
-  }
-
-  &:focus {
-    outline: none;
-    border-color: var(--input-focus);
-    box-shadow: 0 0 0 3px var(--input-focus-shadow);
-  }
-
-  &:hover {
-    border-color: var(--text-muted);
-  }
-`

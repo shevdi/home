@@ -14,4 +14,12 @@ if (!global.fetch) {
   global.fetch = jest.fn()
 }
 
+if (!global.ResizeObserver) {
+  global.ResizeObserver = class ResizeObserver {
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+  } as unknown as typeof ResizeObserver
+}
+
 afterEach(cleanup)

@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react'
+import { TextField } from '../TextField/TextField'
 import { UploadLabel } from '../UploadLabel/UploadLabel'
 import styles from './Input.module.css'
 
@@ -23,12 +24,6 @@ export const Input: React.FC<InputProps> = ({
   const wrapperRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const labelRef = useRef<HTMLLabelElement>(null)
-
-  useEffect(() => {
-    if (focus) {
-      inputRef.current?.focus()
-    }
-  }, [focus])
 
   const onClick = () => {
     inputRef.current?.click()
@@ -59,11 +54,12 @@ export const Input: React.FC<InputProps> = ({
           {label}
         </label>
       )}
-      <input
+      <TextField
         ref={inputRef}
         className={type === 'file' ? `${styles.input} ${styles.inputFile}` : styles.input}
         type={type}
         disabled={disabled}
+        focus={focus}
         {...props}
       />
       {(error || error === null) && <div className={styles.error}>{error}</div>}

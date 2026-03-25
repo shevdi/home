@@ -1,0 +1,30 @@
+.field {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  font-size: var(--font-size-label);
+  color: var(--text-muted);
+}
+
+.requiredMark {
+  color: var(--error-color, #c62828);
+  margin-left: 0.15rem;
+}
+
+.description {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+}
+
+.error {
+  margin-top: 0.4rem;
+  font-size: 0.8rem;
+  color: var(--error-color);
+  min-height: 1rem;
+}

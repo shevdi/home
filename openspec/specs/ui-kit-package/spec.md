@@ -2,10 +2,9 @@
 
 ## Purpose
 
-Define requirements for the `@shevdi-home/ui-kit` workspace package: Radix Themes–aligned stack, Storybook with HMR, production build consumed by the client, Docker/CI alignment, and room to grow toward publish, multi-app, and SSR.
+Define requirements for the `@shevdi-home/ui-kit` workspace package: headless Radix UI primitives with project CSS, Storybook with HMR, production build consumed by the client, Docker/CI alignment, and room to grow toward publish, multi-app, and SSR.
 
 ## Requirements
-
 ### Requirement: Ui-kit workspace package
 
 The repository SHALL include an npm workspace package named `ui-kit` (or equivalent documented name) under `ui-kit/` with its own `package.json`, dependencies, and scripts that can be installed and built independently of the client application.
@@ -14,15 +13,6 @@ The repository SHALL include an npm workspace package named `ui-kit` (or equival
 
 - **WHEN** a developer runs the root package manager install at the monorepo root
 - **THEN** the `ui-kit` package dependencies are installed and the package is resolvable by workspace-aware tooling
-
-### Requirement: Radix Themes aligned stack
-
-The `ui-kit` package SHALL use Radix UI and `@radix-ui/themes` (or successor packages explicitly aligned with the Radix Themes design system) as the foundation for themed components, consistent with the project README reference to Radix Themes.
-
-#### Scenario: Theme provider available for stories
-
-- **WHEN** Storybook renders stories for ui-kit components that depend on Radix Themes
-- **THEN** the story environment SHALL wrap content with the appropriate Radix Themes provider so components render as intended
 
 ### Requirement: Storybook development with HMR
 
@@ -35,7 +25,7 @@ The `ui-kit` package SHALL provide a Storybook setup for developing components w
 
 ### Requirement: Production build artifact
 
-The `ui-kit` package SHALL expose a build script that produces output suitable for consumption by the client bundler (including JavaScript modules and TypeScript declarations; CSS handling SHALL match whatever Radix Themes and the chosen bundler require for correct styling in the app).
+The `ui-kit` package SHALL expose a build script that produces output suitable for consumption by the client bundler (including JavaScript modules and TypeScript declarations; CSS handling SHALL match **project CSS modules**, **Radix primitive** dependencies, and the chosen bundler so styles apply correctly in the app).
 
 #### Scenario: Build succeeds cleanly
 
@@ -68,3 +58,18 @@ The design and package layout SHALL NOT preclude: publishing `ui-kit` to an npm 
 
 - **WHEN** a reader consults the ui-kit documentation in the repository
 - **THEN** the documentation SHALL state that registry publish, multi-app usage, and SSR are planned extensions rather than guaranteed first-scope deliverables
+
+### Requirement: Headless Radix UI primitives for interactive controls
+
+The `ui-kit` package SHALL use **headless** Radix UI primitives (e.g. `@radix-ui/react-checkbox`, `@radix-ui/react-label`, `@radix-ui/react-slot` or `@radix-ui/react-primitive` as appropriate) for interactive controls refactored under this capability, styled with the project’s **CSS modules** (or equivalent documented styling). **`@radix-ui/themes`** SHALL NOT be required for these controls to function or render correctly in the client or in Storybook stories that target only these primitives.
+
+#### Scenario: Storybook without Theme for headless stories
+
+- **WHEN** Storybook renders a story for a component built solely from headless Radix primitives and project CSS
+- **THEN** the story SHALL NOT require wrapping content in a Radix Themes `Theme` provider for correct behavior or layout of that component
+
+#### Scenario: Optional Themes for legacy or mixed stories
+
+- **WHEN** a story or application screen still depends on Radix Themes for unrelated reasons
+- **THEN** wrapping with a Themes provider remains allowed and SHALL NOT conflict with headless form-field components
+

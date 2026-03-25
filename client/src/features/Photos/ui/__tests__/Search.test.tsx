@@ -1,3 +1,4 @@
+import React from 'react'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { useDispatch, useSelector } from 'react-redux'
@@ -21,32 +22,104 @@ jest.mock('react-redux', () => ({
   useStore: jest.fn(),
 }))
 
-jest.mock('@/shared/ui', () => {
-  const actual = jest.requireActual('@/shared/ui')
-  return {
-    ...actual,
-    Checkbox: ({
-      label,
-      checked,
-      onChange,
-    }: {
-      label: string
-      checked: boolean
-      onChange: (value: boolean) => void
-    }) => (
-      <label>
-        <input type='checkbox' checked={checked} onChange={(event) => onChange(event.target.checked)} />
-        {label}
-      </label>
-    ),
-    Input: ({ label, type, ...props }: { label: string; type?: string } & Record<string, unknown>) => (
-      <label>
-        {label}
-        <input type={type ?? 'text'} {...props} />
-      </label>
-    ),
-  }
-})
+jest.mock('@/shared/ui/DateRangeCalendar', () => ({
+  DateRangeCalendar: ({
+    label,
+    inputId,
+    displayValue,
+    placeholder,
+  }: {
+    label: string
+    inputId: string
+    displayValue: string
+    placeholder?: string
+  }) => (
+    <div>
+      <label htmlFor={inputId}>{label}</label>
+      <input id={inputId} readOnly value={displayValue} placeholder={placeholder} type='text' />
+    </div>
+  ),
+}))
+
+jest.mock('@/shared/ui', () => ({
+  Checkbox: ({
+    label,
+    checked,
+    onChange,
+  }: {
+    label: string
+    checked: boolean
+    onChange: (value: boolean) => void
+  }) => (
+    <label>
+      <input type='checkbox' checked={checked} onChange={(event) => onChange(event.target.checked)} />
+      {label}
+    </label>
+  ),
+  Input: ({ label, type, ...props }: { label: string; type?: string } & Record<string, unknown>) => (
+    <label>
+      {label}
+      <input type={type ?? 'text'} {...props} />
+    </label>
+  ),
+  Dropdown: ({
+    label,
+    options = [],
+    id,
+    name,
+    value,
+    onChange,
+    ...rest
+  }: {
+    label: string
+    options: { value: string; label: string }[]
+    id?: string
+    name?: string
+    value?: string
+    onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void
+  } & Record<string, unknown>) => (
+    <div>
+      <label htmlFor={id}>{label}</label>
+      <select
+        id={id}
+        name={name}
+        value={value}
+        onChange={onChange}
+        aria-label={label}
+        {...rest}
+      >
+        {options.map((o) => (
+          <option key={o.value} value={o.value}>
+            {o.label}
+          </option>
+        ))}
+      </select>
+    </div>
+  ),
+  TagList: ({
+    tags,
+    onClick,
+  }: {
+    tags?: string[] | string
+    onClick?: (tag: string) => void
+  }) => {
+    const list = Array.isArray(tags) ? tags : tags ? [String(tags)] : []
+    return (
+    <div>
+      {list.map((tag) => (
+        <span key={tag}>
+          {tag}
+          {onClick ? (
+            <button type='button' aria-label={`Удалить тег ${tag}`} onClick={() => onClick(tag)}>
+              ×
+            </button>
+          ) : null}
+        </span>
+      ))}
+    </div>
+    )
+  },
+}))
 
 const mockUseDispatch = useDispatch as unknown as jest.Mock
 const mockUseSelector = useSelector as unknown as jest.Mock

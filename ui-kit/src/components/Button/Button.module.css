@@ -1,19 +1,39 @@
 .button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   color: white;
   border: none;
   border-radius: var(--radius-md);
-  padding: 0.6rem 1.25rem;
   width: initial;
   margin: 0;
-  font-size: var(--font-size-md);
   font-weight: 500;
   font-family: inherit;
+  box-sizing: border-box;
   transition:
     background-color var(--transition-fast),
     transform var(--transition-fast);
   cursor: pointer;
   box-shadow: var(--shadow-sm);
   background-color: var(--btn-bg, var(--accent));
+}
+
+.buttonSm {
+  padding: 0.45rem 0.9rem;
+  font-size: 0.875rem;
+  min-height: 2rem;
+}
+
+.buttonMd {
+  padding: 0.6rem 1.25rem;
+  font-size: var(--font-size-md);
+  min-height: var(--control-min-height, 2.5rem);
+}
+
+.buttonLg {
+  padding: 0.75rem 1.5rem;
+  font-size: 1.125rem;
+  min-height: 3rem;
 }
 
 .button:hover:not(:disabled) {

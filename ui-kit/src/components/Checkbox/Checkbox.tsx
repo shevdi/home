@@ -1,3 +1,4 @@
+import * as CheckboxPrimitive from '@radix-ui/react-checkbox'
 import React from 'react'
 import styles from './Checkbox.module.css'
 
@@ -25,8 +26,8 @@ export const Checkbox: React.FC<CheckboxProps> = ({
   labelPosition = 'right',
   textColor,
 }) => {
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onChange(e.target.checked)
+  const handleCheckedChange = (value: boolean | 'indeterminate') => {
+    onChange(value === true)
   }
 
   const labelStyle: React.CSSProperties = textColor ? { color: textColor } : { color: 'var(--text-color)' }
@@ -56,14 +57,15 @@ export const Checkbox: React.FC<CheckboxProps> = ({
       className={[styles.container, disabled ? styles.containerDisabled : styles.containerEnabled].join(' ')}
     >
       {label && labelPosition === 'left' && labelEl}
-      <input
-        type="checkbox"
-        className={styles.hidden}
+      <CheckboxPrimitive.Root
+        className={`${styles.root} ${sizeClass[size]}`}
+        style={boxStyle}
         checked={checked}
-        onChange={handleChange}
+        onCheckedChange={handleCheckedChange}
         disabled={disabled}
-      />
-      <span className={`${styles.box} ${sizeClass[size]}`} style={boxStyle} />
+      >
+        <CheckboxPrimitive.Indicator className={styles.indicator} />
+      </CheckboxPrimitive.Root>
       {label && labelPosition === 'right' && labelEl}
     </label>
   )

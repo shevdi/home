@@ -1,7 +1,9 @@
 export { MapEmbed } from './MapEmbed'
 export {
   Button,
+  Field,
   Input,
+  TextField,
   UploadLabel,
   Checkbox,
   Dropdown,
@@ -9,11 +11,20 @@ export {
   Error,
   Loader,
   TagList,
-  CalendarPopover,
+  Calendar,
+  Popover,
 } from '@shevdi-home/ui-kit'
 export type {
   ButtonProps,
+  FieldControlProps,
+  FieldDescriptionProps,
+  FieldErrorProps,
+  FieldLabelProps,
+  FieldProps,
+  FieldRootProps,
+  FieldShorthandProps,
   InputProps,
+  TextFieldProps,
   UploadLabelProps,
   CheckboxProps,
   DropdownProps,
@@ -21,5 +32,6 @@ export type {
   ErrorProps,
   LoaderProps,
   TagListProps,
-  CalendarPopoverProps,
+  CalendarViewProps,
+  PopoverContentProps,
 } from '@shevdi-home/ui-kit'

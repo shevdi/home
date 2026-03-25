@@ -1,8 +1,8 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { themeReducer } from "@/features/ThemeSwitch";
-import { pagesSlice } from "@/features/Page";
-import { authReducer } from "@/features";
-import { photosReducer, uploadReducer } from "@/features/Photos";
+import { themeReducer } from "@/features/ThemeSwitch/model";
+import { pagesSlice } from "@/features/Page/model";
+import { authReducer } from "@/features/Auth/model";
+import { photosReducer, uploadReducer } from "@/features/Photos/model";
 import { apiSlice } from './api'
 
 export const store = configureStore({

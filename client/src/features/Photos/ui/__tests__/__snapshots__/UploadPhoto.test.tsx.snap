@@ -3,17 +3,17 @@
 exports[`UploadPhoto renders default state and disables submit 1`] = `
 <div>
   <div
-    class="sc-hIUJlY"
+    class="sc-jEACwF"
   >
     <div
-      class="sc-eDPEui mhmKh"
+      class=""
     />
     <form>
       <div
-        class="sc-jnOGJJ kxVVvt"
+        class="sc-cPiKLY hcPHMN"
       >
         <div
-          class="sc-dZoeqx dQLAYR"
+          class="sc-dLMFT cVfHkb"
           data-disabled="false"
           role="presentation"
           tabindex="0"
@@ -29,97 +29,101 @@ exports[`UploadPhoto renders default state and disables submit 1`] = `
         </div>
       </div>
       <div
-        class="sc-gFVvzo hRbIgO"
+        class="sc-ikkxIz jlxLpA"
       >
         <label
-          class="sc-iGgWBk ildUPc"
+          class=" "
         >
+          <button
+            aria-checked="false"
+            class="undefined undefined"
+            data-state="unchecked"
+            role="checkbox"
+            type="button"
+            value="on"
+          />
           <input
-            class="sc-gsFSXt dbMBul"
+            aria-hidden="true"
+            style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
+            tabindex="-1"
             type="checkbox"
+            value="on"
           />
           <span
-            class="sc-kAycey bFgwAS"
-          />
-          <span
-            class="sc-imWYAH jBgRds"
+            class="  "
+            style="color: var(--text-color);"
           >
             Скрыть
           </span>
         </label>
       </div>
       <div
-        class="sc-brPLxv hdeOEr"
+        class="sc-dAbbOM juffzi"
       >
-        <div
-          class="sc-jlZhev fTWaMY"
-        >
+        <div>
           <label
-            class="sc-jEACwF iYthgV"
             for="upload-photo-country"
           >
             Страна
           </label>
           <input
-            class="sc-cwHptO LvpCg"
+            class=""
             id="upload-photo-country"
             name="countryInput"
             placeholder="Введите страну и нажмите Enter"
+            type="text"
           />
         </div>
         <div
-          class="sc-feUZmx kqTaa"
+          class="undefined undefined"
         />
       </div>
       <div
-        class="sc-brPLxv hdeOEr"
+        class="sc-dAbbOM juffzi"
       >
-        <div
-          class="sc-jlZhev fTWaMY"
-        >
+        <div>
           <label
-            class="sc-jEACwF iYthgV"
             for="upload-photo-city"
           >
             Город
           </label>
           <input
-            class="sc-cwHptO LvpCg"
+            class=""
             id="upload-photo-city"
             name="cityInput"
             placeholder="Введите город и нажмите Enter"
+            type="text"
           />
         </div>
         <div
-          class="sc-feUZmx kqTaa"
+          class="undefined undefined"
         />
       </div>
       <div
-        class="sc-brPLxv hdeOEr"
+        class="sc-dAbbOM juffzi"
       >
-        <div
-          class="sc-jlZhev fTWaMY"
-        >
+        <div>
           <label
-            class="sc-jEACwF iYthgV"
             for="upload-photo-tags"
           >
             Теги
           </label>
           <input
-            class="sc-cwHptO LvpCg"
+            class=""
             id="upload-photo-tags"
             name="tagInput"
             placeholder="Введите тег и нажмите Enter"
+            type="text"
           />
         </div>
         <div
-          class="sc-feUZmx kqTaa"
+          class="undefined undefined"
         />
       </div>
       <button
-        class="sc-dLMFT ckNJCs"
+        class=""
         disabled=""
+        style="--btn-bg: var(--text-muted);"
         type="submit"
       >
         Загрузить фото
@@ -132,19 +136,19 @@ exports[`UploadPhoto renders default state and disables submit 1`] = `
 exports[`UploadPhoto shows error message when upload fails 1`] = `
 <div>
   <div
-    class="sc-hIUJlY"
+    class="sc-jEACwF"
   >
     <div
-      class="sc-eDPEui mhmKh"
+      class=""
     >
       Network error
     </div>
     <form>
       <div
-        class="sc-jnOGJJ kxVVvt"
+        class="sc-cPiKLY hcPHMN"
       >
         <div
-          class="sc-dZoeqx dQLAYR"
+          class="sc-dLMFT cVfHkb"
           data-disabled="false"
           role="presentation"
           tabindex="0"
@@ -160,118 +164,121 @@ exports[`UploadPhoto shows error message when upload fails 1`] = `
         </div>
       </div>
       <div
-        class="sc-gFVvzo hRbIgO"
+        class="sc-ikkxIz jlxLpA"
       >
         <label
-          class="sc-iGgWBk ildUPc"
+          class=" "
         >
+          <button
+            aria-checked="false"
+            class="undefined undefined"
+            data-state="unchecked"
+            role="checkbox"
+            type="button"
+            value="on"
+          />
           <input
-            class="sc-gsFSXt dbMBul"
+            aria-hidden="true"
+            style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
+            tabindex="-1"
             type="checkbox"
+            value="on"
           />
           <span
-            class="sc-kAycey bFgwAS"
-          />
-          <span
-            class="sc-imWYAH jBgRds"
+            class="  "
+            style="color: var(--text-color);"
           >
             Скрыть
           </span>
         </label>
       </div>
       <div
-        class="sc-brPLxv hdeOEr"
+        class="sc-dAbbOM juffzi"
       >
-        <div
-          class="sc-jlZhev fTWaMY"
-        >
+        <div>
           <label
-            class="sc-jEACwF iYthgV"
             for="upload-photo-country"
           >
             Страна
           </label>
           <input
-            class="sc-cwHptO LvpCg"
+            class=""
             id="upload-photo-country"
             name="countryInput"
             placeholder="Введите страну и нажмите Enter"
+            type="text"
           />
         </div>
         <div
-          class="sc-feUZmx kqTaa"
+          class="undefined undefined"
         />
       </div>
       <div
-        class="sc-brPLxv hdeOEr"
+        class="sc-dAbbOM juffzi"
       >
-        <div
-          class="sc-jlZhev fTWaMY"
-        >
+        <div>
           <label
-            class="sc-jEACwF iYthgV"
             for="upload-photo-city"
           >
             Город
           </label>
           <input
-            class="sc-cwHptO LvpCg"
+            class=""
             id="upload-photo-city"
             name="cityInput"
             placeholder="Введите город и нажмите Enter"
+            type="text"
           />
         </div>
         <div
-          class="sc-feUZmx kqTaa"
+          class="undefined undefined"
         />
       </div>
       <div
-        class="sc-brPLxv hdeOEr"
+        class="sc-dAbbOM juffzi"
       >
-        <div
-          class="sc-jlZhev fTWaMY"
-        >
+        <div>
           <label
-            class="sc-jEACwF iYthgV"
             for="upload-photo-tags"
           >
             Теги
           </label>
           <input
-            class="sc-cwHptO LvpCg"
+            class=""
             id="upload-photo-tags"
             name="tagInput"
             placeholder="Введите тег и нажмите Enter"
+            type="text"
           />
         </div>
         <div
-          class="sc-feUZmx kqTaa"
+          class="undefined undefined"
         />
       </div>
       <div
-        class="sc-kAkpmZ gTaxFf"
+        class="sc-gFqAkO fdwPkA"
       >
         <div
-          class="sc-klVQfr hCkyrS"
+          class="sc-dhKdcy fJkiwv"
         >
           <div
-            class="sc-bypJrU dCgqcO"
+            class="sc-kpDqfp gVbqiU"
           >
             <div
               style="width: 100%; height: 100%; background: var(--input-disabled-color);"
             />
           </div>
           <div
-            class="sc-ddjGPF jokSPh"
+            class="sc-dAlyuI cHVeBq"
           >
             <div
-              class="sc-dSCufm FoGle"
+              class="sc-jlZhev dBSRof"
             >
               <span>
                 photo.jpg
               </span>
               <span
-                class="sc-gmPhUo cRYUdg"
+                class="sc-kAycey jEIthQ"
               >
                 <span>
                   .
@@ -285,7 +292,7 @@ exports[`UploadPhoto shows error message when upload fails 1`] = `
               </span>
             </div>
             <span
-              class="sc-cfxfcL jorOx"
+              class="sc-iGgWBk iCNLQS"
             >
               image/jpeg
                · 
@@ -297,7 +304,7 @@ exports[`UploadPhoto shows error message when upload fails 1`] = `
           </div>
           <button
             aria-label="Удалить файл photo.jpg"
-            class="sc-fxwrCX dIYcHA"
+            class="sc-cwHptO indzLL"
             type="button"
           >
             ×
@@ -305,7 +312,8 @@ exports[`UploadPhoto shows error message when upload fails 1`] = `
         </div>
       </div>
       <button
-        class="sc-dLMFT ePPioQ"
+        class=""
+        style="--btn-bg: var(--accent); --btn-hover-bg: var(--accent-hover);"
         type="submit"
       >
         Загрузить 1 фото
@@ -318,17 +326,17 @@ exports[`UploadPhoto shows error message when upload fails 1`] = `
 exports[`UploadPhoto updates label and shows selected file 1`] = `
 <div>
   <div
-    class="sc-hIUJlY"
+    class="sc-jEACwF"
   >
     <div
-      class="sc-eDPEui mhmKh"
+      class=""
     />
     <form>
       <div
-        class="sc-jnOGJJ kxVVvt"
+        class="sc-cPiKLY hcPHMN"
       >
         <div
-          class="sc-dZoeqx dQLAYR"
+          class="sc-dLMFT cVfHkb"
           data-disabled="false"
           role="presentation"
           tabindex="0"
@@ -344,119 +352,122 @@ exports[`UploadPhoto updates label and shows selected file 1`] = `
         </div>
       </div>
       <div
-        class="sc-gFVvzo hRbIgO"
+        class="sc-ikkxIz jlxLpA"
       >
         <label
-          class="sc-iGgWBk ildUPc"
+          class=" "
         >
+          <button
+            aria-checked="false"
+            class="undefined undefined"
+            data-state="unchecked"
+            role="checkbox"
+            type="button"
+            value="on"
+          />
           <input
-            class="sc-gsFSXt dbMBul"
+            aria-hidden="true"
+            style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
+            tabindex="-1"
             type="checkbox"
+            value="on"
           />
           <span
-            class="sc-kAycey bFgwAS"
-          />
-          <span
-            class="sc-imWYAH jBgRds"
+            class="  "
+            style="color: var(--text-color);"
           >
             Скрыть
           </span>
         </label>
       </div>
       <div
-        class="sc-brPLxv hdeOEr"
+        class="sc-dAbbOM juffzi"
       >
-        <div
-          class="sc-jlZhev fTWaMY"
-        >
+        <div>
           <label
-            class="sc-jEACwF iYthgV"
             for="upload-photo-country"
           >
             Страна
           </label>
           <input
-            class="sc-cwHptO LvpCg"
+            class=""
             id="upload-photo-country"
             name="countryInput"
             placeholder="Введите страну и нажмите Enter"
+            type="text"
           />
         </div>
         <div
-          class="sc-feUZmx kqTaa"
+          class="undefined undefined"
         />
       </div>
       <div
-        class="sc-brPLxv hdeOEr"
+        class="sc-dAbbOM juffzi"
       >
-        <div
-          class="sc-jlZhev fTWaMY"
-        >
+        <div>
           <label
-            class="sc-jEACwF iYthgV"
             for="upload-photo-city"
           >
             Город
           </label>
           <input
-            class="sc-cwHptO LvpCg"
+            class=""
             id="upload-photo-city"
             name="cityInput"
             placeholder="Введите город и нажмите Enter"
+            type="text"
           />
         </div>
         <div
-          class="sc-feUZmx kqTaa"
+          class="undefined undefined"
         />
       </div>
       <div
-        class="sc-brPLxv hdeOEr"
+        class="sc-dAbbOM juffzi"
       >
-        <div
-          class="sc-jlZhev fTWaMY"
-        >
+        <div>
           <label
-            class="sc-jEACwF iYthgV"
             for="upload-photo-tags"
           >
             Теги
           </label>
           <input
-            class="sc-cwHptO LvpCg"
+            class=""
             id="upload-photo-tags"
             name="tagInput"
             placeholder="Введите тег и нажмите Enter"
+            type="text"
           />
         </div>
         <div
-          class="sc-feUZmx kqTaa"
+          class="undefined undefined"
         />
       </div>
       <div
-        class="sc-kAkpmZ gTaxFf"
+        class="sc-gFqAkO fdwPkA"
       >
         <div
-          class="sc-klVQfr hCkyrS"
+          class="sc-dhKdcy fJkiwv"
         >
           <div
-            class="sc-bypJrU dCgqcO"
+            class="sc-kpDqfp gVbqiU"
           >
             <div
               style="width: 100%; height: 100%; background: var(--input-disabled-color);"
             />
           </div>
           <div
-            class="sc-ddjGPF jokSPh"
+            class="sc-dAlyuI cHVeBq"
           >
             <div
-              class="sc-dSCufm FoGle"
+              class="sc-jlZhev dBSRof"
             >
               <span>
                 photo.jpg
               </span>
             </div>
             <span
-              class="sc-cfxfcL jorOx"
+              class="sc-iGgWBk iCNLQS"
             >
               image/jpeg
                · 
@@ -468,7 +479,7 @@ exports[`UploadPhoto updates label and shows selected file 1`] = `
           </div>
           <button
             aria-label="Удалить файл photo.jpg"
-            class="sc-fxwrCX dIYcHA"
+            class="sc-cwHptO indzLL"
             type="button"
           >
             ×
@@ -476,7 +487,8 @@ exports[`UploadPhoto updates label and shows selected file 1`] = `
         </div>
       </div>
       <button
-        class="sc-dLMFT ePPioQ"
+        class=""
+        style="--btn-bg: var(--accent); --btn-hover-bg: var(--accent-hover);"
         type="submit"
       >
         Загрузить 1 фото

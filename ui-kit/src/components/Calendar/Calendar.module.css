@@ -1,13 +1,8 @@
-.popover {
-  position: absolute;
-  left: 0;
-  margin-top: 0.25rem;
-  padding: 1rem;
-  background: var(--input-bg);
-  border: 1px solid var(--input-border);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-md);
-  z-index: 100;
+.root {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
 }
 
 .footer {
@@ -35,7 +30,7 @@
   border-color: var(--text-muted);
 }
 
-.calendar {
+.view {
   --react-calendar-tile-font-size: 0.9rem;
   --react-calendar-tile-height: 1.75rem;
   width: 100%;
@@ -43,13 +38,13 @@
   font-family: inherit;
 }
 
-.calendar :global(.react-calendar__navigation) {
+.view :global(.react-calendar__navigation) {
   display: flex;
   gap: 0.5rem;
   margin-bottom: 1rem;
 }
 
-.calendar :global(.react-calendar__navigation button) {
+.view :global(.react-calendar__navigation button) {
   min-width: 2rem;
   font-size: 1rem;
   color: var(--text-color);
@@ -59,29 +54,29 @@
   cursor: pointer;
 }
 
-.calendar :global(.react-calendar__navigation button:hover) {
+.view :global(.react-calendar__navigation button:hover) {
   background: var(--input-focus-shadow);
 }
 
-.calendar :global(.react-calendar__month-view__weekdays) {
+.view :global(.react-calendar__month-view__weekdays) {
   font-size: 0.75rem;
   color: var(--text-muted);
   text-align: center;
 }
 
-.calendar :global(.react-calendar__month-view__days__day) {
+.view :global(.react-calendar__month-view__days__day) {
   color: var(--text-color);
 }
 
-.calendar :global(.react-calendar__tile) {
+.view :global(.react-calendar__tile) {
   padding: 0.5em;
   border-radius: var(--radius-sm);
 }
 
-.calendar :global(.react-calendar__tile:hover) {
+.view :global(.react-calendar__tile:hover) {
   background: var(--input-focus-shadow);
 }
 
-.calendar :global(.react-calendar__tile--now) {
+.view :global(.react-calendar__tile--now) {
   font-weight: 600;
 }

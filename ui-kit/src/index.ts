@@ -3,8 +3,22 @@ import './styles/tokens.css'
 export { Button } from './components/Button/Button'
 export type { ButtonProps } from './components/Button/Button'
 
+export { Field } from './components/Field/Field'
+export type {
+  FieldControlProps,
+  FieldDescriptionProps,
+  FieldErrorProps,
+  FieldLabelProps,
+  FieldRootProps,
+  FieldShorthandProps,
+  FieldShorthandProps as FieldProps,
+} from './components/Field/Field'
+
 export { Input } from './components/Input/Input'
 export type { InputProps } from './components/Input/Input'
+
+export { TextField } from './components/TextField/TextField'
+export type { TextFieldProps } from './components/TextField/TextField'
 
 export { UploadLabel } from './components/UploadLabel/UploadLabel'
 export type { UploadLabelProps } from './components/UploadLabel/UploadLabel'
@@ -26,5 +40,8 @@ export type { LoaderProps } from './components/Loader/Loader'
 export { TagList } from './components/TagList/TagList'
 export type { TagListProps } from './components/TagList/TagList'
 
-export { CalendarPopover } from './components/CalendarPopover/CalendarPopover'
-export type { CalendarPopoverProps } from './components/CalendarPopover/CalendarPopover'
+export { Calendar } from './components/Calendar/Calendar'
+export type { CalendarViewProps } from './components/Calendar/Calendar'
+
+export { Popover } from './components/Popover/Popover'
+export type { PopoverContentProps } from './components/Popover/Popover'

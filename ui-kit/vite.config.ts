@@ -20,7 +20,17 @@ export default defineConfig({
       fileName: 'index',
     },
     rollupOptions: {
-      external: ['react', 'react-dom', 'react/jsx-runtime', 'react-router', 'react-calendar'],
+      external: [
+        'react',
+        'react-dom',
+        'react/jsx-runtime',
+        'react-router',
+        'react-calendar',
+        '@radix-ui/react-checkbox',
+        '@radix-ui/react-label',
+        '@radix-ui/react-select',
+        '@radix-ui/react-slot',
+      ],
       output: {
         assetFileNames: 'ui-kit[extname]',
       },

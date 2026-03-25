@@ -1,8 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { seedUser } from './helpers/api';
 
-// TODO: Skip this test until we have a way to test the login flow
-test.describe.only('Login flow', () => {
+test.describe('Login flow', () => {
   test.beforeAll(async ({ request }) => {
     await seedUser(request);
   });

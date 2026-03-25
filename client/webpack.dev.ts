@@ -1,9 +1,41 @@
+import fs from 'fs'
 import path from 'path'
 import { merge } from 'webpack-merge'
 import webpack from 'webpack'
 import commonConfig from './webpack.common'
 import { Configuration } from 'webpack';
 import { Configuration as DevServerConfiguration } from 'webpack-dev-server';
+
+const DEV_PORT = 3000
+
+function devServerOpen(): DevServerConfiguration['open'] {
+  if (process.platform === 'win32' && process.env.LOCALAPPDATA) {
+    const canary = path.join(
+      process.env.LOCALAPPDATA,
+      'Google',
+      'Chrome SxS',
+      'Application',
+      'chrome.exe'
+    )
+    if (fs.existsSync(canary)) {
+      return {
+        target: `http://localhost:${DEV_PORT}/`,
+        app: { name: canary, arguments: [] },
+      }
+    }
+  }
+  if (process.platform === 'darwin') {
+    const canary =
+      '/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary'
+    if (fs.existsSync(canary)) {
+      return {
+        target: `http://localhost:${DEV_PORT}/`,
+        app: { name: canary, arguments: [] },
+      }
+    }
+  }
+  return true
+}
 
 interface CustomConfiguration extends Configuration {
   devServer?: DevServerConfiguration;
@@ -37,8 +69,8 @@ const devConfig: CustomConfiguration = merge(commonConfig, {
         interval: 500,
       },
     },
-    port: 3000,
-    open: true,
+    port: DEV_PORT,
+    open: devServerOpen(),
     historyApiFallback: true,
   }
 });
