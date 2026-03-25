@@ -41,6 +41,18 @@
   opacity: 0.7;
 }
 
+/* Keep number fields aligned with text inputs (native spinners vary by browser). */
+.input[type='number'] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.input[type='number']::-webkit-inner-spin-button,
+.input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 .inputFile {
   display: none;
 }

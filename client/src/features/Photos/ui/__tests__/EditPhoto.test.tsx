@@ -37,7 +37,7 @@ jest.mock('@/shared/ui', () => ({
     </label>
   ),
   ErrMessage: ({ children }: { children?: React.ReactNode }) => <div data-testid='err-message'>{children}</div>,
-  Input: ({ label, ...props }: { label: string; [key: string]: unknown }) => (
+  LabeledInput: ({ label, ...props }: { label: string; [key: string]: unknown }) => (
     <div>
       <label>{label}</label>
       <input {...props} />

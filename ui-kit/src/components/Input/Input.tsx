@@ -1,68 +1,33 @@
 import React, { useEffect, useRef } from 'react'
-import { TextField } from '../TextField/TextField'
-import { UploadLabel } from '../UploadLabel/UploadLabel'
-import styles from './Input.module.css'
+import inputStyles from './Input.module.css'
 
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  label: string
-  type?: string
+  /** Focus the input on mount (e.g. first field in a form). */
   focus?: boolean
-  error?: string
-  disabled?: boolean
-  onOutsideClick?: () => void
 }
 
-export const Input: React.FC<InputProps> = ({
-  label,
-  type,
-  focus,
-  error,
-  disabled,
-  onOutsideClick,
-  ...props
-}) => {
-  const wrapperRef = useRef<HTMLDivElement>(null)
-  const inputRef = useRef<HTMLInputElement>(null)
-  const labelRef = useRef<HTMLLabelElement>(null)
-
-  const onClick = () => {
-    inputRef.current?.click()
-  }
+export const Input = React.forwardRef<HTMLInputElement, InputProps>(function Input(
+  { className, type = 'text', focus, ...props },
+  ref,
+) {
+  const innerRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (!onOutsideClick) return
-      if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
-        onOutsideClick()
-      }
+    if (focus) {
+      innerRef.current?.focus()
     }
-
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [onOutsideClick])
+  }, [focus])
 
   return (
-    <div ref={wrapperRef} className={styles.wrapper}>
-      {type === 'file' ? (
-        <UploadLabel ref={labelRef} htmlFor={props.id || props.name} disabled={disabled} onClick={onClick}>
-          {label}
-        </UploadLabel>
-      ) : (
-        <label ref={labelRef} className={styles.label} htmlFor={props.id || props.name} onClick={onClick}>
-          {label}
-        </label>
-      )}
-      <TextField
-        ref={inputRef}
-        className={type === 'file' ? `${styles.input} ${styles.inputFile}` : styles.input}
-        type={type}
-        disabled={disabled}
-        focus={focus}
-        {...props}
-      />
-      {(error || error === null) && <div className={styles.error}>{error}</div>}
-    </div>
+    <input
+      ref={(node) => {
+        innerRef.current = node
+        if (typeof ref === 'function') ref(node)
+        else if (ref != null) (ref as React.MutableRefObject<HTMLInputElement | null>).current = node
+      }}
+      type={type}
+      className={[inputStyles.input, className].filter(Boolean).join(' ')}
+      {...props}
+    />
   )
-}
+})

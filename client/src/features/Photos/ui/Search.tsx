@@ -4,7 +4,7 @@ import z from 'zod'
 import styled from 'styled-components'
 import { useDispatch, useSelector } from 'react-redux'
 import { DateRangeCalendar } from '@/shared/ui/DateRangeCalendar'
-import { Dropdown, Input, TagList } from '@/shared/ui'
+import { Dropdown, LabeledInput, TagList } from '@/shared/ui'
 import { PhotoOrder } from '@shevdi-home/shared'
 import {
   setSearch,
@@ -238,7 +238,7 @@ export const Search = () => {
           onClear={handleClearDates}
         />
         <FieldWrapper>
-          <Input
+          <LabeledInput
             label='Страна'
             id='photo-filter-country'
             placeholder='Введите страну и нажмите Enter'
@@ -248,7 +248,7 @@ export const Search = () => {
           <TagList tags={country} onClick={handleRemoveCountry} />
         </FieldWrapper>
         <FieldWrapper>
-          <Input
+          <LabeledInput
             label='Город'
             id='photo-filter-city'
             placeholder='Введите город и нажмите Enter'
@@ -258,7 +258,7 @@ export const Search = () => {
           <TagList tags={city} onClick={handleRemoveCity} />
         </FieldWrapper>
         <FieldWrapper>
-          <Input
+          <LabeledInput
             label='Теги'
             id='photo-filter-tags'
             placeholder='Введите тег и нажмите Enter'

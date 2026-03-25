@@ -17,8 +17,10 @@ export type {
 export { Input } from './components/Input/Input'
 export type { InputProps } from './components/Input/Input'
 
-export { TextField } from './components/TextField/TextField'
-export type { TextFieldProps } from './components/TextField/TextField'
+export { LabeledInput } from './components/LabeledInput/LabeledInput'
+export type { LabeledInputProps } from './components/LabeledInput/LabeledInput'
+export { LabeledFileInput } from './components/LabeledInput/LabeledFileInput'
+export type { LabeledFileInputProps } from './components/LabeledInput/LabeledFileInput'
 
 export { UploadLabel } from './components/UploadLabel/UploadLabel'
 export type { UploadLabelProps } from './components/UploadLabel/UploadLabel'
@@ -37,8 +39,8 @@ export type { ErrorProps } from './components/Error/Error'
 export { Loader } from './components/Loader/Loader'
 export type { LoaderProps } from './components/Loader/Loader'
 
-export { TagList } from './components/TagList/TagList'
-export type { TagListProps } from './components/TagList/TagList'
+export { TagChips } from './components/TagChips/TagChips'
+export type { TagChipsProps } from './components/TagChips/TagChips'
 
 export { Calendar } from './components/Calendar/Calendar'
 export type { CalendarViewProps } from './components/Calendar/Calendar'

@@ -1,5 +1,11 @@
 /* Design tokens: shared sizes + theme colors. Theme switches via html[data-theme="light"|"dark"] */
 
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 :root {
   --error-color: #c70c50;
   --warning-color: #ba2d0b;

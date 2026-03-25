@@ -5,7 +5,7 @@ import { useLocation } from 'react-router'
 import z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
-import { Button, Checkbox, ErrMessage, Input, Loader, TagList } from '@/shared/ui'
+import { Button, Checkbox, ErrMessage, LabeledInput, Loader, TagList } from '@/shared/ui'
 import { getErrorMessage } from '@/shared/utils'
 import { DeletePhoto } from './DeletePhoto'
 import { PhotosNavigation } from './PhotosNavigation'
@@ -207,29 +207,29 @@ export function EditPhoto() {
                 />
               )}
             />
-            <Input label='Заголовок' {...register('title')} />
-            <Input
+            <LabeledInput label='Заголовок' {...register('title')} />
+            <LabeledInput
               label='Приоритет'
               {...register('priority', {
                 valueAsNumber: true,
               })}
               type='number'
             />
-            <Input
+            <LabeledInput
               label='Страна'
               placeholder='Введите страну и нажмите Enter'
               {...register('countryInput')}
               onKeyDown={handleCountryKeyDown}
             />
             <TagList tags={country} onClick={handleRemoveCountry} />
-            <Input
+            <LabeledInput
               label='Город'
               placeholder='Введите город и нажмите Enter'
               {...register('cityInput')}
               onKeyDown={handleCityKeyDown}
             />
             <TagList tags={city} onClick={handleRemoveCity} />
-            <Input
+            <LabeledInput
               label='Теги'
               placeholder='Введите тег и нажмите Enter'
               {...register('tagsInput')}

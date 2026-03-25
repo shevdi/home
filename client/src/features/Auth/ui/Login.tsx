@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router'
 import { setCredentials } from '../model/authSlice'
 import { useLoginMutation } from '../model/authApiSlice'
-import { Button, ErrMessage, Field, TextField } from '@/shared/ui'
+import { Button, ErrMessage, Field, Input } from '@/shared/ui'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -50,10 +50,10 @@ export function Login() {
 
       <form className='form' onSubmit={handleSubmit(onSubmit)}>
         <Field label='Имя пользователя' error={errors.username?.message} required>
-          <TextField focus {...register('username')} disabled={isSubmitting} />
+          <Input focus {...register('username')} disabled={isSubmitting} />
         </Field>
         <Field label='Пароль' error={errors.password?.message} required>
-          <TextField type='password' {...register('password')} disabled={isSubmitting} />
+          <Input type='password' {...register('password')} disabled={isSubmitting} />
         </Field>
         <Button display='block' type='submit' margin='1.25rem auto 0' disabled={isSubmitting}>
           Войти

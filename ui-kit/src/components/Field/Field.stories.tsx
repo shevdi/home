@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { useState } from 'react'
 import { Field } from './Field'
-import { TextField } from '../TextField/TextField'
+import { Input } from '../Input/Input'
 
 /** Use `Meta` without `typeof Field` so render-only stories are not forced to supply `args` for shorthand props (`label`, `children`). */
 const meta: Meta = {
@@ -29,7 +29,7 @@ export const Shorthand: Story = {
         }}
       >
         <Field label="Email" description="Work email only" error={error} required>
-          <TextField value={value} onChange={(ev) => setValue(ev.target.value)} />
+          <Input value={value} onChange={(ev) => setValue(ev.target.value)} />
         </Field>
         <button type="submit">Submit</button>
       </form>
@@ -46,7 +46,7 @@ export const Compound: Story = {
           <Field.Label>Email</Field.Label>
           <Field.Description>Work only</Field.Description>
           <Field.Control>
-            <TextField value={value} onChange={(ev) => setValue(ev.target.value)} />
+            <Input value={value} onChange={(ev) => setValue(ev.target.value)} />
           </Field.Control>
           <Field.Error />
         </Field.Root>

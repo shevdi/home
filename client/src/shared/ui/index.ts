@@ -1,16 +1,19 @@
 export { MapEmbed } from './MapEmbed'
+export { TagList } from './TagList'
+export type { TagListProps } from './TagList'
 export {
   Button,
   Field,
   Input,
-  TextField,
+  LabeledInput,
+  LabeledFileInput,
+  TagChips,
   UploadLabel,
   Checkbox,
   Dropdown,
   ErrMessage,
   Error,
   Loader,
-  TagList,
   Calendar,
   Popover,
 } from '@shevdi-home/ui-kit'
@@ -24,14 +27,15 @@ export type {
   FieldRootProps,
   FieldShorthandProps,
   InputProps,
-  TextFieldProps,
+  LabeledInputProps,
+  LabeledFileInputProps,
   UploadLabelProps,
   CheckboxProps,
   DropdownProps,
   DropdownOption,
   ErrorProps,
   LoaderProps,
-  TagListProps,
+  TagChipsProps,
   CalendarViewProps,
   PopoverContentProps,
 } from '@shevdi-home/ui-kit'

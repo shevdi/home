@@ -3,7 +3,7 @@ import styled, { keyframes } from 'styled-components'
 import { z } from 'zod'
 import { SubmitHandler, useForm, Controller } from 'react-hook-form'
 import { useDropzone } from 'react-dropzone'
-import { Button, Checkbox, ErrMessage, Input, TagList } from '@/shared/ui'
+import { Button, Checkbox, ErrMessage, LabeledInput, TagList } from '@/shared/ui'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useAppDispatch, useAppSelector } from '@/app/store'
 import { buildMeta, FileMeta } from '../utils/uploadPhotoMeta'
@@ -216,7 +216,7 @@ export function UploadPhoto() {
           />
         </CheckboxContainer>
         <FieldWrapper>
-          <Input
+          <LabeledInput
             label='Страна'
             id='upload-photo-country'
             placeholder='Введите страну и нажмите Enter'
@@ -236,7 +236,7 @@ export function UploadPhoto() {
           />
         </FieldWrapper>
         <FieldWrapper>
-          <Input
+          <LabeledInput
             label='Город'
             id='upload-photo-city'
             placeholder='Введите город и нажмите Enter'
@@ -256,7 +256,7 @@ export function UploadPhoto() {
           />
         </FieldWrapper>
         <FieldWrapper>
-          <Input
+          <LabeledInput
             label='Теги'
             id='upload-photo-tags'
             placeholder='Введите тег и нажмите Enter'

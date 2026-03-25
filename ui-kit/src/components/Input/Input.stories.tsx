@@ -1,11 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { useState } from 'react'
-import { TextField } from './TextField'
+import { Input } from './Input'
 
-/** `Meta` without `typeof TextField` avoids Storybook requiring `args` for render-only stories. */
+/** `Meta` without `typeof Input` avoids Storybook requiring `args` for render-only stories. */
 const meta: Meta = {
-  title: 'Components/TextField',
-  component: TextField,
+  title: 'Components/Input',
+  component: Input,
   parameters: {
     layout: 'centered',
   },
@@ -21,7 +21,7 @@ export const Default: Story = {
   render: function DefaultStory() {
     return (
       <div style={fieldWidth}>
-        <TextField placeholder="Type here" name="default" />
+        <Input placeholder="Type here" name="default" />
       </div>
     )
   },
@@ -31,7 +31,7 @@ export const FocusOnMount: Story = {
   render: function FocusOnMountStory() {
     return (
       <div style={fieldWidth}>
-        <TextField focus placeholder="Focused on load" name="focus" />
+        <Input focus placeholder="Focused on load" name="focus" />
       </div>
     )
   },
@@ -41,7 +41,7 @@ export const Disabled: Story = {
   render: function DisabledStory() {
     return (
       <div style={fieldWidth}>
-        <TextField disabled value="Saved value" name="disabled" />
+        <Input disabled value="Saved value" name="disabled" />
       </div>
     )
   },
@@ -51,7 +51,7 @@ export const Password: Story = {
   render: function PasswordStory() {
     return (
       <div style={fieldWidth}>
-        <TextField type="password" placeholder="Password" name="password" autoComplete="new-password" />
+        <Input type="password" placeholder="Password" name="password" autoComplete="new-password" />
       </div>
     )
   },
@@ -62,7 +62,7 @@ export const Controlled: Story = {
     const [value, setValue] = useState('')
     return (
       <div style={fieldWidth}>
-        <TextField
+        <Input
           value={value}
           onChange={(e) => setValue(e.target.value)}
           placeholder="Controlled input"
@@ -79,7 +79,7 @@ export const Invalid: Story = {
   render: function InvalidStory() {
     return (
       <div style={fieldWidth}>
-        <TextField
+        <Input
           defaultValue="bad@example"
           placeholder="Email"
           name="email"

@@ -56,7 +56,7 @@ jest.mock('@/shared/ui', () => ({
       {label}
     </label>
   ),
-  Input: ({ label, type, ...props }: { label: string; type?: string } & Record<string, unknown>) => (
+  LabeledInput: ({ label, type, ...props }: { label: string; type?: string } & Record<string, unknown>) => (
     <label>
       {label}
       <input type={type ?? 'text'} {...props} />

@@ -14,9 +14,14 @@ import '@shevdi-home/ui-kit/style.css'
 
 ## Components
 
-Form controls, feedback, `TagList`, `CalendarPopover`, etc. live under `src/components/`. Each component has a `*.module.css` file.
+Form controls, feedback, `TagChips`, `Calendar`, etc. live under `src/components/`. Each component has a `*.module.css` file.
 
-`MapEmbed` stays in the client (`client/src/shared/ui/MapEmbed.tsx`) because it depends on app routing and search helpers.
+### Forms: `Field` + `Input` vs `LabeledInput`
+
+- **`Field` + `Input`** — Prefer for new screens: Radix `Label`, generated ids, `aria-describedby` for description and error, and RHF-friendly `Field.Control`. Use **`Input`** (primitive) inside **`Field.Control`** or the **`Field`** shorthand with a single child control.
+- **`LabeledInput`** — Legacy-friendly labeled row (label + input + error) with optional file upload and `onOutsideClick`. Use when you are not migrating to `Field` yet or need that specific layout.
+
+`TagChips` is the presentational tag row in the kit (no router). **`TagList`** (links + photo search URLs) lives in the client (`client/src/shared/ui/TagList.tsx`) next to **`MapEmbed`**, because it depends on `react-router` and `buildSearchParams`.
 
 ## Development
 

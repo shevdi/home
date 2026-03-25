@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import { useChangePageMutation, useGetPageQuery } from '../model/pageSlice'
 import { useLocation, useNavigate } from 'react-router'
-import { Button, ErrMessage, Input } from '@/shared/ui'
+import { Button, ErrMessage, LabeledInput } from '@/shared/ui'
 import { useState } from 'react'
 import z from 'zod'
 import { SubmitHandler, useForm } from 'react-hook-form'
@@ -87,12 +87,12 @@ export function EditPage({ url }: IPageProps) {
     <PageContainer>
       <form onSubmit={handleSubmit(onSubmit)}>
         {isTitleEdited ? (
-          <Input label='' onOutsideClick={switchTitleEdited} {...register('title')} />
+          <LabeledInput label='' onOutsideClick={switchTitleEdited} {...register('title')} />
         ) : (
           <PageHeader onClick={startTitleEdited}>{title}</PageHeader>
         )}
         {isTextEdited ? (
-          <Input label='' onOutsideClick={switchTextEdited} {...register('text')} />
+          <LabeledInput label='' onOutsideClick={switchTextEdited} {...register('text')} />
         ) : (
           <PageText onClick={startTextEdited}>{text}</PageText>
         )}
