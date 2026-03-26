@@ -150,11 +150,13 @@ router.post(`/upload`, upload.array("files", 50), async (req: Request, res: Resp
     const files = Array.isArray(req.files) ? req.files : req.file ? [req.file] : []
     const bodyParsed = uploadBodySchema.safeParse(req.body)
     const body = bodyParsed.success ? bodyParsed.data : {
+      title: undefined,
       private: undefined,
       tags: [],
       country: [],
       city: [],
       meta: [],
+      priority: undefined,
     }
     const isPrivate = body.private
     const tags = normalizeTags(body.tags)
@@ -225,6 +227,8 @@ router.post(`/upload`, upload.array("files", 50), async (req: Request, res: Resp
             } : undefined
           },
           meta,
+          ...(body.title ? { title: body.title } : {}),
+          ...(body.priority !== undefined ? { priority: body.priority } : {}),
         })
         const result = { ok: true, fileName: file.originalname, photo: addedPhoto }
         results.push(result)

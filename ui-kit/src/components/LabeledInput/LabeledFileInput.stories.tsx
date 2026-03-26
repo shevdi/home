@@ -25,6 +25,18 @@ export const Default: Story = {
   },
 }
 
+export const Sizes: Story = {
+  render: function SizesStory() {
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', ...fieldWidth }}>
+        <LabeledFileInput label="Small upload" name="f-sm" id="story-file-sm" size="sm" />
+        <LabeledFileInput label="Medium upload" name="f-md" id="story-file-md" size="md" />
+        <LabeledFileInput label="Large upload" name="f-lg" id="story-file-lg" size="lg" />
+      </div>
+    )
+  },
+}
+
 export const Disabled: Story = {
   render: function DisabledStory() {
     return (

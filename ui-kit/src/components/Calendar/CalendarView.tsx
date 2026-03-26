@@ -5,9 +5,17 @@ import 'react-calendar/dist/Calendar.css'
 import { WEEKDAY_LABELS } from './calendarWeekdays'
 import styles from './Calendar.module.css'
 
-export type CalendarViewProps = CalendarProps
+const viewSizeClass = { sm: styles.viewSm, md: styles.viewMd, lg: styles.viewLg } as const
 
-export function CalendarView({ className, locale = 'ru-RU', formatShortWeekday, ...props }: CalendarViewProps) {
+export type CalendarViewProps = CalendarProps & { size?: 'sm' | 'md' | 'lg' }
+
+export function CalendarView({
+  className,
+  locale = 'ru-RU',
+  formatShortWeekday,
+  size = 'md',
+  ...props
+}: CalendarViewProps) {
   const fmt =
     formatShortWeekday ??
     (locale === 'ru-RU'
@@ -16,7 +24,7 @@ export function CalendarView({ className, locale = 'ru-RU', formatShortWeekday, 
 
   return (
     <ReactCalendar
-      className={[styles.view, className].filter(Boolean).join(' ')}
+      className={[styles.view, viewSizeClass[size], className].filter(Boolean).join(' ')}
       locale={locale}
       formatShortWeekday={fmt}
       {...props}

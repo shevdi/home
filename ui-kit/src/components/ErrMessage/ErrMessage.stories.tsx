@@ -22,3 +22,22 @@ export const Default: Story = {
     )
   },
 }
+
+export const Sizes: Story = {
+  render: function SizesStory() {
+    const text = 'Invalid credentials. Check your username and password.'
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', alignItems: 'flex-start', minWidth: 280 }}>
+        <ErrMessage role="alert" size="sm">
+          {text}
+        </ErrMessage>
+        <ErrMessage role="alert" size="md">
+          {text}
+        </ErrMessage>
+        <ErrMessage role="alert" size="lg">
+          {text}
+        </ErrMessage>
+      </div>
+    )
+  },
+}

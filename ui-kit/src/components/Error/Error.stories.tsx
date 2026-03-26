@@ -33,3 +33,15 @@ export const WithRetry: Story = {
     )
   },
 }
+
+export const Sizes: Story = {
+  render: function SizesStory() {
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem', alignItems: 'center' }}>
+        <Error size="sm" title="Small" message="Compact error panel." />
+        <Error size="md" title="Medium" message="Default error panel." />
+        <Error size="lg" title="Large" message="Spacious error panel." />
+      </div>
+    )
+  },
+}

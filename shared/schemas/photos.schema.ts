@@ -45,6 +45,14 @@ export const uploadMetaItemSchema = z.object({
 export const uploadMetaSchema = z.array(uploadMetaItemSchema)
 
 export const uploadBodySchema = z.object({
+  title: z
+    .string()
+    .optional()
+    .transform((v) => {
+      if (v == null) return undefined
+      const t = String(v).trim()
+      return t === '' ? undefined : t
+    }),
   private: z
     .union([z.string(), z.boolean()])
     .optional()
@@ -66,6 +74,14 @@ export const uploadBodySchema = z.object({
       return []
     }
   }),
+  priority: z
+    .string()
+    .optional()
+    .transform((v) => {
+      if (v == null || String(v).trim() === '') return undefined
+      const n = Number(v)
+      return Number.isFinite(n) ? n : undefined
+    }),
 })
 
 export type UploadBody = z.infer<typeof uploadBodySchema>

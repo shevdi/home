@@ -26,6 +26,30 @@ export const Default: Story = {
   },
 }
 
+export const Sizes: Story = {
+  render: function SizesStory() {
+    const sm = useId()
+    const md = useId()
+    const lg = useId()
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', alignItems: 'flex-start' }}>
+        <UploadLabel htmlFor={sm} size="sm">
+          Small drop zone
+        </UploadLabel>
+        <input id={sm} type="file" style={{ maxWidth: 240 }} />
+        <UploadLabel htmlFor={md} size="md">
+          Medium drop zone
+        </UploadLabel>
+        <input id={md} type="file" style={{ maxWidth: 240 }} />
+        <UploadLabel htmlFor={lg} size="lg">
+          Large drop zone
+        </UploadLabel>
+        <input id={lg} type="file" style={{ maxWidth: 240 }} />
+      </div>
+    )
+  },
+}
+
 export const DragActive: Story = {
   render: function DragActiveStory() {
     const id = useId()

@@ -42,3 +42,16 @@ export const RightAligned: Story = {
     )
   },
 }
+
+export const Sizes: Story = {
+  render: function SizesStory() {
+    const tags = ['landscape', 'sunset', 'travel']
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', alignItems: 'flex-start' }}>
+        <TagChips tags={tags} size="sm" />
+        <TagChips tags={tags} size="md" />
+        <TagChips tags={tags} size="lg" />
+      </div>
+    )
+  },
+}

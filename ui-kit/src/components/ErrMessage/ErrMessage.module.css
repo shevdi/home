@@ -1,7 +1,18 @@
 .root {
   display: block;
   color: var(--error-color);
-  font-size: var(--font-size-sm);
   min-height: 1rem;
   margin-bottom: 1rem;
+}
+
+.rootSm {
+  font-size: 0.8rem;
+}
+
+.rootMd {
+  font-size: var(--font-size-sm);
+}
+
+.rootLg {
+  font-size: var(--font-size-md);
 }

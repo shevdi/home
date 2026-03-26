@@ -7,13 +7,10 @@
 
 .footer {
   margin-top: 0.75rem;
-  padding-top: 0.75rem;
-  border-top: 1px solid var(--input-border);
+  padding-top: 0;
 }
 
 .clearBtn {
-  padding: 0.4rem 0.75rem;
-  font-size: 0.85rem;
   font-family: inherit;
   color: var(--text-muted);
   background: transparent;
@@ -30,21 +27,77 @@
   border-color: var(--text-muted);
 }
 
+.clearBtnSm {
+  padding: 0.3rem 0.55rem;
+  font-size: 0.75rem;
+}
+
+.clearBtnMd {
+  padding: 0.4rem 0.75rem;
+  font-size: 0.85rem;
+}
+
+.clearBtnLg {
+  padding: 0.5rem 0.9rem;
+  font-size: 0.95rem;
+}
+
 .view {
-  --react-calendar-tile-font-size: 0.9rem;
-  --react-calendar-tile-height: 1.75rem;
   width: 100%;
   border: none;
   font-family: inherit;
 }
 
-.view :global(.react-calendar__navigation) {
+/* Override react-calendar defaults (grey box border + white bg) so only the popover frame shows */
+.view:global(.react-calendar) {
+  border: none;
+  background: transparent;
+}
+
+.viewSm {
+  --react-calendar-tile-font-size: 0.75rem;
+  --react-calendar-tile-height: 1.45rem;
+}
+
+.viewMd {
+  --react-calendar-tile-font-size: 0.9rem;
+  --react-calendar-tile-height: 1.75rem;
+}
+
+.viewLg {
+  --react-calendar-tile-font-size: 1rem;
+  --react-calendar-tile-height: 2rem;
+}
+
+.viewSm :global(.react-calendar__navigation) {
+  display: flex;
+  gap: 0.35rem;
+  margin-bottom: 0.75rem;
+}
+
+.viewMd :global(.react-calendar__navigation) {
   display: flex;
   gap: 0.5rem;
   margin-bottom: 1rem;
 }
 
-.view :global(.react-calendar__navigation button) {
+.viewLg :global(.react-calendar__navigation) {
+  display: flex;
+  gap: 0.6rem;
+  margin-bottom: 1.1rem;
+}
+
+.viewSm :global(.react-calendar__navigation button) {
+  min-width: 1.65rem;
+  font-size: 0.875rem;
+  color: var(--text-color);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.viewMd :global(.react-calendar__navigation button) {
   min-width: 2rem;
   font-size: 1rem;
   color: var(--text-color);
@@ -54,29 +107,69 @@
   cursor: pointer;
 }
 
-.view :global(.react-calendar__navigation button:hover) {
+.viewLg :global(.react-calendar__navigation button) {
+  min-width: 2.35rem;
+  font-size: 1.1rem;
+  color: var(--text-color);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.viewSm :global(.react-calendar__navigation button:hover),
+.viewMd :global(.react-calendar__navigation button:hover),
+.viewLg :global(.react-calendar__navigation button:hover) {
   background: var(--input-focus-shadow);
 }
 
-.view :global(.react-calendar__month-view__weekdays) {
+.viewSm :global(.react-calendar__month-view__weekdays) {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.viewMd :global(.react-calendar__month-view__weekdays) {
   font-size: 0.75rem;
   color: var(--text-muted);
   text-align: center;
 }
 
-.view :global(.react-calendar__month-view__days__day) {
+.viewLg :global(.react-calendar__month-view__weekdays) {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.viewSm :global(.react-calendar__month-view__days__day),
+.viewMd :global(.react-calendar__month-view__days__day),
+.viewLg :global(.react-calendar__month-view__days__day) {
   color: var(--text-color);
 }
 
-.view :global(.react-calendar__tile) {
+.viewSm :global(.react-calendar__tile) {
+  padding: 0.4em;
+  border-radius: var(--radius-sm);
+}
+
+.viewMd :global(.react-calendar__tile) {
   padding: 0.5em;
   border-radius: var(--radius-sm);
 }
 
-.view :global(.react-calendar__tile:hover) {
+.viewLg :global(.react-calendar__tile) {
+  padding: 0.55em;
+  border-radius: var(--radius-sm);
+}
+
+.viewSm :global(.react-calendar__tile:hover),
+.viewMd :global(.react-calendar__tile:hover),
+.viewLg :global(.react-calendar__tile:hover) {
   background: var(--input-focus-shadow);
 }
 
-.view :global(.react-calendar__tile--now) {
+.viewSm :global(.react-calendar__tile--now),
+.viewMd :global(.react-calendar__tile--now),
+.viewLg :global(.react-calendar__tile--now) {
   font-weight: 600;
 }

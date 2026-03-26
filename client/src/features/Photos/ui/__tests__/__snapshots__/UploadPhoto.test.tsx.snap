@@ -3,17 +3,17 @@
 exports[`UploadPhoto renders default state and disables submit 1`] = `
 <div>
   <div
-    class="sc-jEACwF"
+    class="sc-eldPxw"
   >
     <div
       class=""
     />
     <form>
       <div
-        class="sc-cPiKLY hcPHMN"
+        class="sc-aXZVf cQAMzK"
       >
         <div
-          class="sc-dLMFT cVfHkb"
+          class="sc-gEvEes erWXnv"
           data-disabled="false"
           role="presentation"
           tabindex="0"
@@ -29,7 +29,7 @@ exports[`UploadPhoto renders default state and disables submit 1`] = `
         </div>
       </div>
       <div
-        class="sc-ikkxIz jlxLpA"
+        class="sc-eDPEui ieKurp"
       >
         <label
           class=" "
@@ -58,7 +58,7 @@ exports[`UploadPhoto renders default state and disables submit 1`] = `
         </label>
       </div>
       <div
-        class="sc-dAbbOM juffzi"
+        class="sc-eDPEui ieKurp"
       >
         <div
           class=""
@@ -67,6 +67,46 @@ exports[`UploadPhoto renders default state and disables submit 1`] = `
             class=""
             for="«r0»-control"
           >
+            Заголовок
+          </label>
+          <input
+            class=""
+            id="photo-form-title"
+            name="title"
+            type="text"
+          />
+        </div>
+      </div>
+      <div
+        class="sc-eDPEui ieKurp"
+      >
+        <div
+          class=""
+        >
+          <label
+            class=""
+            for="«r1»-control"
+          >
+            Приоритет
+          </label>
+          <input
+            class=""
+            id="photo-form-priority"
+            name="priority"
+            type="number"
+          />
+        </div>
+      </div>
+      <div
+        class="sc-eDPEui ieKurp"
+      >
+        <div
+          class=""
+        >
+          <label
+            class=""
+            for="«r2»-control"
+          >
             Страна
           </label>
           <div
@@ -74,7 +114,7 @@ exports[`UploadPhoto renders default state and disables submit 1`] = `
           >
             <input
               class=""
-              id="upload-photo-country"
+              id="photo-form-country"
               placeholder="Введите страну и нажмите Enter"
               type="text"
               value=""
@@ -86,14 +126,14 @@ exports[`UploadPhoto renders default state and disables submit 1`] = `
         </div>
       </div>
       <div
-        class="sc-dAbbOM juffzi"
+        class="sc-eDPEui ieKurp"
       >
         <div
           class=""
         >
           <label
             class=""
-            for="«r1»-control"
+            for="«r3»-control"
           >
             Город
           </label>
@@ -102,7 +142,7 @@ exports[`UploadPhoto renders default state and disables submit 1`] = `
           >
             <input
               class=""
-              id="upload-photo-city"
+              id="photo-form-city"
               placeholder="Введите город и нажмите Enter"
               type="text"
               value=""
@@ -114,14 +154,14 @@ exports[`UploadPhoto renders default state and disables submit 1`] = `
         </div>
       </div>
       <div
-        class="sc-dAbbOM juffzi"
+        class="sc-eDPEui ieKurp"
       >
         <div
           class=""
         >
           <label
             class=""
-            for="«r2»-control"
+            for="«r4»-control"
           >
             Теги
           </label>
@@ -130,7 +170,7 @@ exports[`UploadPhoto renders default state and disables submit 1`] = `
           >
             <input
               class=""
-              id="upload-photo-tags"
+              id="photo-form-tags"
               placeholder="Введите тег и нажмите Enter"
               type="text"
               value=""
@@ -157,7 +197,7 @@ exports[`UploadPhoto renders default state and disables submit 1`] = `
 exports[`UploadPhoto shows error message when upload fails 1`] = `
 <div>
   <div
-    class="sc-jEACwF"
+    class="sc-eldPxw"
   >
     <div
       class=""
@@ -166,10 +206,10 @@ exports[`UploadPhoto shows error message when upload fails 1`] = `
     </div>
     <form>
       <div
-        class="sc-cPiKLY hcPHMN"
+        class="sc-aXZVf cQAMzK"
       >
         <div
-          class="sc-dLMFT cVfHkb"
+          class="sc-gEvEes erWXnv"
           data-disabled="false"
           role="presentation"
           tabindex="0"
@@ -185,7 +225,7 @@ exports[`UploadPhoto shows error message when upload fails 1`] = `
         </div>
       </div>
       <div
-        class="sc-ikkxIz jlxLpA"
+        class="sc-eDPEui ieKurp"
       >
         <label
           class=" "
@@ -214,14 +254,54 @@ exports[`UploadPhoto shows error message when upload fails 1`] = `
         </label>
       </div>
       <div
-        class="sc-dAbbOM juffzi"
+        class="sc-eDPEui ieKurp"
       >
         <div
           class=""
         >
           <label
             class=""
-            for="«rf»-control"
+            for="«rp»-control"
+          >
+            Заголовок
+          </label>
+          <input
+            class=""
+            id="photo-form-title"
+            name="title"
+            type="text"
+          />
+        </div>
+      </div>
+      <div
+        class="sc-eDPEui ieKurp"
+      >
+        <div
+          class=""
+        >
+          <label
+            class=""
+            for="«rq»-control"
+          >
+            Приоритет
+          </label>
+          <input
+            class=""
+            id="photo-form-priority"
+            name="priority"
+            type="number"
+          />
+        </div>
+      </div>
+      <div
+        class="sc-eDPEui ieKurp"
+      >
+        <div
+          class=""
+        >
+          <label
+            class=""
+            for="«rr»-control"
           >
             Страна
           </label>
@@ -230,7 +310,7 @@ exports[`UploadPhoto shows error message when upload fails 1`] = `
           >
             <input
               class=""
-              id="upload-photo-country"
+              id="photo-form-country"
               placeholder="Введите страну и нажмите Enter"
               type="text"
               value=""
@@ -242,14 +322,14 @@ exports[`UploadPhoto shows error message when upload fails 1`] = `
         </div>
       </div>
       <div
-        class="sc-dAbbOM juffzi"
+        class="sc-eDPEui ieKurp"
       >
         <div
           class=""
         >
           <label
             class=""
-            for="«rg»-control"
+            for="«rs»-control"
           >
             Город
           </label>
@@ -258,7 +338,7 @@ exports[`UploadPhoto shows error message when upload fails 1`] = `
           >
             <input
               class=""
-              id="upload-photo-city"
+              id="photo-form-city"
               placeholder="Введите город и нажмите Enter"
               type="text"
               value=""
@@ -270,14 +350,14 @@ exports[`UploadPhoto shows error message when upload fails 1`] = `
         </div>
       </div>
       <div
-        class="sc-dAbbOM juffzi"
+        class="sc-eDPEui ieKurp"
       >
         <div
           class=""
         >
           <label
             class=""
-            for="«rh»-control"
+            for="«rt»-control"
           >
             Теги
           </label>
@@ -286,7 +366,7 @@ exports[`UploadPhoto shows error message when upload fails 1`] = `
           >
             <input
               class=""
-              id="upload-photo-tags"
+              id="photo-form-tags"
               placeholder="Введите тег и нажмите Enter"
               type="text"
               value=""
@@ -298,29 +378,29 @@ exports[`UploadPhoto shows error message when upload fails 1`] = `
         </div>
       </div>
       <div
-        class="sc-gFqAkO fdwPkA"
+        class="sc-fPXMVh khSWFU"
       >
         <div
-          class="sc-dhKdcy fJkiwv"
+          class="sc-jlZhev hpHpHp"
         >
           <div
-            class="sc-kpDqfp gVbqiU"
+            class="sc-cwHptO hygRDn"
           >
             <div
               style="width: 100%; height: 100%; background: var(--input-disabled-color);"
             />
           </div>
           <div
-            class="sc-dAlyuI cHVeBq"
+            class="sc-jEACwF bePEmS"
           >
             <div
-              class="sc-jlZhev dBSRof"
+              class="sc-cPiKLY dsLOjA"
             >
               <span>
                 photo.jpg
               </span>
               <span
-                class="sc-kAycey jEIthQ"
+                class="sc-dhKdcy kLtifp"
               >
                 <span>
                   .
@@ -334,7 +414,7 @@ exports[`UploadPhoto shows error message when upload fails 1`] = `
               </span>
             </div>
             <span
-              class="sc-iGgWBk iCNLQS"
+              class="sc-imWYAH leAWOW"
             >
               image/jpeg
                · 
@@ -346,7 +426,7 @@ exports[`UploadPhoto shows error message when upload fails 1`] = `
           </div>
           <button
             aria-label="Удалить файл photo.jpg"
-            class="sc-cwHptO indzLL"
+            class="sc-dLMFT dNddn"
             type="button"
           >
             ×
@@ -368,17 +448,17 @@ exports[`UploadPhoto shows error message when upload fails 1`] = `
 exports[`UploadPhoto updates label and shows selected file 1`] = `
 <div>
   <div
-    class="sc-jEACwF"
+    class="sc-eldPxw"
   >
     <div
       class=""
     />
     <form>
       <div
-        class="sc-cPiKLY hcPHMN"
+        class="sc-aXZVf cQAMzK"
       >
         <div
-          class="sc-dLMFT cVfHkb"
+          class="sc-gEvEes erWXnv"
           data-disabled="false"
           role="presentation"
           tabindex="0"
@@ -394,7 +474,7 @@ exports[`UploadPhoto updates label and shows selected file 1`] = `
         </div>
       </div>
       <div
-        class="sc-ikkxIz jlxLpA"
+        class="sc-eDPEui ieKurp"
       >
         <label
           class=" "
@@ -423,14 +503,54 @@ exports[`UploadPhoto updates label and shows selected file 1`] = `
         </label>
       </div>
       <div
-        class="sc-dAbbOM juffzi"
+        class="sc-eDPEui ieKurp"
       >
         <div
           class=""
         >
           <label
             class=""
-            for="«r3»-control"
+            for="«r5»-control"
+          >
+            Заголовок
+          </label>
+          <input
+            class=""
+            id="photo-form-title"
+            name="title"
+            type="text"
+          />
+        </div>
+      </div>
+      <div
+        class="sc-eDPEui ieKurp"
+      >
+        <div
+          class=""
+        >
+          <label
+            class=""
+            for="«r6»-control"
+          >
+            Приоритет
+          </label>
+          <input
+            class=""
+            id="photo-form-priority"
+            name="priority"
+            type="number"
+          />
+        </div>
+      </div>
+      <div
+        class="sc-eDPEui ieKurp"
+      >
+        <div
+          class=""
+        >
+          <label
+            class=""
+            for="«r7»-control"
           >
             Страна
           </label>
@@ -439,7 +559,7 @@ exports[`UploadPhoto updates label and shows selected file 1`] = `
           >
             <input
               class=""
-              id="upload-photo-country"
+              id="photo-form-country"
               placeholder="Введите страну и нажмите Enter"
               type="text"
               value=""
@@ -451,14 +571,14 @@ exports[`UploadPhoto updates label and shows selected file 1`] = `
         </div>
       </div>
       <div
-        class="sc-dAbbOM juffzi"
+        class="sc-eDPEui ieKurp"
       >
         <div
           class=""
         >
           <label
             class=""
-            for="«r4»-control"
+            for="«r8»-control"
           >
             Город
           </label>
@@ -467,7 +587,7 @@ exports[`UploadPhoto updates label and shows selected file 1`] = `
           >
             <input
               class=""
-              id="upload-photo-city"
+              id="photo-form-city"
               placeholder="Введите город и нажмите Enter"
               type="text"
               value=""
@@ -479,14 +599,14 @@ exports[`UploadPhoto updates label and shows selected file 1`] = `
         </div>
       </div>
       <div
-        class="sc-dAbbOM juffzi"
+        class="sc-eDPEui ieKurp"
       >
         <div
           class=""
         >
           <label
             class=""
-            for="«r5»-control"
+            for="«r9»-control"
           >
             Теги
           </label>
@@ -495,7 +615,7 @@ exports[`UploadPhoto updates label and shows selected file 1`] = `
           >
             <input
               class=""
-              id="upload-photo-tags"
+              id="photo-form-tags"
               placeholder="Введите тег и нажмите Enter"
               type="text"
               value=""
@@ -507,30 +627,30 @@ exports[`UploadPhoto updates label and shows selected file 1`] = `
         </div>
       </div>
       <div
-        class="sc-gFqAkO fdwPkA"
+        class="sc-fPXMVh khSWFU"
       >
         <div
-          class="sc-dhKdcy fJkiwv"
+          class="sc-jlZhev hpHpHp"
         >
           <div
-            class="sc-kpDqfp gVbqiU"
+            class="sc-cwHptO hygRDn"
           >
             <div
               style="width: 100%; height: 100%; background: var(--input-disabled-color);"
             />
           </div>
           <div
-            class="sc-dAlyuI cHVeBq"
+            class="sc-jEACwF bePEmS"
           >
             <div
-              class="sc-jlZhev dBSRof"
+              class="sc-cPiKLY dsLOjA"
             >
               <span>
                 photo.jpg
               </span>
             </div>
             <span
-              class="sc-iGgWBk iCNLQS"
+              class="sc-imWYAH leAWOW"
             >
               image/jpeg
                · 
@@ -542,7 +662,7 @@ exports[`UploadPhoto updates label and shows selected file 1`] = `
           </div>
           <button
             aria-label="Удалить файл photo.jpg"
-            class="sc-cwHptO indzLL"
+            class="sc-dLMFT dNddn"
             type="button"
           >
             ×

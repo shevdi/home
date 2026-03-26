@@ -4,12 +4,13 @@ import { UploadLabel } from '../UploadLabel'
 import styles from '../Input/Input.module.css'
 import { useLabeledFieldOutsideClick } from './useLabeledFieldOutsideClick'
 
-export interface LabeledFileInputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type'> {
+export interface LabeledFileInputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type' | 'size'> {
   label: string
   focus?: boolean
   error?: string
   disabled?: boolean
   onOutsideClick?: () => void
+  size?: 'sm' | 'md' | 'lg'
 }
 
 export const LabeledFileInput: React.FC<LabeledFileInputProps> = ({
@@ -18,6 +19,7 @@ export const LabeledFileInput: React.FC<LabeledFileInputProps> = ({
   error,
   disabled,
   onOutsideClick,
+  size = 'md',
   ...props
 }) => {
   const wrapperRef = useLabeledFieldOutsideClick(onOutsideClick)
@@ -30,8 +32,8 @@ export const LabeledFileInput: React.FC<LabeledFileInputProps> = ({
   }
 
   return (
-    <div ref={wrapperRef} className={styles.wrapper}>
-      <UploadLabel ref={labelRef} htmlFor={htmlFor} disabled={disabled} onClick={onLabelActivate}>
+    <div ref={wrapperRef} className={styles.wrapper} data-size={size}>
+      <UploadLabel ref={labelRef} htmlFor={htmlFor} disabled={disabled} onClick={onLabelActivate} size={size}>
         {label}
       </UploadLabel>
       <Input
@@ -40,6 +42,7 @@ export const LabeledFileInput: React.FC<LabeledFileInputProps> = ({
         type="file"
         disabled={disabled}
         focus={focus}
+        size={size}
         {...props}
       />
       {(error || error === null) && <div className={styles.error}>{error}</div>}

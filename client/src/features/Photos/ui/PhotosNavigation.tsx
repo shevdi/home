@@ -34,7 +34,6 @@ const Container = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 1rem 0;
   gap: 1rem;
 `
 

@@ -4,6 +4,7 @@ import { Button } from '../../components/Button'
 import { Field } from '../../components/Field'
 import { Input } from '../../components/Input'
 import { ErrMessage } from '../../components/ErrMessage'
+import { formDensityVars, formStoryCardTag, formStoryPageTitle } from './formDensity'
 
 /**
  * Visual reference: client login screen (Field + Input + ErrMessage).
@@ -184,6 +185,144 @@ export const WithRootError: Story = {
           </Button>
         </form>
       </section>
+    )
+  },
+}
+
+const sizeSectionLabel: CSSProperties = {
+  fontSize: '0.7rem',
+  fontWeight: 600,
+  letterSpacing: '0.08em',
+  textTransform: 'uppercase',
+  color: 'var(--text-muted)',
+  margin: '0 0 0.5rem',
+}
+
+const sizesStack: CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '2rem',
+  maxWidth: 400,
+  margin: '0 auto',
+  padding: '1rem 1rem 2rem',
+}
+
+function LoginFilledCard({
+  size,
+  nameSuffix,
+}: {
+  size: 'sm' | 'md' | 'lg'
+  nameSuffix: string
+}) {
+  return (
+    <section style={{ ...card, ...formDensityVars[size] }}>
+      <p style={{ ...sizeSectionLabel, ...formStoryCardTag[size] }}>
+        {size === 'sm' ? 'Small' : size === 'md' ? 'Medium' : 'Large'} · {size}
+      </p>
+      <h1 style={{ ...title, ...formStoryPageTitle[size] }}>Вход</h1>
+      <form
+        className="form"
+        onSubmit={(e) => {
+          e.preventDefault()
+        }}
+      >
+        <div style={fieldWrapper}>
+          <Field label="Имя пользователя" required error="Пример ошибки поля">
+            <Input
+              name={`username-${nameSuffix}`}
+              defaultValue="demo_user"
+              autoComplete="username"
+              size={size}
+            />
+          </Field>
+        </div>
+        <div style={fieldWrapper}>
+          <Field label="Пароль" required>
+            <Input
+              name={`password-${nameSuffix}`}
+              type="password"
+              defaultValue="••••••••"
+              autoComplete="current-password"
+              size={size}
+            />
+          </Field>
+        </div>
+        <Button display="block" type="submit" margin="1.25rem auto 0" size={size}>
+          Войти
+        </Button>
+      </form>
+    </section>
+  )
+}
+
+function LoginWithRootErrorCard({
+  size,
+  nameSuffix,
+}: {
+  size: 'sm' | 'md' | 'lg'
+  nameSuffix: string
+}) {
+  return (
+    <section style={{ ...card, ...formDensityVars[size] }}>
+      <p style={{ ...sizeSectionLabel, ...formStoryCardTag[size] }}>
+        {size === 'sm' ? 'Small' : size === 'md' ? 'Medium' : 'Large'} · {size}
+      </p>
+      <h1 style={{ ...title, ...formStoryPageTitle[size] }}>Вход</h1>
+      <ErrMessage role="alert" size={size}>
+        Неверное имя пользователя или пароль.
+      </ErrMessage>
+      <form
+        className="form"
+        onSubmit={(e) => {
+          e.preventDefault()
+        }}
+      >
+        <div style={fieldWrapper}>
+          <Field label="Имя пользователя" required>
+            <Input name={`username-err-${nameSuffix}`} defaultValue="" autoComplete="username" size={size} />
+          </Field>
+        </div>
+        <div style={fieldWrapper}>
+          <Field label="Пароль" required error="Пароль не может быть пустым">
+            <Input
+              name={`password-err-${nameSuffix}`}
+              type="password"
+              defaultValue=""
+              autoComplete="current-password"
+              size={size}
+            />
+          </Field>
+        </div>
+        <Button display="block" type="submit" margin="1.25rem auto 0" size={size}>
+          Войти
+        </Button>
+      </form>
+    </section>
+  )
+}
+
+/** `sm` / `md` / `lg` on page title, card tag, Field labels, field errors, `ErrMessage`, inputs, and submit. */
+export const Sizes: Story = {
+  render: function SizesStory() {
+    return (
+      <div style={sizesStack}>
+        <div>
+          <h2 style={{ ...sizeSectionLabel, marginBottom: '1rem', fontSize: '0.8rem' }}>Заполненная форма</h2>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+            <LoginFilledCard size="sm" nameSuffix="sm" />
+            <LoginFilledCard size="md" nameSuffix="md" />
+            <LoginFilledCard size="lg" nameSuffix="lg" />
+          </div>
+        </div>
+        <div>
+          <h2 style={{ ...sizeSectionLabel, marginBottom: '1rem', fontSize: '0.8rem' }}>С ошибкой входа</h2>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+            <LoginWithRootErrorCard size="sm" nameSuffix="sm" />
+            <LoginWithRootErrorCard size="md" nameSuffix="md" />
+            <LoginWithRootErrorCard size="lg" nameSuffix="lg" />
+          </div>
+        </div>
+      </div>
     )
   },
 }

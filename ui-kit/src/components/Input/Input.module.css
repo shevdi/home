@@ -11,18 +11,44 @@
   color: var(--text-muted);
 }
 
+.wrapper[data-size='sm'] .label {
+  font-size: 0.8rem;
+  margin-bottom: 0.35rem;
+}
+
+.wrapper[data-size='lg'] .label {
+  font-size: 1rem;
+  margin-bottom: 0.55rem;
+}
+
 .input {
   width: 100%;
-  padding: 0.65rem 1rem;
   border: 1px solid var(--input-border);
   border-radius: var(--radius-md);
-  font-size: var(--font-size-md);
   font-family: inherit;
   color: var(--text-color);
   background-color: var(--input-bg);
   transition:
     border-color var(--transition-fast),
     box-shadow var(--transition-fast);
+}
+
+.inputSm {
+  padding: 0.45rem 0.75rem;
+  font-size: var(--font-size-sm);
+  min-height: 2rem;
+}
+
+.inputMd {
+  padding: 0.65rem 1rem;
+  font-size: var(--font-size-md);
+  min-height: var(--control-min-height);
+}
+
+.inputLg {
+  padding: 0.75rem 1.125rem;
+  font-size: 1.125rem;
+  min-height: 3rem;
 }
 
 .input::placeholder {
@@ -62,4 +88,12 @@
   font-size: 0.8rem;
   color: var(--error-color);
   min-height: 1rem;
+}
+
+.wrapper[data-size='sm'] .error {
+  font-size: 0.72rem;
+}
+
+.wrapper[data-size='lg'] .error {
+  font-size: 0.875rem;
 }

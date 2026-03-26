@@ -36,12 +36,7 @@ export function DateRangeCalendar({
         <Popover.Portal>
           <CalendarPopoverContent side='bottom' align='start'>
             <Calendar.Root>
-              <Calendar.View
-                selectRange
-                allowPartialRange
-                value={calendarValue}
-                onChange={onCalendarChange}
-              />
+              <Calendar.View selectRange allowPartialRange value={calendarValue} onChange={onCalendarChange} />
               <Calendar.Footer>
                 <Calendar.ClearButton onClick={onClear}>{clearButtonLabel}</Calendar.ClearButton>
               </Calendar.Footer>
@@ -67,7 +62,7 @@ const DateRangeLabel = styled.label`
 `
 
 const CalendarPopoverContent = styled(Popover.Content)`
-  max-width: 380px;
+  max-width: 300px;
 `
 
 const DateRangeInput = styled.input`

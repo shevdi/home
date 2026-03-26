@@ -69,3 +69,45 @@ export const WithFooterAndClear: Story = {
     )
   },
 }
+
+export const Sizes: Story = {
+  render: function SizesStory() {
+    const [sm, setSm] = useState<Date | null>(new Date())
+    const [md, setMd] = useState<Date | null>(new Date())
+    const [lg, setLg] = useState<Date | null>(new Date())
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', alignItems: 'flex-start' }}>
+        <div style={panelStyle}>
+          <Calendar.Root>
+            <Calendar.View size="sm" value={sm} onChange={(v) => setSm(Array.isArray(v) ? v[0] ?? null : v)} />
+            <Calendar.Footer>
+              <Calendar.ClearButton size="sm" onClick={() => setSm(null)}>
+                Сбросить
+              </Calendar.ClearButton>
+            </Calendar.Footer>
+          </Calendar.Root>
+        </div>
+        <div style={panelStyle}>
+          <Calendar.Root>
+            <Calendar.View size="md" value={md} onChange={(v) => setMd(Array.isArray(v) ? v[0] ?? null : v)} />
+            <Calendar.Footer>
+              <Calendar.ClearButton size="md" onClick={() => setMd(null)}>
+                Сбросить
+              </Calendar.ClearButton>
+            </Calendar.Footer>
+          </Calendar.Root>
+        </div>
+        <div style={panelStyle}>
+          <Calendar.Root>
+            <Calendar.View size="lg" value={lg} onChange={(v) => setLg(Array.isArray(v) ? v[0] ?? null : v)} />
+            <Calendar.Footer>
+              <Calendar.ClearButton size="lg" onClick={() => setLg(null)}>
+                Сбросить
+              </Calendar.ClearButton>
+            </Calendar.Footer>
+          </Calendar.Root>
+        </div>
+      </div>
+    )
+  },
+}

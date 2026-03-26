@@ -34,6 +34,8 @@ const buildUploadFormData = (
   country: string[],
   city: string[],
   tags: string[],
+  title?: string,
+  priority?: number,
 ) => {
   const formData = new FormData()
   formData.append('private', isPrivate.toString())
@@ -41,6 +43,11 @@ const buildUploadFormData = (
   if (country.length > 0) formData.append('country', country.join(','))
   if (city.length > 0) formData.append('city', city.join(','))
   if (tags.length > 0) formData.append('tags', tags.join(','))
+  const trimmedTitle = title?.trim()
+  if (trimmedTitle) formData.append('title', trimmedTitle)
+  if (priority !== undefined && priority !== null && !Number.isNaN(priority)) {
+    formData.append('priority', String(priority))
+  }
   files.forEach((file) => {
     formData.append('files', file)
   })
@@ -59,7 +66,14 @@ function parseSSEEvent(line: string): UploadProgressEvent | UploadCompleteEvent 
 async function uploadBatch(
   files: File[],
   meta: FileMeta[],
-  options: { isPrivate: boolean; country: string[]; city: string[]; tags: string[] },
+  options: {
+    isPrivate: boolean
+    country: string[]
+    city: string[]
+    tags: string[]
+    title?: string
+    priority?: number
+  },
   baseUrl: string,
   token: string | undefined,
   dispatch: Dispatch,
@@ -73,6 +87,7 @@ async function uploadBatch(
     options.country,
     options.city,
     options.tags,
+    options.title,
   )
 
   for (let i = 0; i < files.length; i++) {
@@ -162,6 +177,8 @@ export interface UploadPhotosOptions {
   country: string[]
   city: string[]
   tags: string[]
+  title?: string
+  priority?: number
 }
 
 export async function uploadPhotosInBatches(

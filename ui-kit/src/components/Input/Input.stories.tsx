@@ -27,6 +27,18 @@ export const Default: Story = {
   },
 }
 
+export const Sizes: Story = {
+  render: function SizesStory() {
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', ...fieldWidth }}>
+        <Input size="sm" placeholder="Small" name="size-sm" aria-label="Small" />
+        <Input size="md" placeholder="Medium" name="size-md" aria-label="Medium" />
+        <Input size="lg" placeholder="Large" name="size-lg" aria-label="Large" />
+      </div>
+    )
+  },
+}
+
 export const FocusOnMount: Story = {
   render: function FocusOnMountStory() {
     return (

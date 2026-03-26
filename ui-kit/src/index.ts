@@ -30,6 +30,7 @@ export { Dropdown } from './components/Dropdown'
 export type { DropdownProps, DropdownOption } from './components/Dropdown'
 
 export { ErrMessage } from './components/ErrMessage'
+export type { ErrMessageProps } from './components/ErrMessage'
 
 export { Error } from './components/Error'
 export type { ErrorProps } from './components/Error'
@@ -47,7 +48,7 @@ export { TaggedInput } from './components/TaggedInput'
 export type { TaggedInputProps } from './components/TaggedInput'
 
 export { Calendar } from './components/Calendar'
-export type { CalendarViewProps } from './components/Calendar'
+export type { CalendarViewProps, CalendarClearButtonProps } from './components/Calendar'
 
 export { Popover } from './components/Popover'
 export type { PopoverContentProps } from './components/Popover'

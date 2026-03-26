@@ -14,12 +14,27 @@
   background-color: var(--surface-elevated);
   border: 1px solid var(--error-color);
   border-radius: var(--radius-lg);
-  padding: 2rem;
   text-align: center;
-  margin: 3rem auto;
-  max-width: 420px;
   box-shadow: var(--shadow-md);
   color: var(--text-color);
+}
+
+.sizeSm {
+  padding: 1.25rem;
+  margin: 2rem auto;
+  max-width: 340px;
+}
+
+.sizeMd {
+  padding: 2rem;
+  margin: 3rem auto;
+  max-width: 420px;
+}
+
+.sizeLg {
+  padding: 2.5rem;
+  margin: 3rem auto;
+  max-width: 500px;
 }
 
 .icon {
@@ -27,6 +42,18 @@
   width: 48px;
   height: 48px;
   opacity: 0.9;
+}
+
+.sizeSm .icon {
+  width: 36px;
+  height: 36px;
+  margin-bottom: 0.75rem;
+}
+
+.sizeLg .icon {
+  width: 56px;
+  height: 56px;
+  margin-bottom: 1.25rem;
 }
 
 .icon svg {
@@ -42,11 +69,27 @@
   color: var(--text-color);
 }
 
+.sizeSm .title {
+  font-size: 1.05rem;
+}
+
+.sizeLg .title {
+  font-size: 1.35rem;
+}
+
 .message {
   margin: 0;
   font-size: var(--font-size-md);
   line-height: 1.5;
   color: var(--text-muted);
+}
+
+.sizeSm .message {
+  font-size: var(--font-size-sm);
+}
+
+.sizeLg .message {
+  font-size: 1.05rem;
 }
 
 .retry {
@@ -63,6 +106,18 @@
   transition:
     background-color var(--transition-fast),
     transform var(--transition-fast);
+}
+
+.sizeSm .retry {
+  margin-top: 1rem;
+  padding: 0.45rem 1rem;
+  font-size: var(--font-size-sm);
+}
+
+.sizeLg .retry {
+  margin-top: 1.5rem;
+  padding: 0.75rem 1.5rem;
+  font-size: 1.05rem;
 }
 
 .retry:hover {

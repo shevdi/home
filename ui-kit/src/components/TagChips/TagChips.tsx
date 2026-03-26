@@ -7,9 +7,12 @@ const positions = {
   right: styles.right,
 } as const
 
+const sizeClass = { sm: styles.sizeSm, md: styles.sizeMd, lg: styles.sizeLg } as const
+
 export interface TagChipsProps {
   tags?: string[]
   position?: 'left' | 'center' | 'right'
+  size?: 'sm' | 'md' | 'lg'
   /** Called when the user activates the remove control (×) on a tag. */
   onRemove?: (tag: string) => void
   /**
@@ -19,13 +22,13 @@ export interface TagChipsProps {
   renderTag?: (tag: string, chip: React.ReactElement) => React.ReactNode
 }
 
-export function TagChips({ tags, position = 'left', onRemove, renderTag }: TagChipsProps) {
+export function TagChips({ tags, position = 'left', size = 'md', onRemove, renderTag }: TagChipsProps) {
   const posClass = positions[position]
   if (!tags?.length) {
-    return <div className={`${styles.container} ${posClass}`} />
+    return <div className={`${styles.container} ${posClass} ${sizeClass[size]}`} />
   }
   return (
-    <div className={`${styles.container} ${posClass}`}>
+    <div className={`${styles.container} ${posClass} ${sizeClass[size]}`}>
       {tags.map((tag) => {
         const chip = (
           <span className={styles.chip}>

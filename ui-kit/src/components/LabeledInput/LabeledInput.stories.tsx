@@ -26,6 +26,18 @@ export const Default: Story = {
   },
 }
 
+export const Sizes: Story = {
+  render: function SizesStory() {
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', ...fieldWidth }}>
+        <LabeledInput label="Small" name="s-sm" size="sm" placeholder="Small" />
+        <LabeledInput label="Medium" name="s-md" size="md" placeholder="Medium" />
+        <LabeledInput label="Large" name="s-lg" size="lg" placeholder="Large" />
+      </div>
+    )
+  },
+}
+
 export const WithError: Story = {
   render: function WithErrorStory() {
     return (

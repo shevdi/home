@@ -8,11 +8,13 @@ import styles from './TaggedInput.module.css'
 import { addCommittedToken, splitPaste } from './taggedInputTokens'
 
 export interface TaggedInputProps
-  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'value' | 'defaultValue' | 'onChange' | 'type'> {
+  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'value' | 'defaultValue' | 'onChange' | 'type' | 'size'> {
   tags: string[]
   onTagsChange: (tags: string[]) => void
   inputValue: string
   onInputValueChange: (value: string) => void
+  /** Matches `Input` and `TagChips` density. */
+  size?: 'sm' | 'md' | 'lg'
   /** Where new tokens are inserted. `start` matches prepend + dedupe (e.g. location lists); `end` appends (e.g. tags). */
   insertAt?: 'start' | 'end'
   /** Chip row alignment (passed to `TagChips`). */
@@ -34,6 +36,7 @@ export const TaggedInput = React.forwardRef<HTMLInputElement, TaggedInputProps>(
     renderTag,
     backspaceRemovesLast = true,
     onOutsideClick,
+    size = 'md',
     disabled,
     className,
     onKeyDown,
@@ -119,13 +122,14 @@ export const TaggedInput = React.forwardRef<HTMLInputElement, TaggedInputProps>(
         type="text"
         disabled={disabled}
         className={inputStyles.input}
+        size={size}
         value={inputValue}
         onChange={(e) => onInputValueChange(e.target.value)}
         onKeyDown={handleKeyDown}
         onPaste={handlePaste}
         {...rest}
       />
-      <TagChips tags={tags} position={position} onRemove={handleRemove} renderTag={renderTag} />
+      <TagChips tags={tags} position={position} size={size} onRemove={handleRemove} renderTag={renderTag} />
     </div>
   )
 })

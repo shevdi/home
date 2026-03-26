@@ -10,14 +10,35 @@
 }
 
 .root {
+  color: var(--text-muted);
+}
+
+.rootSm {
+  margin: 0.35rem 0;
+  font-size: 0.75rem;
+}
+
+.rootMd {
   margin: 0.5rem 0;
   font-size: 0.9rem;
-  color: var(--text-muted);
+}
+
+.rootLg {
+  margin: 0.65rem 0;
+  font-size: 1.05rem;
 }
 
 .dots {
   display: inline-flex;
   gap: 2px;
+}
+
+.rootSm .dots {
+  gap: 1px;
+}
+
+.rootLg .dots {
+  gap: 3px;
 }
 
 .dot {

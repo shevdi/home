@@ -1,14 +1,17 @@
 import styles from './Error.module.css'
 
+const sizeClass = { sm: styles.sizeSm, md: styles.sizeMd, lg: styles.sizeLg } as const
+
 export interface ErrorProps {
   title: string
   message: string
   onRetry?: () => void
+  size?: 'sm' | 'md' | 'lg'
 }
 
-export function Error({ title, message, onRetry }: ErrorProps) {
+export function Error({ title, message, onRetry, size = 'md' }: ErrorProps) {
   return (
-    <div className={styles.wrapper}>
+    <div className={[styles.wrapper, sizeClass[size]].filter(Boolean).join(' ')}>
       <div className={styles.icon}>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
           <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />

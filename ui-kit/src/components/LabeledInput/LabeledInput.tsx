@@ -3,13 +3,14 @@ import { Input } from '../Input'
 import styles from '../Input/Input.module.css'
 import { useLabeledFieldOutsideClick } from './useLabeledFieldOutsideClick'
 
-export interface LabeledInputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type'> {
+export interface LabeledInputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type' | 'size'> {
   label: string
   type?: Exclude<React.HTMLInputTypeAttribute, 'file'>
   focus?: boolean
   error?: string
   disabled?: boolean
   onOutsideClick?: () => void
+  size?: 'sm' | 'md' | 'lg'
 }
 
 export const LabeledInput: React.FC<LabeledInputProps> = ({
@@ -19,6 +20,7 @@ export const LabeledInput: React.FC<LabeledInputProps> = ({
   error,
   disabled,
   onOutsideClick,
+  size = 'md',
   ...props
 }) => {
   const wrapperRef = useLabeledFieldOutsideClick(onOutsideClick)
@@ -31,7 +33,7 @@ export const LabeledInput: React.FC<LabeledInputProps> = ({
   }
 
   return (
-    <div ref={wrapperRef} className={styles.wrapper}>
+    <div ref={wrapperRef} className={styles.wrapper} data-size={size}>
       <label ref={labelRef} className={styles.label} htmlFor={htmlFor} onClick={onLabelActivate}>
         {label}
       </label>
@@ -41,6 +43,7 @@ export const LabeledInput: React.FC<LabeledInputProps> = ({
         type={type}
         disabled={disabled}
         focus={focus}
+        size={size}
         {...props}
       />
       {(error || error === null) && <div className={styles.error}>{error}</div>}

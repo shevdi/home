@@ -1,20 +1,17 @@
 import { useCallback, useMemo, useState } from 'react'
-import styled, { keyframes } from 'styled-components'
+import styled from 'styled-components'
 import { z } from 'zod'
-import { SubmitHandler, useForm, Controller, useWatch } from 'react-hook-form'
+import { SubmitHandler, useForm, useWatch } from 'react-hook-form'
 import { useDropzone } from 'react-dropzone'
-import { Button, Checkbox, ErrMessage, Field, FileDropzone, RhfTaggedInput } from '@/shared/ui'
+import { Button, DotsProgressIndicator, ErrMessage, FileDropzone } from '@/shared/ui'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useAppDispatch, useAppSelector } from '@/app/store'
 import { buildMeta, FileMeta } from '../utils/uploadPhotoMeta'
+import { photoCommonFormDefaults, photoCommonFormSchema } from '../utils/photoCommonForm'
 import { getFileId, removeUploadFile, resetUpload, uploadPhotosThunk } from '../model'
 import { FileData } from './FileData'
 import { getErrorMessage } from '@/shared/utils'
-
-const dotPulse = keyframes`
-  0%, 80%, 100% { opacity: 0.3; }
-  40% { opacity: 1; }
-`
+import { PhotoCommonFields } from './PhotoCommonFields'
 
 const getFileLabel = (count: number) => {
   if (count === 0) return 'Загрузить фото'
@@ -35,15 +32,8 @@ const IMAGE_ACCEPT = {
   'image/webp': ['.webp'],
 } as const
 
-const schema = z.object({
+const schema = photoCommonFormSchema.extend({
   files: z.array(z.instanceof(File)).min(1, { error: 'Пожалуйста, выберите файлы' }),
-  private: z.boolean(),
-  country: z.array(z.string()),
-  city: z.array(z.string()),
-  tags: z.array(z.string()),
-  countryInput: z.string().optional(),
-  cityInput: z.string().optional(),
-  tagInput: z.string().optional(),
 })
 
 type FormFields = z.infer<typeof schema>
@@ -69,19 +59,14 @@ export function UploadPhoto() {
     handleSubmit,
     setError,
     setValue,
+    register,
     trigger,
     formState: { errors },
   } = useForm<FormFields>({
     resolver: zodResolver(schema),
     defaultValues: {
+      ...photoCommonFormDefaults,
       files: [],
-      private: false,
-      country: [],
-      city: [],
-      tags: [],
-      countryInput: '',
-      cityInput: '',
-      tagInput: '',
     },
   })
 
@@ -130,6 +115,8 @@ export function UploadPhoto() {
             country: data.country ?? [],
             city: data.city ?? [],
             tags: data.tags ?? [],
+            title: data.title,
+            priority: data.priority,
           },
         }),
       ).unwrap()
@@ -154,65 +141,14 @@ export function UploadPhoto() {
         >
           {fileLabel}
         </FileDropzone>
-        {isUploading && (
-          <ProgressIndicator>
-            <DotsAnimation>
-              <span>.</span>
-              <span>.</span>
-              <span>.</span>
-            </DotsAnimation>
-          </ProgressIndicator>
-        )}
-        <FieldWrapper>
-          <Controller
-            control={control}
-            name='private'
-            render={({ field }) => (
-              <Checkbox checked={field.value} onChange={field.onChange} label='Скрыть' disabled={isProcessed} />
-            )}
-          />
-        </FieldWrapper>
-        <FieldWrapper>
-          <Field label='Страна'>
-            <RhfTaggedInput<FormFields>
-              control={control}
-              trigger={trigger}
-              tagsName='country'
-              inputName='countryInput'
-              id='upload-photo-country'
-              placeholder='Введите страну и нажмите Enter'
-              insertAt='start'
-              disabled={isProcessed}
-            />
-          </Field>
-        </FieldWrapper>
-        <FieldWrapper>
-          <Field label='Город'>
-            <RhfTaggedInput<FormFields>
-              control={control}
-              trigger={trigger}
-              tagsName='city'
-              inputName='cityInput'
-              id='upload-photo-city'
-              placeholder='Введите город и нажмите Enter'
-              insertAt='start'
-              disabled={isProcessed}
-            />
-          </Field>
-        </FieldWrapper>
-        <FieldWrapper>
-          <Field label='Теги'>
-            <RhfTaggedInput<FormFields>
-              control={control}
-              trigger={trigger}
-              tagsName='tags'
-              inputName='tagInput'
-              id='upload-photo-tags'
-              placeholder='Введите тег и нажмите Enter'
-              disabled={isProcessed}
-            />
-          </Field>
-        </FieldWrapper>
+        {isUploading && <DotsProgressIndicator />}
+        <PhotoCommonFields<FormFields>
+          control={control}
+          register={register}
+          trigger={trigger}
+          disabled={isProcessed}
+          privateLabel='Скрыть'
+        />
         {(files.length > 0 || uploadFiles.length > 0) && (
           <FileList>
             {files.length > 0
@@ -257,30 +193,6 @@ export function UploadPhoto() {
 
 const PageContainer = styled.div``
 
-const ProgressIndicator = styled.div`
-  margin: 0.5rem 0;
-  font-size: 0.9rem;
-  color: var(--text-muted);
-`
-
-const DotsAnimation = styled.span`
-  display: inline-flex;
-  gap: 2px;
-
-  span {
-    animation: ${dotPulse} 1.4s ease-in-out infinite both;
-  }
-  span:nth-child(1) {
-    animation-delay: 0s;
-  }
-  span:nth-child(2) {
-    animation-delay: 0.2s;
-  }
-  span:nth-child(3) {
-    animation-delay: 0.4s;
-  }
-`
-
 const FileList = styled.div`
   margin: 1rem 0;
   padding: 1rem;
@@ -289,12 +201,4 @@ const FileList = styled.div`
   max-height: 300px;
   overflow-y: auto;
   border: 1px solid var(--input-border);
-`
-
-const CheckboxContainer = styled.div`
-  margin: 0.75rem 0;
-`
-
-const FieldWrapper = styled.div`
-  margin-bottom: 1rem;
 `

@@ -2,8 +2,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
-  padding: 1rem 1.5rem;
   border-radius: var(--radius-md);
   cursor: pointer;
   user-select: none;
@@ -12,6 +10,24 @@
   color: var(--text-color);
   font-weight: 500;
   transition: all var(--transition-fast);
+}
+
+.rootSm {
+  gap: 8px;
+  padding: 0.65rem 1rem;
+  font-size: var(--font-size-sm);
+}
+
+.rootMd {
+  gap: 12px;
+  padding: 1rem 1.5rem;
+  font-size: var(--font-size-md);
+}
+
+.rootLg {
+  gap: 14px;
+  padding: 1.15rem 1.75rem;
+  font-size: 1.125rem;
 }
 
 .root:hover:not([data-disabled='true']) {

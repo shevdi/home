@@ -1,5 +1,6 @@
 export { Calendar } from './Calendar'
 export { CalendarClearButton } from './CalendarClearButton'
+export type { CalendarClearButtonProps } from './CalendarClearButton'
 export { CalendarFooter } from './CalendarFooter'
 export { CalendarRoot } from './CalendarRoot'
 export { CalendarView } from './CalendarView'

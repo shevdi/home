@@ -2,26 +2,18 @@ import { useEffect } from 'react'
 import styled from 'styled-components'
 import { useChangePhotoMutation } from '../model'
 import { useLocation } from 'react-router'
-import z from 'zod'
+import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Controller, SubmitHandler, useForm } from 'react-hook-form'
-import { Button, Checkbox, ErrMessage, Field, Input, Loader, RhfTaggedInput } from '@/shared/ui'
+import { SubmitHandler, useForm } from 'react-hook-form'
+import { Button, ErrMessage, Loader } from '@/shared/ui'
 import { getErrorMessage } from '@/shared/utils'
 import { DeletePhoto } from './DeletePhoto'
 import { PhotosNavigation } from './PhotosNavigation'
 import { usePhoto } from '../hooks/usePhoto'
+import { photoCommonFormSchema } from '../utils/photoCommonForm'
+import { PhotoCommonFields } from './PhotoCommonFields'
 
-const schema = z.object({
-  title: z.string(),
-  priority: z.number().optional(),
-  private: z.boolean(),
-  country: z.array(z.string()),
-  city: z.array(z.string()),
-  tags: z.array(z.string()).optional(),
-  countryInput: z.string().optional(),
-  cityInput: z.string().optional(),
-  tagsInput: z.string().optional(),
-})
+const schema = photoCommonFormSchema
 
 type FormFields = z.infer<typeof schema>
 
@@ -50,7 +42,7 @@ export function EditPhoto() {
       tags: photo?.tags ?? [],
       countryInput: '',
       cityInput: '',
-      tagsInput: '',
+      tagInput: '',
     },
   })
 
@@ -65,7 +57,7 @@ export function EditPhoto() {
         tags: photo.tags ?? [],
         countryInput: '',
         cityInput: '',
-        tagsInput: '',
+        tagInput: '',
       })
     }
   }, [photo, reset])
@@ -122,60 +114,13 @@ export function EditPhoto() {
       ) : (
         <>
           <form onSubmit={handleSubmit(onSubmit)}>
-            <Controller
+            <PhotoCommonFields<FormFields>
               control={control}
-              name='private'
-              render={({ field }) => (
-                <Checkbox
-                  checked={!!field.value}
-                  onChange={(checked) => {
-                    field.onChange(checked)
-                    // dispatch(setPrivateFilter(checked))
-                  }}
-                  label='Приватное'
-                />
-              )}
+              register={register}
+              trigger={trigger}
+              disabled={isSubmitting}
+              privateLabel='Приватное'
             />
-            <Field label='Заголовок'>
-              <Input {...register('title')} />
-            </Field>
-            <Field label='Приоритет'>
-              <Input
-                {...register('priority', {
-                  valueAsNumber: true,
-                })}
-                type='number'
-              />
-            </Field>
-            <Field label='Страна'>
-              <RhfTaggedInput<FormFields>
-                control={control}
-                trigger={trigger}
-                tagsName='country'
-                inputName='countryInput'
-                placeholder='Введите страну и нажмите Enter'
-                insertAt='start'
-              />
-            </Field>
-            <Field label='Город'>
-              <RhfTaggedInput<FormFields>
-                control={control}
-                trigger={trigger}
-                tagsName='city'
-                inputName='cityInput'
-                placeholder='Введите город и нажмите Enter'
-                insertAt='start'
-              />
-            </Field>
-            <Field label='Теги'>
-              <RhfTaggedInput<FormFields>
-                control={control}
-                trigger={trigger}
-                tagsName='tags'
-                inputName='tagsInput'
-                placeholder='Введите тег и нажмите Enter'
-              />
-            </Field>
             <Button type='submit' display='block' margin='1rem auto' disabled={isSubmitting}>
               Сохранить
             </Button>
