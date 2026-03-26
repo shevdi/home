@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { useState } from 'react'
-import { Calendar } from '../Calendar/Calendar'
-import { Popover } from './Popover'
+import { Calendar } from '../Calendar'
+import { Popover } from './index'
 
 const meta: Meta = {
   title: 'Components/Popover',

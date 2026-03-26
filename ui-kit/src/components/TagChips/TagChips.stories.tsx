@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { TagChips } from './TagChips'
+import { TagChips } from './index'
 
 const meta: Meta = {
   title: 'Components/TagChips',

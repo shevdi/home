@@ -1,9 +1,9 @@
 import './styles/tokens.css'
 
-export { Button } from './components/Button/Button'
-export type { ButtonProps } from './components/Button/Button'
+export { Button } from './components/Button'
+export type { ButtonProps } from './components/Button'
 
-export { Field } from './components/Field/Field'
+export { Field } from './components/Field'
 export type {
   FieldControlProps,
   FieldDescriptionProps,
@@ -12,42 +12,42 @@ export type {
   FieldRootProps,
   FieldShorthandProps,
   FieldShorthandProps as FieldProps,
-} from './components/Field/Field'
+} from './components/Field'
 
-export { Input } from './components/Input/Input'
-export type { InputProps } from './components/Input/Input'
+export { Input } from './components/Input'
+export type { InputProps } from './components/Input'
 
-export { LabeledInput } from './components/LabeledInput/LabeledInput'
-export type { LabeledInputProps } from './components/LabeledInput/LabeledInput'
-export { useLabeledFieldOutsideClick } from './components/LabeledInput/useLabeledFieldOutsideClick'
-export { LabeledFileInput } from './components/LabeledInput/LabeledFileInput'
-export type { LabeledFileInputProps } from './components/LabeledInput/LabeledFileInput'
+export { LabeledInput, LabeledFileInput, useLabeledFieldOutsideClick } from './components/LabeledInput'
+export type { LabeledInputProps, LabeledFileInputProps } from './components/LabeledInput'
 
-export { UploadLabel } from './components/UploadLabel/UploadLabel'
-export type { UploadLabelProps } from './components/UploadLabel/UploadLabel'
+export { UploadLabel } from './components/UploadLabel'
+export type { UploadLabelProps } from './components/UploadLabel'
 
-export { Checkbox } from './components/Checkbox/Checkbox'
-export type { CheckboxProps } from './components/Checkbox/Checkbox'
+export { Checkbox } from './components/Checkbox'
+export type { CheckboxProps } from './components/Checkbox'
 
-export { Dropdown } from './components/Dropdown/Dropdown'
-export type { DropdownProps, DropdownOption } from './components/Dropdown/Dropdown'
+export { Dropdown } from './components/Dropdown'
+export type { DropdownProps, DropdownOption } from './components/Dropdown'
 
-export { ErrMessage } from './components/ErrMessage/ErrMessage'
+export { ErrMessage } from './components/ErrMessage'
 
-export { Error } from './components/Error/Error'
-export type { ErrorProps } from './components/Error/Error'
+export { Error } from './components/Error'
+export type { ErrorProps } from './components/Error'
 
-export { Loader } from './components/Loader/Loader'
-export type { LoaderProps } from './components/Loader/Loader'
+export { Loader } from './components/Loader'
+export type { LoaderProps } from './components/Loader'
 
-export { TagChips } from './components/TagChips/TagChips'
-export type { TagChipsProps } from './components/TagChips/TagChips'
+export { DotsProgressIndicator } from './components/DotsProgressIndicator'
+export type { DotsProgressIndicatorProps } from './components/DotsProgressIndicator'
 
-export { TaggedInput } from './components/TaggedInput/TaggedInput'
-export type { TaggedInputProps } from './components/TaggedInput/TaggedInput'
+export { TagChips } from './components/TagChips'
+export type { TagChipsProps } from './components/TagChips'
 
-export { Calendar } from './components/Calendar/Calendar'
-export type { CalendarViewProps } from './components/Calendar/Calendar'
+export { TaggedInput } from './components/TaggedInput'
+export type { TaggedInputProps } from './components/TaggedInput'
 
-export { Popover } from './components/Popover/Popover'
-export type { PopoverContentProps } from './components/Popover/Popover'
+export { Calendar } from './components/Calendar'
+export type { CalendarViewProps } from './components/Calendar'
+
+export { Popover } from './components/Popover'
+export type { PopoverContentProps } from './components/Popover'

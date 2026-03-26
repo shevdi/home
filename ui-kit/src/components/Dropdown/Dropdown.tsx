@@ -1,5 +1,6 @@
 import * as Select from '@radix-ui/react-select'
 import React, { useEffect, useRef, useState } from 'react'
+import { ChevronDownIcon } from './ChevronDownIcon'
 import styles from './Dropdown.module.css'
 
 export interface DropdownOption {
@@ -18,14 +19,6 @@ const triggerSizeClass = { sm: styles.triggerSm, md: styles.triggerMd, lg: style
 const labelSizeClass = { sm: styles.labelSm, md: styles.labelMd, lg: styles.labelLg } as const
 const optionSizeClass = { sm: styles.optionSm, md: styles.optionMd, lg: styles.optionLg } as const
 const iconSizeClass = { sm: styles.iconSm, md: styles.iconMd, lg: styles.iconLg } as const
-
-function ChevronDownIcon() {
-  return (
-    <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' aria-hidden>
-      <path fill='currentColor' d='M6 8L1 3h10z' />
-    </svg>
-  )
-}
 
 export const Dropdown = React.forwardRef<HTMLSelectElement, DropdownProps>(
   ({ label, options, id, name, value, defaultValue, onChange, onBlur, disabled, size = 'md', ...selectProps }, ref) => {
@@ -90,13 +83,13 @@ export const Dropdown = React.forwardRef<HTMLSelectElement, DropdownProps>(
         {options.length > 0 ? (
           <Select.Root value={radixValue} onValueChange={handleValueChange} disabled={disabled}>
             <Select.Trigger className={[styles.trigger, triggerSizeClass[size]].join(' ')} aria-label={label}>
-              <Select.Value placeholder=' ' />
+              <Select.Value placeholder=" " />
               <Select.Icon className={[styles.icon, iconSizeClass[size]].join(' ')}>
                 <ChevronDownIcon />
               </Select.Icon>
             </Select.Trigger>
             <Select.Portal>
-              <Select.Content className={styles.content} position='popper' sideOffset={4}>
+              <Select.Content className={styles.content} position="popper" sideOffset={4}>
                 <Select.Viewport>
                   {options.map((option) => {
                     const isSelected = option.value === radixValue

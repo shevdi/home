@@ -1,9 +1,9 @@
 import { useState, type CSSProperties } from 'react'
 import type { Meta, StoryObj } from '@storybook/react'
-import { Button } from '../../components/Button/Button'
-import { Field } from '../../components/Field/Field'
-import { Input } from '../../components/Input/Input'
-import { ErrMessage } from '../../components/ErrMessage/ErrMessage'
+import { Button } from '../../components/Button'
+import { Field } from '../../components/Field'
+import { Input } from '../../components/Input'
+import { ErrMessage } from '../../components/ErrMessage'
 
 /**
  * Visual reference: client login screen (Field + Input + ErrMessage).
@@ -37,6 +37,10 @@ const title: CSSProperties = {
   fontWeight: 600,
 }
 
+const fieldWrapper: CSSProperties = {
+  marginBottom: '10px',
+}
+
 const REQUIRED_MSG = 'Обязательное поле'
 
 export const Empty: Story = {
@@ -60,29 +64,33 @@ export const Empty: Story = {
             setPasswordError(pErr)
           }}
         >
-          <Field label="Имя пользователя" required error={usernameError}>
-            <Input
-              name="username"
-              autoComplete="username"
-              value={username}
-              onChange={(e) => {
-                setUsername(e.target.value)
-                setUsernameError(undefined)
-              }}
-            />
-          </Field>
-          <Field label="Пароль" required error={passwordError}>
-            <Input
-              name="password"
-              type="password"
-              autoComplete="current-password"
-              value={password}
-              onChange={(e) => {
-                setPassword(e.target.value)
-                setPasswordError(undefined)
-              }}
-            />
-          </Field>
+          <div style={fieldWrapper}>
+            <Field label="Имя пользователя" required error={usernameError}>
+              <Input
+                name="username"
+                autoComplete="username"
+                value={username}
+                onChange={(e) => {
+                  setUsername(e.target.value)
+                  setUsernameError(undefined)
+                }}
+              />
+            </Field>
+          </div>
+          <div style={fieldWrapper}>
+            <Field label="Пароль" required error={passwordError}>
+              <Input
+                name="password"
+                type="password"
+                autoComplete="current-password"
+                value={password}
+                onChange={(e) => {
+                  setPassword(e.target.value)
+                  setPasswordError(undefined)
+                }}
+              />
+            </Field>
+          </div>
           <Button display="block" type="submit" margin="1.25rem auto 0">
             Войти
           </Button>
@@ -103,12 +111,16 @@ export const Filled: Story = {
             e.preventDefault()
           }}
         >
-          <Field label="Имя пользователя" required>
-            <Input name="username" defaultValue="demo_user" autoComplete="username" />
-          </Field>
-          <Field label="Пароль" required>
-            <Input name="password" type="password" defaultValue="••••••••" autoComplete="current-password" />
-          </Field>
+          <div style={fieldWrapper}>
+            <Field label="Имя пользователя" required>
+              <Input name="username" defaultValue="demo_user" autoComplete="username" />
+            </Field>
+          </div>
+          <div style={fieldWrapper}>
+            <Field label="Пароль" required>
+              <Input name="password" type="password" defaultValue="••••••••" autoComplete="current-password" />
+            </Field>
+          </div>
           <Button display="block" type="submit" margin="1.25rem auto 0">
             Войти
           </Button>
@@ -140,29 +152,33 @@ export const WithRootError: Story = {
             setPasswordError(pErr)
           }}
         >
-          <Field label="Имя пользователя" required error={usernameError}>
-            <Input
-              name="username"
-              autoComplete="username"
-              value={username}
-              onChange={(e) => {
-                setUsername(e.target.value)
-                setUsernameError(undefined)
-              }}
-            />
-          </Field>
-          <Field label="Пароль" required error={passwordError}>
-            <Input
-              name="password"
-              type="password"
-              autoComplete="current-password"
-              value={password}
-              onChange={(e) => {
-                setPassword(e.target.value)
-                setPasswordError(undefined)
-              }}
-            />
-          </Field>
+          <div style={fieldWrapper}>
+            <Field label="Имя пользователя" required error={usernameError}>
+              <Input
+                name="username"
+                autoComplete="username"
+                value={username}
+                onChange={(e) => {
+                  setUsername(e.target.value)
+                  setUsernameError(undefined)
+                }}
+              />
+            </Field>
+          </div>
+          <div style={fieldWrapper}>
+            <Field label="Пароль" required error={passwordError}>
+              <Input
+                name="password"
+                type="password"
+                autoComplete="current-password"
+                value={password}
+                onChange={(e) => {
+                  setPassword(e.target.value)
+                  setPasswordError(undefined)
+                }}
+              />
+            </Field>
+          </div>
           <Button display="block" type="submit" margin="1.25rem auto 0">
             Войти
           </Button>

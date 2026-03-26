@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { useId } from 'react'
-import { UploadLabel } from './UploadLabel'
+import { UploadLabel } from './index'
 
 const meta: Meta = {
   title: 'Components/UploadLabel',

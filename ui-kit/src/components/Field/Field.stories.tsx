@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { useState } from 'react'
-import { Field } from './Field'
-import { Input } from '../Input/Input'
+import { Field } from './index'
+import { Input } from '../Input'
 
 /** Use `Meta` without `typeof Field` so render-only stories are not forced to supply `args` for shorthand props (`label`, `children`). */
 const meta: Meta = {

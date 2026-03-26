@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { useState } from 'react'
-import { LabeledInput } from './LabeledInput'
+import { LabeledInput } from './index'
 
 const meta: Meta = {
   title: 'Components/LabeledInput',

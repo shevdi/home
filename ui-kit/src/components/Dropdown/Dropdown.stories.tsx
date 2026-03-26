@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { useState } from 'react'
-import { Dropdown } from './Dropdown'
+import { Dropdown } from './index'
 
 const SAMPLE_OPTIONS = [
   { value: 'a', label: 'Option A' },

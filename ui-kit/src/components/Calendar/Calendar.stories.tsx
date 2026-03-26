@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { useState, type CSSProperties } from 'react'
-import { Calendar } from './Calendar'
+import { Calendar } from './index'
 
 const meta: Meta = {
   title: 'Components/Calendar',

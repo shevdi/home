@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { useState } from 'react'
-import { Input } from './Input'
+import { Input } from './index'
 
 /** `Meta` without `typeof Input` avoids Storybook requiring `args` for render-only stories. */
 const meta: Meta = {

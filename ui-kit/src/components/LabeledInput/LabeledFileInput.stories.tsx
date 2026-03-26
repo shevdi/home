@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { LabeledFileInput } from './LabeledFileInput'
+import { LabeledFileInput } from './index'
 
 const meta: Meta = {
   title: 'Components/LabeledFileInput',

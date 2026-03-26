@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'
-import { Input } from '../Input/Input'
+import { Input } from '../Input'
 import styles from '../Input/Input.module.css'
 import { useLabeledFieldOutsideClick } from './useLabeledFieldOutsideClick'
 

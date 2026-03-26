@@ -1,0 +1,7 @@
+export function ChevronDownIcon() {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12" aria-hidden>
+      <path fill="currentColor" d="M6 8L1 3h10z" />
+    </svg>
+  )
+}

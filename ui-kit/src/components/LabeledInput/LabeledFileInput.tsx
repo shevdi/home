@@ -1,6 +1,6 @@
 import React, { useRef } from 'react'
-import { Input } from '../Input/Input'
-import { UploadLabel } from '../UploadLabel/UploadLabel'
+import { Input } from '../Input'
+import { UploadLabel } from '../UploadLabel'
 import styles from '../Input/Input.module.css'
 import { useLabeledFieldOutsideClick } from './useLabeledFieldOutsideClick'
 

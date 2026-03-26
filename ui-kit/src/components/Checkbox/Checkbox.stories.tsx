@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { useState } from 'react'
-import { Checkbox } from './Checkbox'
+import { Checkbox } from './index'
 
 /** `Meta` without `typeof Checkbox` avoids Storybook requiring `args` for render-only controlled stories. */
 const meta: Meta = {

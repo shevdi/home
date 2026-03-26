@@ -1,11 +1,11 @@
 import type { CSSProperties } from 'react'
 import type { Meta, StoryObj } from '@storybook/react'
 import { useState } from 'react'
-import { Button } from '../../components/Button/Button'
-import { Checkbox } from '../../components/Checkbox/Checkbox'
-import { Field } from '../../components/Field/Field'
-import { Input } from '../../components/Input/Input'
-import { TaggedInput } from '../../components/TaggedInput/TaggedInput'
+import { Button } from '../../components/Button'
+import { Checkbox } from '../../components/Checkbox'
+import { Field } from '../../components/Field'
+import { Input } from '../../components/Input'
+import { TaggedInput } from '../../components/TaggedInput'
 
 /**
  * Visual reference: photo edit form (Field + Input + Checkbox + TaggedInput).
@@ -32,6 +32,10 @@ const card: CSSProperties = {
   border: '1px solid var(--input-border)',
 }
 
+const fieldWrapper: CSSProperties = {
+  marginBottom: '10px',
+}
+
 export const Default: Story = {
   render: function DefaultStory() {
     return (
@@ -41,22 +45,28 @@ export const Default: Story = {
             e.preventDefault()
           }}
         >
-          <Field label="Заголовок">
-            <Input name="title" defaultValue="Вечерний пейзаж" />
-          </Field>
-          <Field label="Приоритет">
-            <Input name="priority" type="number" defaultValue="3" />
-          </Field>
+          <div style={fieldWrapper}>
+            <Field label="Заголовок">
+              <Input name="title" defaultValue="Вечерний пейзаж" />
+            </Field>
+          </div>
+          <div style={fieldWrapper}>
+            <Field label="Приоритет">
+              <Input name="priority" type="number" defaultValue="3" />
+            </Field>
+          </div>
           <Checkbox checked={false} label="Приватное" onChange={() => {}} />
-          <Field label="Теги">
-            <TaggedInput
-              tags={['landscape', 'sunset']}
-              onTagsChange={() => {}}
-              inputValue=""
-              onInputValueChange={() => {}}
-              placeholder="Введите тег и нажмите Enter"
-            />
-          </Field>
+          <div style={fieldWrapper}>
+            <Field label="Теги">
+              <TaggedInput
+                tags={['landscape', 'sunset']}
+                onTagsChange={() => {}}
+                inputValue=""
+                onInputValueChange={() => {}}
+                placeholder="Введите тег и нажмите Enter"
+              />
+            </Field>
+          </div>
           <Button display="block" type="submit" margin="1rem auto 0">
             Сохранить
           </Button>
@@ -77,18 +87,22 @@ export const InteractiveTags: Story = {
             e.preventDefault()
           }}
         >
-          <Field label="Заголовок">
-            <Input name="title" defaultValue="Без названия" />
-          </Field>
-          <Field label="Теги">
-            <TaggedInput
-              tags={tags}
-              onTagsChange={setTags}
-              inputValue={draft}
-              onInputValueChange={setDraft}
-              placeholder="Добавьте тег"
-            />
-          </Field>
+          <div style={fieldWrapper}>
+            <Field label="Заголовок">
+              <Input name="title" defaultValue="Без названия" />
+            </Field>
+          </div>
+          <div style={fieldWrapper}>
+            <Field label="Теги">
+              <TaggedInput
+                tags={tags}
+                onTagsChange={setTags}
+                inputValue={draft}
+                onInputValueChange={setDraft}
+                placeholder="Добавьте тег"
+              />
+            </Field>
+          </div>
           <Button type="button" display="block" margin="1rem auto 0" onClick={() => setTags([])}>
             Очистить теги
           </Button>

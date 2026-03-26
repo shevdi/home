@@ -1,10 +1,11 @@
 import React, { useCallback } from 'react'
-import { Input } from '../Input/Input'
-import { TagChips } from '../TagChips/TagChips'
-import type { TagChipsProps } from '../TagChips/TagChips'
+import { Input } from '../Input'
 import inputStyles from '../Input/Input.module.css'
-import { useLabeledFieldOutsideClick } from '../LabeledInput/useLabeledFieldOutsideClick'
+import { useLabeledFieldOutsideClick } from '../LabeledInput'
+import { TagChips } from '../TagChips'
+import type { TagChipsProps } from '../TagChips'
 import styles from './TaggedInput.module.css'
+import { addCommittedToken, splitPaste } from './taggedInputTokens'
 
 export interface TaggedInputProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'value' | 'defaultValue' | 'onChange' | 'type'> {
@@ -20,31 +21,6 @@ export interface TaggedInputProps
   /** When the draft is empty, Backspace removes the last tag. */
   backspaceRemovesLast?: boolean
   onOutsideClick?: () => void
-}
-
-function addCommittedToken(
-  tags: string[],
-  raw: string,
-  insertAt: 'start' | 'end',
-): { next: string[]; duplicate: boolean } {
-  const trimmed = raw.trim()
-  if (!trimmed) {
-    return { next: tags, duplicate: false }
-  }
-  if (insertAt === 'end') {
-    if (tags.includes(trimmed)) {
-      return { next: tags, duplicate: true }
-    }
-    return { next: [...tags, trimmed], duplicate: false }
-  }
-  return { next: Array.from(new Set([trimmed, ...tags])), duplicate: false }
-}
-
-function splitPaste(text: string): string[] {
-  return text
-    .split(/[\n,;]+/)
-    .map((s) => s.trim())
-    .filter(Boolean)
 }
 
 export const TaggedInput = React.forwardRef<HTMLInputElement, TaggedInputProps>(function TaggedInput(
