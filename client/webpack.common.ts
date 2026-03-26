@@ -10,8 +10,8 @@ const commonConfig: Configuration = {
   },
   plugins: [
     new webpack.EnvironmentPlugin({
-      NODE_ENV: 'development',
-      BACKEND_URL: process.env.BACKEND_URL,
+      // Default matches Docker Compose / local API; override at build time for prod images or CI.
+      BACKEND_URL: 'http://localhost:3001/api/v1',
     }),
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, "public", "index.html"),

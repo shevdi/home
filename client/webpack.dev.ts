@@ -8,6 +8,11 @@ import { Configuration as DevServerConfiguration } from 'webpack-dev-server';
 
 const DEV_PORT = 3000
 
+/** Linked workspace package output; must be watched so client rebuilds when ui-kit watch rebuilds. */
+const uiKitDistGlob = path
+  .join(path.resolve(__dirname, '..', 'ui-kit', 'dist'), '**', '*')
+  .replace(/\\/g, '/')
+
 function devServerOpen(): DevServerConfiguration['open'] {
   if (process.platform === 'win32' && process.env.LOCALAPPDATA) {
     const canary = path.join(
@@ -63,9 +68,9 @@ const devConfig: CustomConfiguration = merge(commonConfig, {
       writeToDisk: false,
     },
     watchFiles: {
-      paths: ['src/**/*'],  // Watch these files for changes
+      paths: ['src/**/*', uiKitDistGlob],
       options: {
-        usePolling: true,  // Required for Docker
+        usePolling: true, // Docker bind mounts and some Windows setups
         interval: 500,
       },
     },
