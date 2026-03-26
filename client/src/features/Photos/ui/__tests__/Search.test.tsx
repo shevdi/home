@@ -42,77 +42,13 @@ jest.mock('@/shared/ui/DateRangeCalendar', () => ({
 }))
 
 jest.mock('@/shared/ui', () => ({
-  Checkbox: ({
-    label,
-    checked,
-    onChange,
-  }: {
-    label: string
-    checked: boolean
-    onChange: (value: boolean) => void
-  }) => (
-    <label>
-      <input type='checkbox' checked={checked} onChange={(event) => onChange(event.target.checked)} />
-      {label}
-    </label>
-  ),
+  ...jest.requireActual<typeof import('@/shared/ui')>('@/shared/ui'),
   Field: ({ label, children }: { label: string; children: React.ReactElement<{ id?: string }> }) => {
     const id = children.props.id ?? `mock-field-${String(label)}`
     return (
       <div>
         <label htmlFor={id}>{label}</label>
         {React.cloneElement(children, { id } as never)}
-      </div>
-    )
-  },
-  TaggedInput: ({
-    tags,
-    inputValue,
-    onInputValueChange,
-    onTagsChange,
-    id,
-    placeholder,
-  }: {
-    tags?: unknown
-    inputValue: string
-    onInputValueChange: (v: string) => void
-    onTagsChange?: (next: string[]) => void
-    id?: string
-    placeholder?: string
-  }) => {
-    const list = Array.isArray(tags) ? tags : []
-    return (
-      <div data-testid='tagged-input'>
-        <input
-          id={id}
-          value={inputValue}
-          onChange={(e) => onInputValueChange(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key !== 'Enter') return
-            e.preventDefault()
-            const trimmed = inputValue.trim()
-            if (!trimmed) return
-            if (list.includes(trimmed)) {
-              onInputValueChange('')
-              return
-            }
-            onTagsChange?.([...list, trimmed])
-            onInputValueChange('')
-          }}
-          placeholder={placeholder}
-        />
-        {list.map((tag: string) => (
-          <span key={tag}>
-            {tag}
-            <button
-              type='button'
-              aria-label={`Удалить тег ${tag}`}
-              onClick={() => onTagsChange?.(list.filter((t) => t !== tag))}
-            >
-              ×
-            </button>
-          </span>
-        ))}
       </div>
     )
   },

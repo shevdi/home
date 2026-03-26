@@ -1,3 +1,5 @@
+export { RhfTaggedInput } from './RhfTaggedInput'
+export type { RhfTaggedInputProps } from './RhfTaggedInput'
 export { MapEmbed } from './MapEmbed'
 export { TagList } from './TagList'
 export type { TagListProps } from './TagList'

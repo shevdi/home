@@ -27,6 +27,7 @@ jest.mock('../DeletePhoto', () => ({
 }))
 
 jest.mock('@/shared/ui', () => ({
+  ...jest.requireActual<typeof import('@/shared/ui')>('@/shared/ui'),
   Button: ({ children, ...props }: { children: React.ReactNode }) => (
     <button {...props}>{children}</button>
   ),
@@ -45,28 +46,6 @@ jest.mock('@/shared/ui', () => ({
   ),
   Input: (props: React.InputHTMLAttributes<HTMLInputElement>) => <input {...props} />,
   Loader: () => <div data-testid='loader'>loader</div>,
-  TaggedInput: ({
-    tags,
-    inputValue,
-    onInputValueChange,
-    placeholder,
-  }: {
-    tags: string[]
-    inputValue: string
-    onInputValueChange: (v: string) => void
-    placeholder?: string
-  }) => (
-    <div data-testid='tagged-input'>
-      <input
-        value={inputValue}
-        onChange={(e) => onInputValueChange(e.target.value)}
-        placeholder={placeholder}
-      />
-      {tags?.map((tag: string) => (
-        <span key={tag}>{tag}</span>
-      ))}
-    </div>
-  ),
 }))
 
 const mockUseChangePhotoMutation = useChangePhotoMutation as unknown as jest.Mock

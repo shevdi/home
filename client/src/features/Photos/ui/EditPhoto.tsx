@@ -5,7 +5,7 @@ import { useLocation } from 'react-router'
 import z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
-import { Button, Checkbox, ErrMessage, Field, Input, Loader, TaggedInput } from '@/shared/ui'
+import { Button, Checkbox, ErrMessage, Field, Input, Loader, RhfTaggedInput } from '@/shared/ui'
 import { getErrorMessage } from '@/shared/utils'
 import { DeletePhoto } from './DeletePhoto'
 import { PhotosNavigation } from './PhotosNavigation'
@@ -37,8 +37,7 @@ export function EditPhoto() {
     control,
     reset,
     setError,
-    setValue,
-    watch,
+    trigger,
     formState: { isSubmitting, errors },
   } = useForm<FormFields>({
     resolver: zodResolver(schema),
@@ -71,19 +70,9 @@ export function EditPhoto() {
     }
   }, [photo, reset])
 
-  const tags = watch('tags') ?? []
-  const country = watch('country') ?? []
-  const city = watch('city') ?? []
-
   const onSubmit: SubmitHandler<FormFields> = async (data) => {
     try {
-      const parsedData = schema.safeParse({
-        ...data,
-        private: data?.private,
-        tags,
-        country,
-        city,
-      } as FormFields)
+      const parsedData = schema.safeParse(data)
       if (!parsedData.success) {
         setError('root', {
           message: 'Некорректное значение приватности.',
@@ -159,33 +148,31 @@ export function EditPhoto() {
               />
             </Field>
             <Field label='Страна'>
-              <TaggedInput
-                tags={country}
-                onTagsChange={(next) =>
-                  setValue('country', next, { shouldValidate: true, shouldDirty: true })
-                }
-                inputValue={watch('countryInput') ?? ''}
-                onInputValueChange={(v) => setValue('countryInput', v, { shouldDirty: true })}
+              <RhfTaggedInput<FormFields>
+                control={control}
+                trigger={trigger}
+                tagsName='country'
+                inputName='countryInput'
                 placeholder='Введите страну и нажмите Enter'
                 insertAt='start'
               />
             </Field>
             <Field label='Город'>
-              <TaggedInput
-                tags={city}
-                onTagsChange={(next) => setValue('city', next, { shouldValidate: true, shouldDirty: true })}
-                inputValue={watch('cityInput') ?? ''}
-                onInputValueChange={(v) => setValue('cityInput', v, { shouldDirty: true })}
+              <RhfTaggedInput<FormFields>
+                control={control}
+                trigger={trigger}
+                tagsName='city'
+                inputName='cityInput'
                 placeholder='Введите город и нажмите Enter'
                 insertAt='start'
               />
             </Field>
             <Field label='Теги'>
-              <TaggedInput
-                tags={tags}
-                onTagsChange={(next) => setValue('tags', next, { shouldValidate: true, shouldDirty: true })}
-                inputValue={watch('tagsInput') ?? ''}
-                onInputValueChange={(v) => setValue('tagsInput', v, { shouldDirty: true })}
+              <RhfTaggedInput<FormFields>
+                control={control}
+                trigger={trigger}
+                tagsName='tags'
+                inputName='tagsInput'
                 placeholder='Введите тег и нажмите Enter'
               />
             </Field>

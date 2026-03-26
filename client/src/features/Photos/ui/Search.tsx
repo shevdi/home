@@ -4,7 +4,7 @@ import z from 'zod'
 import styled from 'styled-components'
 import { useDispatch, useSelector } from 'react-redux'
 import { DateRangeCalendar } from '@/shared/ui/DateRangeCalendar'
-import { Dropdown, Field, TaggedInput } from '@/shared/ui'
+import { Dropdown, Field, RhfTaggedInput } from '@/shared/ui'
 import { PhotoOrder } from '@shevdi-home/shared'
 import {
   setSearch,
@@ -23,6 +23,8 @@ const schema = z.object({
   order: z.string(),
   dateFrom: z.string(),
   dateTo: z.string(),
+  country: z.array(z.string()),
+  city: z.array(z.string()),
   countryInput: z.string().optional(),
   cityInput: z.string().optional(),
   priority: z.number().optional(),
@@ -77,7 +79,7 @@ export const Search = () => {
   const normalizedOrderParamValue = ORDER_PARAMS.includes(orderParamValue as PhotoOrder)
     ? (queryParams.order as PhotoOrder)
     : undefined
-  const { register, setValue, watch } = useForm<FormFields>({
+  const { register, setValue, watch, control, trigger } = useForm<FormFields>({
     resolver: zodResolver(schema),
     values: {
       order: normalizedOrderParamValue ?? order ?? '',
@@ -87,6 +89,8 @@ export const Search = () => {
       cityInput: '',
       tagInput: '',
       tags: (tagsParamValue && tagsParamValue.length > 0 ? tagsParamValue : tags) ?? [],
+      country: countryParamValue?.length ? countryParamValue : (country ?? []),
+      city: cityParamValue?.length ? cityParamValue : (city ?? []),
     },
   })
 
@@ -171,47 +175,51 @@ export const Search = () => {
         />
         <FieldWrapper>
           <Field label='Страна'>
-            <TaggedInput
+            <RhfTaggedInput<FormFields>
+              control={control}
+              trigger={trigger}
+              tagsName='country'
+              inputName='countryInput'
               id='photo-filter-country'
-              tags={country}
-              onTagsChange={(next) => {
+              placeholder='Введите страну и нажмите Enter'
+              insertAt='start'
+              onAfterTagsChange={(next) => {
                 dispatch(setCountrySearch(next))
                 setQueryParams({ dateFrom, dateTo, order, tags, country: next, city })
               }}
-              inputValue={watch('countryInput') ?? ''}
-              onInputValueChange={(v) => setValue('countryInput', v)}
-              placeholder='Введите страну и нажмите Enter'
             />
           </Field>
         </FieldWrapper>
         <FieldWrapper>
           <Field label='Город'>
-            <TaggedInput
+            <RhfTaggedInput<FormFields>
+              control={control}
+              trigger={trigger}
+              tagsName='city'
+              inputName='cityInput'
               id='photo-filter-city'
-              tags={city}
-              onTagsChange={(next) => {
+              placeholder='Введите город и нажмите Enter'
+              insertAt='start'
+              onAfterTagsChange={(next) => {
                 dispatch(setCitySearch(next))
                 setQueryParams({ dateFrom, dateTo, order, tags, country, city: next })
               }}
-              inputValue={watch('cityInput') ?? ''}
-              onInputValueChange={(v) => setValue('cityInput', v)}
-              placeholder='Введите город и нажмите Enter'
             />
           </Field>
         </FieldWrapper>
         <FieldWrapper>
           <Field label='Теги'>
-            <TaggedInput
+            <RhfTaggedInput<FormFields>
+              control={control}
+              trigger={trigger}
+              tagsName='tags'
+              inputName='tagInput'
               id='photo-filter-tags'
-              tags={tags}
-              onTagsChange={(next) => {
+              placeholder='Введите тег и нажмите Enter'
+              onAfterTagsChange={(next) => {
                 dispatch(setTagsSearch(next))
                 setQueryParams({ dateFrom, dateTo, order, tags: next, country, city })
-                setValue('tags', next)
               }}
-              inputValue={watch('tagInput') ?? ''}
-              onInputValueChange={(v) => setValue('tagInput', v)}
-              placeholder='Введите тег и нажмите Enter'
             />
           </Field>
         </FieldWrapper>

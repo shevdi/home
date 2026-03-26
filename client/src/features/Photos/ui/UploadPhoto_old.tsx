@@ -1,9 +1,9 @@
 import { useCallback, useMemo, useState } from 'react'
 import styled, { keyframes } from 'styled-components'
 import { z } from 'zod'
-import { SubmitHandler, useForm, Controller, useWatch } from 'react-hook-form'
+import { SubmitHandler, useForm, Controller } from 'react-hook-form'
 import { useDropzone } from 'react-dropzone'
-import { Button, Checkbox, ErrMessage, Field, RhfTaggedInput } from '@/shared/ui'
+import { Button, Checkbox, ErrMessage, Field, TaggedInput } from '@/shared/ui'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useAppDispatch, useAppSelector } from '@/app/store'
 import { buildMeta, FileMeta } from '../utils/uploadPhotoMeta'
@@ -69,7 +69,7 @@ export function UploadPhoto() {
     handleSubmit,
     setError,
     setValue,
-    trigger,
+    watch,
     formState: { errors },
   } = useForm<FormFields>({
     resolver: zodResolver(schema),
@@ -85,7 +85,11 @@ export function UploadPhoto() {
     },
   })
 
-  const files = useWatch({ control, name: 'files', defaultValue: [] })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const files = watch('files') || []
+  const country = watch('country') || []
+  const city = watch('city') || []
+  const tags = watch('tags') || []
   const isProcessed = isUploading
 
   const fileLabel = useMemo(() => getFileLabel(files.length), [files.length])
@@ -177,12 +181,12 @@ export function UploadPhoto() {
         </CheckboxContainer>
         <FieldWrapper>
           <Field label='Страна'>
-            <RhfTaggedInput<FormFields>
-              control={control}
-              trigger={trigger}
-              tagsName='country'
-              inputName='countryInput'
+            <TaggedInput
               id='upload-photo-country'
+              tags={country}
+              onTagsChange={(next) => setValue('country', next, { shouldValidate: true, shouldDirty: true })}
+              inputValue={watch('countryInput') ?? ''}
+              onInputValueChange={(v) => setValue('countryInput', v, { shouldDirty: true })}
               placeholder='Введите страну и нажмите Enter'
               insertAt='start'
               disabled={isProcessed}
@@ -191,12 +195,12 @@ export function UploadPhoto() {
         </FieldWrapper>
         <FieldWrapper>
           <Field label='Город'>
-            <RhfTaggedInput<FormFields>
-              control={control}
-              trigger={trigger}
-              tagsName='city'
-              inputName='cityInput'
+            <TaggedInput
               id='upload-photo-city'
+              tags={city}
+              onTagsChange={(next) => setValue('city', next, { shouldValidate: true, shouldDirty: true })}
+              inputValue={watch('cityInput') ?? ''}
+              onInputValueChange={(v) => setValue('cityInput', v, { shouldDirty: true })}
               placeholder='Введите город и нажмите Enter'
               insertAt='start'
               disabled={isProcessed}
@@ -205,12 +209,12 @@ export function UploadPhoto() {
         </FieldWrapper>
         <FieldWrapper>
           <Field label='Теги'>
-            <RhfTaggedInput<FormFields>
-              control={control}
-              trigger={trigger}
-              tagsName='tags'
-              inputName='tagInput'
+            <TaggedInput
               id='upload-photo-tags'
+              tags={tags}
+              onTagsChange={(next) => setValue('tags', next, { shouldValidate: true, shouldDirty: true })}
+              inputValue={watch('tagInput') ?? ''}
+              onInputValueChange={(v) => setValue('tagInput', v, { shouldDirty: true })}
               placeholder='Введите тег и нажмите Enter'
               disabled={isProcessed}
             />
