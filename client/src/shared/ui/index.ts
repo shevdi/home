@@ -1,5 +1,7 @@
 export { RhfTaggedInput } from './RhfTaggedInput'
 export type { RhfTaggedInputProps } from './RhfTaggedInput'
+export { FileDropzone } from './FileDropzone'
+export type { FileDropzoneProps } from './FileDropzone'
 export { MapEmbed } from './MapEmbed'
 export { TagList } from './TagList'
 export type { TagListProps } from './TagList'

@@ -3,7 +3,7 @@ import styled, { keyframes } from 'styled-components'
 import { z } from 'zod'
 import { SubmitHandler, useForm, Controller, useWatch } from 'react-hook-form'
 import { useDropzone } from 'react-dropzone'
-import { Button, Checkbox, ErrMessage, Field, RhfTaggedInput } from '@/shared/ui'
+import { Button, Checkbox, ErrMessage, Field, FileDropzone, RhfTaggedInput } from '@/shared/ui'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useAppDispatch, useAppSelector } from '@/app/store'
 import { buildMeta, FileMeta } from '../utils/uploadPhotoMeta'
@@ -145,18 +145,15 @@ export function UploadPhoto() {
     <PageContainer>
       <ErrMessage>{errors.root?.message}</ErrMessage>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <DropzoneWrapper>
-          <DropzoneArea
-            {...getRootProps()}
-            $isDragActive={isDragActive}
-            $disabled={isProcessed}
-            data-disabled={isProcessed}
-          >
-            <input {...getInputProps()} />
-            {fileLabel}
-          </DropzoneArea>
-          {errors.files?.message && <ErrorText>{errors.files?.message}</ErrorText>}
-        </DropzoneWrapper>
+        <FileDropzone
+          getRootProps={getRootProps}
+          getInputProps={getInputProps}
+          isDragActive={isDragActive}
+          disabled={isProcessed}
+          error={errors.files?.message}
+        >
+          {fileLabel}
+        </FileDropzone>
         {isUploading && (
           <ProgressIndicator>
             <DotsAnimation>
@@ -166,7 +163,7 @@ export function UploadPhoto() {
             </DotsAnimation>
           </ProgressIndicator>
         )}
-        <CheckboxContainer>
+        <FieldWrapper>
           <Controller
             control={control}
             name='private'
@@ -174,7 +171,7 @@ export function UploadPhoto() {
               <Checkbox checked={field.value} onChange={field.onChange} label='Скрыть' disabled={isProcessed} />
             )}
           />
-        </CheckboxContainer>
+        </FieldWrapper>
         <FieldWrapper>
           <Field label='Страна'>
             <RhfTaggedInput<FormFields>
@@ -259,39 +256,6 @@ export function UploadPhoto() {
 }
 
 const PageContainer = styled.div``
-
-const DropzoneWrapper = styled.div`
-  margin-bottom: 1rem;
-`
-
-const DropzoneArea = styled.div<{ $isDragActive?: boolean; $disabled?: boolean }>`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem 1.5rem;
-  border-radius: var(--radius-md);
-  cursor: ${({ $disabled }) => ($disabled ? 'not-allowed' : 'pointer')};
-  user-select: none;
-  border: 2px dashed
-    ${({ $isDragActive, $disabled }) => ($isDragActive || $disabled ? 'var(--accent)' : 'var(--input-border)')};
-  background: ${({ $isDragActive, $disabled }) =>
-    $isDragActive || $disabled ? 'var(--input-disabled-color)' : 'var(--input-bg)'};
-  color: var(--text-color);
-  font-weight: 500;
-  transition: all var(--transition-fast);
-
-  &:hover:not([data-disabled='true']) {
-    border-color: var(--accent);
-    background: rgba(199, 107, 57, 0.08);
-  }
-`
-
-const ErrorText = styled.div`
-  margin-top: 0.4rem;
-  font-size: 0.8rem;
-  color: var(--error-color);
-  min-height: 1rem;
-`
 
 const ProgressIndicator = styled.div`
   margin: 0.5rem 0;
