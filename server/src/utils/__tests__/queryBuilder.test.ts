@@ -42,7 +42,7 @@ describe('queryBuilder', () => {
         .dateRange('createdAt', undefined, '2024-12-31')
         .build()
 
-      expect(filter).toEqual({ createdAt: { $lte: '2024-12-31T59:59:59Z' } })
+      expect(filter).toEqual({ createdAt: { $lte: '2024-12-31T23:59:59Z' } })
     })
 
     it('adds both $gte and $lte when both provided', () => {
@@ -51,7 +51,7 @@ describe('queryBuilder', () => {
         .build()
 
       expect(filter).toEqual({
-        createdAt: { $gte: '2024-01-01T00:00:00Z', $lte: '2024-12-31T59:59:59Z' },
+        createdAt: { $gte: '2024-01-01T00:00:00Z', $lte: '2024-12-31T23:59:59Z' },
       })
     })
 
@@ -69,7 +69,7 @@ describe('queryBuilder', () => {
         .build()
 
       expect(filter).toEqual({
-        createdAt: { $gte: '2024-01-01T00:00:00Z', $lte: '2024-12-31T59:59:59Z' },
+        createdAt: { $gte: '2024-01-01T00:00:00Z', $lte: '2024-12-31T23:59:59Z' },
       })
     })
 
@@ -294,7 +294,7 @@ describe('queryBuilder', () => {
 
       expect(filter).toEqual({
         $nor: [{ status: 'draft' }],
-        createdAt: { $gte: '2024-01-01T00:00:00Z', $lte: '2024-12-31T59:59:59Z' },
+        createdAt: { $gte: '2024-01-01T00:00:00Z', $lte: '2024-12-31T23:59:59Z' },
         tags: { $all: ['a', 'b'] },
       })
     })
