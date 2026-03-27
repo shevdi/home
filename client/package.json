@@ -1,6 +1,6 @@
 {
   "name": "shevdi-home-front",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "shevdi home",
   "scripts": {
     "build": "webpack --config webpack.prod.ts",
