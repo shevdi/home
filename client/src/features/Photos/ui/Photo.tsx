@@ -80,6 +80,7 @@ const PhotoMeta = styled.div`
 `
 
 const Image = styled.img`
+  margin-top: 2rem;
   width: 100%;
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-md);

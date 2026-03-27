@@ -30,8 +30,7 @@
   "peerDependencies": {
     "react": "^19.0.0",
     "react-calendar": "^6.0.0",
-    "react-dom": "^19.0.0",
-    "react-router": "^7.0.0"
+    "react-dom": "^19.0.0"
   },
   "dependencies": {
     "clsx": "^2.1.1",
@@ -42,6 +41,7 @@
     "@radix-ui/react-slot": "^1.2.4"
   },
   "devDependencies": {
+    "@storybook/addon-a11y": "8.6.18",
     "@storybook/addon-essentials": "8.6.18",
     "@storybook/react": "8.6.18",
     "@storybook/react-vite": "8.6.18",

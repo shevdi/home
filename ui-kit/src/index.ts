@@ -1,4 +1,5 @@
 import './styles/tokens.css'
+import './styles/base.css'
 
 export { Button } from './components/Button'
 export type { ButtonProps } from './components/Button'

@@ -8,6 +8,11 @@ export interface DropdownOption {
   label: string
 }
 
+/**
+ * Radix-styled select with a hidden native `<select>` for `name` / traditional form posts.
+ * `onChange` runs when the user picks a value. `onBlur` is only invoked for the hidden
+ * select’s real blur events (not when the visible value changes).
+ */
 export interface DropdownProps extends Omit<React.SelectHTMLAttributes<HTMLSelectElement>, 'onChange' | 'size'> {
   label: string
   options: DropdownOption[]
@@ -45,7 +50,6 @@ export const Dropdown = React.forwardRef<HTMLSelectElement, DropdownProps>(
         target: { value: next, name: name ?? '' },
       } as React.ChangeEvent<HTMLSelectElement>
       onChange?.(syntheticEvent)
-      onBlur?.(syntheticEvent as unknown as React.FocusEvent<HTMLSelectElement>)
     }
 
     const handleValueChange = (next: string) => {

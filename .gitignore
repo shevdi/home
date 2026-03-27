@@ -2,6 +2,10 @@
 /.vscode
 /node_modules/
 /.turbo/
+client/.turbo/
+server/.turbo/
+mock-server/.turbo/
+e2e/.turbo/
 /mock-server/node_modules/
 /e2e/node_modules/
 /e2e/test-results/

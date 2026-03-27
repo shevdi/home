@@ -3,13 +3,13 @@
 exports[`Search renders search form with default state 1`] = `
 <div>
   <div
-    class="sc-iGgWBk eNlheC"
+    class="sc-imWYAH fgbdhS"
   >
     <div
-      class="sc-gsFSXt bocubB"
+      class="sc-jXbUNf hSIbvB"
     >
       <div
-        class="sc-kAycey"
+        class="sc-dhKdcy"
       >
         <div>
           <label
@@ -55,7 +55,7 @@ exports[`Search renders search form with default state 1`] = `
         />
       </div>
       <div
-        class="sc-kAycey"
+        class="sc-dhKdcy"
       >
         <div>
           <label
@@ -74,13 +74,13 @@ exports[`Search renders search form with default state 1`] = `
               value=""
             />
             <div
-              class="undefined undefined"
+              class="undefined undefined undefined"
             />
           </div>
         </div>
       </div>
       <div
-        class="sc-kAycey"
+        class="sc-dhKdcy"
       >
         <div>
           <label
@@ -99,13 +99,13 @@ exports[`Search renders search form with default state 1`] = `
               value=""
             />
             <div
-              class="undefined undefined"
+              class="undefined undefined undefined"
             />
           </div>
         </div>
       </div>
       <div
-        class="sc-kAycey"
+        class="sc-dhKdcy"
       >
         <div>
           <label
@@ -124,7 +124,7 @@ exports[`Search renders search form with default state 1`] = `
               value=""
             />
             <div
-              class="undefined undefined"
+              class="undefined undefined undefined"
             />
           </div>
         </div>
@@ -137,13 +137,13 @@ exports[`Search renders search form with default state 1`] = `
 exports[`Search renders with different queryParams renders with all params 1`] = `
 <div>
   <div
-    class="sc-iGgWBk eNlheC"
+    class="sc-imWYAH fgbdhS"
   >
     <div
-      class="sc-gsFSXt bocubB"
+      class="sc-jXbUNf hSIbvB"
     >
       <div
-        class="sc-kAycey"
+        class="sc-dhKdcy"
       >
         <div>
           <label
@@ -189,7 +189,7 @@ exports[`Search renders with different queryParams renders with all params 1`] =
         />
       </div>
       <div
-        class="sc-kAycey"
+        class="sc-dhKdcy"
       >
         <div>
           <label
@@ -208,13 +208,13 @@ exports[`Search renders with different queryParams renders with all params 1`] =
               value=""
             />
             <div
-              class="undefined undefined"
+              class="undefined undefined undefined"
             />
           </div>
         </div>
       </div>
       <div
-        class="sc-kAycey"
+        class="sc-dhKdcy"
       >
         <div>
           <label
@@ -233,13 +233,13 @@ exports[`Search renders with different queryParams renders with all params 1`] =
               value=""
             />
             <div
-              class="undefined undefined"
+              class="undefined undefined undefined"
             />
           </div>
         </div>
       </div>
       <div
-        class="sc-kAycey"
+        class="sc-dhKdcy"
       >
         <div>
           <label
@@ -258,7 +258,7 @@ exports[`Search renders with different queryParams renders with all params 1`] =
               value=""
             />
             <div
-              class="undefined undefined"
+              class="undefined undefined undefined"
             >
               <span>
                 foo
@@ -299,13 +299,13 @@ exports[`Search renders with different queryParams renders with all params 1`] =
 exports[`Search renders with different queryParams renders with date range params 1`] = `
 <div>
   <div
-    class="sc-iGgWBk eNlheC"
+    class="sc-imWYAH fgbdhS"
   >
     <div
-      class="sc-gsFSXt bocubB"
+      class="sc-jXbUNf hSIbvB"
     >
       <div
-        class="sc-kAycey"
+        class="sc-dhKdcy"
       >
         <div>
           <label
@@ -351,7 +351,7 @@ exports[`Search renders with different queryParams renders with date range param
         />
       </div>
       <div
-        class="sc-kAycey"
+        class="sc-dhKdcy"
       >
         <div>
           <label
@@ -370,13 +370,13 @@ exports[`Search renders with different queryParams renders with date range param
               value=""
             />
             <div
-              class="undefined undefined"
+              class="undefined undefined undefined"
             />
           </div>
         </div>
       </div>
       <div
-        class="sc-kAycey"
+        class="sc-dhKdcy"
       >
         <div>
           <label
@@ -395,13 +395,13 @@ exports[`Search renders with different queryParams renders with date range param
               value=""
             />
             <div
-              class="undefined undefined"
+              class="undefined undefined undefined"
             />
           </div>
         </div>
       </div>
       <div
-        class="sc-kAycey"
+        class="sc-dhKdcy"
       >
         <div>
           <label
@@ -420,7 +420,7 @@ exports[`Search renders with different queryParams renders with date range param
               value=""
             />
             <div
-              class="undefined undefined"
+              class="undefined undefined undefined"
             />
           </div>
         </div>
@@ -433,13 +433,13 @@ exports[`Search renders with different queryParams renders with date range param
 exports[`Search renders with different queryParams renders with order param 1`] = `
 <div>
   <div
-    class="sc-iGgWBk eNlheC"
+    class="sc-imWYAH fgbdhS"
   >
     <div
-      class="sc-gsFSXt bocubB"
+      class="sc-jXbUNf hSIbvB"
     >
       <div
-        class="sc-kAycey"
+        class="sc-dhKdcy"
       >
         <div>
           <label
@@ -485,7 +485,7 @@ exports[`Search renders with different queryParams renders with order param 1`] 
         />
       </div>
       <div
-        class="sc-kAycey"
+        class="sc-dhKdcy"
       >
         <div>
           <label
@@ -504,13 +504,13 @@ exports[`Search renders with different queryParams renders with order param 1`] 
               value=""
             />
             <div
-              class="undefined undefined"
+              class="undefined undefined undefined"
             />
           </div>
         </div>
       </div>
       <div
-        class="sc-kAycey"
+        class="sc-dhKdcy"
       >
         <div>
           <label
@@ -529,13 +529,13 @@ exports[`Search renders with different queryParams renders with order param 1`] 
               value=""
             />
             <div
-              class="undefined undefined"
+              class="undefined undefined undefined"
             />
           </div>
         </div>
       </div>
       <div
-        class="sc-kAycey"
+        class="sc-dhKdcy"
       >
         <div>
           <label
@@ -554,7 +554,7 @@ exports[`Search renders with different queryParams renders with order param 1`] 
               value=""
             />
             <div
-              class="undefined undefined"
+              class="undefined undefined undefined"
             />
           </div>
         </div>
@@ -567,13 +567,13 @@ exports[`Search renders with different queryParams renders with order param 1`] 
 exports[`Search renders with different queryParams renders with tags param 1`] = `
 <div>
   <div
-    class="sc-iGgWBk eNlheC"
+    class="sc-imWYAH fgbdhS"
   >
     <div
-      class="sc-gsFSXt bocubB"
+      class="sc-jXbUNf hSIbvB"
     >
       <div
-        class="sc-kAycey"
+        class="sc-dhKdcy"
       >
         <div>
           <label
@@ -619,7 +619,7 @@ exports[`Search renders with different queryParams renders with tags param 1`] =
         />
       </div>
       <div
-        class="sc-kAycey"
+        class="sc-dhKdcy"
       >
         <div>
           <label
@@ -638,13 +638,13 @@ exports[`Search renders with different queryParams renders with tags param 1`] =
               value=""
             />
             <div
-              class="undefined undefined"
+              class="undefined undefined undefined"
             />
           </div>
         </div>
       </div>
       <div
-        class="sc-kAycey"
+        class="sc-dhKdcy"
       >
         <div>
           <label
@@ -663,13 +663,13 @@ exports[`Search renders with different queryParams renders with tags param 1`] =
               value=""
             />
             <div
-              class="undefined undefined"
+              class="undefined undefined undefined"
             />
           </div>
         </div>
       </div>
       <div
-        class="sc-kAycey"
+        class="sc-dhKdcy"
       >
         <div>
           <label
@@ -688,7 +688,7 @@ exports[`Search renders with different queryParams renders with tags param 1`] =
               value=""
             />
             <div
-              class="undefined undefined"
+              class="undefined undefined undefined"
             >
               <span>
                 landscape

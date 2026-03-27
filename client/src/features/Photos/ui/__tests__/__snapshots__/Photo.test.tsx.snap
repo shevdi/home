@@ -6,7 +6,7 @@ exports[`Photo renders full photo with all elements when using infinite query 1`
     class="sc-gsFSXt cUMUji"
   >
     <div
-      class="sc-aXZVf eEQMZI"
+      class="sc-aXZVf kiiPPS"
     >
       <div>
         <a
@@ -39,7 +39,7 @@ exports[`Photo renders full photo with all elements when using infinite query 1`
     </div>
     <img
       alt="Test Photo"
-      class="sc-jXbUNf khYyzK"
+      class="sc-jXbUNf eOpRDV"
       src="/photo-md.jpg"
     />
     <h1
@@ -82,7 +82,7 @@ exports[`Photo renders loader when loading 1`] = `
     class="sc-gsFSXt cUMUji"
   >
     <div
-      class="sc-aXZVf eEQMZI"
+      class="sc-aXZVf kiiPPS"
     >
       <div />
       <div />
@@ -106,7 +106,7 @@ exports[`Photo renders photo with GPS coordinates and MapEmbed 1`] = `
     class="sc-gsFSXt cUMUji"
   >
     <div
-      class="sc-aXZVf eEQMZI"
+      class="sc-aXZVf kiiPPS"
     >
       <div />
       <div>
@@ -123,7 +123,7 @@ exports[`Photo renders photo with GPS coordinates and MapEmbed 1`] = `
     </div>
     <img
       alt="Test Photo"
-      class="sc-jXbUNf khYyzK"
+      class="sc-jXbUNf eOpRDV"
       src="/photo-md.jpg"
     />
     <h1
@@ -149,7 +149,7 @@ exports[`Photo renders photo with basic info 1`] = `
     class="sc-gsFSXt cUMUji"
   >
     <div
-      class="sc-aXZVf eEQMZI"
+      class="sc-aXZVf kiiPPS"
     >
       <div />
       <div>
@@ -166,7 +166,7 @@ exports[`Photo renders photo with basic info 1`] = `
     </div>
     <img
       alt="Test Photo"
-      class="sc-jXbUNf khYyzK"
+      class="sc-jXbUNf eOpRDV"
       src="/photo-md.jpg"
     />
     <h1
@@ -184,7 +184,7 @@ exports[`Photo renders photo with neighbours navigation 1`] = `
     class="sc-gsFSXt cUMUji"
   >
     <div
-      class="sc-aXZVf eEQMZI"
+      class="sc-aXZVf kiiPPS"
     >
       <div>
         <a
@@ -217,7 +217,7 @@ exports[`Photo renders photo with neighbours navigation 1`] = `
     </div>
     <img
       alt="Test Photo"
-      class="sc-jXbUNf khYyzK"
+      class="sc-jXbUNf eOpRDV"
       src="/photo-md.jpg"
     />
     <h1
@@ -235,7 +235,7 @@ exports[`Photo renders photo with tags 1`] = `
     class="sc-gsFSXt cUMUji"
   >
     <div
-      class="sc-aXZVf eEQMZI"
+      class="sc-aXZVf kiiPPS"
     >
       <div />
       <div>
@@ -252,7 +252,7 @@ exports[`Photo renders photo with tags 1`] = `
     </div>
     <img
       alt="Test Photo"
-      class="sc-jXbUNf khYyzK"
+      class="sc-jXbUNf eOpRDV"
       src="/photo-md.jpg"
     />
     <h1
@@ -280,7 +280,7 @@ exports[`Photo renders photo with takenAt date 1`] = `
     class="sc-gsFSXt cUMUji"
   >
     <div
-      class="sc-aXZVf eEQMZI"
+      class="sc-aXZVf kiiPPS"
     >
       <div />
       <div>
@@ -297,7 +297,7 @@ exports[`Photo renders photo with takenAt date 1`] = `
     </div>
     <img
       alt="Test Photo"
-      class="sc-jXbUNf khYyzK"
+      class="sc-jXbUNf eOpRDV"
       src="/photo-md.jpg"
     />
     <h1

@@ -3,7 +3,7 @@
 exports[`UploadPhoto renders default state and disables submit 1`] = `
 <div>
   <div
-    class="sc-eldPxw"
+    class="sc-fPXMVh"
   >
     <div
       class=""
@@ -29,7 +29,8 @@ exports[`UploadPhoto renders default state and disables submit 1`] = `
         </div>
       </div>
       <div
-        class="sc-eDPEui ieKurp"
+        class="sc-eDPEui"
+        style="--font-size-label: 0.78rem; --font-size-field-error: 0.72rem; --font-size-field-description: 0.8rem;"
       >
         <label
           class=" "
@@ -56,128 +57,112 @@ exports[`UploadPhoto renders default state and disables submit 1`] = `
             Скрыть
           </span>
         </label>
-      </div>
-      <div
-        class="sc-eDPEui ieKurp"
-      >
         <div
-          class=""
+          class="sc-eldPxw dgLCQu"
         >
-          <label
-            class=""
-            for="«r0»-control"
-          >
-            Заголовок
-          </label>
-          <input
-            class=""
-            id="photo-form-title"
-            name="title"
-            type="text"
-          />
-        </div>
-      </div>
-      <div
-        class="sc-eDPEui ieKurp"
-      >
-        <div
-          class=""
-        >
-          <label
-            class=""
-            for="«r1»-control"
-          >
-            Приоритет
-          </label>
-          <input
-            class=""
-            id="photo-form-priority"
-            name="priority"
-            type="number"
-          />
-        </div>
-      </div>
-      <div
-        class="sc-eDPEui ieKurp"
-      >
-        <div
-          class=""
-        >
-          <label
-            class=""
-            for="«r2»-control"
-          >
-            Страна
-          </label>
           <div
             class=""
           >
+            <label
+              class=""
+              for="«r0»-control"
+            >
+              Заголовок
+            </label>
             <input
               class=""
-              id="photo-form-country"
-              placeholder="Введите страну и нажмите Enter"
+              id="photo-form-title"
+              name="title"
               type="text"
-              value=""
-            />
-            <div
-              class="undefined undefined"
             />
           </div>
-        </div>
-      </div>
-      <div
-        class="sc-eDPEui ieKurp"
-      >
-        <div
-          class=""
-        >
-          <label
-            class=""
-            for="«r3»-control"
-          >
-            Город
-          </label>
           <div
             class=""
           >
+            <label
+              class=""
+              for="«r1»-control"
+            >
+              Приоритет
+            </label>
             <input
               class=""
-              id="photo-form-city"
-              placeholder="Введите город и нажмите Enter"
-              type="text"
-              value=""
-            />
-            <div
-              class="undefined undefined"
+              id="photo-form-priority"
+              name="priority"
+              type="number"
             />
           </div>
-        </div>
-      </div>
-      <div
-        class="sc-eDPEui ieKurp"
-      >
-        <div
-          class=""
-        >
-          <label
-            class=""
-            for="«r4»-control"
-          >
-            Теги
-          </label>
           <div
             class=""
           >
-            <input
+            <label
               class=""
-              id="photo-form-tags"
-              placeholder="Введите тег и нажмите Enter"
-              type="text"
-              value=""
-            />
+              for="«r2»-control"
+            >
+              Страна
+            </label>
             <div
-              class="undefined undefined"
-            />
+              class=""
+            >
+              <input
+                class=""
+                id="photo-form-country"
+                placeholder="Введите страну и нажмите Enter"
+                type="text"
+                value=""
+              />
+              <div
+                class="undefined undefined undefined"
+              />
+            </div>
+          </div>
+          <div
+            class=""
+          >
+            <label
+              class=""
+              for="«r3»-control"
+            >
+              Город
+            </label>
+            <div
+              class=""
+            >
+              <input
+                class=""
+                id="photo-form-city"
+                placeholder="Введите город и нажмите Enter"
+                type="text"
+                value=""
+              />
+              <div
+                class="undefined undefined undefined"
+              />
+            </div>
+          </div>
+          <div
+            class=""
+          >
+            <label
+              class=""
+              for="«r4»-control"
+            >
+              Теги
+            </label>
+            <div
+              class=""
+            >
+              <input
+                class=""
+                id="photo-form-tags"
+                placeholder="Введите тег и нажмите Enter"
+                type="text"
+                value=""
+              />
+              <div
+                class="undefined undefined undefined"
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -197,7 +182,7 @@ exports[`UploadPhoto renders default state and disables submit 1`] = `
 exports[`UploadPhoto shows error message when upload fails 1`] = `
 <div>
   <div
-    class="sc-eldPxw"
+    class="sc-fPXMVh"
   >
     <div
       class=""
@@ -225,7 +210,8 @@ exports[`UploadPhoto shows error message when upload fails 1`] = `
         </div>
       </div>
       <div
-        class="sc-eDPEui ieKurp"
+        class="sc-eDPEui"
+        style="--font-size-label: 0.78rem; --font-size-field-error: 0.72rem; --font-size-field-description: 0.8rem;"
       >
         <label
           class=" "
@@ -252,133 +238,117 @@ exports[`UploadPhoto shows error message when upload fails 1`] = `
             Скрыть
           </span>
         </label>
-      </div>
-      <div
-        class="sc-eDPEui ieKurp"
-      >
         <div
-          class=""
+          class="sc-eldPxw dgLCQu"
         >
-          <label
-            class=""
-            for="«rp»-control"
-          >
-            Заголовок
-          </label>
-          <input
-            class=""
-            id="photo-form-title"
-            name="title"
-            type="text"
-          />
-        </div>
-      </div>
-      <div
-        class="sc-eDPEui ieKurp"
-      >
-        <div
-          class=""
-        >
-          <label
-            class=""
-            for="«rq»-control"
-          >
-            Приоритет
-          </label>
-          <input
-            class=""
-            id="photo-form-priority"
-            name="priority"
-            type="number"
-          />
-        </div>
-      </div>
-      <div
-        class="sc-eDPEui ieKurp"
-      >
-        <div
-          class=""
-        >
-          <label
-            class=""
-            for="«rr»-control"
-          >
-            Страна
-          </label>
           <div
             class=""
           >
+            <label
+              class=""
+              for="«rp»-control"
+            >
+              Заголовок
+            </label>
             <input
               class=""
-              id="photo-form-country"
-              placeholder="Введите страну и нажмите Enter"
+              id="photo-form-title"
+              name="title"
               type="text"
-              value=""
             />
+          </div>
+          <div
+            class=""
+          >
+            <label
+              class=""
+              for="«rq»-control"
+            >
+              Приоритет
+            </label>
+            <input
+              class=""
+              id="photo-form-priority"
+              name="priority"
+              type="number"
+            />
+          </div>
+          <div
+            class=""
+          >
+            <label
+              class=""
+              for="«rr»-control"
+            >
+              Страна
+            </label>
             <div
-              class="undefined undefined"
-            />
+              class=""
+            >
+              <input
+                class=""
+                id="photo-form-country"
+                placeholder="Введите страну и нажмите Enter"
+                type="text"
+                value=""
+              />
+              <div
+                class="undefined undefined undefined"
+              />
+            </div>
+          </div>
+          <div
+            class=""
+          >
+            <label
+              class=""
+              for="«rs»-control"
+            >
+              Город
+            </label>
+            <div
+              class=""
+            >
+              <input
+                class=""
+                id="photo-form-city"
+                placeholder="Введите город и нажмите Enter"
+                type="text"
+                value=""
+              />
+              <div
+                class="undefined undefined undefined"
+              />
+            </div>
+          </div>
+          <div
+            class=""
+          >
+            <label
+              class=""
+              for="«rt»-control"
+            >
+              Теги
+            </label>
+            <div
+              class=""
+            >
+              <input
+                class=""
+                id="photo-form-tags"
+                placeholder="Введите тег и нажмите Enter"
+                type="text"
+                value=""
+              />
+              <div
+                class="undefined undefined undefined"
+              />
+            </div>
           </div>
         </div>
       </div>
       <div
-        class="sc-eDPEui ieKurp"
-      >
-        <div
-          class=""
-        >
-          <label
-            class=""
-            for="«rs»-control"
-          >
-            Город
-          </label>
-          <div
-            class=""
-          >
-            <input
-              class=""
-              id="photo-form-city"
-              placeholder="Введите город и нажмите Enter"
-              type="text"
-              value=""
-            />
-            <div
-              class="undefined undefined"
-            />
-          </div>
-        </div>
-      </div>
-      <div
-        class="sc-eDPEui ieKurp"
-      >
-        <div
-          class=""
-        >
-          <label
-            class=""
-            for="«rt»-control"
-          >
-            Теги
-          </label>
-          <div
-            class=""
-          >
-            <input
-              class=""
-              id="photo-form-tags"
-              placeholder="Введите тег и нажмите Enter"
-              type="text"
-              value=""
-            />
-            <div
-              class="undefined undefined"
-            />
-          </div>
-        </div>
-      </div>
-      <div
-        class="sc-fPXMVh khSWFU"
+        class="sc-gFqAkO fdwPkA"
       >
         <div
           class="sc-jlZhev hpHpHp"
@@ -448,7 +418,7 @@ exports[`UploadPhoto shows error message when upload fails 1`] = `
 exports[`UploadPhoto updates label and shows selected file 1`] = `
 <div>
   <div
-    class="sc-eldPxw"
+    class="sc-fPXMVh"
   >
     <div
       class=""
@@ -474,7 +444,8 @@ exports[`UploadPhoto updates label and shows selected file 1`] = `
         </div>
       </div>
       <div
-        class="sc-eDPEui ieKurp"
+        class="sc-eDPEui"
+        style="--font-size-label: 0.78rem; --font-size-field-error: 0.72rem; --font-size-field-description: 0.8rem;"
       >
         <label
           class=" "
@@ -501,133 +472,117 @@ exports[`UploadPhoto updates label and shows selected file 1`] = `
             Скрыть
           </span>
         </label>
-      </div>
-      <div
-        class="sc-eDPEui ieKurp"
-      >
         <div
-          class=""
+          class="sc-eldPxw dgLCQu"
         >
-          <label
-            class=""
-            for="«r5»-control"
-          >
-            Заголовок
-          </label>
-          <input
-            class=""
-            id="photo-form-title"
-            name="title"
-            type="text"
-          />
-        </div>
-      </div>
-      <div
-        class="sc-eDPEui ieKurp"
-      >
-        <div
-          class=""
-        >
-          <label
-            class=""
-            for="«r6»-control"
-          >
-            Приоритет
-          </label>
-          <input
-            class=""
-            id="photo-form-priority"
-            name="priority"
-            type="number"
-          />
-        </div>
-      </div>
-      <div
-        class="sc-eDPEui ieKurp"
-      >
-        <div
-          class=""
-        >
-          <label
-            class=""
-            for="«r7»-control"
-          >
-            Страна
-          </label>
           <div
             class=""
           >
+            <label
+              class=""
+              for="«r5»-control"
+            >
+              Заголовок
+            </label>
             <input
               class=""
-              id="photo-form-country"
-              placeholder="Введите страну и нажмите Enter"
+              id="photo-form-title"
+              name="title"
               type="text"
-              value=""
             />
+          </div>
+          <div
+            class=""
+          >
+            <label
+              class=""
+              for="«r6»-control"
+            >
+              Приоритет
+            </label>
+            <input
+              class=""
+              id="photo-form-priority"
+              name="priority"
+              type="number"
+            />
+          </div>
+          <div
+            class=""
+          >
+            <label
+              class=""
+              for="«r7»-control"
+            >
+              Страна
+            </label>
             <div
-              class="undefined undefined"
-            />
+              class=""
+            >
+              <input
+                class=""
+                id="photo-form-country"
+                placeholder="Введите страну и нажмите Enter"
+                type="text"
+                value=""
+              />
+              <div
+                class="undefined undefined undefined"
+              />
+            </div>
+          </div>
+          <div
+            class=""
+          >
+            <label
+              class=""
+              for="«r8»-control"
+            >
+              Город
+            </label>
+            <div
+              class=""
+            >
+              <input
+                class=""
+                id="photo-form-city"
+                placeholder="Введите город и нажмите Enter"
+                type="text"
+                value=""
+              />
+              <div
+                class="undefined undefined undefined"
+              />
+            </div>
+          </div>
+          <div
+            class=""
+          >
+            <label
+              class=""
+              for="«r9»-control"
+            >
+              Теги
+            </label>
+            <div
+              class=""
+            >
+              <input
+                class=""
+                id="photo-form-tags"
+                placeholder="Введите тег и нажмите Enter"
+                type="text"
+                value=""
+              />
+              <div
+                class="undefined undefined undefined"
+              />
+            </div>
           </div>
         </div>
       </div>
       <div
-        class="sc-eDPEui ieKurp"
-      >
-        <div
-          class=""
-        >
-          <label
-            class=""
-            for="«r8»-control"
-          >
-            Город
-          </label>
-          <div
-            class=""
-          >
-            <input
-              class=""
-              id="photo-form-city"
-              placeholder="Введите город и нажмите Enter"
-              type="text"
-              value=""
-            />
-            <div
-              class="undefined undefined"
-            />
-          </div>
-        </div>
-      </div>
-      <div
-        class="sc-eDPEui ieKurp"
-      >
-        <div
-          class=""
-        >
-          <label
-            class=""
-            for="«r9»-control"
-          >
-            Теги
-          </label>
-          <div
-            class=""
-          >
-            <input
-              class=""
-              id="photo-form-tags"
-              placeholder="Введите тег и нажмите Enter"
-              type="text"
-              value=""
-            />
-            <div
-              class="undefined undefined"
-            />
-          </div>
-        </div>
-      </div>
-      <div
-        class="sc-fPXMVh khSWFU"
+        class="sc-gFqAkO fdwPkA"
       >
         <div
           class="sc-jlZhev hpHpHp"

@@ -29,6 +29,11 @@
   flex-shrink: 0;
 }
 
+.root:focus-visible {
+  outline: 2px solid var(--input-focus);
+  outline-offset: 2px;
+}
+
 .indicator {
   display: none;
 }
