@@ -1,6 +1,6 @@
 {
   "name": "shevdi-home-server",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Backend server with TypeScript",
   "type": "module",
   "main": "dist/index.ts",
