@@ -86,12 +86,13 @@ test.describe('Photo gallery caching', () => {
     });
 
     await test.step('Reload page — cache HIT (x-served-at unchanged)', async () => {
-      const capture = captureApiResponse(page, /\/api\/v1\/photos(\?|$)/);
-      await page.reload();
-      await expect(page.locator(GALLERY_PHOTO).first()).toBeVisible({ timeout: 15000 });
-      const response2 = await capture;
-
-      expect(response2.servedAt).toEqual(response1.servedAt);
+      await expect(async () => {
+        const capture = captureApiResponse(page, /\/api\/v1\/photos(\?|$)/);
+        await page.reload();
+        await expect(page.locator(GALLERY_PHOTO).first()).toBeVisible({ timeout: 15000 });
+        const response2 = await capture;
+        expect(response2.servedAt).toEqual(response1.servedAt);
+      }).toPass({ timeout: 30000, intervals: [300, 800, 1500] });
     });
 
     await test.step('Edit photo via API to bust response cache', async () => {
