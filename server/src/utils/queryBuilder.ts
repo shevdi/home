@@ -23,7 +23,7 @@ export const queryBuilder = () => {
         const range: Record<string, string> = {}
         // TODO make search by proper date
         if (from) range.$gte = `${from}T00:00:00Z`
-        if (to) range.$lte = `${to}T23:59:59Z`
+        if (to) range.$lte = `${to}T59:59:59Z`
         filter[field] = range
       }
       return this

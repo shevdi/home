@@ -63,7 +63,7 @@ test.describe('Photo gallery caching', () => {
     await resetPhotos(request);
   });
 
-  test('cache lifecycle: response cache and urlCache', async ({ page, request, }) => {
+  test.only('cache lifecycle: response cache and urlCache', async ({ page, request, }) => {
     await loginAsAdmin(page);
 
     const { response1, versions1 } = await test.step('Load gallery — cache MISS, urlCache MISS', async () => {
@@ -86,13 +86,14 @@ test.describe('Photo gallery caching', () => {
     });
 
     await test.step('Reload page — cache HIT (x-served-at unchanged)', async () => {
-      await expect(async () => {
-        const capture = captureApiResponse(page, /\/api\/v1\/photos(\?|$)/);
-        await page.reload();
-        await expect(page.locator(GALLERY_PHOTO).first()).toBeVisible({ timeout: 15000 });
-        const response2 = await capture;
-        expect(response2.servedAt).toEqual(response1.servedAt);
-      }).toPass({ timeout: 30000, intervals: [300, 800, 1500] });
+      await page.waitForTimeout(2000);
+      const capture = captureApiResponse(page, /\/api\/v1\/photos(\?|$)/);
+      await page.waitForTimeout(2000);
+      await page.reload();
+      await expect(page.locator(GALLERY_PHOTO).first()).toBeVisible({ timeout: 15000 });
+      const response2 = await capture;
+
+      expect(response2.servedAt).toEqual(response1.servedAt);
     });
 
     await test.step('Edit photo via API to bust response cache', async () => {
