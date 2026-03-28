@@ -34,6 +34,16 @@ jobs:
       - name: Run E2E tests
         run: docker compose -f docker-compose.e2e.yml --profile test up --build --exit-code-from e2e
 
+      - name: Upload Playwright artifacts on E2E failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-playwright-output
+          path: |
+            e2e/test-results/
+            e2e/allure-results/
+          if-no-files-found: ignore
+
       - name: Tear down E2E stack
         if: always()
         run: docker compose -f docker-compose.e2e.yml down -v

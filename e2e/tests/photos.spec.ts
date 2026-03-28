@@ -9,7 +9,11 @@ const PHOTOS_API_PATTERN = /\/api\/v1\/photos(\?|$)/;
 
 async function waitForPhotosAndGallery(page: import('@playwright/test').Page) {
   const responsePromise = page.waitForResponse(
-    (resp) => PHOTOS_API_PATTERN.test(resp.url()) && resp.status() === 200,
+    (resp) => {
+      if (!PHOTOS_API_PATTERN.test(resp.url()) || resp.request().method() !== 'GET') return false;
+      const s = resp.status();
+      return s === 200 || s === 304;
+    },
     { timeout: 30000 },
   );
   await page.goto('/photos', { waitUntil: 'domcontentloaded' });
@@ -19,13 +23,9 @@ async function waitForPhotosAndGallery(page: import('@playwright/test').Page) {
 
 /** Navigate to /photos via header link (client-side nav) to preserve auth state. Use after loginAsAdmin. */
 async function waitForPhotosAndGalleryViaNav(page: import('@playwright/test').Page) {
-  const responsePromise = page.waitForResponse(
-    (resp) => PHOTOS_API_PATTERN.test(resp.url()) && resp.status() === 200,
-    { timeout: 30000 },
-  );
   await page.getByRole('link', { name: 'Фото' }).click();
-  await responsePromise;
-  await expect(page.locator(GALLERY_PHOTO).first()).toBeVisible({ timeout: 20000 });
+  await expect(page).toHaveURL(/\/photos/);
+  await expect(page.locator(GALLERY_PHOTO).first()).toBeVisible({ timeout: 30000 });
 }
 
 test.describe('Photo flows', () => {

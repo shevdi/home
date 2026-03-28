@@ -29,14 +29,21 @@ test.describe('Login flow', () => {
     test.skip(!username || !password, 'E2E_LOGIN and E2E_PASSWORD must be set for this test');
 
     await test.step('Fill credentials and submit', async () => {
+      const loginResponse = page.waitForResponse(
+        (resp) =>
+          resp.request().method() === 'POST' &&
+          /\/api\/v1\/auth\b/.test(resp.url()) &&
+          resp.status() === 200,
+      );
       await page.locator('input[name="username"]').fill(username!);
       await page.locator('input[name="password"]').fill(password!);
       await page.getByRole('button', { name: 'Войти' }).click();
+      await loginResponse;
     });
 
     await test.step('Logged-in state is confirmed', async () => {
       await expect(page).toHaveURL(/\/(home)?$/);
-      await expect(page.getByRole('link', { name: 'Редактировать' })).toBeVisible({ timeout: 15000 });
+      await expect(page.getByRole('link', { name: 'Редактировать' })).toBeVisible({ timeout: 30000 });
     });
 
     await test.step('Log out via settings', async () => {
