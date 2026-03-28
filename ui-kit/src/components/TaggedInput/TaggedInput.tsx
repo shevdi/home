@@ -129,7 +129,14 @@ export const TaggedInput = React.forwardRef<HTMLInputElement, TaggedInputProps>(
         onPaste={handlePaste}
         {...rest}
       />
-      <TagChips tags={tags} position={position} size={size} onRemove={handleRemove} renderTag={renderTag} />
+      <TagChips
+        tags={tags}
+        position={position}
+        size={size}
+        disabled={disabled}
+        onRemove={handleRemove}
+        renderTag={renderTag}
+      />
     </div>
   )
 })

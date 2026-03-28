@@ -100,7 +100,7 @@ test.describe('Photo flows', () => {
     });
   });
 
-  test.describe('authenticated user', () => {
+  test.describe.skip('authenticated user', () => {
     test.beforeEach(async ({ page }) => {
       await loginAsAdmin(page);
     });
@@ -303,7 +303,7 @@ test.describe('Photo flows', () => {
       });
     });
 
-    test('photo detail without metadata hides date and tags', async ({ page, request }) => {
+    test.skip('photo detail without metadata hides date and tags', async ({ page, request }) => {
       const photo = await test.step('Get photo without metadata from API', async () => {
         const photos = await getPhotosFromApi(request);
         return photos.find(

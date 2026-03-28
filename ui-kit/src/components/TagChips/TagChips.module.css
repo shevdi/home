@@ -4,6 +4,18 @@
   margin: 0.5rem 0;
 }
 
+.disabled {
+  opacity: 0.7;
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
+.disabled .chip:hover {
+  background: var(--surface-elevated);
+  border-color: var(--input-border);
+  color: var(--text-color);
+}
+
 .sizeSm {
   gap: 0.35rem;
   min-height: 1.5rem;

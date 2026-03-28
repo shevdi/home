@@ -13,6 +13,8 @@ export interface TagChipsProps {
   tags?: string[]
   position?: 'left' | 'center' | 'right'
   size?: 'sm' | 'md' | 'lg'
+  /** When true, chips are non-interactive (no remove, muted like a disabled input). */
+  disabled?: boolean
   /** Called when the user activates the remove control (×) on a tag. */
   onRemove?: (tag: string) => void
   /**
@@ -22,18 +24,38 @@ export interface TagChipsProps {
   renderTag?: (tag: string, chip: React.ReactElement) => React.ReactNode
 }
 
-export function TagChips({ tags, position = 'left', size = 'md', onRemove, renderTag }: TagChipsProps) {
+export function TagChips({
+  tags,
+  position = 'left',
+  size = 'md',
+  disabled = false,
+  onRemove,
+  renderTag,
+}: TagChipsProps) {
   const posClass = positions[position]
+  const containerClass = [
+    styles.container,
+    posClass,
+    sizeClass[size],
+    disabled ? styles.disabled : '',
+  ]
+    .filter(Boolean)
+    .join(' ')
   if (!tags?.length) {
-    return <div className={`${styles.container} ${posClass} ${sizeClass[size]}`} />
+    return (
+      <div
+        className={containerClass}
+        aria-disabled={disabled || undefined}
+      />
+    )
   }
   return (
-    <div className={`${styles.container} ${posClass} ${sizeClass[size]}`}>
+    <div className={containerClass} aria-disabled={disabled || undefined}>
       {tags.map((tag) => {
         const chip = (
           <span className={styles.chip}>
             {tag}
-            {onRemove ? (
+            {onRemove && !disabled ? (
               <button
                 type="button"
                 className={styles.remove}
