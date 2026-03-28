@@ -112,7 +112,7 @@ exports[`UploadPhoto renders default state and disables submit 1`] = `
                 value=""
               />
               <div
-                class="undefined undefined undefined"
+                class=""
               />
             </div>
           </div>
@@ -136,7 +136,7 @@ exports[`UploadPhoto renders default state and disables submit 1`] = `
                 value=""
               />
               <div
-                class="undefined undefined undefined"
+                class=""
               />
             </div>
           </div>
@@ -160,7 +160,7 @@ exports[`UploadPhoto renders default state and disables submit 1`] = `
                 value=""
               />
               <div
-                class="undefined undefined undefined"
+                class=""
               />
             </div>
           </div>
@@ -293,7 +293,7 @@ exports[`UploadPhoto shows error message when upload fails 1`] = `
                 value=""
               />
               <div
-                class="undefined undefined undefined"
+                class=""
               />
             </div>
           </div>
@@ -317,7 +317,7 @@ exports[`UploadPhoto shows error message when upload fails 1`] = `
                 value=""
               />
               <div
-                class="undefined undefined undefined"
+                class=""
               />
             </div>
           </div>
@@ -341,7 +341,7 @@ exports[`UploadPhoto shows error message when upload fails 1`] = `
                 value=""
               />
               <div
-                class="undefined undefined undefined"
+                class=""
               />
             </div>
           </div>
@@ -527,7 +527,7 @@ exports[`UploadPhoto updates label and shows selected file 1`] = `
                 value=""
               />
               <div
-                class="undefined undefined undefined"
+                class=""
               />
             </div>
           </div>
@@ -551,7 +551,7 @@ exports[`UploadPhoto updates label and shows selected file 1`] = `
                 value=""
               />
               <div
-                class="undefined undefined undefined"
+                class=""
               />
             </div>
           </div>
@@ -575,7 +575,7 @@ exports[`UploadPhoto updates label and shows selected file 1`] = `
                 value=""
               />
               <div
-                class="undefined undefined undefined"
+                class=""
               />
             </div>
           </div>

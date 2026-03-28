@@ -74,7 +74,7 @@ exports[`Search renders search form with default state 1`] = `
               value=""
             />
             <div
-              class="undefined undefined undefined"
+              class=""
             />
           </div>
         </div>
@@ -99,7 +99,7 @@ exports[`Search renders search form with default state 1`] = `
               value=""
             />
             <div
-              class="undefined undefined undefined"
+              class=""
             />
           </div>
         </div>
@@ -124,7 +124,7 @@ exports[`Search renders search form with default state 1`] = `
               value=""
             />
             <div
-              class="undefined undefined undefined"
+              class=""
             />
           </div>
         </div>
@@ -208,7 +208,7 @@ exports[`Search renders with different queryParams renders with all params 1`] =
               value=""
             />
             <div
-              class="undefined undefined undefined"
+              class=""
             />
           </div>
         </div>
@@ -233,7 +233,7 @@ exports[`Search renders with different queryParams renders with all params 1`] =
               value=""
             />
             <div
-              class="undefined undefined undefined"
+              class=""
             />
           </div>
         </div>
@@ -258,7 +258,7 @@ exports[`Search renders with different queryParams renders with all params 1`] =
               value=""
             />
             <div
-              class="undefined undefined undefined"
+              class=""
             >
               <span>
                 foo
@@ -370,7 +370,7 @@ exports[`Search renders with different queryParams renders with date range param
               value=""
             />
             <div
-              class="undefined undefined undefined"
+              class=""
             />
           </div>
         </div>
@@ -395,7 +395,7 @@ exports[`Search renders with different queryParams renders with date range param
               value=""
             />
             <div
-              class="undefined undefined undefined"
+              class=""
             />
           </div>
         </div>
@@ -420,7 +420,7 @@ exports[`Search renders with different queryParams renders with date range param
               value=""
             />
             <div
-              class="undefined undefined undefined"
+              class=""
             />
           </div>
         </div>
@@ -504,7 +504,7 @@ exports[`Search renders with different queryParams renders with order param 1`] 
               value=""
             />
             <div
-              class="undefined undefined undefined"
+              class=""
             />
           </div>
         </div>
@@ -529,7 +529,7 @@ exports[`Search renders with different queryParams renders with order param 1`] 
               value=""
             />
             <div
-              class="undefined undefined undefined"
+              class=""
             />
           </div>
         </div>
@@ -554,7 +554,7 @@ exports[`Search renders with different queryParams renders with order param 1`] 
               value=""
             />
             <div
-              class="undefined undefined undefined"
+              class=""
             />
           </div>
         </div>
@@ -638,7 +638,7 @@ exports[`Search renders with different queryParams renders with tags param 1`] =
               value=""
             />
             <div
-              class="undefined undefined undefined"
+              class=""
             />
           </div>
         </div>
@@ -663,7 +663,7 @@ exports[`Search renders with different queryParams renders with tags param 1`] =
               value=""
             />
             <div
-              class="undefined undefined undefined"
+              class=""
             />
           </div>
         </div>
@@ -688,7 +688,7 @@ exports[`Search renders with different queryParams renders with tags param 1`] =
               value=""
             />
             <div
-              class="undefined undefined undefined"
+              class=""
             >
               <span>
                 landscape
