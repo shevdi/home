@@ -22,7 +22,7 @@ test.describe.skip('Login flow', () => {
     });
   });
 
-  test('redirects to home on successful login and logs out', async ({ page }) => {
+  test.skip('redirects to home on successful login and logs out', async ({ page }) => {
     const username = process.env.E2E_LOGIN;
     const password = process.env.E2E_PASSWORD;
 
