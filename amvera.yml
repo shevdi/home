@@ -1,3 +1,5 @@
+# Build context is the repository root (Amvera "Code" folder). The Dockerfile uses
+# paths like client/ and ui-kit/ relative to that root — not relative to client/ alone.
 meta:
   environment: docker
   toolchain:
