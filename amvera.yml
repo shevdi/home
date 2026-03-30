@@ -5,7 +5,7 @@ meta:
   toolchain:
     name: docker
 build:
-  dockerfile: client/Dockerfile
+  dockerfile: server/Dockerfile
   skip: false
 run:
   image: null
