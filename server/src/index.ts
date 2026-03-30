@@ -14,16 +14,16 @@ import { app } from "./app.ts";
 import { initDatabase } from "./db/init.ts";
 import { logError } from "./db/services/logs";
 
-const PORT = process.env.PORT || 3001;
-const DATABASE_URL = process.env.DATABASE_URL || 'localhost'
+const port = Number(process.env.PORT) || 3001;
 
 async function startServer(): Promise<void> {
   try {
     await initDatabase();
 
-    app.listen(PORT, () => {
-      console.info(`Express server running on ${DATABASE_URL}`);
-      console.info(`Environment: ${process.env.NODE_ENV || 'development'}`);
+    // Bind 0.0.0.0 so Amvera / Docker ingress can reach the process (not only localhost).
+    app.listen(port, "0.0.0.0", () => {
+      console.info(`Express listening on 0.0.0.0:${port}`);
+      console.info(`Environment: ${process.env.NODE_ENV || "development"}`);
     });
   } catch (err) {
     logError(err, { source: 'startServer', action: 'initDatabase' })

@@ -34,7 +34,6 @@ export function initDatabase() {
   }
 
   const databaseURL = resolveMongoUri();
-  console.log('databaseURL', databaseURL);
 
   mongoose.connection.once("open", () => {
     console.info("successfully connected to database");

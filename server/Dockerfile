@@ -4,7 +4,6 @@ FROM node:22-alpine
 
 WORKDIR /app
 
-# Manifests only — matches lockfile; all workspaces needed for npm ci
 COPY package.json package-lock.json ./
 COPY client/package.json ./client/package.json
 COPY server/package.json ./server/package.json
@@ -15,13 +14,12 @@ COPY ui-kit/package.json ./ui-kit/package.json
 
 RUN npm ci --no-audit --no-fund --fetch-retries=5 --fetch-retry-mintimeout=20000
 
-# Source: shared (file:../shared) + server only
 COPY shared ./shared
 COPY server ./server
 
 ENV NODE_ENV=production
-ENV PORT=3000
+ENV PORT=80
 
-EXPOSE 3000
+EXPOSE 80
 
 CMD ["npm", "run", "start", "-w", "shevdi-home-server"]
