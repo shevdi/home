@@ -1,0 +1,169 @@
+.viewport {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  width: 100%;
+  max-width: 26rem;
+  padding: var(--space-4);
+  margin: 0;
+  list-style: none;
+  /* Above Storybook canvas chrome / overlays inside the preview iframe */
+  z-index: 10000;
+  outline: none;
+}
+
+.root {
+  list-style: none;
+  position: relative;
+  border-radius: var(--radius-lg);
+  background: var(--surface-elevated);
+  box-shadow: var(--shadow-lg);
+  padding: var(--space-4) var(--space-5) var(--space-4) var(--space-4);
+  border: 1px solid var(--input-border);
+  color: var(--text-color);
+}
+
+.root[data-state='open'] {
+  animation: toastSlideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.root[data-state='closed'] {
+  animation: toastFadeOut 0.2s ease-in forwards;
+}
+
+.root[data-swipe='move'] {
+  transform: translateX(var(--radix-toast-swipe-move-x));
+}
+
+.root[data-swipe='cancel'] {
+  transform: translateX(0);
+  transition: transform 0.2s ease-out;
+}
+
+.root[data-swipe='end'] {
+  animation: toastSwipeOut 0.2s ease-out forwards;
+}
+
+.variantDefault {
+  border-color: var(--input-border);
+}
+
+.variantSuccess {
+  border-color: color-mix(in srgb, var(--accent) 55%, var(--input-border));
+}
+
+.variantError {
+  border-color: var(--error-color);
+}
+
+.variantWarning {
+  border-color: var(--warning-color);
+}
+
+.title {
+  margin: 0;
+  text-align: center;
+  font-size: var(--font-size-label);
+  font-weight: 600;
+  line-height: 1.35;
+  padding-right: var(--space-6);
+}
+
+.description {
+  margin: var(--space-1) 0 0 0;
+  font-size: var(--font-size-sm);
+  text-align: center;
+  line-height: 1.45;
+  color: var(--text-muted);
+}
+
+.description:empty {
+  display: none;
+}
+
+.action {
+  margin-top: var(--space-3);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.45rem 1rem;
+  border: none;
+  border-radius: var(--radius-md);
+  background: var(--accent);
+  color: #fff;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.action:hover {
+  background: var(--accent-hover);
+}
+
+.close {
+  position: absolute;
+  top: var(--space-3);
+  right: var(--space-3);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  font: inherit;
+  line-height: 0;
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.close:hover {
+  background: color-mix(in srgb, var(--text-color) 8%, transparent);
+  color: var(--text-color);
+}
+
+.close:focus-visible {
+  outline: 2px solid var(--input-focus);
+  outline-offset: 2px;
+}
+
+.closeIcon {
+  width: 1rem;
+  height: 1rem;
+}
+
+@keyframes toastSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(0.75rem) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes toastFadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes toastSwipeOut {
+  to {
+    transform: translateX(calc(100% + var(--space-4)));
+  }
+}

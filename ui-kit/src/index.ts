@@ -53,3 +53,6 @@ export type { CalendarViewProps, CalendarClearButtonProps } from './components/C
 
 export { Popover } from './components/Popover'
 export type { PopoverContentProps } from './components/Popover'
+
+export { Toast, ToastProvider, ToastViewport, ToastRoot, ToastTitle, ToastDescription, ToastAction, ToastClose } from './components/Toast'
+export type { ToastRootProps, ToastVariant } from './components/Toast'
