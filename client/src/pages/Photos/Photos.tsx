@@ -6,6 +6,29 @@ import { useEffect } from 'react'
 import { Link } from 'react-router'
 import styled from 'styled-components'
 
+export function PhotosPage() {
+  useTitle('Галерея фото')
+  const { isAdmin } = useAuth()
+
+  useEffect(() => {
+    reachGoal('photos_gallery_open')
+  }, [])
+
+  return (
+    <>
+      {isAdmin && (
+        <TopBar>
+          <AddLink to='new'>Добавить фото</AddLink>
+        </TopBar>
+      )}
+      <PageHeader>Фото</PageHeader>
+      <Filter isHiddenFilters={!isAdmin} />
+      <Search />
+      <PhotoGallery />
+    </>
+  )
+}
+
 const PageHeader = styled.h1`
   text-align: center;
   font-size: 1.75rem;
@@ -30,27 +53,3 @@ const AddLink = styled(Link)`
     text-decoration: underline;
   }
 `
-
-export function PhotosPage() {
-  useTitle('Галерея фото')
-  const { isAdmin } = useAuth()
-
-  useEffect(() => {
-    reachGoal('photos_gallery_open')
-  }, [])
-
-  return (
-    <>
-      {isAdmin && (
-        <TopBar>
-          <AddLink to='new'>Добавить фото</AddLink>
-        </TopBar>
-      )}
-
-      <PageHeader>Фото</PageHeader>
-      <Filter isHiddenFilters={!isAdmin} />
-      <Search />
-      <PhotoGallery />
-    </>
-  )
-}

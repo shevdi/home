@@ -18,3 +18,4 @@ e2e/.turbo/
 /client/.env
 /server/.env
 docker-compose.dev.yml
+docker-compose.prod.yml

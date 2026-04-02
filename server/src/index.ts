@@ -1,3 +1,9 @@
+import 'dotenv/config'
+
+import { app } from "./app.ts";
+import { initDatabase } from "./db/init.ts";
+import { logError } from "./db/services/logs";
+
 process.on('unhandledRejection', (reason, promise) => {
   console.error('Unhandled Rejection at:', promise, 'reason:', reason);
   process.exit(1);
@@ -6,13 +12,6 @@ process.on('uncaughtException', (err) => {
   console.error('Uncaught Exception:', err);
   process.exit(1);
 });
-
-import dotenv from "dotenv";
-dotenv.config();
-
-import { app } from "./app.ts";
-import { initDatabase } from "./db/init.ts";
-import { logError } from "./db/services/logs";
 
 const PORT = process.env.PORT || 3001;
 const DATABASE_URL = process.env.DATABASE_URL || 'localhost'

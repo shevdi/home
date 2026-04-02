@@ -1,6 +1,7 @@
 export { useOnClickOutside } from './useOnClickOutside'
 export { useQueryParams } from './useQueryParams'
 export { useInfiniteLoader } from './useInfiniteLoader'
+export { useIsOnline } from './useIsOnline'
 export { useTitle } from './useTitle'
 export { useReverseGeocode } from './useReverseGeocode'
 export { useSearchAnalytics } from './useSearchAnalytics'

@@ -2,25 +2,15 @@ import styled from 'styled-components'
 import { Header } from './Header'
 import { Footer } from './Footer'
 import { Outlet } from 'react-router'
-import { useAppSelector, getPageError, getPending } from '@/app/store'
-import { Error, Loader } from '@/shared/ui'
 
 export function Layout() {
-  const isPending = useAppSelector(getPending)
-  const error = useAppSelector(getPageError)
   return (
     <LayoutContainer>
       <Header />
       <Main>
-        {error ? (
-          <Error title='Ошибка' message='Что-то пошло не так' />
-        ) : isPending ? (
-          <Loader />
-        ) : (
-          <PageContainer>
-            <Outlet />
-          </PageContainer>
-        )}
+        <PageContainer>
+          <Outlet />
+        </PageContainer>
       </Main>
       <Footer />
     </LayoutContainer>

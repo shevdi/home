@@ -13,13 +13,13 @@
 
 ### New Capabilities
 
-- `ui-kit-taglist-boundaries`: Requirements for presentational tag/chip UI in the kit vs app-specific routing and URL state; acceptable extension points (render prop, `asChild`, optional wrapper).
+- `ui-kit-taglist-boundaries`: This capability SHALL define requirements for presentational tag/chip UI in the kit vs app-specific routing and URL state; acceptable extension points (render prop, `asChild`, optional wrapper).
 
 - `ui-kit-storybook-coverage`: Requirements for which exported ui-kit components MUST have Storybook stories and what each story set should demonstrate (at least default + one meaningful variant per component class).
 
 ### Modified Capabilities
 
-- `ui-kit-package`: Extend requirements so that **Storybook coverage** is explicitly tied to **exported** components (aligned with `ui-kit-storybook-coverage`), and add a **non-normative or normative** note that kit components SHOULD NOT depend on application routing unless documented as an exception (supports the boundaries goal without duplicating all of `ui-kit-taglist-boundaries` in the base package spec).
+- `ui-kit-package`: The main package spec SHALL extend requirements so that **Storybook coverage** is explicitly tied to **exported** components (aligned with `ui-kit-storybook-coverage`), and add a **non-normative or normative** note that kit components SHOULD NOT depend on application routing unless documented as an exception (supports the boundaries goal without duplicating all of `ui-kit-taglist-boundaries` in the base package spec).
 
 ## Impact
 

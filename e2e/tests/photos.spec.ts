@@ -74,13 +74,14 @@ test.describe('Photo flows', () => {
       });
     });
 
-    test('fails to open upload photo page', async ({ page }) => {
+    test('redirects upload route to gallery (v1 no uploads)', async ({ page }) => {
       await test.step('Navigate to /photos/new', async () => {
         await page.goto('/photos/new');
       });
 
-      await test.step('Not-found message is shown', async () => {
-        await expect(page.getByText('Такого фото нет')).toBeVisible({ timeout: 10000 });
+      await test.step('Gallery is shown', async () => {
+        await expect(page).toHaveURL(/\/photos\/?$/);
+        await expect(page.getByRole('heading', { name: 'Фото' })).toBeVisible({ timeout: 10000 });
       });
     });
 
@@ -100,7 +101,7 @@ test.describe('Photo flows', () => {
     });
   });
 
-  test.describe.skip('authenticated user', () => {
+  test.describe('authenticated user', () => {
     test.beforeEach(async ({ page }) => {
       await loginAsAdmin(page);
     });

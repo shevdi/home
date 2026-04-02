@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 import { useGetPageQuery } from '../model/pageSlice'
 import { useLocation } from 'react-router'
+import { Error, Loader } from '@/shared/ui'
 
 interface IPageProps {
   url?: string
@@ -9,6 +10,12 @@ interface IPageProps {
 const PageContainer = styled.div`
   max-width: 640px;
   margin: 0 auto;
+`
+
+const LoadingWrap = styled.div`
+  display: flex;
+  justify-content: center;
+  padding: 3rem 1rem;
 `
 
 const PageHeader = styled.h1`
@@ -50,7 +57,35 @@ const PageLink = styled.li`
 
 export function Page({ url }: IPageProps) {
   const location = useLocation()
-  const { data: { title, text, links } = {} } = useGetPageQuery(url || location.pathname.split('/')[1])
+  const pageName = url || location.pathname.split('/')[1]
+  const { data, isLoading, refetch } = useGetPageQuery(pageName)
+
+  /** RTK Query keeps last successful `data` when a refetch fails (e.g. offline); do not treat `isError` as fatal if cache exists. */
+  if (isLoading && !data) {
+    return (
+      <PageContainer>
+        <LoadingWrap>
+          <Loader inline />
+        </LoadingWrap>
+      </PageContainer>
+    )
+  }
+
+  if (!data) {
+    return (
+      <PageContainer>
+        <Error
+          title="Ошибка"
+          message="Не удалось загрузить страницу"
+          onRetry={() => {
+            void refetch()
+          }}
+        />
+      </PageContainer>
+    )
+  }
+
+  const { title, text, links } = data
   return (
     <PageContainer>
       <PageHeader>{title}</PageHeader>

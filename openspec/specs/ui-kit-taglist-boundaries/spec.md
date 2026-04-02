@@ -1,11 +1,8 @@
-# UI Kit Tag List Boundaries
+# ui-kit-taglist-boundaries Specification
 
 ## Purpose
-
-Define how tag/chip UI in `@shevdi-home/ui-kit` stays presentational and free of application routing and domain-specific URL encoding, while still allowing the client to compose navigation and search behavior.
-
-## ADDED Requirements
-
+TBD - created by archiving change ui-kit-hardening. Update Purpose after archive.
+## Requirements
 ### Requirement: Presentational tag list without router imports
 
 The `ui-kit` package SHALL provide a tag or chip list component suitable for displaying tags and optional remove actions that does NOT import `react-router`, `react-router-dom`, or equivalent routing libraries as implementation dependencies of the core presentational module.
@@ -17,7 +14,7 @@ The `ui-kit` package SHALL provide a tag or chip list component suitable for dis
 
 ### Requirement: Optional navigation composed outside the kit
 
-Application code MAY attach navigation or filter behavior (e.g. navigating to a search URL) by composition—using wrapper components, render callbacks, or an explicitly documented extension API—without requiring the kit to encode photo-search or page-specific query shapes.
+Application code SHALL be able to attach navigation or filter behavior (e.g. navigating to a search URL) by composition—using wrapper components, render callbacks, or an explicitly documented extension API—without requiring the kit to encode photo-search or page-specific query shapes.
 
 #### Scenario: Client can wrap chips with links
 
@@ -32,3 +29,4 @@ The presentational tag/chip component SHALL NOT depend on `buildSearchParams` or
 
 - **WHEN** a developer inspects the ui-kit source for the presentational tag list
 - **THEN** that component SHALL NOT import project-specific search types or helpers that exist solely to support the photos search URL schema
+
