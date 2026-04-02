@@ -10,7 +10,7 @@ function NetworkToastRoots() {
 
   useEffect(() => {
     const prev = prevOnlineRef.current
-    if (online === false || (prev === false && online === true)) {
+    if (prev === false && online === true) {
       setReconnectOpen(true)
     }
     prevOnlineRef.current = online

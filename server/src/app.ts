@@ -7,18 +7,11 @@ import authRouter from './routes/auth.ts'
 import pagesRouter from './routes/pages.ts'
 import photosRouter from './routes/photos.ts'
 import testRouter from './routes/test.ts'
+import { whitelist } from './config';
 
 const apiVersion = '/api/v1'
 
 const app: Application = express();
-
-const whitelist = [
-  'https://shevdi.ru',
-  'https://home-front-shevdi.amvera.io',
-  'http://localhost:8080',
-  'http://localhost:3000',
-  'http://home-frontend:3000', // Docker E2E: browser runs in e2e container, loads page from home-frontend
-]
 
 app.use(helmet());
 app.use(cors({
