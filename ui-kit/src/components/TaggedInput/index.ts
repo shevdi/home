@@ -1,2 +1,2 @@
 export { TaggedInput } from './TaggedInput'
-export type { TaggedInputProps } from './TaggedInput'
+export type { TaggedInputProps, TaggedSuggestion } from './TaggedInput'

@@ -46,7 +46,7 @@ export { TagChips } from './components/TagChips'
 export type { TagChipsProps } from './components/TagChips'
 
 export { TaggedInput } from './components/TaggedInput'
-export type { TaggedInputProps } from './components/TaggedInput'
+export type { TaggedInputProps, TaggedSuggestion } from './components/TaggedInput'
 
 export { Calendar } from './components/Calendar'
 export type { CalendarViewProps, CalendarClearButtonProps } from './components/Calendar'
