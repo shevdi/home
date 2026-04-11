@@ -20,6 +20,7 @@ export default merge(common, {
   plugins: [
     new webpack.EnvironmentPlugin({
       YANDEX_METRIKA_ID: process.env.YANDEX_METRIKA_ID ?? '',
+      TELEGRAM_BOT_USERNAME: process.env.TELEGRAM_BOT_USERNAME ?? '',
     }),
     new CopyPlugin({
       patterns: [{

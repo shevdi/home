@@ -1,12 +1,14 @@
 import { useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { z } from 'zod'
-import { SubmitHandler, useForm, useWatch } from 'react-hook-form'
+import type { SubmitHandler} from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form'
 import { useDropzone } from 'react-dropzone'
 import { Button, DotsProgressIndicator, ErrMessage, FileDropzone } from '@/shared/ui'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useAppDispatch, useAppSelector } from '@/app/store'
-import { buildMeta, FileMeta } from '../utils/uploadPhotoMeta'
+import type { FileMeta } from '../utils/uploadPhotoMeta';
+import { buildMeta } from '../utils/uploadPhotoMeta'
 import { photoCommonFormDefaults, photoCommonFormSchema } from '../utils/photoCommonForm'
 import { getFileId, removeUploadFile, resetUpload, uploadPhotosThunk } from '../model'
 import { FileData } from './FileData'

@@ -1,5 +1,6 @@
 export { Auth } from './Auth'
-export { Login } from './Login'
+export { PasswordLogin } from './PasswordLogin'
+export { TelegramLogin } from './TelegramLogin'
 export { Logout } from './Logout'
 export { PersistLogin } from './PersistLogin'
 export { default as RequireAuth } from './RequireAuth'

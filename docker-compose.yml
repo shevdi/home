@@ -33,7 +33,7 @@ services:
       context: .
       dockerfile: client/Dockerfile
       args:
-        BACKEND_URL=http://localhost:3001/api/v1
+        BACKEND_URL: "http://localhost:3001/api/v1"
     environment:
       - BACKEND_URL=http://localhost:3001/api/v1
       - NODE_ENV=development

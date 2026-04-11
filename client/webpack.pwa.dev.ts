@@ -3,8 +3,8 @@ import path from 'path'
 import { merge } from 'webpack-merge'
 import webpack from 'webpack'
 import commonConfig from './webpack.common'
-import { Configuration } from 'webpack';
-import { Configuration as DevServerConfiguration } from 'webpack-dev-server';
+import type { Configuration } from 'webpack'
+import type { Configuration as DevServerConfiguration } from 'webpack-dev-server'
 
 const DEV_PORT = 3000
 

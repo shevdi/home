@@ -67,6 +67,21 @@ describe('auth service', () => {
     expect(res.json).toHaveBeenCalledWith({ message: 'Неверный логин или пароль' })
   })
 
+  it('returns 401 when user has no password (Telegram-only)', async () => {
+    jest.spyOn(usersModule, 'getUserByName').mockResolvedValue({
+      name: 'user',
+      roles: ['user'],
+      active: true
+    } as never)
+    const req = { body: { username: 'user', password: 'pass' } } as unknown as Request
+    const res = createRes()
+
+    await login(req, res)
+
+    expect(res.status).toHaveBeenCalledWith(401)
+    expect(res.json).toHaveBeenCalledWith({ message: 'Неверный логин или пароль' })
+  })
+
   it('returns 401 when password does not match', async () => {
     jest.spyOn(usersModule, 'getUserByName').mockResolvedValue({
       name: 'user',

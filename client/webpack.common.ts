@@ -1,5 +1,6 @@
 import path from "path";
-import webpack, { Configuration } from 'webpack'
+import webpack from 'webpack'
+import type { Configuration } from 'webpack'
 import HtmlWebpackPlugin from "html-webpack-plugin";
 
 const commonConfig: Configuration = {

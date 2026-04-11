@@ -1,5 +1,5 @@
 import { useEffect } from "react"
-import { IConfig } from "../types"
+import type { IConfig } from "../types"
 
 export const useUserConfigPersistance = <K extends keyof IConfig>(key: K, theme: IConfig[K]) => {
   useEffect(() => {

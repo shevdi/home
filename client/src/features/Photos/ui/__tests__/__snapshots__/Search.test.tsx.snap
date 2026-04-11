@@ -8,37 +8,33 @@ exports[`Search renders search form with default state 1`] = `
     <div
       class="sc-jXbUNf hSIbvB"
     >
-      <div
-        class="sc-dhKdcy"
-      >
-        <div>
-          <label
-            for="photo-sort-order"
+      <div>
+        <label
+          for="photo-sort-order"
+        >
+          Сортировать
+        </label>
+        <select
+          aria-label="Сортировать"
+          id="photo-sort-order"
+          name="order"
+        >
+          <option
+            value="orderDownByTakenAt"
           >
-            Сортировать
-          </label>
-          <select
-            aria-label="Сортировать"
-            id="photo-sort-order"
-            name="order"
+            Вначале новые
+          </option>
+          <option
+            value="orderUpByTakenAt"
           >
-            <option
-              value="orderDownByTakenAt"
-            >
-              Вначале новые
-            </option>
-            <option
-              value="orderUpByTakenAt"
-            >
-              Вначале старые
-            </option>
-            <option
-              value="orderDownByEdited"
-            >
-              Последние загруженные
-            </option>
-          </select>
-        </div>
+            Вначале старые
+          </option>
+          <option
+            value="orderDownByEdited"
+          >
+            Последние загруженные
+          </option>
+        </select>
       </div>
       <div>
         <label
@@ -54,18 +50,16 @@ exports[`Search renders search form with default state 1`] = `
           value=""
         />
       </div>
-      <div
-        class="sc-dhKdcy"
-      >
-        <div>
-          <label
-            for="photo-filter-country"
-          >
-            Страна
-          </label>
-          <div
-            class=""
-          >
+      <div>
+        <label
+          for="photo-filter-country"
+        >
+          Страна
+        </label>
+        <div
+          class=""
+        >
+          <div>
             <input
               class=""
               id="photo-filter-country"
@@ -73,24 +67,22 @@ exports[`Search renders search form with default state 1`] = `
               type="text"
               value=""
             />
-            <div
-              class=""
-            />
           </div>
-        </div>
-      </div>
-      <div
-        class="sc-dhKdcy"
-      >
-        <div>
-          <label
-            for="photo-filter-city"
-          >
-            Город
-          </label>
           <div
             class=""
-          >
+          />
+        </div>
+      </div>
+      <div>
+        <label
+          for="photo-filter-city"
+        >
+          Город
+        </label>
+        <div
+          class=""
+        >
+          <div>
             <input
               class=""
               id="photo-filter-city"
@@ -98,24 +90,22 @@ exports[`Search renders search form with default state 1`] = `
               type="text"
               value=""
             />
-            <div
-              class=""
-            />
           </div>
-        </div>
-      </div>
-      <div
-        class="sc-dhKdcy"
-      >
-        <div>
-          <label
-            for="photo-filter-tags"
-          >
-            Теги
-          </label>
           <div
             class=""
-          >
+          />
+        </div>
+      </div>
+      <div>
+        <label
+          for="photo-filter-tags"
+        >
+          Теги
+        </label>
+        <div
+          class=""
+        >
+          <div>
             <input
               class=""
               id="photo-filter-tags"
@@ -123,10 +113,10 @@ exports[`Search renders search form with default state 1`] = `
               type="text"
               value=""
             />
-            <div
-              class=""
-            />
           </div>
+          <div
+            class=""
+          />
         </div>
       </div>
     </div>
@@ -142,37 +132,33 @@ exports[`Search renders with different queryParams renders with all params 1`] =
     <div
       class="sc-jXbUNf hSIbvB"
     >
-      <div
-        class="sc-dhKdcy"
-      >
-        <div>
-          <label
-            for="photo-sort-order"
+      <div>
+        <label
+          for="photo-sort-order"
+        >
+          Сортировать
+        </label>
+        <select
+          aria-label="Сортировать"
+          id="photo-sort-order"
+          name="order"
+        >
+          <option
+            value="orderDownByTakenAt"
           >
-            Сортировать
-          </label>
-          <select
-            aria-label="Сортировать"
-            id="photo-sort-order"
-            name="order"
+            Вначале новые
+          </option>
+          <option
+            value="orderUpByTakenAt"
           >
-            <option
-              value="orderDownByTakenAt"
-            >
-              Вначале новые
-            </option>
-            <option
-              value="orderUpByTakenAt"
-            >
-              Вначале старые
-            </option>
-            <option
-              value="orderDownByEdited"
-            >
-              Последние загруженные
-            </option>
-          </select>
-        </div>
+            Вначале старые
+          </option>
+          <option
+            value="orderDownByEdited"
+          >
+            Последние загруженные
+          </option>
+        </select>
       </div>
       <div>
         <label
@@ -188,18 +174,16 @@ exports[`Search renders with different queryParams renders with all params 1`] =
           value="2024-01 — 2024-12"
         />
       </div>
-      <div
-        class="sc-dhKdcy"
-      >
-        <div>
-          <label
-            for="photo-filter-country"
-          >
-            Страна
-          </label>
-          <div
-            class=""
-          >
+      <div>
+        <label
+          for="photo-filter-country"
+        >
+          Страна
+        </label>
+        <div
+          class=""
+        >
+          <div>
             <input
               class=""
               id="photo-filter-country"
@@ -207,24 +191,22 @@ exports[`Search renders with different queryParams renders with all params 1`] =
               type="text"
               value=""
             />
-            <div
-              class=""
-            />
           </div>
-        </div>
-      </div>
-      <div
-        class="sc-dhKdcy"
-      >
-        <div>
-          <label
-            for="photo-filter-city"
-          >
-            Город
-          </label>
           <div
             class=""
-          >
+          />
+        </div>
+      </div>
+      <div>
+        <label
+          for="photo-filter-city"
+        >
+          Город
+        </label>
+        <div
+          class=""
+        >
+          <div>
             <input
               class=""
               id="photo-filter-city"
@@ -232,24 +214,22 @@ exports[`Search renders with different queryParams renders with all params 1`] =
               type="text"
               value=""
             />
-            <div
-              class=""
-            />
           </div>
-        </div>
-      </div>
-      <div
-        class="sc-dhKdcy"
-      >
-        <div>
-          <label
-            for="photo-filter-tags"
-          >
-            Теги
-          </label>
           <div
             class=""
-          >
+          />
+        </div>
+      </div>
+      <div>
+        <label
+          for="photo-filter-tags"
+        >
+          Теги
+        </label>
+        <div
+          class=""
+        >
+          <div>
             <input
               class=""
               id="photo-filter-tags"
@@ -257,37 +237,37 @@ exports[`Search renders with different queryParams renders with all params 1`] =
               type="text"
               value=""
             />
-            <div
-              class=""
-            >
-              <span>
-                foo
-                <button
-                  aria-label="Удалить тег foo"
-                  type="button"
-                >
-                  ×
-                </button>
-              </span>
-              <span>
-                bar
-                <button
-                  aria-label="Удалить тег bar"
-                  type="button"
-                >
-                  ×
-                </button>
-              </span>
-              <span>
-                baz
-                <button
-                  aria-label="Удалить тег baz"
-                  type="button"
-                >
-                  ×
-                </button>
-              </span>
-            </div>
+          </div>
+          <div
+            class=""
+          >
+            <span>
+              foo
+              <button
+                aria-label="Удалить тег foo"
+                type="button"
+              >
+                ×
+              </button>
+            </span>
+            <span>
+              bar
+              <button
+                aria-label="Удалить тег bar"
+                type="button"
+              >
+                ×
+              </button>
+            </span>
+            <span>
+              baz
+              <button
+                aria-label="Удалить тег baz"
+                type="button"
+              >
+                ×
+              </button>
+            </span>
           </div>
         </div>
       </div>
@@ -304,37 +284,33 @@ exports[`Search renders with different queryParams renders with date range param
     <div
       class="sc-jXbUNf hSIbvB"
     >
-      <div
-        class="sc-dhKdcy"
-      >
-        <div>
-          <label
-            for="photo-sort-order"
+      <div>
+        <label
+          for="photo-sort-order"
+        >
+          Сортировать
+        </label>
+        <select
+          aria-label="Сортировать"
+          id="photo-sort-order"
+          name="order"
+        >
+          <option
+            value="orderDownByTakenAt"
           >
-            Сортировать
-          </label>
-          <select
-            aria-label="Сортировать"
-            id="photo-sort-order"
-            name="order"
+            Вначале новые
+          </option>
+          <option
+            value="orderUpByTakenAt"
           >
-            <option
-              value="orderDownByTakenAt"
-            >
-              Вначале новые
-            </option>
-            <option
-              value="orderUpByTakenAt"
-            >
-              Вначале старые
-            </option>
-            <option
-              value="orderDownByEdited"
-            >
-              Последние загруженные
-            </option>
-          </select>
-        </div>
+            Вначале старые
+          </option>
+          <option
+            value="orderDownByEdited"
+          >
+            Последние загруженные
+          </option>
+        </select>
       </div>
       <div>
         <label
@@ -350,18 +326,16 @@ exports[`Search renders with different queryParams renders with date range param
           value="15-01-2024 — 31-12-2024"
         />
       </div>
-      <div
-        class="sc-dhKdcy"
-      >
-        <div>
-          <label
-            for="photo-filter-country"
-          >
-            Страна
-          </label>
-          <div
-            class=""
-          >
+      <div>
+        <label
+          for="photo-filter-country"
+        >
+          Страна
+        </label>
+        <div
+          class=""
+        >
+          <div>
             <input
               class=""
               id="photo-filter-country"
@@ -369,24 +343,22 @@ exports[`Search renders with different queryParams renders with date range param
               type="text"
               value=""
             />
-            <div
-              class=""
-            />
           </div>
-        </div>
-      </div>
-      <div
-        class="sc-dhKdcy"
-      >
-        <div>
-          <label
-            for="photo-filter-city"
-          >
-            Город
-          </label>
           <div
             class=""
-          >
+          />
+        </div>
+      </div>
+      <div>
+        <label
+          for="photo-filter-city"
+        >
+          Город
+        </label>
+        <div
+          class=""
+        >
+          <div>
             <input
               class=""
               id="photo-filter-city"
@@ -394,24 +366,22 @@ exports[`Search renders with different queryParams renders with date range param
               type="text"
               value=""
             />
-            <div
-              class=""
-            />
           </div>
-        </div>
-      </div>
-      <div
-        class="sc-dhKdcy"
-      >
-        <div>
-          <label
-            for="photo-filter-tags"
-          >
-            Теги
-          </label>
           <div
             class=""
-          >
+          />
+        </div>
+      </div>
+      <div>
+        <label
+          for="photo-filter-tags"
+        >
+          Теги
+        </label>
+        <div
+          class=""
+        >
+          <div>
             <input
               class=""
               id="photo-filter-tags"
@@ -419,10 +389,10 @@ exports[`Search renders with different queryParams renders with date range param
               type="text"
               value=""
             />
-            <div
-              class=""
-            />
           </div>
+          <div
+            class=""
+          />
         </div>
       </div>
     </div>
@@ -438,37 +408,33 @@ exports[`Search renders with different queryParams renders with order param 1`] 
     <div
       class="sc-jXbUNf hSIbvB"
     >
-      <div
-        class="sc-dhKdcy"
-      >
-        <div>
-          <label
-            for="photo-sort-order"
+      <div>
+        <label
+          for="photo-sort-order"
+        >
+          Сортировать
+        </label>
+        <select
+          aria-label="Сортировать"
+          id="photo-sort-order"
+          name="order"
+        >
+          <option
+            value="orderDownByTakenAt"
           >
-            Сортировать
-          </label>
-          <select
-            aria-label="Сортировать"
-            id="photo-sort-order"
-            name="order"
+            Вначале новые
+          </option>
+          <option
+            value="orderUpByTakenAt"
           >
-            <option
-              value="orderDownByTakenAt"
-            >
-              Вначале новые
-            </option>
-            <option
-              value="orderUpByTakenAt"
-            >
-              Вначале старые
-            </option>
-            <option
-              value="orderDownByEdited"
-            >
-              Последние загруженные
-            </option>
-          </select>
-        </div>
+            Вначале старые
+          </option>
+          <option
+            value="orderDownByEdited"
+          >
+            Последние загруженные
+          </option>
+        </select>
       </div>
       <div>
         <label
@@ -484,18 +450,16 @@ exports[`Search renders with different queryParams renders with order param 1`] 
           value=""
         />
       </div>
-      <div
-        class="sc-dhKdcy"
-      >
-        <div>
-          <label
-            for="photo-filter-country"
-          >
-            Страна
-          </label>
-          <div
-            class=""
-          >
+      <div>
+        <label
+          for="photo-filter-country"
+        >
+          Страна
+        </label>
+        <div
+          class=""
+        >
+          <div>
             <input
               class=""
               id="photo-filter-country"
@@ -503,24 +467,22 @@ exports[`Search renders with different queryParams renders with order param 1`] 
               type="text"
               value=""
             />
-            <div
-              class=""
-            />
           </div>
-        </div>
-      </div>
-      <div
-        class="sc-dhKdcy"
-      >
-        <div>
-          <label
-            for="photo-filter-city"
-          >
-            Город
-          </label>
           <div
             class=""
-          >
+          />
+        </div>
+      </div>
+      <div>
+        <label
+          for="photo-filter-city"
+        >
+          Город
+        </label>
+        <div
+          class=""
+        >
+          <div>
             <input
               class=""
               id="photo-filter-city"
@@ -528,24 +490,22 @@ exports[`Search renders with different queryParams renders with order param 1`] 
               type="text"
               value=""
             />
-            <div
-              class=""
-            />
           </div>
-        </div>
-      </div>
-      <div
-        class="sc-dhKdcy"
-      >
-        <div>
-          <label
-            for="photo-filter-tags"
-          >
-            Теги
-          </label>
           <div
             class=""
-          >
+          />
+        </div>
+      </div>
+      <div>
+        <label
+          for="photo-filter-tags"
+        >
+          Теги
+        </label>
+        <div
+          class=""
+        >
+          <div>
             <input
               class=""
               id="photo-filter-tags"
@@ -553,10 +513,10 @@ exports[`Search renders with different queryParams renders with order param 1`] 
               type="text"
               value=""
             />
-            <div
-              class=""
-            />
           </div>
+          <div
+            class=""
+          />
         </div>
       </div>
     </div>
@@ -572,37 +532,33 @@ exports[`Search renders with different queryParams renders with tags param 1`] =
     <div
       class="sc-jXbUNf hSIbvB"
     >
-      <div
-        class="sc-dhKdcy"
-      >
-        <div>
-          <label
-            for="photo-sort-order"
+      <div>
+        <label
+          for="photo-sort-order"
+        >
+          Сортировать
+        </label>
+        <select
+          aria-label="Сортировать"
+          id="photo-sort-order"
+          name="order"
+        >
+          <option
+            value="orderDownByTakenAt"
           >
-            Сортировать
-          </label>
-          <select
-            aria-label="Сортировать"
-            id="photo-sort-order"
-            name="order"
+            Вначале новые
+          </option>
+          <option
+            value="orderUpByTakenAt"
           >
-            <option
-              value="orderDownByTakenAt"
-            >
-              Вначале новые
-            </option>
-            <option
-              value="orderUpByTakenAt"
-            >
-              Вначале старые
-            </option>
-            <option
-              value="orderDownByEdited"
-            >
-              Последние загруженные
-            </option>
-          </select>
-        </div>
+            Вначале старые
+          </option>
+          <option
+            value="orderDownByEdited"
+          >
+            Последние загруженные
+          </option>
+        </select>
       </div>
       <div>
         <label
@@ -618,18 +574,16 @@ exports[`Search renders with different queryParams renders with tags param 1`] =
           value=""
         />
       </div>
-      <div
-        class="sc-dhKdcy"
-      >
-        <div>
-          <label
-            for="photo-filter-country"
-          >
-            Страна
-          </label>
-          <div
-            class=""
-          >
+      <div>
+        <label
+          for="photo-filter-country"
+        >
+          Страна
+        </label>
+        <div
+          class=""
+        >
+          <div>
             <input
               class=""
               id="photo-filter-country"
@@ -637,24 +591,22 @@ exports[`Search renders with different queryParams renders with tags param 1`] =
               type="text"
               value=""
             />
-            <div
-              class=""
-            />
           </div>
-        </div>
-      </div>
-      <div
-        class="sc-dhKdcy"
-      >
-        <div>
-          <label
-            for="photo-filter-city"
-          >
-            Город
-          </label>
           <div
             class=""
-          >
+          />
+        </div>
+      </div>
+      <div>
+        <label
+          for="photo-filter-city"
+        >
+          Город
+        </label>
+        <div
+          class=""
+        >
+          <div>
             <input
               class=""
               id="photo-filter-city"
@@ -662,24 +614,22 @@ exports[`Search renders with different queryParams renders with tags param 1`] =
               type="text"
               value=""
             />
-            <div
-              class=""
-            />
           </div>
-        </div>
-      </div>
-      <div
-        class="sc-dhKdcy"
-      >
-        <div>
-          <label
-            for="photo-filter-tags"
-          >
-            Теги
-          </label>
           <div
             class=""
-          >
+          />
+        </div>
+      </div>
+      <div>
+        <label
+          for="photo-filter-tags"
+        >
+          Теги
+        </label>
+        <div
+          class=""
+        >
+          <div>
             <input
               class=""
               id="photo-filter-tags"
@@ -687,28 +637,28 @@ exports[`Search renders with different queryParams renders with tags param 1`] =
               type="text"
               value=""
             />
-            <div
-              class=""
-            >
-              <span>
-                landscape
-                <button
-                  aria-label="Удалить тег landscape"
-                  type="button"
-                >
-                  ×
-                </button>
-              </span>
-              <span>
-                portrait
-                <button
-                  aria-label="Удалить тег portrait"
-                  type="button"
-                >
-                  ×
-                </button>
-              </span>
-            </div>
+          </div>
+          <div
+            class=""
+          >
+            <span>
+              landscape
+              <button
+                aria-label="Удалить тег landscape"
+                type="button"
+              >
+                ×
+              </button>
+            </span>
+            <span>
+              portrait
+              <button
+                aria-label="Удалить тег portrait"
+                type="button"
+              >
+                ×
+              </button>
+            </span>
           </div>
         </div>
       </div>

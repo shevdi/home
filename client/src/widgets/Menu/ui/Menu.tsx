@@ -1,4 +1,4 @@
-import { useState, useRef, ReactElement } from 'react'
+import { useState, useRef, type ReactElement } from 'react'
 import styled from 'styled-components'
 import { useOnClickOutside } from '@/shared/hooks'
 import { ReactComponent as Gear } from './gear.svg'
@@ -17,7 +17,7 @@ export function Menu(): ReactElement {
 
   return (
     <ModalContainer>
-      <ModalButton onClick={toggleModal} aria-label="Настройки">
+      <ModalButton onClick={toggleModal} aria-label='Настройки'>
         <Gear />
       </ModalButton>
 

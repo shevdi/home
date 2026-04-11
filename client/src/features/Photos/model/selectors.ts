@@ -1,4 +1,4 @@
-import { RootState } from '@/app/store/store'
+import type { RootState } from '@/app/store/store'
 import { photosApiSlice } from './photosApiSlice'
 
 export const selectFilter = (state: RootState) => state.photos.filter

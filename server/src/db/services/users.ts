@@ -18,3 +18,22 @@ export async function getUserByName(name: string) {
     throw new Error('Failed to fetch projects');
   }
 }
+
+export async function getUserByTelegramUserId(telegramUserId: number) {
+  try {
+    return await User.findOne({ 'telegram.userId': telegramUserId })
+  } catch (error) {
+    logError(error, { service: 'users', action: 'getUserByTelegramUserId', telegramUserId })
+    throw new Error('Failed to fetch projects')
+  }
+}
+
+export async function isNameTaken(name: string) {
+  try {
+    const existing = await User.findOne({ name }).lean()
+    return !!existing
+  } catch (error) {
+    logError(error, { service: 'users', action: 'isNameTaken', name })
+    throw new Error('Failed to fetch projects')
+  }
+}

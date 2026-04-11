@@ -32,6 +32,8 @@ npm run docker:e2e:down
   ```
   Tests that require authentication will be skipped if these are not set.
 
+**Telegram login:** Playwright does not drive the Telegram Login Widget (third-party iframe and BotFather domain rules). Password login remains what E2E covers; verify Telegram on a staging URL manually if needed.
+
 From the project root:
 
 ```bash

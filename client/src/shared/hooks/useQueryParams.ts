@@ -1,13 +1,13 @@
 import { useSearchParams } from 'react-router'
-import { photoSearchParamsSchema } from '@shevdi-home/shared'
+import { photoSearchParamsSchema, type PhotoOrder, type PhotoSearchParams } from '@shevdi-home/shared'
 
-export type PhotoSearch = import('@shevdi-home/shared').PhotoSearchParams
+export type PhotoSearch = PhotoSearchParams
 
 const DEFAULT_PARAMS = {
   page: 1,
   dateFrom: undefined as string | undefined,
   dateTo: undefined as string | undefined,
-  order: undefined as import('@shevdi-home/shared').PhotoOrder | undefined,
+  order: undefined as PhotoOrder | undefined,
   tags: [] as string[],
   country: [] as string[],
   city: [] as string[],

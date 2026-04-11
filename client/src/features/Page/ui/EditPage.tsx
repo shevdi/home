@@ -4,7 +4,8 @@ import { useLocation, useNavigate } from 'react-router'
 import { Button, ErrMessage, Error, Field, Input, Loader, useLabeledFieldOutsideClick } from '@/shared/ui'
 import { useEffect, useState } from 'react'
 import z from 'zod'
-import { SubmitHandler, useForm } from 'react-hook-form'
+import type { SubmitHandler} from 'react-hook-form';
+import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { getErrorMessage } from '@/shared/utils'
 

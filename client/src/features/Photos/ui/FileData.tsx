@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { FileMeta } from '../utils/uploadPhotoMeta'
+import type { FileMeta } from '../utils/uploadPhotoMeta'
 import type { UploadFileStatus } from '../model/uploadSlice'
 import { FileMeta as FileMetaComponent } from './FileMeta'
 import { Status, OpenLink } from './Status'

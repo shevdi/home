@@ -74,14 +74,15 @@ test.describe('Photo flows', () => {
       });
     });
 
-    test('redirects upload route to gallery (v1 no uploads)', async ({ page }) => {
+    test('upload route is hidden for guests (not-found, URL unchanged)', async ({ page }) => {
       await test.step('Navigate to /photos/new', async () => {
         await page.goto('/photos/new');
       });
 
-      await test.step('Gallery is shown', async () => {
-        await expect(page).toHaveURL(/\/photos\/?$/);
-        await expect(page.getByRole('heading', { name: 'Фото' })).toBeVisible({ timeout: 10000 });
+      await test.step('Guest sees not-found for upload URL', async () => {
+        await expect(page).toHaveURL(/\/photos\/new$/, { timeout: 10000 });
+        await expect(page.getByText('Такого фото нет')).toBeVisible({ timeout: 10000 });
+        await expect(page.getByRole('link', { name: 'К фотографиям' })).toBeVisible();
       });
     });
 
@@ -304,7 +305,7 @@ test.describe('Photo flows', () => {
       });
     });
 
-    test.skip('photo detail without metadata hides date and tags', async ({ page, request }) => {
+    test('photo detail without metadata hides date and tags', async ({ page, request }) => {
       const photo = await test.step('Get photo without metadata from API', async () => {
         const photos = await getPhotosFromApi(request);
         return photos.find(

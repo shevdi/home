@@ -104,37 +104,15 @@ exports[`UploadPhoto renders default state and disables submit 1`] = `
             <div
               class=""
             >
-              <input
-                class=""
-                id="photo-form-country"
-                placeholder="Введите страну и нажмите Enter"
-                type="text"
-                value=""
-              />
-              <div
-                class=""
-              />
-            </div>
-          </div>
-          <div
-            class=""
-          >
-            <label
-              class=""
-              for="«r3»-control"
-            >
-              Город
-            </label>
-            <div
-              class=""
-            >
-              <input
-                class=""
-                id="photo-form-city"
-                placeholder="Введите город и нажмите Enter"
-                type="text"
-                value=""
-              />
+              <div>
+                <input
+                  class=""
+                  id="photo-form-country"
+                  placeholder="Введите страну и нажмите Enter"
+                  type="text"
+                  value=""
+                />
+              </div>
               <div
                 class=""
               />
@@ -147,18 +125,46 @@ exports[`UploadPhoto renders default state and disables submit 1`] = `
               class=""
               for="«r4»-control"
             >
+              Город
+            </label>
+            <div
+              class=""
+            >
+              <div>
+                <input
+                  class=""
+                  id="photo-form-city"
+                  placeholder="Введите город и нажмите Enter"
+                  type="text"
+                  value=""
+                />
+              </div>
+              <div
+                class=""
+              />
+            </div>
+          </div>
+          <div
+            class=""
+          >
+            <label
+              class=""
+              for="«r6»-control"
+            >
               Теги
             </label>
             <div
               class=""
             >
-              <input
-                class=""
-                id="photo-form-tags"
-                placeholder="Введите тег и нажмите Enter"
-                type="text"
-                value=""
-              />
+              <div>
+                <input
+                  class=""
+                  id="photo-form-tags"
+                  placeholder="Введите тег и нажмите Enter"
+                  type="text"
+                  value=""
+                />
+              </div>
               <div
                 class=""
               />
@@ -246,7 +252,7 @@ exports[`UploadPhoto shows error message when upload fails 1`] = `
           >
             <label
               class=""
-              for="«rp»-control"
+              for="«r18»-control"
             >
               Заголовок
             </label>
@@ -262,7 +268,7 @@ exports[`UploadPhoto shows error message when upload fails 1`] = `
           >
             <label
               class=""
-              for="«rq»-control"
+              for="«r19»-control"
             >
               Приоритет
             </label>
@@ -278,20 +284,22 @@ exports[`UploadPhoto shows error message when upload fails 1`] = `
           >
             <label
               class=""
-              for="«rr»-control"
+              for="«r1a»-control"
             >
               Страна
             </label>
             <div
               class=""
             >
-              <input
-                class=""
-                id="photo-form-country"
-                placeholder="Введите страну и нажмите Enter"
-                type="text"
-                value=""
-              />
+              <div>
+                <input
+                  class=""
+                  id="photo-form-country"
+                  placeholder="Введите страну и нажмите Enter"
+                  type="text"
+                  value=""
+                />
+              </div>
               <div
                 class=""
               />
@@ -302,20 +310,22 @@ exports[`UploadPhoto shows error message when upload fails 1`] = `
           >
             <label
               class=""
-              for="«rs»-control"
+              for="«r1c»-control"
             >
               Город
             </label>
             <div
               class=""
             >
-              <input
-                class=""
-                id="photo-form-city"
-                placeholder="Введите город и нажмите Enter"
-                type="text"
-                value=""
-              />
+              <div>
+                <input
+                  class=""
+                  id="photo-form-city"
+                  placeholder="Введите город и нажмите Enter"
+                  type="text"
+                  value=""
+                />
+              </div>
               <div
                 class=""
               />
@@ -326,20 +336,22 @@ exports[`UploadPhoto shows error message when upload fails 1`] = `
           >
             <label
               class=""
-              for="«rt»-control"
+              for="«r1e»-control"
             >
               Теги
             </label>
             <div
               class=""
             >
-              <input
-                class=""
-                id="photo-form-tags"
-                placeholder="Введите тег и нажмите Enter"
-                type="text"
-                value=""
-              />
+              <div>
+                <input
+                  class=""
+                  id="photo-form-tags"
+                  placeholder="Введите тег и нажмите Enter"
+                  type="text"
+                  value=""
+                />
+              </div>
               <div
                 class=""
               />
@@ -480,7 +492,7 @@ exports[`UploadPhoto updates label and shows selected file 1`] = `
           >
             <label
               class=""
-              for="«r5»-control"
+              for="«r8»-control"
             >
               Заголовок
             </label>
@@ -496,7 +508,7 @@ exports[`UploadPhoto updates label and shows selected file 1`] = `
           >
             <label
               class=""
-              for="«r6»-control"
+              for="«r9»-control"
             >
               Приоритет
             </label>
@@ -512,20 +524,22 @@ exports[`UploadPhoto updates label and shows selected file 1`] = `
           >
             <label
               class=""
-              for="«r7»-control"
+              for="«ra»-control"
             >
               Страна
             </label>
             <div
               class=""
             >
-              <input
-                class=""
-                id="photo-form-country"
-                placeholder="Введите страну и нажмите Enter"
-                type="text"
-                value=""
-              />
+              <div>
+                <input
+                  class=""
+                  id="photo-form-country"
+                  placeholder="Введите страну и нажмите Enter"
+                  type="text"
+                  value=""
+                />
+              </div>
               <div
                 class=""
               />
@@ -536,20 +550,22 @@ exports[`UploadPhoto updates label and shows selected file 1`] = `
           >
             <label
               class=""
-              for="«r8»-control"
+              for="«rc»-control"
             >
               Город
             </label>
             <div
               class=""
             >
-              <input
-                class=""
-                id="photo-form-city"
-                placeholder="Введите город и нажмите Enter"
-                type="text"
-                value=""
-              />
+              <div>
+                <input
+                  class=""
+                  id="photo-form-city"
+                  placeholder="Введите город и нажмите Enter"
+                  type="text"
+                  value=""
+                />
+              </div>
               <div
                 class=""
               />
@@ -560,20 +576,22 @@ exports[`UploadPhoto updates label and shows selected file 1`] = `
           >
             <label
               class=""
-              for="«r9»-control"
+              for="«re»-control"
             >
               Теги
             </label>
             <div
               class=""
             >
-              <input
-                class=""
-                id="photo-form-tags"
-                placeholder="Введите тег и нажмите Enter"
-                type="text"
-                value=""
-              />
+              <div>
+                <input
+                  class=""
+                  id="photo-form-tags"
+                  placeholder="Введите тег и нажмите Enter"
+                  type="text"
+                  value=""
+                />
+              </div>
               <div
                 class=""
               />

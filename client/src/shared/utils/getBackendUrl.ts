@@ -11,5 +11,5 @@ export function getBackendUrl(): string {
   if (typeof window !== 'undefined' && window.location.hostname === 'home-frontend') {
     return 'http://home-backend:3001/api/v1';
   }
-  return (typeof process !== 'undefined' && process.env.BACKEND_URL) || 'https://home-server-shevdi.amvera.io/api/v1';
+  return (typeof process !== 'undefined' && process.env.BACKEND_URL) || 'http://localhost:3001/api/v1';
 }
