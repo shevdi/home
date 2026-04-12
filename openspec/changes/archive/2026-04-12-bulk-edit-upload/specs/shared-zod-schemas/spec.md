@@ -1,8 +1,5 @@
-# shared-zod-schemas Specification
+## MODIFIED Requirements
 
-## Purpose
-TBD - created by archiving change shared-zod-api-contract. Update Purpose after archive.
-## Requirements
 ### Requirement: Shared package exports Zod schemas for photos API
 
 The shared package SHALL export Zod schemas for the photos API contract: `photoOrderSchema`, `photoSearchParamsSchema`, `uploadBodySchema`, `uploadMetaSchema`, `uploadMetaItemSchema`, and `perFileOptionsItemSchema`. These schemas SHALL be consumable by both client and server.
@@ -38,32 +35,3 @@ The `uploadBodySchema` SHALL include a `perFileOptions` field that accepts an op
 
 - **WHEN** consumer imports `PhotoOrder`, `PhotoSearchParams`, `UploadBody`, or `PerFileOptionsItem` from shared
 - **THEN** these types are `z.infer<>` of the corresponding schemas
-
-### Requirement: Shared package has zod dependency
-
-The shared package SHALL list `zod` as a dependency. Client and server SHALL use a compatible Zod version (same major) when consuming shared schemas.
-
-#### Scenario: Shared package installs zod
-
-- **WHEN** root runs `npm install`
-- **THEN** shared package has access to zod and schemas parse/validate without error
-
-#### Scenario: Schema exports work across packages
-
-- **WHEN** client or server imports a shared schema and calls `.safeParse()` or `.parse()`
-- **THEN** validation succeeds or fails consistently
-
-### Requirement: Helper schemas exported for reuse
-
-The shared package SHALL export `stringOrArray` and `queryParam` (or equivalent) as reusable schema helpers used by `photoSearchParamsSchema` and `uploadBodySchema`.
-
-#### Scenario: stringOrArray normalizes to array
-
-- **WHEN** `stringOrArray` parses a value that is string, string[], or undefined
-- **THEN** output is `string[]` (empty array for undefined)
-
-#### Scenario: queryParam handles single or array
-
-- **WHEN** `queryParam` parses URL query value (string or string[])
-- **THEN** output is single string or undefined
-

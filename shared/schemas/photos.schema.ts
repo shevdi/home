@@ -69,6 +69,36 @@ const accessedByFromJsonField = z
     }
   })
 
+export const perFileOptionsItemSchema = z.object({
+  title: z.string().optional().transform((v) => {
+    if (v == null) return undefined
+    const t = String(v).trim()
+    return t === '' ? undefined : t
+  }),
+  priority: z.number().optional(),
+  private: z.boolean().optional(),
+  tags: stringOrArray,
+  country: stringOrArray,
+  city: stringOrArray,
+  accessedBy: z.array(z.object({ userId: z.string().regex(/^[a-fA-F0-9]{24}$/) })).optional().transform((v) => v ?? []),
+})
+
+export type PerFileOptionsItem = z.infer<typeof perFileOptionsItemSchema>
+
+const perFileOptionsFromJsonField = z
+  .string()
+  .optional()
+  .transform((v) => {
+    if (v == null || String(v).trim() === '') return [] as PerFileOptionsItem[]
+    try {
+      const parsed = JSON.parse(String(v)) as unknown
+      if (!Array.isArray(parsed)) return []
+      return parsed.map((item) => perFileOptionsItemSchema.parse(item))
+    } catch {
+      return []
+    }
+  })
+
 export const uploadBodySchema = z.object({
   title: z
     .string()
@@ -108,6 +138,7 @@ export const uploadBodySchema = z.object({
       return Number.isFinite(n) ? n : undefined
     }),
   accessedBy: accessedByFromJsonField,
+  perFileOptions: perFileOptionsFromJsonField,
 })
 
 export type UploadBody = z.infer<typeof uploadBodySchema>

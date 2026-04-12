@@ -23,7 +23,7 @@ import { verifyJWT } from '../middlewares/verifyJWT';
 import { requireAdmin } from '../middlewares/requireAdmin';
 import { cacheClear, cacheMiddleware } from '../middlewares/cache';
 import type { RequestWithAuth } from '@/services/auth';
-import type { ILink } from '@shevdi-home/shared';
+import type { ILink, PerFileOptionsItem } from '@shevdi-home/shared';
 import { photoUpdateBodySchema } from '@shevdi-home/shared';
 import {
   canViewPhoto,
@@ -173,6 +173,29 @@ router.post(
   try {
     const files = Array.isArray(req.files) ? req.files : req.file ? [req.file] : []
     const bodyParsed = uploadBodySchema.safeParse(req.body)
+    // #region agent log
+    {
+      const rawPfo = (req.body as Record<string, unknown>)?.perFileOptions
+      fetch('http://127.0.0.1:7915/ingest/9992f24d-00f6-41c9-bc27-a45102f4306c', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': 'd2a394' },
+        body: JSON.stringify({
+          sessionId: 'd2a394',
+          location: 'photos.ts:upload:bodyParsed',
+          message: 'upload body parse',
+          data: {
+            parseOk: bodyParsed.success,
+            issues: bodyParsed.success ? undefined : bodyParsed.error.issues.slice(0, 8),
+            perFileOptionsType: rawPfo === undefined ? 'undefined' : typeof rawPfo,
+            perFileOptionsLen:
+              typeof rawPfo === 'string' ? rawPfo.length : Array.isArray(rawPfo) ? rawPfo.length : null,
+          },
+          timestamp: Date.now(),
+          hypothesisId: 'H3-H4',
+        }),
+      }).catch(() => {})
+    }
+    // #endregion
     const body = bodyParsed.success ? bodyParsed.data : {
       title: undefined,
       private: undefined,
@@ -182,11 +205,34 @@ router.post(
       meta: [],
       priority: undefined,
       accessedBy: [] as { userId: string }[],
+      perFileOptions: [] as PerFileOptionsItem[],
     }
-    const isPrivate = body.private
-    const tags = normalizeTags(body.tags)
-    const userCountry = normalizeTags(body.country) ?? []
-    const userCity = normalizeTags(body.city) ?? []
+    const globalIsPrivate = body.private
+    const globalTags = normalizeTags(body.tags)
+    const globalCountry = normalizeTags(body.country) ?? []
+    const globalCity = normalizeTags(body.city) ?? []
+    const globalAccessedBy = body.accessedBy ?? []
+    const perFileOptions = body.perFileOptions ?? []
+    const hasPerFileOptions = perFileOptions.length > 0
+    // #region agent log
+    fetch('http://127.0.0.1:7915/ingest/9992f24d-00f6-41c9-bc27-a45102f4306c', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': 'd2a394' },
+      body: JSON.stringify({
+        sessionId: 'd2a394',
+        location: 'photos.ts:upload:afterBody',
+        message: 'perFileOptions resolved',
+        data: {
+          filesCount: files.length,
+          perFileOptionsCount: perFileOptions.length,
+          hasPerFileOptions,
+          firstHasTitle: perFileOptions[0] ? Boolean(perFileOptions[0].title) : false,
+        },
+        timestamp: Date.now(),
+        hypothesisId: 'H5',
+      }),
+    }).catch(() => {})
+    // #endregion
     const metaParsed = uploadMetaSchema.safeParse(body.meta)
     const metaList = metaParsed.success ? metaParsed.data : []
 
@@ -195,7 +241,15 @@ router.post(
     }
 
     try {
-      await validatePhotoAccessedBy(body.accessedBy ?? [])
+      await validatePhotoAccessedBy(globalAccessedBy)
+      if (hasPerFileOptions) {
+        const allPerFileAccessedBy = perFileOptions
+          .flatMap((o) => o.accessedBy ?? [])
+          .filter((v, i, a) => a.findIndex((x) => x.userId === v.userId) === i)
+        if (allPerFileAccessedBy.length > 0) {
+          await validatePhotoAccessedBy(allPerFileAccessedBy)
+        }
+      }
     } catch (ve) {
       const st = getErrorStatus(ve)
       return res.status(st ?? 400).json({
@@ -229,9 +283,18 @@ router.post(
 
         const { country, city } = getLocationValue([nominatim, dadata])
 
+        const fileOpts = hasPerFileOptions ? perFileOptions[fileIndex] : undefined
+        const fileTags = fileOpts ? normalizeTags(fileOpts.tags) : globalTags
+        const fileCountry = fileOpts ? (normalizeTags(fileOpts.country) ?? []) : globalCountry
+        const fileCity = fileOpts ? (normalizeTags(fileOpts.city) ?? []) : globalCity
+        const fileTitle = fileOpts ? fileOpts.title : body.title
+        const filePriority = fileOpts ? fileOpts.priority : body.priority
+        const fileIsPrivate = fileOpts?.private !== undefined ? fileOpts.private : globalIsPrivate
+        const fileAccessedBy = fileOpts ? (fileOpts.accessedBy ?? []) : globalAccessedBy
+
         const locationValue = {
-          country: Array.from(new Set([...userCountry, ...country])),
-          city: Array.from(new Set([...userCity, ...city])),
+          country: Array.from(new Set([...fileCountry, ...country])),
+          city: Array.from(new Set([...fileCity, ...city])),
         }
 
         const { url: fullSizeUrl, photoData: fullSizePhoto } = await drime.cropPhotoAndUpload(file)
@@ -251,8 +314,8 @@ router.post(
           fullSizeEntryId: fullSizePhoto.id.toString(),
           name: fullSizePhoto.name,
           fileName: file.originalname,
-          private: isPrivate,
-          tags,
+          private: fileIsPrivate,
+          tags: fileTags,
           location: {
             value: locationValue,
             nominatim: nominatim ?? undefined,
@@ -262,9 +325,9 @@ router.post(
             } : undefined
           },
           meta,
-          ...(body.title ? { title: body.title } : {}),
-          ...(body.priority !== undefined ? { priority: body.priority } : {}),
-          ...(body.accessedBy?.length ? { accessedBy: body.accessedBy } : {}),
+          ...(fileTitle ? { title: fileTitle } : {}),
+          ...(filePriority !== undefined ? { priority: filePriority } : {}),
+          ...(fileAccessedBy.length ? { accessedBy: fileAccessedBy } : {}),
         })
         const result = { ok: true, fileName: file.originalname, photo: addedPhoto }
         results.push(result)

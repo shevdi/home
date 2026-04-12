@@ -1,0 +1,2 @@
+{"sessionId":"d2a394","location":"UploadPhoto.tsx:onSubmit","message":"upload submit per-file","data":{"fileCount":2,"mapSize":2,"idHits":2,"nonEmptyTitles":2,"anyPrivate":true,"tagSets":2},"timestamp":1775990995049,"hypothesisId":"H1"}
+{"sessionId":"d2a394","location":"uploadPhotos.ts:buildUploadFormData","message":"formData perFileOptions","data":{"filesLen":2,"perFileLen":2,"jsonLen":301},"timestamp":1775990995061,"hypothesisId":"H2"}

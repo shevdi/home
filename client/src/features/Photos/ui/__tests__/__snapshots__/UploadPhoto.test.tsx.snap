@@ -3,7 +3,7 @@
 exports[`UploadPhoto renders default state and disables submit 1`] = `
 <div>
   <div
-    class="sc-fPXMVh"
+    class="sc-dAbbOM"
   >
     <div
       class=""
@@ -28,179 +28,6 @@ exports[`UploadPhoto renders default state and disables submit 1`] = `
           Загрузить фото
         </div>
       </div>
-      <div
-        class="sc-eDPEui"
-        style="--font-size-label: 0.78rem; --font-size-field-error: 0.72rem; --font-size-field-description: 0.8rem;"
-      >
-        <label
-          class=" "
-        >
-          <button
-            aria-checked="false"
-            class="undefined undefined"
-            data-state="unchecked"
-            role="checkbox"
-            type="button"
-            value="on"
-          />
-          <input
-            aria-hidden="true"
-            style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
-            tabindex="-1"
-            type="checkbox"
-            value="on"
-          />
-          <span
-            class="  "
-            style="color: var(--text-color);"
-          >
-            Скрыть
-          </span>
-        </label>
-        <div
-          class="sc-eldPxw dgLCQu"
-        >
-          <div
-            class=""
-          >
-            <label
-              class=""
-              for="«r0»-control"
-            >
-              Заголовок
-            </label>
-            <input
-              class=""
-              id="photo-form-title"
-              name="title"
-              type="text"
-            />
-          </div>
-          <div
-            class=""
-          >
-            <label
-              class=""
-              for="«r1»-control"
-            >
-              Приоритет
-            </label>
-            <input
-              class=""
-              id="photo-form-priority"
-              name="priority"
-              type="number"
-            />
-          </div>
-          <div
-            class=""
-          >
-            <label
-              class=""
-              for="«r2»-control"
-            >
-              Страна
-            </label>
-            <div
-              class=""
-            >
-              <div>
-                <input
-                  class=""
-                  id="photo-form-country"
-                  placeholder="Введите страну и нажмите Enter"
-                  type="text"
-                  value=""
-                />
-              </div>
-              <div
-                class=""
-              />
-            </div>
-          </div>
-          <div
-            class=""
-          >
-            <label
-              class=""
-              for="«r4»-control"
-            >
-              Город
-            </label>
-            <div
-              class=""
-            >
-              <div>
-                <input
-                  class=""
-                  id="photo-form-city"
-                  placeholder="Введите город и нажмите Enter"
-                  type="text"
-                  value=""
-                />
-              </div>
-              <div
-                class=""
-              />
-            </div>
-          </div>
-          <div
-            class=""
-          >
-            <label
-              class=""
-              for="«r6»-control"
-            >
-              Теги
-            </label>
-            <div
-              class=""
-            >
-              <div>
-                <input
-                  class=""
-                  id="photo-form-tags"
-                  placeholder="Введите тег и нажмите Enter"
-                  type="text"
-                  value=""
-                />
-              </div>
-              <div
-                class=""
-              />
-            </div>
-          </div>
-          <div
-            class=""
-          >
-            <label
-              class=""
-              for="«r8»-control"
-            >
-              Доступ для пользователей
-            </label>
-            <div
-              class=""
-            >
-              <div>
-                <input
-                  aria-autocomplete="list"
-                  aria-expanded="false"
-                  class=""
-                  id="photo-form-accessed-by"
-                  placeholder="Имя пользователя"
-                  role="combobox"
-                  type="text"
-                  value=""
-                />
-              </div>
-              <div
-                class=""
-              />
-            </div>
-          </div>
-        </div>
-      </div>
       <button
         class=""
         disabled=""
@@ -217,7 +44,7 @@ exports[`UploadPhoto renders default state and disables submit 1`] = `
 exports[`UploadPhoto shows error message when upload fails 1`] = `
 <div>
   <div
-    class="sc-fPXMVh"
+    class="sc-dAbbOM"
   >
     <div
       class=""
@@ -245,196 +72,29 @@ exports[`UploadPhoto shows error message when upload fails 1`] = `
         </div>
       </div>
       <div
-        class="sc-eDPEui"
-        style="--font-size-label: 0.78rem; --font-size-field-error: 0.72rem; --font-size-field-description: 0.8rem;"
+        class="sc-feUZmx dNUNAR"
       >
-        <label
-          class=" "
+        <div
+          class="sc-jlZhev ctYIiT"
         >
-          <button
-            aria-checked="false"
-            class="undefined undefined"
-            data-state="unchecked"
-            role="checkbox"
-            type="button"
-            value="on"
-          />
-          <input
-            aria-hidden="true"
-            style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
-            tabindex="-1"
-            type="checkbox"
-            value="on"
-          />
           <span
-            class="  "
-            style="color: var(--text-color);"
+            aria-label="Выбрать"
+            class="sc-cwHptO cZLwRr"
           >
-            Скрыть
+            ☐
           </span>
-        </label>
-        <div
-          class="sc-eldPxw dgLCQu"
-        >
           <div
-            class=""
-          >
-            <label
-              class=""
-              for="«r1i»-control"
-            >
-              Заголовок
-            </label>
-            <input
-              class=""
-              id="photo-form-title"
-              name="title"
-              type="text"
-            />
-          </div>
-          <div
-            class=""
-          >
-            <label
-              class=""
-              for="«r1j»-control"
-            >
-              Приоритет
-            </label>
-            <input
-              class=""
-              id="photo-form-priority"
-              name="priority"
-              type="number"
-            />
-          </div>
-          <div
-            class=""
-          >
-            <label
-              class=""
-              for="«r1k»-control"
-            >
-              Страна
-            </label>
-            <div
-              class=""
-            >
-              <div>
-                <input
-                  class=""
-                  id="photo-form-country"
-                  placeholder="Введите страну и нажмите Enter"
-                  type="text"
-                  value=""
-                />
-              </div>
-              <div
-                class=""
-              />
-            </div>
-          </div>
-          <div
-            class=""
-          >
-            <label
-              class=""
-              for="«r1m»-control"
-            >
-              Город
-            </label>
-            <div
-              class=""
-            >
-              <div>
-                <input
-                  class=""
-                  id="photo-form-city"
-                  placeholder="Введите город и нажмите Enter"
-                  type="text"
-                  value=""
-                />
-              </div>
-              <div
-                class=""
-              />
-            </div>
-          </div>
-          <div
-            class=""
-          >
-            <label
-              class=""
-              for="«r1o»-control"
-            >
-              Теги
-            </label>
-            <div
-              class=""
-            >
-              <div>
-                <input
-                  class=""
-                  id="photo-form-tags"
-                  placeholder="Введите тег и нажмите Enter"
-                  type="text"
-                  value=""
-                />
-              </div>
-              <div
-                class=""
-              />
-            </div>
-          </div>
-          <div
-            class=""
-          >
-            <label
-              class=""
-              for="«r1q»-control"
-            >
-              Доступ для пользователей
-            </label>
-            <div
-              class=""
-            >
-              <div>
-                <input
-                  aria-autocomplete="list"
-                  aria-expanded="false"
-                  class=""
-                  id="photo-form-accessed-by"
-                  placeholder="Имя пользователя"
-                  role="combobox"
-                  type="text"
-                  value=""
-                />
-              </div>
-              <div
-                class=""
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-      <div
-        class="sc-gFqAkO fdwPkA"
-      >
-        <div
-          class="sc-jlZhev hpHpHp"
-        >
-          <div
-            class="sc-cwHptO hygRDn"
+            class="sc-jEACwF eUYEUs"
           >
             <div
               style="width: 100%; height: 100%; background: var(--input-disabled-color);"
             />
           </div>
           <div
-            class="sc-jEACwF bePEmS"
+            class="sc-cPiKLY fqxQWe"
           >
             <div
-              class="sc-cPiKLY dsLOjA"
+              class="sc-dLMFT hManvj"
             >
               <span>
                 photo.jpg
@@ -466,57 +126,22 @@ exports[`UploadPhoto shows error message when upload fails 1`] = `
           </div>
           <button
             aria-label="Удалить файл photo.jpg"
-            class="sc-dLMFT dNddn"
+            class="sc-eDPEui dpcpQo"
             type="button"
           >
             ×
           </button>
         </div>
       </div>
-      <button
-        class=""
-        style="--btn-bg: var(--accent); --btn-hover-bg: var(--accent-hover);"
-        type="submit"
-      >
-        Загрузить 1 фото
-      </button>
-    </form>
-  </div>
-</div>
-`;
-
-exports[`UploadPhoto updates label and shows selected file 1`] = `
-<div>
-  <div
-    class="sc-fPXMVh"
-  >
-    <div
-      class=""
-    />
-    <form>
       <div
-        class="sc-aXZVf cQAMzK"
-      >
-        <div
-          class="sc-gEvEes erWXnv"
-          data-disabled="false"
-          role="presentation"
-          tabindex="0"
-        >
-          <input
-            accept="image/jpeg,.jpeg,.jpg,image/png,.png,image/gif,.gif,image/webp,.webp"
-            multiple=""
-            style="border: 0px; clip: rect(0px, 0px, 0px, 0px); clip-path: inset(50%); height: 1px; margin: 0px -1px -1px 0px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap;"
-            tabindex="-1"
-            type="file"
-          />
-          1 файл выбран
-        </div>
-      </div>
-      <div
-        class="sc-eDPEui"
+        class="sc-fPXMVh fTtKti"
         style="--font-size-label: 0.78rem; --font-size-field-error: 0.72rem; --font-size-field-description: 0.8rem;"
       >
+        <div
+          class="sc-gFqAkO dsrjCY"
+        >
+          Редактирование (все 1)
+        </div>
         <label
           class=" "
         >
@@ -543,22 +168,23 @@ exports[`UploadPhoto updates label and shows selected file 1`] = `
           </span>
         </label>
         <div
-          class="sc-eldPxw dgLCQu"
+          class="sc-ikkxIz hNSMIe"
         >
           <div
             class=""
           >
             <label
               class=""
-              for="«ra»-control"
+              for="«ru»-control"
             >
               Заголовок
             </label>
             <input
               class=""
-              id="photo-form-title"
-              name="title"
+              id="«ru»-control"
+              placeholder="Нажмите enter сохранить значение"
               type="text"
+              value=""
             />
           </div>
           <div
@@ -566,15 +192,16 @@ exports[`UploadPhoto updates label and shows selected file 1`] = `
           >
             <label
               class=""
-              for="«rb»-control"
+              for="«rv»-control"
             >
               Приоритет
             </label>
             <input
               class=""
-              id="photo-form-priority"
-              name="priority"
+              id="«rv»-control"
+              placeholder="Нажмите enter сохранить значение"
               type="number"
+              value="0"
             />
           </div>
           <div
@@ -582,7 +209,7 @@ exports[`UploadPhoto updates label and shows selected file 1`] = `
           >
             <label
               class=""
-              for="«rc»-control"
+              for="«r10»-control"
             >
               Страна
             </label>
@@ -592,8 +219,8 @@ exports[`UploadPhoto updates label and shows selected file 1`] = `
               <div>
                 <input
                   class=""
-                  id="photo-form-country"
-                  placeholder="Введите страну и нажмите Enter"
+                  id="«r10»-control"
+                  placeholder="Нажмите enter сохранить значение"
                   type="text"
                   value=""
                 />
@@ -608,7 +235,7 @@ exports[`UploadPhoto updates label and shows selected file 1`] = `
           >
             <label
               class=""
-              for="«re»-control"
+              for="«r12»-control"
             >
               Город
             </label>
@@ -618,8 +245,8 @@ exports[`UploadPhoto updates label and shows selected file 1`] = `
               <div>
                 <input
                   class=""
-                  id="photo-form-city"
-                  placeholder="Введите город и нажмите Enter"
+                  id="«r12»-control"
+                  placeholder="Нажмите enter сохранить значение"
                   type="text"
                   value=""
                 />
@@ -634,7 +261,7 @@ exports[`UploadPhoto updates label and shows selected file 1`] = `
           >
             <label
               class=""
-              for="«rg»-control"
+              for="«r14»-control"
             >
               Теги
             </label>
@@ -644,8 +271,8 @@ exports[`UploadPhoto updates label and shows selected file 1`] = `
               <div>
                 <input
                   class=""
-                  id="photo-form-tags"
-                  placeholder="Введите тег и нажмите Enter"
+                  id="«r14»-control"
+                  placeholder="Нажмите enter сохранить значение"
                   type="text"
                   value=""
                 />
@@ -660,7 +287,7 @@ exports[`UploadPhoto updates label and shows selected file 1`] = `
           >
             <label
               class=""
-              for="«ri»-control"
+              for="«r16»-control"
             >
               Доступ для пользователей
             </label>
@@ -672,8 +299,8 @@ exports[`UploadPhoto updates label and shows selected file 1`] = `
                   aria-autocomplete="list"
                   aria-expanded="false"
                   class=""
-                  id="photo-form-accessed-by"
-                  placeholder="Имя пользователя"
+                  id="«r16»-control"
+                  placeholder="Нажмите enter сохранить значение"
                   role="combobox"
                   type="text"
                   value=""
@@ -686,24 +313,70 @@ exports[`UploadPhoto updates label and shows selected file 1`] = `
           </div>
         </div>
       </div>
+      <button
+        class=""
+        style="--btn-bg: var(--accent); --btn-hover-bg: var(--accent-hover);"
+        type="submit"
+      >
+        Загрузить 1 фото
+      </button>
+    </form>
+  </div>
+</div>
+`;
+
+exports[`UploadPhoto updates label and shows selected file 1`] = `
+<div>
+  <div
+    class="sc-dAbbOM"
+  >
+    <div
+      class=""
+    />
+    <form>
       <div
-        class="sc-gFqAkO fdwPkA"
+        class="sc-aXZVf cQAMzK"
       >
         <div
-          class="sc-jlZhev hpHpHp"
+          class="sc-gEvEes erWXnv"
+          data-disabled="false"
+          role="presentation"
+          tabindex="0"
         >
+          <input
+            accept="image/jpeg,.jpeg,.jpg,image/png,.png,image/gif,.gif,image/webp,.webp"
+            multiple=""
+            style="border: 0px; clip: rect(0px, 0px, 0px, 0px); clip-path: inset(50%); height: 1px; margin: 0px -1px -1px 0px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap;"
+            tabindex="-1"
+            type="file"
+          />
+          1 файл выбран
+        </div>
+      </div>
+      <div
+        class="sc-feUZmx dNUNAR"
+      >
+        <div
+          class="sc-jlZhev ctYIiT"
+        >
+          <span
+            aria-label="Выбрать"
+            class="sc-cwHptO cZLwRr"
+          >
+            ☐
+          </span>
           <div
-            class="sc-cwHptO hygRDn"
+            class="sc-jEACwF eUYEUs"
           >
             <div
               style="width: 100%; height: 100%; background: var(--input-disabled-color);"
             />
           </div>
           <div
-            class="sc-jEACwF bePEmS"
+            class="sc-cPiKLY fqxQWe"
           >
             <div
-              class="sc-cPiKLY dsLOjA"
+              class="sc-dLMFT hManvj"
             >
               <span>
                 photo.jpg
@@ -722,11 +395,191 @@ exports[`UploadPhoto updates label and shows selected file 1`] = `
           </div>
           <button
             aria-label="Удалить файл photo.jpg"
-            class="sc-dLMFT dNddn"
+            class="sc-eDPEui dpcpQo"
             type="button"
           >
             ×
           </button>
+        </div>
+      </div>
+      <div
+        class="sc-fPXMVh fTtKti"
+        style="--font-size-label: 0.78rem; --font-size-field-error: 0.72rem; --font-size-field-description: 0.8rem;"
+      >
+        <div
+          class="sc-gFqAkO dsrjCY"
+        >
+          Редактирование (все 1)
+        </div>
+        <label
+          class=" "
+        >
+          <button
+            aria-checked="false"
+            class="undefined undefined"
+            data-state="unchecked"
+            role="checkbox"
+            type="button"
+            value="on"
+          />
+          <input
+            aria-hidden="true"
+            style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
+            tabindex="-1"
+            type="checkbox"
+            value="on"
+          />
+          <span
+            class="  "
+            style="color: var(--text-color);"
+          >
+            Скрыть
+          </span>
+        </label>
+        <div
+          class="sc-ikkxIz hNSMIe"
+        >
+          <div
+            class=""
+          >
+            <label
+              class=""
+              for="«r0»-control"
+            >
+              Заголовок
+            </label>
+            <input
+              class=""
+              id="«r0»-control"
+              placeholder="Нажмите enter сохранить значение"
+              type="text"
+              value=""
+            />
+          </div>
+          <div
+            class=""
+          >
+            <label
+              class=""
+              for="«r1»-control"
+            >
+              Приоритет
+            </label>
+            <input
+              class=""
+              id="«r1»-control"
+              placeholder="Нажмите enter сохранить значение"
+              type="number"
+              value="0"
+            />
+          </div>
+          <div
+            class=""
+          >
+            <label
+              class=""
+              for="«r2»-control"
+            >
+              Страна
+            </label>
+            <div
+              class=""
+            >
+              <div>
+                <input
+                  class=""
+                  id="«r2»-control"
+                  placeholder="Нажмите enter сохранить значение"
+                  type="text"
+                  value=""
+                />
+              </div>
+              <div
+                class=""
+              />
+            </div>
+          </div>
+          <div
+            class=""
+          >
+            <label
+              class=""
+              for="«r4»-control"
+            >
+              Город
+            </label>
+            <div
+              class=""
+            >
+              <div>
+                <input
+                  class=""
+                  id="«r4»-control"
+                  placeholder="Нажмите enter сохранить значение"
+                  type="text"
+                  value=""
+                />
+              </div>
+              <div
+                class=""
+              />
+            </div>
+          </div>
+          <div
+            class=""
+          >
+            <label
+              class=""
+              for="«r6»-control"
+            >
+              Теги
+            </label>
+            <div
+              class=""
+            >
+              <div>
+                <input
+                  class=""
+                  id="«r6»-control"
+                  placeholder="Нажмите enter сохранить значение"
+                  type="text"
+                  value=""
+                />
+              </div>
+              <div
+                class=""
+              />
+            </div>
+          </div>
+          <div
+            class=""
+          >
+            <label
+              class=""
+              for="«r8»-control"
+            >
+              Доступ для пользователей
+            </label>
+            <div
+              class=""
+            >
+              <div>
+                <input
+                  aria-autocomplete="list"
+                  aria-expanded="false"
+                  class=""
+                  id="«r8»-control"
+                  placeholder="Нажмите enter сохранить значение"
+                  role="combobox"
+                  type="text"
+                  value=""
+                />
+              </div>
+              <div
+                class=""
+              />
+            </div>
+          </div>
         </div>
       </div>
       <button

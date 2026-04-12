@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import type { FileMeta } from '../utils/uploadPhotoMeta'
@@ -19,6 +20,10 @@ type FileDataProps = {
   thumbnailDataUrl?: string
   /** Remove from staged list (e.g. before upload) */
   onRemove?: () => void
+  selected?: boolean
+  onToggleSelect?: () => void
+  /** Extra content rendered below meta (e.g. FileOptionsSummary) */
+  children?: ReactNode
 }
 
 export const FileData = ({
@@ -31,6 +36,9 @@ export const FileData = ({
   thumbnailUrl,
   thumbnailDataUrl,
   onRemove,
+  selected,
+  onToggleSelect,
+  children,
 }: FileDataProps) => {
   const [localThumbUrl, setLocalThumbUrl] = useState<string | null>(null)
 
@@ -46,7 +54,16 @@ export const FileData = ({
   const thumbSrc = localThumbUrl ?? thumbnailUrl ?? thumbnailDataUrl
 
   return (
-    <FileItem>
+    <FileItem
+      $selected={selected}
+      $selectable={!!onToggleSelect}
+      onClick={onToggleSelect}
+    >
+      {onToggleSelect && (
+        <SelectIndicator $selected={!!selected} aria-label={selected ? 'Снять выделение' : 'Выбрать'}>
+          {selected ? '☑' : '☐'}
+        </SelectIndicator>
+      )}
       <Thumbnail>
         {thumbSrc ? (
           <img src={thumbSrc} alt='' />
@@ -64,6 +81,7 @@ export const FileData = ({
           <Status status={displayStatus} photoId={photoId} error={error} />
         </FileNameRow>
         {meta && <FileMetaComponent meta={meta} />}
+        {children}
       </FileContent>
       {onRemove && (
         <RemoveFileButton
@@ -81,13 +99,29 @@ export const FileData = ({
   )
 }
 
-const FileItem = styled.div`
+const FileItem = styled.div<{ $selected?: boolean; $selectable?: boolean }>`
   display: flex;
   align-items: flex-start;
   gap: 0.75rem;
-  padding: 0.5rem 0;
+  padding: 0.5rem;
   font-size: 0.9rem;
   color: var(--text-color);
+  border-radius: var(--radius-sm);
+  transition: background-color 0.15s;
+  ${({ $selectable }) => $selectable && 'cursor: pointer;'}
+  ${({ $selected }) => $selected && 'background-color: var(--accent-bg, rgba(76, 175, 80, 0.08));'}
+
+  &:hover {
+    ${({ $selectable }) => $selectable && 'background-color: var(--accent-bg, rgba(76, 175, 80, 0.05));'}
+  }
+`
+
+const SelectIndicator = styled.span<{ $selected: boolean }>`
+  flex-shrink: 0;
+  font-size: 1.1rem;
+  line-height: 1;
+  user-select: none;
+  color: ${({ $selected }) => ($selected ? 'var(--accent, #4caf50)' : 'var(--text-muted)')};
 `
 
 const Thumbnail = styled.div`

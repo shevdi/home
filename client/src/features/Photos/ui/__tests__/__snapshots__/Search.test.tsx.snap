@@ -70,7 +70,7 @@ exports[`Search renders search form with default state 1`] = `
               <input
                 class=""
                 id="photo-filter-country"
-                placeholder="Введите страну и нажмите Enter"
+                placeholder="Нажмите enter сохранить значение"
                 type="text"
                 value=""
               />
@@ -97,7 +97,7 @@ exports[`Search renders search form with default state 1`] = `
               <input
                 class=""
                 id="photo-filter-city"
-                placeholder="Введите город и нажмите Enter"
+                placeholder="Нажмите enter сохранить значение"
                 type="text"
                 value=""
               />
@@ -124,7 +124,7 @@ exports[`Search renders search form with default state 1`] = `
               <input
                 class=""
                 id="photo-filter-tags"
-                placeholder="Введите тег и нажмите Enter"
+                placeholder="Нажмите enter сохранить значение"
                 type="text"
                 value=""
               />
@@ -210,7 +210,7 @@ exports[`Search renders with different queryParams renders with all params 1`] =
               <input
                 class=""
                 id="photo-filter-country"
-                placeholder="Введите страну и нажмите Enter"
+                placeholder="Нажмите enter сохранить значение"
                 type="text"
                 value=""
               />
@@ -237,7 +237,7 @@ exports[`Search renders with different queryParams renders with all params 1`] =
               <input
                 class=""
                 id="photo-filter-city"
-                placeholder="Введите город и нажмите Enter"
+                placeholder="Нажмите enter сохранить значение"
                 type="text"
                 value=""
               />
@@ -264,7 +264,7 @@ exports[`Search renders with different queryParams renders with all params 1`] =
               <input
                 class=""
                 id="photo-filter-tags"
-                placeholder="Введите тег и нажмите Enter"
+                placeholder="Нажмите enter сохранить значение"
                 type="text"
                 value=""
               />
@@ -378,7 +378,7 @@ exports[`Search renders with different queryParams renders with date range param
               <input
                 class=""
                 id="photo-filter-country"
-                placeholder="Введите страну и нажмите Enter"
+                placeholder="Нажмите enter сохранить значение"
                 type="text"
                 value=""
               />
@@ -405,7 +405,7 @@ exports[`Search renders with different queryParams renders with date range param
               <input
                 class=""
                 id="photo-filter-city"
-                placeholder="Введите город и нажмите Enter"
+                placeholder="Нажмите enter сохранить значение"
                 type="text"
                 value=""
               />
@@ -432,7 +432,7 @@ exports[`Search renders with different queryParams renders with date range param
               <input
                 class=""
                 id="photo-filter-tags"
-                placeholder="Введите тег и нажмите Enter"
+                placeholder="Нажмите enter сохранить значение"
                 type="text"
                 value=""
               />
@@ -518,7 +518,7 @@ exports[`Search renders with different queryParams renders with order param 1`] 
               <input
                 class=""
                 id="photo-filter-country"
-                placeholder="Введите страну и нажмите Enter"
+                placeholder="Нажмите enter сохранить значение"
                 type="text"
                 value=""
               />
@@ -545,7 +545,7 @@ exports[`Search renders with different queryParams renders with order param 1`] 
               <input
                 class=""
                 id="photo-filter-city"
-                placeholder="Введите город и нажмите Enter"
+                placeholder="Нажмите enter сохранить значение"
                 type="text"
                 value=""
               />
@@ -572,7 +572,7 @@ exports[`Search renders with different queryParams renders with order param 1`] 
               <input
                 class=""
                 id="photo-filter-tags"
-                placeholder="Введите тег и нажмите Enter"
+                placeholder="Нажмите enter сохранить значение"
                 type="text"
                 value=""
               />
@@ -658,7 +658,7 @@ exports[`Search renders with different queryParams renders with tags param 1`] =
               <input
                 class=""
                 id="photo-filter-country"
-                placeholder="Введите страну и нажмите Enter"
+                placeholder="Нажмите enter сохранить значение"
                 type="text"
                 value=""
               />
@@ -685,7 +685,7 @@ exports[`Search renders with different queryParams renders with tags param 1`] =
               <input
                 class=""
                 id="photo-filter-city"
-                placeholder="Введите город и нажмите Enter"
+                placeholder="Нажмите enter сохранить значение"
                 type="text"
                 value=""
               />
@@ -712,7 +712,7 @@ exports[`Search renders with different queryParams renders with tags param 1`] =
               <input
                 class=""
                 id="photo-filter-tags"
-                placeholder="Введите тег и нажмите Enter"
+                placeholder="Нажмите enter сохранить значение"
                 type="text"
                 value=""
               />
