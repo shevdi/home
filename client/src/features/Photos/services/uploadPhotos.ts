@@ -36,10 +36,17 @@ const buildUploadFormData = (
   tags: string[],
   title?: string,
   priority?: number,
+  accessedByUserIds?: string[],
 ) => {
   const formData = new FormData()
   formData.append('private', isPrivate.toString())
   formData.append('meta', JSON.stringify(meta.map(buildMetaPayload)))
+  if (accessedByUserIds && accessedByUserIds.length > 0) {
+    formData.append(
+      'accessedBy',
+      JSON.stringify(accessedByUserIds.map((userId) => ({ userId }))),
+    )
+  }
   if (country.length > 0) formData.append('country', country.join(','))
   if (city.length > 0) formData.append('city', city.join(','))
   if (tags.length > 0) formData.append('tags', tags.join(','))
@@ -66,14 +73,7 @@ function parseSSEEvent(line: string): UploadProgressEvent | UploadCompleteEvent 
 async function uploadBatch(
   files: File[],
   meta: FileMeta[],
-  options: {
-    isPrivate: boolean
-    country: string[]
-    city: string[]
-    tags: string[]
-    title?: string
-    priority?: number
-  },
+  options: UploadPhotosOptions,
   baseUrl: string,
   token: string | undefined,
   dispatch: Dispatch,
@@ -88,6 +88,8 @@ async function uploadBatch(
     options.city,
     options.tags,
     options.title,
+    options.priority,
+    options.accessedBy,
   )
 
   for (let i = 0; i < files.length; i++) {
@@ -179,6 +181,8 @@ export interface UploadPhotosOptions {
   tags: string[]
   title?: string
   priority?: number
+  /** Mongo user ids allowed to see private uploads */
+  accessedBy?: string[]
 }
 
 export async function uploadPhotosInBatches(

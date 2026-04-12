@@ -7,6 +7,8 @@ import { useDropzone } from 'react-dropzone'
 import { Button, DotsProgressIndicator, ErrMessage, FileDropzone } from '@/shared/ui'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useAppDispatch, useAppSelector } from '@/app/store'
+import { useStore } from 'react-redux'
+import type { RootState } from '@/app/store/store'
 import type { FileMeta } from '../utils/uploadPhotoMeta';
 import { buildMeta } from '../utils/uploadPhotoMeta'
 import { photoCommonFormDefaults, photoCommonFormSchema } from '../utils/photoCommonForm'
@@ -14,6 +16,7 @@ import { getFileId, removeUploadFile, resetUpload, uploadPhotosThunk } from '../
 import { FileData } from './FileData'
 import { getErrorMessage } from '@/shared/utils'
 import { PhotoCommonFields } from './PhotoCommonFields'
+import { createUserSuggestionsLoader } from '../utils/userSuggestions'
 
 const getFileLabel = (count: number) => {
   if (count === 0) return 'Загрузить фото'
@@ -42,6 +45,11 @@ type FormFields = z.infer<typeof schema>
 
 export function UploadPhoto() {
   const dispatch = useAppDispatch()
+  const store = useStore<RootState>()
+  const fetchUserSuggestions = useMemo(
+    () => createUserSuggestionsLoader(() => store.getState()),
+    [store],
+  )
   const [fileMeta, setFileMeta] = useState<FileMeta[]>([])
   const { files: uploadFiles, isUploading } = useAppSelector((state) => state.upload)
 
@@ -119,6 +127,7 @@ export function UploadPhoto() {
             tags: data.tags ?? [],
             title: data.title,
             priority: data.priority,
+            accessedBy: data.accessedBy?.length ? data.accessedBy : undefined,
           },
         }),
       ).unwrap()
@@ -150,6 +159,7 @@ export function UploadPhoto() {
           trigger={trigger}
           disabled={isProcessed}
           privateLabel='Скрыть'
+          fetchUserSuggestions={fetchUserSuggestions}
         />
         {(files.length > 0 || uploadFiles.length > 0) && (
           <FileList>

@@ -20,8 +20,18 @@ import { logError } from '../db/services/logs';
 import { photosQuerySchema, uploadBodySchema, uploadMetaSchema } from './photos.schema.js';
 import { optionalAuth } from '../middlewares/optionalAuth';
 import { verifyJWT } from '../middlewares/verifyJWT';
+import { requireAdmin } from '../middlewares/requireAdmin';
 import { cacheClear, cacheMiddleware } from '../middlewares/cache';
 import type { RequestWithAuth } from '@/services/auth';
+import type { ILink } from '@shevdi-home/shared';
+import { photoUpdateBodySchema } from '@shevdi-home/shared';
+import {
+  canViewPhoto,
+  photosViewerCacheSegment,
+  withPhotoVisibilityFilter,
+} from '../utils/photoAccess.ts';
+import { validatePhotoAccessedBy } from '../utils/validatePhotoAccessedBy.ts';
+import type { MongoFilter } from '../utils/queryBuilder.ts';
 
 const router = express.Router()
 
@@ -38,7 +48,9 @@ const sortTypes: Record<string, Record<string, SortOrder>> = {
   orderDownByEdited: { updatedAt: -1, _id: -1 }
 }
 
-const cache = cacheMiddleware('10 min', 'photos')
+const cache = cacheMiddleware('10 min', 'photos', (req) =>
+  photosViewerCacheSegment((req as RequestWithAuth).auth),
+)
 
 const urlSource: UrlSource = {
   listIds: (page) => drime.getFilesList(page),
@@ -76,12 +88,12 @@ router.get(`/`, optionalAuth, cache, async (req: RequestWithAuth, res: Response)
 
     const pageSize = req.query.page ? 5 : 100 // Number of photos per page
 
-    const isAdmin = Boolean(req.auth?.roles?.includes('admin'))
     const builder = queryBuilder()
       .dateRange('meta.takenAt', dateFromParam, dateToParam)
       .allIn('tags', tagsParam, (v) => normalizeTags(v) ?? [])
       .locationMatch(normalizeTags(countryParam) ?? [], normalizeTags(cityParam) ?? [])
-    const search = (isAdmin ? builder : builder.excludeWhere('private', true)).build()
+    const baseSearch = builder.build() as MongoFilter
+    const search = withPhotoVisibilityFilter(baseSearch, req.auth) as MongoFilter
 
     const page = typeof pageParam === 'number' ? pageParam : 1
     const sort = orderParam ? sortTypes[orderParam] : undefined
@@ -97,6 +109,12 @@ router.get(`/`, optionalAuth, cache, async (req: RequestWithAuth, res: Response)
           urlCache.getUrl(urlSource, item.mdSizeEntryId),
           urlCache.getUrl(urlSource, item.fullSizeEntryId),
         ])
+        const accessedBy =
+          Array.isArray(item.accessedBy) && item.accessedBy.length > 0
+            ? item.accessedBy.map((g: { userId?: { toString(): string } }) => ({
+                userId: String(g.userId),
+              }))
+            : undefined
         return {
           _id: item._id,
           name: item.name,
@@ -104,6 +122,7 @@ router.get(`/`, optionalAuth, cache, async (req: RequestWithAuth, res: Response)
           title: item.title,
           priority: item.priority,
           private: item.private,
+          accessedBy,
           tags: item.tags,
           location: item.location,
           smSizeUrl,
@@ -145,7 +164,12 @@ const upload = multer({
   storage: multer.memoryStorage()
 });
 
-router.post(`/upload`, upload.array("files", 50), async (req: Request, res: Response) => {
+router.post(
+  `/upload`,
+  verifyJWT,
+  requireAdmin,
+  upload.array('files', 50),
+  async (req: Request, res: Response) => {
   try {
     const files = Array.isArray(req.files) ? req.files : req.file ? [req.file] : []
     const bodyParsed = uploadBodySchema.safeParse(req.body)
@@ -157,6 +181,7 @@ router.post(`/upload`, upload.array("files", 50), async (req: Request, res: Resp
       city: [],
       meta: [],
       priority: undefined,
+      accessedBy: [] as { userId: string }[],
     }
     const isPrivate = body.private
     const tags = normalizeTags(body.tags)
@@ -167,6 +192,16 @@ router.post(`/upload`, upload.array("files", 50), async (req: Request, res: Resp
 
     if (!files || files.length === 0) {
       return res.status(400).json({ ok: false, error: 'No files provided' })
+    }
+
+    try {
+      await validatePhotoAccessedBy(body.accessedBy ?? [])
+    } catch (ve) {
+      const st = getErrorStatus(ve)
+      return res.status(st ?? 400).json({
+        ok: false,
+        error: ve instanceof Error ? ve.message : 'Invalid accessedBy',
+      })
     }
 
     res.setHeader('Content-Type', 'text/event-stream')
@@ -229,6 +264,7 @@ router.post(`/upload`, upload.array("files", 50), async (req: Request, res: Resp
           meta,
           ...(body.title ? { title: body.title } : {}),
           ...(body.priority !== undefined ? { priority: body.priority } : {}),
+          ...(body.accessedBy?.length ? { accessedBy: body.accessedBy } : {}),
         })
         const result = { ok: true, fileName: file.originalname, photo: addedPhoto }
         results.push(result)
@@ -271,7 +307,7 @@ router.get(`/:id`, optionalAuth, cache, async (req: RequestWithAuth, res: Respon
     if (!photo) {
       return res.status(404).json({ message: 'Photo not found' })
     }
-    if (photo.private && (!req.auth?.roles || !req.auth.roles.includes('admin'))) {
+    if (!canViewPhoto(photo, req.auth)) {
       return res.status(403).json({ message: 'Forbidden' })
     }
     const [mdSizeUrl, fullSizeUrl] = await Promise.all([
@@ -294,11 +330,29 @@ router.get(`/:id`, optionalAuth, cache, async (req: RequestWithAuth, res: Respon
   }
 })
 
-router.put(`/:id`, verifyJWT, async (req: Request, res: Response) => {
+router.put(`/:id`, verifyJWT, requireAdmin, async (req: Request, res: Response) => {
   try {
-    const normalizedTags = normalizeTags(req.body?.tags)
-    const updateData = normalizedTags === undefined ? req.body : { ...req.body, tags: normalizedTags }
-    const photo = await updatePhotoById(req.params.id, updateData)
+    const parsed = photoUpdateBodySchema.safeParse(req.body)
+    if (!parsed.success) {
+      return res.status(400).json({ message: 'Invalid request body' })
+    }
+    const body = parsed.data
+    if (body.accessedBy !== undefined) {
+      try {
+        await validatePhotoAccessedBy(body.accessedBy)
+      } catch (ve) {
+        const st = getErrorStatus(ve)
+        return res.status(st ?? 400).json({
+          message: ve instanceof Error ? ve.message : 'Invalid accessedBy',
+        })
+      }
+    }
+    const normalizedTags = normalizeTags(body.tags !== undefined ? body.tags : req.body?.tags)
+    const updateData: Record<string, unknown> =
+      normalizedTags === undefined
+        ? { ...body }
+        : { ...body, tags: normalizedTags }
+    const photo = await updatePhotoById(req.params.id, updateData as unknown as ILink)
     if (!photo) {
       return res.status(404).json({ message: 'Photo not found' })
     }
@@ -320,7 +374,7 @@ router.put(`/:id`, verifyJWT, async (req: Request, res: Response) => {
   }
 })
 
-router.delete(`/:id`, verifyJWT, async (req: Request, res: Response) => {
+router.delete(`/:id`, verifyJWT, requireAdmin, async (req: Request, res: Response) => {
   try {
     const photo = await getPhotoById(req.params.id)
 

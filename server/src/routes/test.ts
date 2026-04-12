@@ -38,12 +38,12 @@ router.post('/seed-user', async (req: Request, res: Response) => {
       return res.status(400).json({ error: 'username and password required' })
     }
     const hashed = await bcrypt.hash(password, 10)
-    await User.findOneAndUpdate(
+    const user = await User.findOneAndUpdate(
       { name: username },
       { name: username, email: `${username}@test.local`, password: hashed, roles, active: true },
-      { upsert: true }
+      { upsert: true, new: true, setDefaultsOnInsert: true },
     )
-    return res.json({ ok: true })
+    return res.json({ ok: true, userId: user?._id?.toString() })
   } catch (err) {
     return res.status(500).json({ error: String(err) })
   }

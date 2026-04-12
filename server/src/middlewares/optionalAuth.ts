@@ -31,6 +31,7 @@ export const optionalAuth = (req: RequestWithAuth, res: Response, next: NextFunc
       req.auth = {
         username: decoded?.UserInfo?.username,
         roles: decoded?.UserInfo?.roles,
+        userId: decoded?.UserInfo?.userId,
       }
       next()
     }) as VerifyCallback

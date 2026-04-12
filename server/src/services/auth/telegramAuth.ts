@@ -35,7 +35,11 @@ export async function telegramVerify(req: Request, res: Response) {
 
   const existing = await getUserByTelegramUserId(result.telegramUserId)
   if (existing?.active) {
-    issueSessionForUser(res, { name: existing.name, roles: existing.roles })
+    issueSessionForUser(res, {
+      name: existing.name,
+      roles: existing.roles,
+      userId: existing._id?.toString(),
+    })
     return
   }
 
@@ -52,7 +56,7 @@ export async function telegramVerify(req: Request, res: Response) {
   const suggestedName = result.username
     ? result.username.startsWith('@')
       ? result.username
-      : `@${result.username}`
+      : `${result.username}`
     : undefined
 
   return res.json({ pendingTicket, suggestedName })
@@ -100,7 +104,11 @@ export async function telegramCompleteName(req: Request, res: Response) {
 
   const existingByTg = await getUserByTelegramUserId(telegramUserId)
   if (existingByTg?.active) {
-    issueSessionForUser(res, { name: existingByTg.name, roles: existingByTg.roles })
+    issueSessionForUser(res, {
+      name: existingByTg.name,
+      roles: existingByTg.roles,
+      userId: existingByTg._id?.toString(),
+    })
     return
   }
 
@@ -115,7 +123,11 @@ export async function telegramCompleteName(req: Request, res: Response) {
       roles: ['user'],
       active: true,
     })
-    issueSessionForUser(res, { name: created.name, roles: created.roles })
+    issueSessionForUser(res, {
+      name: created.name,
+      roles: created.roles,
+      userId: created._id?.toString(),
+    })
   } catch (err: unknown) {
     if (isMongoDuplicateKey(err)) {
       return res.status(409).json({ code: 'NAME_CONFLICT', message: 'Это имя уже занято' })

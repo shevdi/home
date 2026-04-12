@@ -26,6 +26,7 @@ export const verifyJWT = (req: RequestWithAuth, res: Response, next: NextFunctio
       req.auth = {
         username: decoded?.UserInfo?.username,
         roles: decoded?.UserInfo?.roles,
+        userId: decoded?.UserInfo?.userId,
       }
       next()
     }) as VerifyCallback

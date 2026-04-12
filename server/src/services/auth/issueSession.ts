@@ -3,12 +3,16 @@ import type { Response } from 'express'
 import { env } from '../../config/env.js'
 
 /** Issues access token JSON body and refresh cookie (same contract as password login). */
-export function issueSessionForUser(res: Response, user: { name: string; roles: string[] }) {
+export function issueSessionForUser(
+  res: Response,
+  user: { name: string; roles: string[]; userId?: string },
+) {
   const accessToken = jwt.sign(
     {
       UserInfo: {
         username: user.name,
         roles: user.roles,
+        ...(user.userId ? { userId: user.userId } : {}),
       },
     },
     env.ACCESS_TOKEN_SECRET,

@@ -26,7 +26,11 @@ export const login = async (req: Request, res: Response) => {
 
   if (!match) return res.status(401).json({ message: 'Неверный логин или пароль' })
 
-  issueSessionForUser(res, { name: foundUser.name, roles: foundUser.roles })
+  issueSessionForUser(res, {
+    name: foundUser.name,
+    roles: foundUser.roles,
+    userId: foundUser._id?.toString(),
+  })
 }
 
 export const refresh = (req: Request, res: Response) => {
@@ -54,11 +58,12 @@ export const refresh = (req: Request, res: Response) => {
         {
           UserInfo: {
             username: foundUser.name,
-            roles: foundUser.roles
-          }
+            roles: foundUser.roles,
+            ...(foundUser._id ? { userId: foundUser._id.toString() } : {}),
+          },
         },
         env.ACCESS_TOKEN_SECRET,
-        { expiresIn: '15m' }
+        { expiresIn: '15m' },
       )
 
       res.json({ accessToken })

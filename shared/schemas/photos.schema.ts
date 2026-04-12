@@ -44,6 +44,31 @@ export const uploadMetaItemSchema = z.object({
 
 export const uploadMetaSchema = z.array(uploadMetaItemSchema)
 
+const objectIdHex = z.string().regex(/^[a-fA-F0-9]{24}$/)
+
+const accessedByFromJsonField = z
+  .string()
+  .optional()
+  .transform((v) => {
+    if (v == null || String(v).trim() === '') return [] as { userId: string }[]
+    try {
+      const parsed = JSON.parse(String(v)) as unknown
+      if (!Array.isArray(parsed)) return []
+      const out: { userId: string }[] = []
+      for (const item of parsed) {
+        if (item && typeof item === 'object' && 'userId' in item) {
+          const id = (item as { userId: unknown }).userId
+          if (typeof id === 'string' && objectIdHex.safeParse(id).success) {
+            out.push({ userId: id })
+          }
+        }
+      }
+      return out
+    } catch {
+      return []
+    }
+  })
+
 export const uploadBodySchema = z.object({
   title: z
     .string()
@@ -82,6 +107,18 @@ export const uploadBodySchema = z.object({
       const n = Number(v)
       return Number.isFinite(n) ? n : undefined
     }),
+  accessedBy: accessedByFromJsonField,
 })
 
 export type UploadBody = z.infer<typeof uploadBodySchema>
+
+export const photoUpdateBodySchema = z.object({
+  title: z.string().optional(),
+  priority: z.number().optional(),
+  private: z.boolean().optional(),
+  tags: z.union([z.string(), z.array(z.string())]).optional(),
+  location: z.unknown().optional(),
+  accessedBy: z.array(z.object({ userId: objectIdHex })).optional(),
+})
+
+export type PhotoUpdateBody = z.infer<typeof photoUpdateBodySchema>

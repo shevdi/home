@@ -170,6 +170,35 @@ exports[`UploadPhoto renders default state and disables submit 1`] = `
               />
             </div>
           </div>
+          <div
+            class=""
+          >
+            <label
+              class=""
+              for="«r8»-control"
+            >
+              Доступ для пользователей
+            </label>
+            <div
+              class=""
+            >
+              <div>
+                <input
+                  aria-autocomplete="list"
+                  aria-expanded="false"
+                  class=""
+                  id="photo-form-accessed-by"
+                  placeholder="Имя пользователя"
+                  role="combobox"
+                  type="text"
+                  value=""
+                />
+              </div>
+              <div
+                class=""
+              />
+            </div>
+          </div>
         </div>
       </div>
       <button
@@ -252,7 +281,7 @@ exports[`UploadPhoto shows error message when upload fails 1`] = `
           >
             <label
               class=""
-              for="«r18»-control"
+              for="«r1i»-control"
             >
               Заголовок
             </label>
@@ -268,7 +297,7 @@ exports[`UploadPhoto shows error message when upload fails 1`] = `
           >
             <label
               class=""
-              for="«r19»-control"
+              for="«r1j»-control"
             >
               Приоритет
             </label>
@@ -284,7 +313,7 @@ exports[`UploadPhoto shows error message when upload fails 1`] = `
           >
             <label
               class=""
-              for="«r1a»-control"
+              for="«r1k»-control"
             >
               Страна
             </label>
@@ -310,7 +339,7 @@ exports[`UploadPhoto shows error message when upload fails 1`] = `
           >
             <label
               class=""
-              for="«r1c»-control"
+              for="«r1m»-control"
             >
               Город
             </label>
@@ -336,7 +365,7 @@ exports[`UploadPhoto shows error message when upload fails 1`] = `
           >
             <label
               class=""
-              for="«r1e»-control"
+              for="«r1o»-control"
             >
               Теги
             </label>
@@ -348,6 +377,35 @@ exports[`UploadPhoto shows error message when upload fails 1`] = `
                   class=""
                   id="photo-form-tags"
                   placeholder="Введите тег и нажмите Enter"
+                  type="text"
+                  value=""
+                />
+              </div>
+              <div
+                class=""
+              />
+            </div>
+          </div>
+          <div
+            class=""
+          >
+            <label
+              class=""
+              for="«r1q»-control"
+            >
+              Доступ для пользователей
+            </label>
+            <div
+              class=""
+            >
+              <div>
+                <input
+                  aria-autocomplete="list"
+                  aria-expanded="false"
+                  class=""
+                  id="photo-form-accessed-by"
+                  placeholder="Имя пользователя"
+                  role="combobox"
                   type="text"
                   value=""
                 />
@@ -492,7 +550,7 @@ exports[`UploadPhoto updates label and shows selected file 1`] = `
           >
             <label
               class=""
-              for="«r8»-control"
+              for="«ra»-control"
             >
               Заголовок
             </label>
@@ -508,7 +566,7 @@ exports[`UploadPhoto updates label and shows selected file 1`] = `
           >
             <label
               class=""
-              for="«r9»-control"
+              for="«rb»-control"
             >
               Приоритет
             </label>
@@ -524,7 +582,7 @@ exports[`UploadPhoto updates label and shows selected file 1`] = `
           >
             <label
               class=""
-              for="«ra»-control"
+              for="«rc»-control"
             >
               Страна
             </label>
@@ -550,7 +608,7 @@ exports[`UploadPhoto updates label and shows selected file 1`] = `
           >
             <label
               class=""
-              for="«rc»-control"
+              for="«re»-control"
             >
               Город
             </label>
@@ -576,7 +634,7 @@ exports[`UploadPhoto updates label and shows selected file 1`] = `
           >
             <label
               class=""
-              for="«re»-control"
+              for="«rg»-control"
             >
               Теги
             </label>
@@ -588,6 +646,35 @@ exports[`UploadPhoto updates label and shows selected file 1`] = `
                   class=""
                   id="photo-form-tags"
                   placeholder="Введите тег и нажмите Enter"
+                  type="text"
+                  value=""
+                />
+              </div>
+              <div
+                class=""
+              />
+            </div>
+          </div>
+          <div
+            class=""
+          >
+            <label
+              class=""
+              for="«ri»-control"
+            >
+              Доступ для пользователей
+            </label>
+            <div
+              class=""
+            >
+              <div>
+                <input
+                  aria-autocomplete="list"
+                  aria-expanded="false"
+                  class=""
+                  id="photo-form-accessed-by"
+                  placeholder="Имя пользователя"
+                  role="combobox"
                   type="text"
                   value=""
                 />

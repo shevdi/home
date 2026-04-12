@@ -4,6 +4,7 @@ import type { Control, FieldValues, Path, UseFormRegister, UseFormTrigger } from
 import { Controller } from 'react-hook-form'
 import { Checkbox, Field, Input, RhfTaggedInput } from '@/shared/ui'
 import type { PhotoCommonFormValues } from '../utils/photoCommonForm'
+import type { TaggedSuggestion } from '@shevdi-home/ui-kit'
 
 /** Matches ui-kit `sm` density for Field labels / descriptions / errors. */
 const smallFormDensity: CSSProperties = {
@@ -18,6 +19,8 @@ type PhotoCommonFieldsProps<T extends PhotoCommonFormValues & FieldValues> = {
   trigger: UseFormTrigger<T>
   disabled?: boolean
   privateLabel: string
+  /** When set, shows user-picker tags for private photo sharing (Mongo user ids). */
+  fetchUserSuggestions?: (query: string) => Promise<TaggedSuggestion[]>
 }
 
 export function PhotoCommonFields<T extends PhotoCommonFormValues & FieldValues>({
@@ -26,6 +29,7 @@ export function PhotoCommonFields<T extends PhotoCommonFormValues & FieldValues>
   trigger,
   disabled = false,
   privateLabel,
+  fetchUserSuggestions,
 }: PhotoCommonFieldsProps<T>) {
   return (
     <SmallFormRoot style={smallFormDensity}>
@@ -99,6 +103,21 @@ export function PhotoCommonFields<T extends PhotoCommonFormValues & FieldValues>
             size='sm'
           />
         </Field>
+        {fetchUserSuggestions ? (
+          <Field label='Доступ для пользователей'>
+            <RhfTaggedInput<T>
+              control={control}
+              trigger={trigger}
+              tagsName={'accessedBy' as Path<T>}
+              inputName={'accessedByInput' as Path<T>}
+              id='photo-form-accessed-by'
+              placeholder='Имя пользователя'
+              disabled={disabled}
+              size='sm'
+              fetchSuggestions={fetchUserSuggestions}
+            />
+          </Field>
+        ) : null}
       </FieldsWrapper>
     </SmallFormRoot>
   )
