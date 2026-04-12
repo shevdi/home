@@ -1,5 +1,7 @@
 export { PhotoGallery } from './PhotoGallery'
 export { UploadPhoto } from './UploadPhoto'
+export { EditPhotos } from './EditPhotos'
+export { BulkEditPhotoRow } from './BulkEditPhotoRow'
 export { Photo } from './Photo'
 export { PhotoLink } from './PhotoLink'
 export { EditPhoto } from './EditPhoto'

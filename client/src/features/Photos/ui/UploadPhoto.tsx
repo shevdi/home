@@ -16,9 +16,10 @@ import { FileData } from '@/features/Photos/ui/FileData'
 import { getErrorMessage } from '@/shared/utils'
 import { createUserSuggestionsLoader } from '../utils/userSuggestions'
 import type { PerFileOptions } from '../utils/perFileOptions'
-import { defaultPerFileOptions, computeMergedView, getTargetIds } from '../utils/perFileOptions'
+import { defaultPerFileOptions } from '../utils/perFileOptions'
 import { FileOptionsSummary } from '@/features/Photos/ui/FileOptionsSummary'
 import { BulkEditForm } from '@/features/Photos/ui/BulkEditForm'
+import { useBulkPerFileOptions } from '../hooks/useBulkPerFileOptions'
 
 const getFileLabel = (count: number) => {
   if (count === 0) return 'Загрузить фото'
@@ -53,8 +54,19 @@ export function UploadPhoto() {
     [store],
   )
   const [fileMeta, setFileMeta] = useState<FileMeta[]>([])
-  const [fileOptions, setFileOptions] = useState<Map<string, PerFileOptions>>(new Map())
-  const [selection, setSelection] = useState<Set<string>>(new Set())
+  const {
+    fileOptions,
+    setFileOptions,
+    selection,
+    setSelection,
+    toggleSelection,
+    toggleSelectAll,
+    mergedView,
+    handleBulkUpdate,
+    handleTagAdd,
+    handleTagRemove,
+    removeOptionIds,
+  } = useBulkPerFileOptions()
   const { files: uploadFiles, isUploading } = useAppSelector((state) => state.upload)
 
   const uploadStatusById = useMemo(() => {
@@ -98,7 +110,7 @@ export function UploadPhoto() {
       setFileOptions(newOptions)
       setSelection(new Set())
     },
-    [dispatch, setValue],
+    [dispatch, setFileOptions, setSelection, setValue],
   )
 
   const removeFileAt = useCallback(
@@ -108,99 +120,15 @@ export function UploadPhoto() {
       const next = files.filter((_, i) => i !== index)
       setValue('files', next, { shouldValidate: true, shouldDirty: true })
       setFileMeta((prev) => prev.filter((_, i) => i !== index))
-      setFileOptions((prev) => {
-        const updated = new Map(prev)
-        updated.delete(removedId)
-        return updated
-      })
-      setSelection((prev) => {
-        if (!prev.has(removedId)) return prev
-        const updated = new Set(prev)
-        updated.delete(removedId)
-        return updated
-      })
+      removeOptionIds([removedId])
       if (next.length === 0) dispatch(resetUpload())
     },
-    [dispatch, files, isUploading, setValue],
+    [dispatch, files, isUploading, removeOptionIds, setValue],
   )
 
   const allFileIds = useMemo(
     () => files.map((f) => getFileId(f)),
     [files],
-  )
-
-  const toggleSelection = useCallback((fileId: string) => {
-    setSelection((prev) => {
-      const updated = new Set(prev)
-      if (updated.has(fileId)) updated.delete(fileId)
-      else updated.add(fileId)
-      return updated
-    })
-  }, [])
-
-  const toggleSelectAll = useCallback(() => {
-    setSelection((prev) =>
-      prev.size === allFileIds.length ? new Set() : new Set(allFileIds),
-    )
-  }, [allFileIds])
-
-  const mergedView = useMemo(
-    () => computeMergedView(fileOptions, selection),
-    [fileOptions, selection],
-  )
-
-  const handleBulkUpdate = useCallback(
-    (field: keyof PerFileOptions, value: unknown) => {
-      const targets = getTargetIds(fileOptions, selection)
-      setFileOptions((prev) => {
-        const updated = new Map(prev)
-        for (const id of targets) {
-          const current = updated.get(id)
-          if (!current) continue
-          updated.set(id, { ...current, [field]: value })
-        }
-        return updated
-      })
-    },
-    [fileOptions, selection],
-  )
-
-  const handleTagAdd = useCallback(
-    (field: 'country' | 'city' | 'tags' | 'accessedBy', tag: string) => {
-      const targets = getTargetIds(fileOptions, selection)
-      setFileOptions((prev) => {
-        const updated = new Map(prev)
-        for (const id of targets) {
-          const current = updated.get(id)
-          if (!current) continue
-          const arr = current[field]
-          if (!arr.includes(tag)) {
-            updated.set(id, { ...current, [field]: [...arr, tag] })
-          }
-        }
-        return updated
-      })
-    },
-    [fileOptions, selection],
-  )
-
-  const handleTagRemove = useCallback(
-    (field: 'country' | 'city' | 'tags' | 'accessedBy', tag: string) => {
-      const targets = getTargetIds(fileOptions, selection)
-      setFileOptions((prev) => {
-        const updated = new Map(prev)
-        for (const id of targets) {
-          const current = updated.get(id)
-          if (!current) continue
-          updated.set(id, {
-            ...current,
-            [field]: current[field].filter((t) => t !== tag),
-          })
-        }
-        return updated
-      })
-    },
-    [fileOptions, selection],
   )
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -216,31 +144,6 @@ export function UploadPhoto() {
       const id = getFileId(file)
       return fileOptions.get(id) ?? { ...defaultPerFileOptions }
     })
-
-    // #region agent log
-    {
-      const hits = data.files.filter((f) => fileOptions.has(getFileId(f))).length
-      fetch('http://127.0.0.1:7915/ingest/9992f24d-00f6-41c9-bc27-a45102f4306c', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': 'd2a394' },
-        body: JSON.stringify({
-          sessionId: 'd2a394',
-          location: 'UploadPhoto.tsx:onSubmit',
-          message: 'upload submit per-file',
-          data: {
-            fileCount: data.files.length,
-            mapSize: fileOptions.size,
-            idHits: hits,
-            nonEmptyTitles: orderedPerFileOptions.filter((o) => o.title?.trim()).length,
-            anyPrivate: orderedPerFileOptions.some((o) => o.private),
-            tagSets: orderedPerFileOptions.filter((o) => o.tags.length > 0).length,
-          },
-          timestamp: Date.now(),
-          hypothesisId: 'H1',
-        }),
-      }).catch(() => {})
-    }
-    // #endregion
 
     try {
       await dispatch(
@@ -278,7 +181,7 @@ export function UploadPhoto() {
               <SelectAllRow>
                 <Checkbox
                   checked={selection.size === allFileIds.length && allFileIds.length > 0}
-                  onChange={toggleSelectAll}
+                  onChange={() => toggleSelectAll(allFileIds)}
                   label='Выбрать все'
                   size='sm'
                 />

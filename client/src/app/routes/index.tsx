@@ -31,7 +31,9 @@ export function RoutesList() {
               <Route index element={<PhotosPage />} />
               <Route path=':id'>
                 <Route index element={<PhotoPage />} />
-                <Route path='edit' element={<EditPhotoPage />} />
+                <Route element={<RequireAuth allowedRoles={['user', 'admin']} />}>
+                  <Route path='edit' element={<EditPhotoPage />} />
+                </Route>
               </Route>
               <Route path='new' element={<UploadPhotoPage />} />
             </Route>
