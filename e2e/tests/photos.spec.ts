@@ -12,6 +12,9 @@ import {
   apiLogin,
 } from './helpers/api';
 import { loginAsAdmin, loginAsGrantee } from './helpers/auth';
+
+/** `User.name` from `__test/seed-user` for the grantee account. */
+const E2E_GRANTEE_DISPLAY_NAME = 'e2e_grantee';
 import { mockPhotos } from './fixtures/photo-mocks';
 
 const GALLERY_PHOTO = 'figure a[href^="/photos/"]';
@@ -409,5 +412,64 @@ test.describe('Private photo share (accessedBy)', () => {
 
     await page.goto(`/photos/${shared?._id}`);
     await expect(page.getByText('Такого фото нет')).toBeVisible({ timeout: 10000 });
+  });
+
+  test('edit page shows accessedBy chip with grantee display name, not user id', async ({ page, request }) => {
+    const password = process.env.E2E_PASSWORD;
+    if (!password) {
+      test.skip();
+      return;
+    }
+    await loginAsAdmin(page);
+    const adminToken = await apiLogin(request);
+    const photos = await getPhotosWithToken(request, adminToken);
+    const shared = photos.find((p) => p.tags?.includes('e2e-private-share'));
+    expect(shared?._id).toBeTruthy();
+
+    // Client-side nav keeps the access token in Redux; full reload would drop it and
+    // refresh cookie is Secure (not sent on http://localhost in e2e).
+    await waitForPhotosAndGalleryViaNav(page);
+    await page.getByText('Приватные').click();
+    await expect(page.locator(`a[href^="/photos/${shared?._id}"]`).first()).toBeVisible({ timeout: 10000 });
+    await page.locator(`a[href^="/photos/${shared?._id}"]`).first().click();
+    await page.getByRole('link', { name: 'Редактировать' }).click();
+    await expect(page.locator('input[name="title"]')).toBeVisible({ timeout: 15000 });
+
+    const accessedByTaggedInput = page.locator('#photo-form-accessed-by').locator('..').locator('..');
+    await expect(accessedByTaggedInput.getByText(E2E_GRANTEE_DISPLAY_NAME)).toBeVisible();
+    await expect(accessedByTaggedInput.getByText(granteeUserId)).toHaveCount(0);
+  });
+
+  test('edit page can re-add grantee from suggestions; chip shows display name', async ({ page, request }) => {
+    const password = process.env.E2E_PASSWORD;
+    if (!password) {
+      test.skip();
+      return;
+    }
+    await loginAsAdmin(page);
+    const adminToken = await apiLogin(request);
+    const photos = await getPhotosWithToken(request, adminToken);
+    const shared = photos.find((p) => p.tags?.includes('e2e-private-share'));
+    expect(shared?._id).toBeTruthy();
+
+    await waitForPhotosAndGalleryViaNav(page);
+    await page.getByText('Приватные').click();
+    await expect(page.locator(`a[href^="/photos/${shared?._id}"]`).first()).toBeVisible({ timeout: 10000 });
+    await page.locator(`a[href^="/photos/${shared?._id}"]`).first().click();
+    await page.getByRole('link', { name: 'Редактировать' }).click();
+    await expect(page.locator('input[name="title"]')).toBeVisible({ timeout: 15000 });
+
+    const accessedByTaggedInput = page.locator('#photo-form-accessed-by').locator('..').locator('..');
+    await expect(accessedByTaggedInput.getByText(E2E_GRANTEE_DISPLAY_NAME)).toBeVisible();
+
+    await accessedByTaggedInput.getByRole('button', { name: new RegExp(`Удалить тег ${granteeUserId}`) }).click();
+    await expect(accessedByTaggedInput.getByText(E2E_GRANTEE_DISPLAY_NAME)).toHaveCount(0);
+
+    await page.locator('#photo-form-accessed-by').fill('e2e_gr');
+    await expect(page.getByRole('option', { name: E2E_GRANTEE_DISPLAY_NAME })).toBeVisible({ timeout: 10000 });
+    await page.getByRole('option', { name: E2E_GRANTEE_DISPLAY_NAME }).click();
+
+    await expect(accessedByTaggedInput.getByText(E2E_GRANTEE_DISPLAY_NAME)).toBeVisible();
+    await expect(accessedByTaggedInput.getByText(granteeUserId)).toHaveCount(0);
   });
 });

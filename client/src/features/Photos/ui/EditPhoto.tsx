@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useStore } from 'react-redux'
 import type { RootState } from '@/app/store/store'
 import styled from 'styled-components'
@@ -16,6 +16,11 @@ import { usePhoto } from '../hooks/usePhoto'
 import { photoCommonFormSchema } from '../utils/photoCommonForm'
 import { PhotoCommonFields } from './PhotoCommonFields'
 import { createUserSuggestionsLoader } from '../utils/userSuggestions'
+import {
+  accessGrantsToLabelMap,
+  mergeUserLabelMaps,
+  suggestionToStoredLabel,
+} from '../utils/accessedByChipLabels'
 
 const schema = photoCommonFormSchema
 
@@ -31,6 +36,16 @@ export function EditPhoto() {
   const photoId = location.pathname.split('/')[2]
   const { photo, neighbours, isLoading } = usePhoto()
   const [changePhoto] = useChangePhotoMutation()
+
+  const labelsFromPhoto = useMemo(() => accessGrantsToLabelMap(photo?.accessedBy), [photo?.accessedBy])
+  const [pickedAccessLabels, setPickedAccessLabels] = useState<Record<string, string>>({})
+  useEffect(() => {
+    setPickedAccessLabels({})
+  }, [photoId])
+  const accessedByChipLabels = useMemo(
+    () => mergeUserLabelMaps(labelsFromPhoto, pickedAccessLabels),
+    [labelsFromPhoto, pickedAccessLabels],
+  )
 
   const {
     register,
@@ -136,6 +151,13 @@ export function EditPhoto() {
               disabled={isSubmitting}
               privateLabel='Приватное'
               fetchUserSuggestions={fetchUserSuggestions}
+              accessedByChipLabels={accessedByChipLabels}
+              onAccessedBySuggestionPick={(s) =>
+                setPickedAccessLabels((prev) => ({
+                  ...prev,
+                  [s.value]: suggestionToStoredLabel(s),
+                }))
+              }
             />
             <Button type='submit' display='block' margin='1rem auto' disabled={isSubmitting}>
               Сохранить

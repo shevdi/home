@@ -6,6 +6,7 @@ import { Checkbox, Field, Input, RhfTaggedInput } from '@/shared/ui'
 import type { PhotoCommonFormValues } from '../utils/photoCommonForm'
 import { PLACEHOLDER_SAVE_VALUE } from '../utils/formPlaceholders'
 import type { TaggedSuggestion } from '@shevdi-home/ui-kit'
+import { createAccessedByRenderTag } from '../utils/accessedByChipLabels'
 
 /** Matches ui-kit `sm` density for Field labels / descriptions / errors. */
 const smallFormDensity: CSSProperties = {
@@ -22,6 +23,9 @@ type PhotoCommonFieldsProps<T extends PhotoCommonFormValues & FieldValues> = {
   privateLabel: string
   /** When set, shows user-picker tags for private photo sharing (Mongo user ids). */
   fetchUserSuggestions?: (query: string) => Promise<TaggedSuggestion[]>
+  /** Display names for chip text; form values remain user ids. */
+  accessedByChipLabels?: Record<string, string>
+  onAccessedBySuggestionPick?: (suggestion: TaggedSuggestion) => void
 }
 
 export function PhotoCommonFields<T extends PhotoCommonFormValues & FieldValues>({
@@ -31,6 +35,8 @@ export function PhotoCommonFields<T extends PhotoCommonFormValues & FieldValues>
   disabled = false,
   privateLabel,
   fetchUserSuggestions,
+  accessedByChipLabels,
+  onAccessedBySuggestionPick,
 }: PhotoCommonFieldsProps<T>) {
   return (
     <SmallFormRoot style={smallFormDensity}>
@@ -116,6 +122,8 @@ export function PhotoCommonFields<T extends PhotoCommonFormValues & FieldValues>
               disabled={disabled}
               size='sm'
               fetchSuggestions={fetchUserSuggestions}
+              renderTag={createAccessedByRenderTag(accessedByChipLabels ?? {})}
+              onCommitSuggestion={onAccessedBySuggestionPick}
             />
           </Field>
         ) : null}

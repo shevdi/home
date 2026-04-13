@@ -30,6 +30,8 @@ export interface ILocation {
 /** Grant on a private photo: user id references `User._id`. */
 export interface IPhotoAccessGrant {
   userId: string
+  /** Present on read API responses when the server resolves `User.name`. */
+  userName?: string
 }
 
 export interface ILink {

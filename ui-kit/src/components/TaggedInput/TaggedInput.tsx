@@ -34,6 +34,8 @@ export interface TaggedInputProps
   fetchSuggestions?: (query: string) => Promise<TaggedSuggestion[]>
   /** Debounce before calling `fetchSuggestions` (default 250). */
   suggestionDebounceMs?: number
+  /** When the user commits a row from the suggestion list (mouse or keyboard). */
+  onCommitSuggestion?: (suggestion: TaggedSuggestion) => void
 }
 
 export const TaggedInput = React.forwardRef<HTMLInputElement, TaggedInputProps>(function TaggedInput(
@@ -54,6 +56,7 @@ export const TaggedInput = React.forwardRef<HTMLInputElement, TaggedInputProps>(
     onPaste,
     fetchSuggestions,
     suggestionDebounceMs = 250,
+    onCommitSuggestion,
     ...rest
   },
   ref,
@@ -98,6 +101,8 @@ export const TaggedInput = React.forwardRef<HTMLInputElement, TaggedInputProps>(
 
   const pickSuggestion = useCallback(
     (value: string) => {
+      const picked = suggestions.find((s) => s.value === value)
+      if (picked) onCommitSuggestion?.(picked)
       const { next, duplicate } = addCommittedToken(tags, value, insertAt)
       if (!duplicate) {
         onTagsChange(next)
@@ -105,7 +110,7 @@ export const TaggedInput = React.forwardRef<HTMLInputElement, TaggedInputProps>(
       onInputValueChange('')
       closeMenu()
     },
-    [insertAt, onInputValueChange, onTagsChange, tags, closeMenu],
+    [insertAt, onInputValueChange, onTagsChange, tags, closeMenu, suggestions, onCommitSuggestion],
   )
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {

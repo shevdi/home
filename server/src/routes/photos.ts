@@ -31,6 +31,7 @@ import {
   withPhotoVisibilityFilter,
 } from '../utils/photoAccess.ts';
 import { validatePhotoAccessedBy } from '../utils/validatePhotoAccessedBy.ts';
+import { hydrateAccessedByGrants, userNamesForAccessGrants } from '../utils/hydrateAccessedBy.ts';
 import type { MongoFilter } from '../utils/queryBuilder.ts';
 
 const router = express.Router()
@@ -102,6 +103,8 @@ router.get(`/`, optionalAuth, cache, async (req: RequestWithAuth, res: Response)
       getPhotosCount(search)
     ])
 
+    const accessUserNames = await userNamesForAccessGrants(photos)
+
     const results = await Promise.all(photos
       .map(async (item) => {
         const [smSizeUrl, mdSizeUrl, fullSizeUrl] = await Promise.all([
@@ -111,9 +114,11 @@ router.get(`/`, optionalAuth, cache, async (req: RequestWithAuth, res: Response)
         ])
         const accessedBy =
           Array.isArray(item.accessedBy) && item.accessedBy.length > 0
-            ? item.accessedBy.map((g: { userId?: { toString(): string } }) => ({
-                userId: String(g.userId),
-              }))
+            ? item.accessedBy.map((g: { userId?: { toString(): string } } | { userId?: string }) => {
+                const userId = String(g.userId)
+                const userName = accessUserNames.get(userId)
+                return userName !== undefined ? { userId, userName } : { userId }
+              })
             : undefined
         return {
           _id: item._id,
@@ -377,8 +382,13 @@ router.get(`/:id`, optionalAuth, cache, async (req: RequestWithAuth, res: Respon
       urlCache.getUrl(urlSource, photo.mdSizeEntryId),
       urlCache.getUrl(urlSource, photo.fullSizeEntryId),
     ])
+    const accessedBy =
+      Array.isArray(photo.accessedBy) && photo.accessedBy.length > 0
+        ? await hydrateAccessedByGrants(photo.accessedBy)
+        : undefined
     return res.json({
       ...photo,
+      ...(accessedBy !== undefined ? { accessedBy } : {}),
       mdSizeUrl,
       fullSizeUrl
     })
@@ -422,8 +432,13 @@ router.put(`/:id`, verifyJWT, requireAdmin, async (req: Request, res: Response) 
 
     const url = await urlCache.getUrl(urlSource, photo.mdSizeEntryId)
     cacheClear('photos')
+    const accessedBy =
+      Array.isArray(photo.accessedBy) && photo.accessedBy.length > 0
+        ? await hydrateAccessedByGrants(photo.accessedBy)
+        : undefined
     res.json({
       ...photo,
+      ...(accessedBy !== undefined ? { accessedBy } : {}),
       url
     })
   } catch (err) {

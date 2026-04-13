@@ -1,4 +1,5 @@
 import type { CSSProperties, KeyboardEvent } from 'react'
+import type { ReactElement, ReactNode } from 'react'
 import { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { Checkbox, Field, Input } from '@/shared/ui'
@@ -7,6 +8,7 @@ import type { MergedView } from '../utils/perFileOptions'
 import type { PerFileOptions } from '../utils/perFileOptions'
 import { PLACEHOLDER_MIXED, PLACEHOLDER_SAVE_VALUE } from '../utils/formPlaceholders'
 import type { TaggedSuggestion } from '@shevdi-home/ui-kit'
+import { createAccessedByRenderTag } from '../utils/accessedByChipLabels'
 
 const smallFormDensity: CSSProperties = {
   ['--font-size-label' as string]: '0.78rem',
@@ -25,6 +27,9 @@ type BulkEditFormProps = {
   onTagAdd: (field: TagArrayField, tag: string) => void
   onTagRemove: (field: TagArrayField, tag: string) => void
   fetchUserSuggestions?: (query: string) => Promise<TaggedSuggestion[]>
+  /** User id → display name for `accessedBy` chips only. */
+  accessedByDisplayNames?: Record<string, string>
+  onAccessedBySuggestionPick?: (suggestion: TaggedSuggestion) => void
 }
 
 function TagField({
@@ -37,6 +42,8 @@ function TagField({
   onTagRemove,
   insertAt = 'end',
   fetchSuggestions,
+  renderTag,
+  onCommitSuggestion,
 }: {
   label: string
   tags: string[]
@@ -47,6 +54,8 @@ function TagField({
   onTagRemove: (field: TagArrayField, tag: string) => void
   insertAt?: 'start' | 'end'
   fetchSuggestions?: (query: string) => Promise<TaggedSuggestion[]>
+  renderTag?: (tag: string, chip: ReactElement) => ReactNode
+  onCommitSuggestion?: (suggestion: TaggedSuggestion) => void
 }) {
   const [inputValue, setInputValue] = useState('')
 
@@ -72,6 +81,8 @@ function TagField({
         size='sm'
         insertAt={insertAt}
         fetchSuggestions={fetchSuggestions}
+        renderTag={renderTag}
+        onCommitSuggestion={onCommitSuggestion}
       />
     </Field>
   )
@@ -86,6 +97,8 @@ export function BulkEditForm({
   onTagAdd,
   onTagRemove,
   fetchUserSuggestions,
+  accessedByDisplayNames,
+  onAccessedBySuggestionPick,
 }: BulkEditFormProps) {
   const [titleDraft, setTitleDraft] = useState('')
   const [priorityDraft, setPriorityDraft] = useState('')
@@ -199,6 +212,8 @@ export function BulkEditForm({
             onTagAdd={onTagAdd}
             onTagRemove={onTagRemove}
             fetchSuggestions={fetchUserSuggestions}
+            renderTag={createAccessedByRenderTag(accessedByDisplayNames ?? {})}
+            onCommitSuggestion={onAccessedBySuggestionPick}
           />
         )}
       </FieldsGrid>

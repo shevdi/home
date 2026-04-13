@@ -1,4 +1,9 @@
 import { useCallback, useLayoutEffect, useMemo, useState } from 'react'
+import {
+  accessGrantsToLabelMap,
+  mergeUserLabelMaps,
+  suggestionToStoredLabel,
+} from '../utils/accessedByChipLabels'
 import { Link, useLocation } from 'react-router'
 import styled from 'styled-components'
 import { useStore } from 'react-redux'
@@ -55,6 +60,19 @@ export function EditPhotos() {
   } = useBulkPerFileOptions()
 
   const [changePhoto] = useChangePhotoMutation()
+
+  const labelsFromPhotos = useMemo(() => {
+    const merged: Record<string, string> = {}
+    for (const p of photos) {
+      Object.assign(merged, accessGrantsToLabelMap(p.accessedBy))
+    }
+    return merged
+  }, [photos])
+  const [pickedAccessLabels, setPickedAccessLabels] = useState<Record<string, string>>({})
+  const bulkAccessedByLabels = useMemo(
+    () => mergeUserLabelMaps(labelsFromPhotos, pickedAccessLabels),
+    [labelsFromPhotos, pickedAccessLabels],
+  )
 
   useLayoutEffect(() => {
     const next = new Map<string, PerFileOptions>()
@@ -188,6 +206,13 @@ export function EditPhotos() {
         onTagAdd={handleTagAdd}
         onTagRemove={handleTagRemove}
         fetchUserSuggestions={fetchUserSuggestions}
+        accessedByDisplayNames={bulkAccessedByLabels}
+        onAccessedBySuggestionPick={(s) =>
+          setPickedAccessLabels((prev) => ({
+            ...prev,
+            [s.value]: suggestionToStoredLabel(s),
+          }))
+        }
       />
       <SaveRow>
         <Button type='button' onClick={() => void handleSave()} disabled={isSaving}>

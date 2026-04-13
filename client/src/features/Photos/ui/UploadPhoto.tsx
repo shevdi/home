@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { z } from 'zod'
 import type { SubmitHandler} from 'react-hook-form';
@@ -20,6 +20,7 @@ import { defaultPerFileOptions } from '../utils/perFileOptions'
 import { FileOptionsSummary } from '@/features/Photos/ui/FileOptionsSummary'
 import { BulkEditForm } from '@/features/Photos/ui/BulkEditForm'
 import { useBulkPerFileOptions } from '../hooks/useBulkPerFileOptions'
+import { suggestionToStoredLabel } from '../utils/accessedByChipLabels'
 
 const getFileLabel = (count: number) => {
   if (count === 0) return 'Загрузить фото'
@@ -54,6 +55,7 @@ export function UploadPhoto() {
     [store],
   )
   const [fileMeta, setFileMeta] = useState<FileMeta[]>([])
+  const [pickedAccessLabels, setPickedAccessLabels] = useState<Record<string, string>>({})
   const {
     fileOptions,
     setFileOptions,
@@ -95,6 +97,10 @@ export function UploadPhoto() {
 
   const files = useWatch({ control, name: 'files', defaultValue: [] })
   const isProcessed = isUploading
+
+  useEffect(() => {
+    if (files.length === 0) setPickedAccessLabels({})
+  }, [files.length])
 
   const fileLabel = useMemo(() => getFileLabel(files.length), [files.length])
 
@@ -235,6 +241,13 @@ export function UploadPhoto() {
             onTagAdd={handleTagAdd}
             onTagRemove={handleTagRemove}
             fetchUserSuggestions={fetchUserSuggestions}
+            accessedByDisplayNames={pickedAccessLabels}
+            onAccessedBySuggestionPick={(s) =>
+              setPickedAccessLabels((prev) => ({
+                ...prev,
+                [s.value]: suggestionToStoredLabel(s),
+              }))
+            }
           />
         )}
         <Button type='submit' disabled={isProcessed || files.length === 0}>
