@@ -18,16 +18,18 @@ const createRes = (): Response => {
 }
 
 beforeAll(async () => {
-  const mod = await import('jsonwebtoken')
-  jwtModule = mod
-    ; ({ verifyJWT } = await import('../verifyJWT.js'))
+  jwtModule = await import('jsonwebtoken')
 })
 
 const getJwt = () => (jwtModule as { default?: typeof jwtModule }).default ?? jwtModule
 
-beforeEach(() => {
+beforeEach(async () => {
   jest.restoreAllMocks()
+  jest.resetModules()
   process.env.ACCESS_TOKEN_SECRET = 'access-secret'
+  process.env.REFRESH_TOKEN_SECRET = 'refresh-secret'
+  jwtModule = await import('jsonwebtoken')
+  ; ({ verifyJWT } = await import('../verifyJWT.js'))
 })
 
 afterEach(() => {

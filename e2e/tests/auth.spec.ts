@@ -11,14 +11,25 @@ test.describe('Login flow', () => {
   });
 
   test('shows error on invalid credentials', async ({ page }) => {
-    await test.step('Submit invalid credentials', async () => {
+    await test.step('Submit invalid credentials and wait for 401', async () => {
+      const authRejected = page.waitForResponse(
+        (r) =>
+          r.request().method() === 'POST' &&
+          /\/api\/v1\/auth\b/.test(r.url()) &&
+          r.status() === 401,
+      );
       await page.locator('input[name="username"]').fill('invalid-user');
       await page.locator('input[name="password"]').fill('wrong-password');
       await page.getByRole('button', { name: 'Войти' }).click();
+      const resp = await authRejected;
+      const body = (await resp.json()) as { message?: string };
+      expect(body.message).toBe('Неверный логин или пароль');
     });
 
-    await test.step('Error message is shown', async () => {
-      await expect(page.getByText('Неверный логин или пароль')).toBeVisible({ timeout: 10000 });
+    await test.step('Error message is shown in the form', async () => {
+      await expect(page.getByTestId('password-login-error')).toContainText('Неверный логин или пароль', {
+        timeout: 10000,
+      });
     });
   });
 

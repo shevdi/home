@@ -2,7 +2,8 @@ import { Photo } from '@/features/Photos'
 import { reachGoal } from '@/shared/analytics'
 import { useTitle } from '@/shared/hooks'
 import { useAuth } from '@/shared/hooks/useAuth'
-import { MouseEvent, useEffect } from 'react'
+import type { MouseEvent} from 'react';
+import { useEffect } from 'react'
 import { Link, useNavigate, useParams } from 'react-router'
 import styled from 'styled-components'
 

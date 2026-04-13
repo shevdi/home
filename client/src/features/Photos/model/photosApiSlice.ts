@@ -1,6 +1,6 @@
 import { apiSlice } from '@/app/store/api'
 import type { FetchBaseQueryError, FetchBaseQueryMeta, QueryReturnValue } from '@reduxjs/toolkit/query'
-import type { ILink, IPhotosResponse, PhotoSearchParams, UploadResponse } from '@shevdi-home/shared'
+import type { ILink, IPhotoAccessGrant, IPhotosResponse, PhotoSearchParams, UploadResponse } from '@shevdi-home/shared'
 import { buildSearchParams } from '@/shared/utils'
 
 let lastInfiniteSearchKey: string | null = null
@@ -92,7 +92,17 @@ export const photosApiSlice = apiSlice.injectEndpoints({
     }),
     changePhoto: builder.mutation<
       ILink,
-      { id: string; data: { title: string; priority?: number; private?: boolean; tags?: string[]; location?: ILink['location'] } }
+      {
+        id: string
+        data: {
+          title: string
+          priority?: number
+          private?: boolean
+          tags?: string[]
+          location?: ILink['location']
+          accessedBy?: IPhotoAccessGrant[]
+        }
+      }
     >({
       query: ({ id, data }) => ({
         url: `photos/${id}`,

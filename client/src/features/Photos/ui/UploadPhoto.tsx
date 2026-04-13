@@ -1,17 +1,26 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { z } from 'zod'
-import { SubmitHandler, useForm, useWatch } from 'react-hook-form'
+import type { SubmitHandler} from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form'
 import { useDropzone } from 'react-dropzone'
-import { Button, DotsProgressIndicator, ErrMessage, FileDropzone } from '@/shared/ui'
+import { Button, Checkbox, DotsProgressIndicator, ErrMessage, FileDropzone } from '@/shared/ui'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useAppDispatch, useAppSelector } from '@/app/store'
-import { buildMeta, FileMeta } from '../utils/uploadPhotoMeta'
-import { photoCommonFormDefaults, photoCommonFormSchema } from '../utils/photoCommonForm'
+import { useStore } from 'react-redux'
+import type { RootState } from '@/app/store/store'
+import type { FileMeta } from '../utils/uploadPhotoMeta';
+import { buildMeta } from '../utils/uploadPhotoMeta'
 import { getFileId, removeUploadFile, resetUpload, uploadPhotosThunk } from '../model'
-import { FileData } from './FileData'
+import { FileData } from '@/features/Photos/ui/FileData'
 import { getErrorMessage } from '@/shared/utils'
-import { PhotoCommonFields } from './PhotoCommonFields'
+import { createUserSuggestionsLoader } from '../utils/userSuggestions'
+import type { PerFileOptions } from '../utils/perFileOptions'
+import { defaultPerFileOptions } from '../utils/perFileOptions'
+import { FileOptionsSummary } from '@/features/Photos/ui/FileOptionsSummary'
+import { BulkEditForm } from '@/features/Photos/ui/BulkEditForm'
+import { useBulkPerFileOptions } from '../hooks/useBulkPerFileOptions'
+import { suggestionToStoredLabel } from '../utils/accessedByChipLabels'
 
 const getFileLabel = (count: number) => {
   if (count === 0) return 'Загрузить фото'
@@ -32,7 +41,7 @@ const IMAGE_ACCEPT = {
   'image/webp': ['.webp'],
 } as const
 
-const schema = photoCommonFormSchema.extend({
+const schema = z.object({
   files: z.array(z.instanceof(File)).min(1, { error: 'Пожалуйста, выберите файлы' }),
 })
 
@@ -40,7 +49,26 @@ type FormFields = z.infer<typeof schema>
 
 export function UploadPhoto() {
   const dispatch = useAppDispatch()
+  const store = useStore<RootState>()
+  const fetchUserSuggestions = useMemo(
+    () => createUserSuggestionsLoader(() => store.getState()),
+    [store],
+  )
   const [fileMeta, setFileMeta] = useState<FileMeta[]>([])
+  const [pickedAccessLabels, setPickedAccessLabels] = useState<Record<string, string>>({})
+  const {
+    fileOptions,
+    setFileOptions,
+    selection,
+    setSelection,
+    toggleSelection,
+    toggleSelectAll,
+    mergedView,
+    handleBulkUpdate,
+    handleTagAdd,
+    handleTagRemove,
+    removeOptionIds,
+  } = useBulkPerFileOptions()
   const { files: uploadFiles, isUploading } = useAppSelector((state) => state.upload)
 
   const uploadStatusById = useMemo(() => {
@@ -59,19 +87,20 @@ export function UploadPhoto() {
     handleSubmit,
     setError,
     setValue,
-    register,
-    trigger,
     formState: { errors },
   } = useForm<FormFields>({
     resolver: zodResolver(schema),
     defaultValues: {
-      ...photoCommonFormDefaults,
       files: [],
     },
   })
 
   const files = useWatch({ control, name: 'files', defaultValue: [] })
   const isProcessed = isUploading
+
+  useEffect(() => {
+    if (files.length === 0) setPickedAccessLabels({})
+  }, [files.length])
 
   const fileLabel = useMemo(() => getFileLabel(files.length), [files.length])
 
@@ -80,19 +109,32 @@ export function UploadPhoto() {
       dispatch(resetUpload())
       setValue('files', acceptedFiles, { shouldValidate: true })
       setFileMeta(acceptedFiles.length ? await buildMeta(acceptedFiles) : [])
+      const newOptions = new Map<string, PerFileOptions>()
+      for (const file of acceptedFiles) {
+        newOptions.set(getFileId(file), { ...defaultPerFileOptions })
+      }
+      setFileOptions(newOptions)
+      setSelection(new Set())
     },
-    [dispatch, setValue],
+    [dispatch, setFileOptions, setSelection, setValue],
   )
 
   const removeFileAt = useCallback(
     (index: number) => {
       if (isUploading) return
+      const removedId = getFileId(files[index])
       const next = files.filter((_, i) => i !== index)
       setValue('files', next, { shouldValidate: true, shouldDirty: true })
       setFileMeta((prev) => prev.filter((_, i) => i !== index))
+      removeOptionIds([removedId])
       if (next.length === 0) dispatch(resetUpload())
     },
-    [dispatch, files, isUploading, setValue],
+    [dispatch, files, isUploading, removeOptionIds, setValue],
+  )
+
+  const allFileIds = useMemo(
+    () => files.map((f) => getFileId(f)),
+    [files],
   )
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -104,20 +146,17 @@ export function UploadPhoto() {
 
   const onSubmit: SubmitHandler<FormFields> = async (data) => {
     const metaForSubmit = await buildMeta(data.files)
+    const orderedPerFileOptions = data.files.map((file) => {
+      const id = getFileId(file)
+      return fileOptions.get(id) ?? { ...defaultPerFileOptions }
+    })
 
     try {
       await dispatch(
         uploadPhotosThunk({
           files: data.files,
           meta: metaForSubmit,
-          options: {
-            isPrivate: data.private,
-            country: data.country ?? [],
-            city: data.city ?? [],
-            tags: data.tags ?? [],
-            title: data.title,
-            priority: data.priority,
-          },
+          perFileOptions: orderedPerFileOptions,
         }),
       ).unwrap()
     } catch (error: unknown) {
@@ -142,19 +181,24 @@ export function UploadPhoto() {
           {fileLabel}
         </FileDropzone>
         {isUploading && <DotsProgressIndicator />}
-        <PhotoCommonFields<FormFields>
-          control={control}
-          register={register}
-          trigger={trigger}
-          disabled={isProcessed}
-          privateLabel='Скрыть'
-        />
         {(files.length > 0 || uploadFiles.length > 0) && (
           <FileList>
+            {files.length > 1 && (
+              <SelectAllRow>
+                <Checkbox
+                  checked={selection.size === allFileIds.length && allFileIds.length > 0}
+                  onChange={() => toggleSelectAll(allFileIds)}
+                  label='Выбрать все'
+                  size='sm'
+                />
+                <FileCountLabel>{allFileIds.length} файл(ов)</FileCountLabel>
+              </SelectAllRow>
+            )}
             {files.length > 0
               ? files.map((file, index) => {
                   const fileId = getFileId(file)
                   const statusInfo = uploadStatusById.get(fileId)
+                  const opts = fileOptions.get(fileId)
                   return (
                     <FileData
                       key={fileId}
@@ -165,7 +209,11 @@ export function UploadPhoto() {
                       photoId={statusInfo?.photoId}
                       error={statusInfo?.error}
                       onRemove={isProcessed ? undefined : () => removeFileAt(index)}
-                    />
+                      selected={selection.has(fileId)}
+                      onToggleSelect={isProcessed ? undefined : () => toggleSelection(fileId)}
+                    >
+                      {opts && <FileOptionsSummary options={opts} />}
+                    </FileData>
                   )
                 })
               : uploadFiles.map((entry) => (
@@ -183,6 +231,25 @@ export function UploadPhoto() {
                 ))}
           </FileList>
         )}
+        {files.length > 0 && (
+          <BulkEditForm
+            mergedView={mergedView}
+            selectionCount={selection.size}
+            totalCount={allFileIds.length}
+            disabled={isProcessed}
+            onScalarCommit={handleBulkUpdate}
+            onTagAdd={handleTagAdd}
+            onTagRemove={handleTagRemove}
+            fetchUserSuggestions={fetchUserSuggestions}
+            accessedByDisplayNames={pickedAccessLabels}
+            onAccessedBySuggestionPick={(s) =>
+              setPickedAccessLabels((prev) => ({
+                ...prev,
+                [s.value]: suggestionToStoredLabel(s),
+              }))
+            }
+          />
+        )}
         <Button type='submit' disabled={isProcessed || files.length === 0}>
           {getSubmitLabel(files.length, isProcessed)}
         </Button>
@@ -195,10 +262,25 @@ const PageContainer = styled.div``
 
 const FileList = styled.div`
   margin: 1rem 0;
-  padding: 1rem;
+  padding: 0.5rem;
   background-color: var(--input-bg);
   border-radius: var(--radius-md);
-  max-height: 300px;
+  max-height: 400px;
   overflow-y: auto;
   border: 1px solid var(--input-border);
+`
+
+const SelectAllRow = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.25rem 0.5rem 0.5rem;
+  border-bottom: 1px solid var(--input-border);
+  margin-bottom: 0.25rem;
+`
+
+const FileCountLabel = styled.span`
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-left: auto;
 `

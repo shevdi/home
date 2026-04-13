@@ -1,10 +1,53 @@
-import { Filter, PhotoGallery, Search } from '@/features/Photos'
+import { Filter, PhotoGallery, Search, usePhotosGalleryInfinite } from '@/features/Photos'
 import { reachGoal } from '@/shared/analytics'
 import { useTitle } from '@/shared/hooks'
 import { useAuth } from '@/shared/hooks/useAuth'
 import { useEffect } from 'react'
 import { Link } from 'react-router'
 import styled from 'styled-components'
+
+export function PhotosPage() {
+  useTitle('Галерея фото')
+  const { isAdmin } = useAuth()
+  const {
+    photos,
+    isLoading,
+    isFetching,
+    isFetchingNextPage,
+    hasNextPage,
+    fetchNextPage,
+  } = usePhotosGalleryInfinite()
+
+  useEffect(() => {
+    reachGoal('photos_gallery_open')
+  }, [])
+
+  return (
+    <>
+      {isAdmin && (
+        <TopBar>
+          {photos.length > 0 && (
+            <BulkEditLink to='edit' state={{ photos }}>
+              Редактировать список
+            </BulkEditLink>
+          )}
+          <AddLink to='new'>Добавить фото</AddLink>
+        </TopBar>
+      )}
+      <PageHeader>Фото</PageHeader>
+      <Filter isHiddenFilters={!isAdmin} />
+      <Search />
+      <PhotoGallery
+        photos={photos}
+        isLoading={isLoading}
+        isFetching={isFetching}
+        isFetchingNextPage={isFetchingNextPage}
+        hasNextPage={Boolean(hasNextPage)}
+        fetchNextPage={fetchNextPage}
+      />
+    </>
+  )
+}
 
 const PageHeader = styled.h1`
   text-align: center;
@@ -17,7 +60,20 @@ const PageHeader = styled.h1`
 const TopBar = styled.div`
   display: flex;
   justify-content: flex-end;
+  align-items: center;
+  gap: 1rem;
   margin-bottom: 1rem;
+`
+
+const BulkEditLink = styled(Link)`
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--accent);
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
 `
 
 const AddLink = styled(Link)`
@@ -30,27 +86,3 @@ const AddLink = styled(Link)`
     text-decoration: underline;
   }
 `
-
-export function PhotosPage() {
-  useTitle('Галерея фото')
-  const { isAdmin } = useAuth()
-
-  useEffect(() => {
-    reachGoal('photos_gallery_open')
-  }, [])
-
-  return (
-    <>
-      {isAdmin && (
-        <TopBar>
-          <AddLink to='new'>Добавить фото</AddLink>
-        </TopBar>
-      )}
-
-      <PageHeader>Фото</PageHeader>
-      <Filter isHiddenFilters={!isAdmin} />
-      <Search />
-      <PhotoGallery />
-    </>
-  )
-}

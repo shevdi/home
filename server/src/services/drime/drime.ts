@@ -1,6 +1,6 @@
 import sharp from 'sharp'
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios'
-import { photoFolderNames } from '../../config'
+import { folderNames } from '../../config'
 import { env } from '../../config/env.js'
 import { logError } from '../../db/services/logs'
 import {
@@ -20,7 +20,7 @@ const DEFAULT_RETRY_BASE_DELAY_MS = 300
 const DEFAULT_RETRY_MAX_DELAY_MS = 2000
 
 const getPhotoFolder = (size?: number) =>
-  size ? (size < 500 ? photoFolderNames.sm : photoFolderNames.md) : photoFolderNames.full
+  size ? (size < 500 ? folderNames.dev.sm : folderNames.dev.md) : folderNames.dev.full
 
 export { createDrimeClient } from './drimeClient'
 export type { DrimeClientDeps } from './drime.types'
@@ -272,7 +272,7 @@ export const createDrimeService = (deps: DrimeServiceDeps = {}): DrimeService =>
     {
       fileName,
       mimetype,
-      folder = photoFolderNames.full
+      folder = folderNames.dev.full
     }: UploadPhotoInput
   ): Promise<DrimeFileEntry> => {
     if (!file) {

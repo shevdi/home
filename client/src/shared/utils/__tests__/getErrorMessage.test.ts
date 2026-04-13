@@ -41,8 +41,17 @@ describe('getErrorMessage', () => {
     expect(getErrorMessage(true)).toBe('Неизвестная ошибка')
   })
 
-  it('prefers message over data.message when both exist', () => {
-    // Error path is checked first, so we need object with message
+  it('prefers message over data.message when both exist (non-RTK shape)', () => {
     expect(getErrorMessage({ message: 'Top level', data: { message: 'Nested' } })).toBe('Top level')
+  })
+
+  it('prefers data.message for RTK fetchBaseQuery HTTP errors when both exist', () => {
+    expect(
+      getErrorMessage({
+        status: 401,
+        data: { message: 'Неверный логин или пароль' },
+        message: 'Rejected',
+      }),
+    ).toBe('Неверный логин или пароль')
   })
 })

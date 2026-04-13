@@ -2,11 +2,13 @@ import { NavLink } from 'react-router'
 import styled from 'styled-components'
 import { Menu } from '@/widgets/Menu'
 import { useSelector } from 'react-redux'
+import { selectCurrentToken } from '@/features/Auth'
 import { selectSearch } from '@/features'
 import { buildSearchParams } from '@/shared/utils'
 
 export function Header() {
   const search = useSelector(selectSearch)
+  const token = useSelector(selectCurrentToken)
   const stringSearchParams = buildSearchParams(search)
 
   return (
@@ -27,6 +29,11 @@ export function Header() {
               Фото
             </NavLink>
           </NavItem>
+          {!token && (
+            <NavItem>
+              <NavLink to='/login'>Вход</NavLink>
+            </NavItem>
+          )}
           <NavItem>
             <Menu />
           </NavItem>

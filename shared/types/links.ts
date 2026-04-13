@@ -27,6 +27,13 @@ export interface ILocation {
   nominatim?: INominatimAddress & Record<string, unknown>
 }
 
+/** Grant on a private photo: user id references `User._id`. */
+export interface IPhotoAccessGrant {
+  userId: string
+  /** Present on read API responses when the server resolves `User.name`. */
+  userName?: string
+}
+
 export interface ILink {
   _id?: string;
   url?: string;
@@ -44,6 +51,8 @@ export interface ILink {
   page?: number;
   priority?: number;
   tags?: string[];
+  /** When `private` is true, listed users may view the photo (in addition to admins). */
+  accessedBy?: IPhotoAccessGrant[];
   private?: boolean;
   createdAt?: string;
   updatedAt?: string;

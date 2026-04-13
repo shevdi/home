@@ -1,10 +1,13 @@
-import { useEffect } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import { useStore } from 'react-redux'
+import type { RootState } from '@/app/store/store'
 import styled from 'styled-components'
 import { useChangePhotoMutation } from '../model'
 import { useLocation } from 'react-router'
-import { z } from 'zod'
+import type { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { SubmitHandler, useForm } from 'react-hook-form'
+import type { SubmitHandler} from 'react-hook-form';
+import { useForm } from 'react-hook-form'
 import { Button, ErrMessage, Loader } from '@/shared/ui'
 import { getErrorMessage } from '@/shared/utils'
 import { DeletePhoto } from './DeletePhoto'
@@ -12,16 +15,37 @@ import { PhotosNavigation } from './PhotosNavigation'
 import { usePhoto } from '../hooks/usePhoto'
 import { photoCommonFormSchema } from '../utils/photoCommonForm'
 import { PhotoCommonFields } from './PhotoCommonFields'
+import { createUserSuggestionsLoader } from '../utils/userSuggestions'
+import {
+  accessGrantsToLabelMap,
+  mergeUserLabelMaps,
+  suggestionToStoredLabel,
+} from '../utils/accessedByChipLabels'
 
 const schema = photoCommonFormSchema
 
 type FormFields = z.infer<typeof schema>
 
 export function EditPhoto() {
+  const store = useStore<RootState>()
+  const fetchUserSuggestions = useMemo(
+    () => createUserSuggestionsLoader(() => store.getState()),
+    [store],
+  )
   const location = useLocation()
   const photoId = location.pathname.split('/')[2]
   const { photo, neighbours, isLoading } = usePhoto()
   const [changePhoto] = useChangePhotoMutation()
+
+  const labelsFromPhoto = useMemo(() => accessGrantsToLabelMap(photo?.accessedBy), [photo?.accessedBy])
+  const [pickedAccessLabels, setPickedAccessLabels] = useState<Record<string, string>>({})
+  useEffect(() => {
+    setPickedAccessLabels({})
+  }, [photoId])
+  const accessedByChipLabels = useMemo(
+    () => mergeUserLabelMaps(labelsFromPhoto, pickedAccessLabels),
+    [labelsFromPhoto, pickedAccessLabels],
+  )
 
   const {
     register,
@@ -40,9 +64,11 @@ export function EditPhoto() {
       country: photo?.location?.value?.country ?? [],
       city: photo?.location?.value?.city ?? [],
       tags: photo?.tags ?? [],
+      accessedBy: photo?.accessedBy?.map((g) => g.userId) ?? [],
       countryInput: '',
       cityInput: '',
       tagInput: '',
+      accessedByInput: '',
     },
   })
 
@@ -55,9 +81,11 @@ export function EditPhoto() {
         country: photo.location?.value?.country ?? [],
         city: photo.location?.value?.city ?? [],
         tags: photo.tags ?? [],
+        accessedBy: photo.accessedBy?.map((g) => g.userId) ?? [],
         countryInput: '',
         cityInput: '',
         tagInput: '',
+        accessedByInput: '',
       })
     }
   }, [photo, reset])
@@ -79,6 +107,7 @@ export function EditPhoto() {
         private: privateFilter,
         country: parsedCountry,
         city: parsedCity,
+        accessedBy: accessedByIds,
       } = parsedData.data
 
       await changePhoto({
@@ -88,6 +117,7 @@ export function EditPhoto() {
           priority,
           private: privateFilter,
           tags: parsedTags,
+          accessedBy: accessedByIds.map((userId) => ({ userId })),
           location: {
             ...photo?.location,
             value: {
@@ -120,6 +150,14 @@ export function EditPhoto() {
               trigger={trigger}
               disabled={isSubmitting}
               privateLabel='Приватное'
+              fetchUserSuggestions={fetchUserSuggestions}
+              accessedByChipLabels={accessedByChipLabels}
+              onAccessedBySuggestionPick={(s) =>
+                setPickedAccessLabels((prev) => ({
+                  ...prev,
+                  [s.value]: suggestionToStoredLabel(s),
+                }))
+              }
             />
             <Button type='submit' display='block' margin='1rem auto' disabled={isSubmitting}>
               Сохранить

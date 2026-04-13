@@ -1,0 +1,19 @@
+# Production API — same install layout as Dockerfile.dev; `npm start` uses tsx (kept via devDependencies).
+FROM node:22
+
+WORKDIR /app
+
+COPY package.json package-lock.json ./
+COPY shared ./shared
+COPY server ./server
+
+RUN npm install
+
+RUN cp -r server/node_modules . && cp server/package*.json . && cp -r server/src . && cp server/tsconfig.json . 2>/dev/null || true
+
+ENV NODE_ENV=production
+ENV PORT=3001
+
+EXPOSE 3001
+
+CMD ["npm", "run", "start"]

@@ -1,7 +1,8 @@
 import type { ReactNode } from 'react'
 import styled from 'styled-components'
+import type { DropzoneState } from 'react-dropzone'
 
-type DropzoneReturn = ReturnType<typeof import('react-dropzone').useDropzone>
+type DropzoneReturn = DropzoneState
 
 export type FileDropzoneProps = Pick<DropzoneReturn, 'getRootProps' | 'getInputProps' | 'isDragActive'> & {
   disabled?: boolean

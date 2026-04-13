@@ -14,6 +14,17 @@ const linkSchema = new Schema(
     fullSizeEntryId: { type: String },
     priority: { type: Number },
     tags: [{ type: String }],
+    accessedBy: {
+      type: [
+        new Schema(
+          {
+            userId: { type: Schema.Types.ObjectId, ref: 'user', required: true },
+          },
+          { _id: false },
+        ),
+      ],
+      default: undefined,
+    },
     createdAt: { type: Date },
     updatedAt: { type: Date },
     private: { type: Boolean },
@@ -43,6 +54,8 @@ const linkSchema = new Schema(
     timestamps: true,
   }
 )
+
+linkSchema.index({ 'accessedBy.userId': 1 }, { sparse: true })
 
 export const Project = mongoose.model('project', linkSchema)
 export const Photo = mongoose.model('photo', linkSchema)

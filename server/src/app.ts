@@ -6,18 +6,13 @@ import cookieParser from 'cookie-parser'
 import authRouter from './routes/auth.ts'
 import pagesRouter from './routes/pages.ts'
 import photosRouter from './routes/photos.ts'
+import usersRouter from './routes/users.ts'
 import testRouter from './routes/test.ts'
+import { whitelist } from './config';
 
 const apiVersion = '/api/v1'
 
 const app: Application = express();
-
-const whitelist = [
-  'https://shevdi.ru',
-  'https://home-front-shevdi.amvera.io',
-  'http://localhost:3000',
-  'http://home-frontend:3000', // Docker E2E: browser runs in e2e container, loads page from home-frontend
-]
 
 app.use(helmet());
 app.use(cors({
@@ -36,6 +31,7 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(`${apiVersion}/pages`, pagesRouter)
 app.use(`${apiVersion}/auth`, authRouter)
 app.use(`${apiVersion}/photos`, photosRouter)
+app.use(`${apiVersion}/users`, usersRouter)
 
 if (process.env.E2E_LOGIN) {
   app.use(`${apiVersion}/__test`, testRouter)

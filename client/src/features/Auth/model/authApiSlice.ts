@@ -1,14 +1,43 @@
 import { apiSlice } from "@/app/store/api"
 import { logOut, setCredentials } from "./authSlice"
 import { getErrorMessage } from "@/shared/utils"
+import type { AccessToken, LoginInputRequest } from "./types"
+
+export type TelegramWidgetUser = {
+  id: number
+  first_name?: string
+  last_name?: string
+  username?: string
+  photo_url?: string
+  auth_date: number
+  hash: string
+}
+
+export type TelegramVerifyResponse =
+  | AccessToken
+  | { pendingTicket: string; suggestedName?: string }
 
 export const authApiSlice = apiSlice.injectEndpoints({
   endpoints: builder => ({
-    login: builder.mutation({
+    login: builder.mutation<AccessToken, LoginInputRequest>({
       query: credentials => ({
         url: '/auth',
         method: 'POST',
         body: { ...credentials },
+      }),
+    }),
+    telegramVerify: builder.mutation<TelegramVerifyResponse, TelegramWidgetUser>({
+      query: (body) => ({
+        url: '/auth/telegram/verify',
+        method: 'POST',
+        body,
+      }),
+    }),
+    telegramCompleteName: builder.mutation<AccessToken, { pendingTicket: string; name: string }>({
+      query: (body) => ({
+        url: '/auth/telegram/complete',
+        method: 'POST',
+        body,
       }),
     }),
     sendLogout: builder.mutation({
@@ -28,7 +57,7 @@ export const authApiSlice = apiSlice.injectEndpoints({
         }
       }
     }),
-    refresh: builder.mutation({
+    refresh: builder.mutation<AccessToken, void>({
       query: () => ({
         url: '/auth/refresh',
         method: 'GET',
@@ -47,6 +76,8 @@ export const authApiSlice = apiSlice.injectEndpoints({
 
 export const {
   useLoginMutation,
+  useTelegramVerifyMutation,
+  useTelegramCompleteNameMutation,
   useSendLogoutMutation,
   useRefreshMutation,
 } = authApiSlice 

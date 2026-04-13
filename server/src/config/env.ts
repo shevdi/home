@@ -5,6 +5,9 @@ const envSchema = z.object({
   REFRESH_TOKEN_SECRET: z.string().min(1, { error: 'REFRESH_TOKEN_SECRET is required' }),
   DRIME_TOKEN: z.string().optional(),
   NOMINATIM_URL: z.string().optional(),
+  TELEGRAM_BOT_TOKEN: z.string().min(1).optional(),
+  TELEGRAM_PENDING_SECRET: z.string().min(1).optional(),
+  TELEGRAM_AUTH_MAX_AGE_SECONDS: z.coerce.number().positive().default(600),
 })
 
 const parsed = envSchema.safeParse(process.env)

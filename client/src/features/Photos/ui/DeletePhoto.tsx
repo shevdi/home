@@ -1,7 +1,8 @@
 import styled from 'styled-components'
 import { useDeletePhotoMutation } from '../model'
 import { useNavigate, useLocation } from 'react-router'
-import { EmptyObject, SubmitHandler, useForm } from 'react-hook-form'
+import type { EmptyObject, SubmitHandler} from 'react-hook-form';
+import { useForm } from 'react-hook-form'
 import { Button, ErrMessage } from '@/shared/ui'
 import { getErrorMessage } from '@/shared/utils'
 

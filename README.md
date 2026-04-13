@@ -42,6 +42,16 @@ The **`home-frontend`** image runs **`npm run dev:with-uikit`** (ui-kit `build:w
 
 CI may still invoke workspace scripts directly; switching workflows to `turbo run build` everywhere is optional follow-up work.
 
+### Telegram Login Widget
+
+Optional sign-in via [Telegram Login Widget](https://core.telegram.org/widgets/login).
+
+1. Create a bot with [@BotFather](https://t.me/BotFather), get the **bot token**, and set **Domain** for the Login Widget to the site origin users open in the browser (e.g. production host or a tunnel URL for local testing).
+2. **Server** env (see `server/.env.template`): `TELEGRAM_BOT_TOKEN`, `TELEGRAM_PENDING_SECRET` (separate from JWT secrets; signs short-lived pending-registration tokens, default TTL 10 minutes), and optional `TELEGRAM_AUTH_MAX_AGE_SECONDS` (default `600`) for `auth_date` replay protection.
+3. **Client** build env: `TELEGRAM_BOT_USERNAME` — the bot **username without @** (webpack `EnvironmentPlugin`). If unset, the widget is hidden and password login is unchanged.
+4. **CSP:** If you use a strict `Content-Security-Policy`, allow Telegram script and frame sources used by `https://telegram.org/js/telegram-widget.js` (e.g. `script-src` / `frame-src` for `telegram.org` as required by your policy).
+5. **MongoDB:** `name` is unique. Before deploying, ensure no duplicate `name` values in `user` documents or index creation will fail.
+
 ## E2E Tests
 
 Run Playwright E2E tests with `npm run e2e`. **The dev server must be running** (`npm run dev`) in a separate terminal first. See [e2e/README.md](e2e/README.md) for details.

@@ -1,4 +1,5 @@
 export * from './selectors'
+export * from './photosBulkEditNavState'
 export * from './photosApiSlice'
 export * from './photosSlice'
 export * from './uploadSlice'

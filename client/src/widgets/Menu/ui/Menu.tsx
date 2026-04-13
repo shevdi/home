@@ -1,6 +1,7 @@
-import { useState, useRef, ReactElement } from 'react'
+import { useState, useRef, type ReactElement } from 'react'
 import styled from 'styled-components'
 import { useOnClickOutside } from '@/shared/hooks'
+import { useAuth } from '@/shared/hooks/useAuth'
 import { ReactComponent as Gear } from './gear.svg'
 import { ThemeSwitch } from '@/features/ThemeSwitch'
 import { Auth } from '@/features/Auth'
@@ -8,6 +9,7 @@ import { Auth } from '@/features/Auth'
 export function Menu(): ReactElement {
   const [isModalOpen, setModalOpen] = useState(false)
   const modalRef = useRef<HTMLDivElement>(null)
+  const { username } = useAuth()
 
   useOnClickOutside(modalRef, () => setModalOpen(false))
 
@@ -17,13 +19,14 @@ export function Menu(): ReactElement {
 
   return (
     <ModalContainer>
-      <ModalButton onClick={toggleModal} aria-label="Настройки">
+      <ModalButton onClick={toggleModal} aria-label='Настройки'>
         <Gear />
       </ModalButton>
 
       {isModalOpen && (
         <ModalOverlay>
           <ModalContent ref={modalRef}>
+            {username ? <span>{username}</span> : null}
             <h3>Настройки</h3>
             <ThemeSwitch />
             <Auth />

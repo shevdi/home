@@ -46,10 +46,13 @@ export { TagChips } from './components/TagChips'
 export type { TagChipsProps } from './components/TagChips'
 
 export { TaggedInput } from './components/TaggedInput'
-export type { TaggedInputProps } from './components/TaggedInput'
+export type { TaggedInputProps, TaggedSuggestion } from './components/TaggedInput'
 
 export { Calendar } from './components/Calendar'
 export type { CalendarViewProps, CalendarClearButtonProps } from './components/Calendar'
 
 export { Popover } from './components/Popover'
 export type { PopoverContentProps } from './components/Popover'
+
+export { Toast, ToastProvider, ToastViewport, ToastRoot, ToastTitle, ToastDescription, ToastAction, ToastClose } from './components/Toast'
+export type { ToastRootProps, ToastVariant } from './components/Toast'

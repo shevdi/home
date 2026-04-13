@@ -1,5 +1,6 @@
 import styled from 'styled-components'
-import { FileMeta as FileMetaType, formatBytes, formatDate, formatGps } from '../utils/uploadPhotoMeta'
+import type { FileMeta as FileMetaType} from '../utils/uploadPhotoMeta';
+import { formatBytes, formatDate, formatGps } from '../utils/uploadPhotoMeta'
 
 const MetaText = styled.span`
   color: var(--text-muted);

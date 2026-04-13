@@ -1,40 +1,38 @@
 import styled from 'styled-components'
-import { useSelector } from 'react-redux'
-import { selectFilter, selectSearch, useGetInfinitePhotoWithMaxInfiniteQuery } from '../model'
+import type { ILink } from '@shevdi-home/shared'
 import { PhotoLink } from './PhotoLink'
 import { Loader } from '@/shared/ui'
 import { useInfiniteLoader } from '@/shared/hooks'
 
-export function PhotoGallery() {
-  const filters = useSelector(selectFilter)
-  const search = useSelector(selectSearch)
-  const { isLoading, fetchNextPage, hasNextPage, isFetchingNextPage, data, isFetching } =
-    useGetInfinitePhotoWithMaxInfiniteQuery(
-      {
-        ...search,
-        page: 1,
-      },
-      {
-        refetchOnMountOrArgChange: true,
-        selectFromResult: ({ data, ...rest }) => ({
-          data:
-            data?.pages.flatMap((page) => page.photos).filter((item) => (filters.private ? item.private : true)) ?? [],
-          ...rest,
-        }),
-      },
-    )
+export type PhotoGalleryProps = {
+  photos: ILink[]
+  isLoading: boolean
+  isFetching: boolean
+  isFetchingNextPage: boolean
+  hasNextPage: boolean
+  fetchNextPage: () => void
+}
+
+export function PhotoGallery({
+  photos,
+  isLoading,
+  isFetching,
+  isFetchingNextPage,
+  hasNextPage,
+  fetchNextPage,
+}: PhotoGalleryProps) {
   const sentinelRef = useInfiniteLoader({
     hasNextPage: Boolean(hasNextPage),
     isLoading,
     isFetchingNextPage,
     onLoadMore: fetchNextPage,
-    dataLength: data?.length ?? 0,
+    dataLength: photos.length,
   })
 
   return (
     <PageContainer>
       <PhotoContainer $isLoading={isFetching && !isFetchingNextPage}>
-        {data?.map((item) => (
+        {photos.map((item) => (
           <PhotoLink key={item._id} photo={item} disabled={isFetching && !isFetchingNextPage} />
         ))}
       </PhotoContainer>

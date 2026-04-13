@@ -20,8 +20,19 @@ import { logError } from '../db/services/logs';
 import { photosQuerySchema, uploadBodySchema, uploadMetaSchema } from './photos.schema.js';
 import { optionalAuth } from '../middlewares/optionalAuth';
 import { verifyJWT } from '../middlewares/verifyJWT';
+import { requireAdmin } from '../middlewares/requireAdmin';
 import { cacheClear, cacheMiddleware } from '../middlewares/cache';
 import type { RequestWithAuth } from '@/services/auth';
+import type { ILink, PerFileOptionsItem } from '@shevdi-home/shared';
+import { photoUpdateBodySchema } from '@shevdi-home/shared';
+import {
+  canViewPhoto,
+  photosViewerCacheSegment,
+  withPhotoVisibilityFilter,
+} from '../utils/photoAccess.ts';
+import { validatePhotoAccessedBy } from '../utils/validatePhotoAccessedBy.ts';
+import { hydrateAccessedByGrants, userNamesForAccessGrants } from '../utils/hydrateAccessedBy.ts';
+import type { MongoFilter } from '../utils/queryBuilder.ts';
 
 const router = express.Router()
 
@@ -38,7 +49,9 @@ const sortTypes: Record<string, Record<string, SortOrder>> = {
   orderDownByEdited: { updatedAt: -1, _id: -1 }
 }
 
-const cache = cacheMiddleware('10 min', 'photos')
+const cache = cacheMiddleware('10 min', 'photos', (req) =>
+  photosViewerCacheSegment((req as RequestWithAuth).auth),
+)
 
 const urlSource: UrlSource = {
   listIds: (page) => drime.getFilesList(page),
@@ -76,12 +89,12 @@ router.get(`/`, optionalAuth, cache, async (req: RequestWithAuth, res: Response)
 
     const pageSize = req.query.page ? 5 : 100 // Number of photos per page
 
-    const isAdmin = Boolean(req.auth?.roles?.includes('admin'))
     const builder = queryBuilder()
       .dateRange('meta.takenAt', dateFromParam, dateToParam)
       .allIn('tags', tagsParam, (v) => normalizeTags(v) ?? [])
       .locationMatch(normalizeTags(countryParam) ?? [], normalizeTags(cityParam) ?? [])
-    const search = (isAdmin ? builder : builder.excludeWhere('private', true)).build()
+    const baseSearch = builder.build() as MongoFilter
+    const search = withPhotoVisibilityFilter(baseSearch, req.auth) as MongoFilter
 
     const page = typeof pageParam === 'number' ? pageParam : 1
     const sort = orderParam ? sortTypes[orderParam] : undefined
@@ -90,6 +103,8 @@ router.get(`/`, optionalAuth, cache, async (req: RequestWithAuth, res: Response)
       getPhotosCount(search)
     ])
 
+    const accessUserNames = await userNamesForAccessGrants(photos)
+
     const results = await Promise.all(photos
       .map(async (item) => {
         const [smSizeUrl, mdSizeUrl, fullSizeUrl] = await Promise.all([
@@ -97,6 +112,14 @@ router.get(`/`, optionalAuth, cache, async (req: RequestWithAuth, res: Response)
           urlCache.getUrl(urlSource, item.mdSizeEntryId),
           urlCache.getUrl(urlSource, item.fullSizeEntryId),
         ])
+        const accessedBy =
+          Array.isArray(item.accessedBy) && item.accessedBy.length > 0
+            ? item.accessedBy.map((g: { userId?: { toString(): string } } | { userId?: string }) => {
+                const userId = String(g.userId)
+                const userName = accessUserNames.get(userId)
+                return userName !== undefined ? { userId, userName } : { userId }
+              })
+            : undefined
         return {
           _id: item._id,
           name: item.name,
@@ -104,6 +127,7 @@ router.get(`/`, optionalAuth, cache, async (req: RequestWithAuth, res: Response)
           title: item.title,
           priority: item.priority,
           private: item.private,
+          accessedBy,
           tags: item.tags,
           location: item.location,
           smSizeUrl,
@@ -145,10 +169,38 @@ const upload = multer({
   storage: multer.memoryStorage()
 });
 
-router.post(`/upload`, upload.array("files", 50), async (req: Request, res: Response) => {
+router.post(
+  `/upload`,
+  verifyJWT,
+  requireAdmin,
+  upload.array('files', 50),
+  async (req: Request, res: Response) => {
   try {
     const files = Array.isArray(req.files) ? req.files : req.file ? [req.file] : []
     const bodyParsed = uploadBodySchema.safeParse(req.body)
+    // #region agent log
+    {
+      const rawPfo = (req.body as Record<string, unknown>)?.perFileOptions
+      fetch('http://127.0.0.1:7915/ingest/9992f24d-00f6-41c9-bc27-a45102f4306c', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': 'd2a394' },
+        body: JSON.stringify({
+          sessionId: 'd2a394',
+          location: 'photos.ts:upload:bodyParsed',
+          message: 'upload body parse',
+          data: {
+            parseOk: bodyParsed.success,
+            issues: bodyParsed.success ? undefined : bodyParsed.error.issues.slice(0, 8),
+            perFileOptionsType: rawPfo === undefined ? 'undefined' : typeof rawPfo,
+            perFileOptionsLen:
+              typeof rawPfo === 'string' ? rawPfo.length : Array.isArray(rawPfo) ? rawPfo.length : null,
+          },
+          timestamp: Date.now(),
+          hypothesisId: 'H3-H4',
+        }),
+      }).catch(() => {})
+    }
+    // #endregion
     const body = bodyParsed.success ? bodyParsed.data : {
       title: undefined,
       private: undefined,
@@ -157,16 +209,58 @@ router.post(`/upload`, upload.array("files", 50), async (req: Request, res: Resp
       city: [],
       meta: [],
       priority: undefined,
+      accessedBy: [] as { userId: string }[],
+      perFileOptions: [] as PerFileOptionsItem[],
     }
-    const isPrivate = body.private
-    const tags = normalizeTags(body.tags)
-    const userCountry = normalizeTags(body.country) ?? []
-    const userCity = normalizeTags(body.city) ?? []
+    const globalIsPrivate = body.private
+    const globalTags = normalizeTags(body.tags)
+    const globalCountry = normalizeTags(body.country) ?? []
+    const globalCity = normalizeTags(body.city) ?? []
+    const globalAccessedBy = body.accessedBy ?? []
+    const perFileOptions = body.perFileOptions ?? []
+    const hasPerFileOptions = perFileOptions.length > 0
+    // #region agent log
+    fetch('http://127.0.0.1:7915/ingest/9992f24d-00f6-41c9-bc27-a45102f4306c', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': 'd2a394' },
+      body: JSON.stringify({
+        sessionId: 'd2a394',
+        location: 'photos.ts:upload:afterBody',
+        message: 'perFileOptions resolved',
+        data: {
+          filesCount: files.length,
+          perFileOptionsCount: perFileOptions.length,
+          hasPerFileOptions,
+          firstHasTitle: perFileOptions[0] ? Boolean(perFileOptions[0].title) : false,
+        },
+        timestamp: Date.now(),
+        hypothesisId: 'H5',
+      }),
+    }).catch(() => {})
+    // #endregion
     const metaParsed = uploadMetaSchema.safeParse(body.meta)
     const metaList = metaParsed.success ? metaParsed.data : []
 
     if (!files || files.length === 0) {
       return res.status(400).json({ ok: false, error: 'No files provided' })
+    }
+
+    try {
+      await validatePhotoAccessedBy(globalAccessedBy)
+      if (hasPerFileOptions) {
+        const allPerFileAccessedBy = perFileOptions
+          .flatMap((o) => o.accessedBy ?? [])
+          .filter((v, i, a) => a.findIndex((x) => x.userId === v.userId) === i)
+        if (allPerFileAccessedBy.length > 0) {
+          await validatePhotoAccessedBy(allPerFileAccessedBy)
+        }
+      }
+    } catch (ve) {
+      const st = getErrorStatus(ve)
+      return res.status(st ?? 400).json({
+        ok: false,
+        error: ve instanceof Error ? ve.message : 'Invalid accessedBy',
+      })
     }
 
     res.setHeader('Content-Type', 'text/event-stream')
@@ -194,9 +288,18 @@ router.post(`/upload`, upload.array("files", 50), async (req: Request, res: Resp
 
         const { country, city } = getLocationValue([nominatim, dadata])
 
+        const fileOpts = hasPerFileOptions ? perFileOptions[fileIndex] : undefined
+        const fileTags = fileOpts ? normalizeTags(fileOpts.tags) : globalTags
+        const fileCountry = fileOpts ? (normalizeTags(fileOpts.country) ?? []) : globalCountry
+        const fileCity = fileOpts ? (normalizeTags(fileOpts.city) ?? []) : globalCity
+        const fileTitle = fileOpts ? fileOpts.title : body.title
+        const filePriority = fileOpts ? fileOpts.priority : body.priority
+        const fileIsPrivate = fileOpts?.private !== undefined ? fileOpts.private : globalIsPrivate
+        const fileAccessedBy = fileOpts ? (fileOpts.accessedBy ?? []) : globalAccessedBy
+
         const locationValue = {
-          country: Array.from(new Set([...userCountry, ...country])),
-          city: Array.from(new Set([...userCity, ...city])),
+          country: Array.from(new Set([...fileCountry, ...country])),
+          city: Array.from(new Set([...fileCity, ...city])),
         }
 
         const { url: fullSizeUrl, photoData: fullSizePhoto } = await drime.cropPhotoAndUpload(file)
@@ -216,8 +319,8 @@ router.post(`/upload`, upload.array("files", 50), async (req: Request, res: Resp
           fullSizeEntryId: fullSizePhoto.id.toString(),
           name: fullSizePhoto.name,
           fileName: file.originalname,
-          private: isPrivate,
-          tags,
+          private: fileIsPrivate,
+          tags: fileTags,
           location: {
             value: locationValue,
             nominatim: nominatim ?? undefined,
@@ -227,8 +330,9 @@ router.post(`/upload`, upload.array("files", 50), async (req: Request, res: Resp
             } : undefined
           },
           meta,
-          ...(body.title ? { title: body.title } : {}),
-          ...(body.priority !== undefined ? { priority: body.priority } : {}),
+          ...(fileTitle ? { title: fileTitle } : {}),
+          ...(filePriority !== undefined ? { priority: filePriority } : {}),
+          ...(fileAccessedBy.length ? { accessedBy: fileAccessedBy } : {}),
         })
         const result = { ok: true, fileName: file.originalname, photo: addedPhoto }
         results.push(result)
@@ -271,15 +375,20 @@ router.get(`/:id`, optionalAuth, cache, async (req: RequestWithAuth, res: Respon
     if (!photo) {
       return res.status(404).json({ message: 'Photo not found' })
     }
-    if (photo.private && (!req.auth?.roles || !req.auth.roles.includes('admin'))) {
+    if (!canViewPhoto(photo, req.auth)) {
       return res.status(403).json({ message: 'Forbidden' })
     }
     const [mdSizeUrl, fullSizeUrl] = await Promise.all([
       urlCache.getUrl(urlSource, photo.mdSizeEntryId),
       urlCache.getUrl(urlSource, photo.fullSizeEntryId),
     ])
+    const accessedBy =
+      Array.isArray(photo.accessedBy) && photo.accessedBy.length > 0
+        ? await hydrateAccessedByGrants(photo.accessedBy)
+        : undefined
     return res.json({
       ...photo,
+      ...(accessedBy !== undefined ? { accessedBy } : {}),
       mdSizeUrl,
       fullSizeUrl
     })
@@ -294,19 +403,42 @@ router.get(`/:id`, optionalAuth, cache, async (req: RequestWithAuth, res: Respon
   }
 })
 
-router.put(`/:id`, verifyJWT, async (req: Request, res: Response) => {
+router.put(`/:id`, verifyJWT, requireAdmin, async (req: Request, res: Response) => {
   try {
-    const normalizedTags = normalizeTags(req.body?.tags)
-    const updateData = normalizedTags === undefined ? req.body : { ...req.body, tags: normalizedTags }
-    const photo = await updatePhotoById(req.params.id, updateData)
+    const parsed = photoUpdateBodySchema.safeParse(req.body)
+    if (!parsed.success) {
+      return res.status(400).json({ message: 'Invalid request body' })
+    }
+    const body = parsed.data
+    if (body.accessedBy !== undefined) {
+      try {
+        await validatePhotoAccessedBy(body.accessedBy)
+      } catch (ve) {
+        const st = getErrorStatus(ve)
+        return res.status(st ?? 400).json({
+          message: ve instanceof Error ? ve.message : 'Invalid accessedBy',
+        })
+      }
+    }
+    const normalizedTags = normalizeTags(body.tags !== undefined ? body.tags : req.body?.tags)
+    const updateData: Record<string, unknown> =
+      normalizedTags === undefined
+        ? { ...body }
+        : { ...body, tags: normalizedTags }
+    const photo = await updatePhotoById(req.params.id, updateData as unknown as ILink)
     if (!photo) {
       return res.status(404).json({ message: 'Photo not found' })
     }
 
     const url = await urlCache.getUrl(urlSource, photo.mdSizeEntryId)
     cacheClear('photos')
+    const accessedBy =
+      Array.isArray(photo.accessedBy) && photo.accessedBy.length > 0
+        ? await hydrateAccessedByGrants(photo.accessedBy)
+        : undefined
     res.json({
       ...photo,
+      ...(accessedBy !== undefined ? { accessedBy } : {}),
       url
     })
   } catch (err) {
@@ -320,7 +452,7 @@ router.put(`/:id`, verifyJWT, async (req: Request, res: Response) => {
   }
 })
 
-router.delete(`/:id`, verifyJWT, async (req: Request, res: Response) => {
+router.delete(`/:id`, verifyJWT, requireAdmin, async (req: Request, res: Response) => {
   try {
     const photo = await getPhotoById(req.params.id)
 

@@ -18,6 +18,7 @@ import {
 import { selectSearch } from '../model'
 import { useQueryParams, useSearchAnalytics } from '@/shared/hooks'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { PLACEHOLDER_SAVE_VALUE } from '../utils/formPlaceholders'
 
 const schema = z.object({
   order: z.string(),
@@ -181,7 +182,7 @@ export const Search = () => {
               tagsName='country'
               inputName='countryInput'
               id='photo-filter-country'
-              placeholder='Введите страну и нажмите Enter'
+              placeholder={PLACEHOLDER_SAVE_VALUE}
               insertAt='start'
               onAfterTagsChange={(next) => {
                 dispatch(setCountrySearch(next))
@@ -198,7 +199,7 @@ export const Search = () => {
               tagsName='city'
               inputName='cityInput'
               id='photo-filter-city'
-              placeholder='Введите город и нажмите Enter'
+              placeholder={PLACEHOLDER_SAVE_VALUE}
               insertAt='start'
               onAfterTagsChange={(next) => {
                 dispatch(setCitySearch(next))
@@ -215,7 +216,7 @@ export const Search = () => {
               tagsName='tags'
               inputName='tagInput'
               id='photo-filter-tags'
-              placeholder='Введите тег и нажмите Enter'
+              placeholder={PLACEHOLDER_SAVE_VALUE}
               onAfterTagsChange={(next) => {
                 dispatch(setTagsSearch(next))
                 setQueryParams({ dateFrom, dateTo, order, tags: next, country, city })

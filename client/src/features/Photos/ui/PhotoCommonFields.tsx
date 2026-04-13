@@ -4,6 +4,9 @@ import type { Control, FieldValues, Path, UseFormRegister, UseFormTrigger } from
 import { Controller } from 'react-hook-form'
 import { Checkbox, Field, Input, RhfTaggedInput } from '@/shared/ui'
 import type { PhotoCommonFormValues } from '../utils/photoCommonForm'
+import { PLACEHOLDER_SAVE_VALUE } from '../utils/formPlaceholders'
+import type { TaggedSuggestion } from '@shevdi-home/ui-kit'
+import { createAccessedByRenderTag } from '../utils/accessedByChipLabels'
 
 /** Matches ui-kit `sm` density for Field labels / descriptions / errors. */
 const smallFormDensity: CSSProperties = {
@@ -18,6 +21,11 @@ type PhotoCommonFieldsProps<T extends PhotoCommonFormValues & FieldValues> = {
   trigger: UseFormTrigger<T>
   disabled?: boolean
   privateLabel: string
+  /** When set, shows user-picker tags for private photo sharing (Mongo user ids). */
+  fetchUserSuggestions?: (query: string) => Promise<TaggedSuggestion[]>
+  /** Display names for chip text; form values remain user ids. */
+  accessedByChipLabels?: Record<string, string>
+  onAccessedBySuggestionPick?: (suggestion: TaggedSuggestion) => void
 }
 
 export function PhotoCommonFields<T extends PhotoCommonFormValues & FieldValues>({
@@ -26,6 +34,9 @@ export function PhotoCommonFields<T extends PhotoCommonFormValues & FieldValues>
   trigger,
   disabled = false,
   privateLabel,
+  fetchUserSuggestions,
+  accessedByChipLabels,
+  onAccessedBySuggestionPick,
 }: PhotoCommonFieldsProps<T>) {
   return (
     <SmallFormRoot style={smallFormDensity}>
@@ -68,7 +79,7 @@ export function PhotoCommonFields<T extends PhotoCommonFormValues & FieldValues>
             tagsName={'country' as Path<T>}
             inputName={'countryInput' as Path<T>}
             id='photo-form-country'
-            placeholder='Введите страну и нажмите Enter'
+            placeholder={PLACEHOLDER_SAVE_VALUE}
             insertAt='start'
             disabled={disabled}
             size='sm'
@@ -81,7 +92,7 @@ export function PhotoCommonFields<T extends PhotoCommonFormValues & FieldValues>
             tagsName={'city' as Path<T>}
             inputName={'cityInput' as Path<T>}
             id='photo-form-city'
-            placeholder='Введите город и нажмите Enter'
+            placeholder={PLACEHOLDER_SAVE_VALUE}
             insertAt='start'
             disabled={disabled}
             size='sm'
@@ -94,11 +105,28 @@ export function PhotoCommonFields<T extends PhotoCommonFormValues & FieldValues>
             tagsName={'tags' as Path<T>}
             inputName={'tagInput' as Path<T>}
             id='photo-form-tags'
-            placeholder='Введите тег и нажмите Enter'
+            placeholder={PLACEHOLDER_SAVE_VALUE}
             disabled={disabled}
             size='sm'
           />
         </Field>
+        {fetchUserSuggestions ? (
+          <Field label='Доступ для пользователей'>
+            <RhfTaggedInput<T>
+              control={control}
+              trigger={trigger}
+              tagsName={'accessedBy' as Path<T>}
+              inputName={'accessedByInput' as Path<T>}
+              id='photo-form-accessed-by'
+              placeholder={PLACEHOLDER_SAVE_VALUE}
+              disabled={disabled}
+              size='sm'
+              fetchSuggestions={fetchUserSuggestions}
+              renderTag={createAccessedByRenderTag(accessedByChipLabels ?? {})}
+              onCommitSuggestion={onAccessedBySuggestionPick}
+            />
+          </Field>
+        ) : null}
       </FieldsWrapper>
     </SmallFormRoot>
   )

@@ -35,9 +35,9 @@ services:
       - BACKEND_URL=http://localhost:3001/api/v1
       - NODE_ENV=development
       - CHOKIDAR_USEPOLLING=true # Important for file watching in Docker
+      - CLIENT_DEV_PORT=80
     ports:
-      - '3000:3000'
-      - '8080:8080'
+      - '80:80'
     depends_on:
       - home-backend
     develop:

@@ -1,8 +1,10 @@
 import { useEffect } from 'react'
 import { Provider } from 'react-redux'
-import { RootState, store } from '@/app/store/store'
+import type { RootState} from '@/app/store/store';
+import { store } from '@/app/store/store'
 import { useAppSelector } from '@/app/store/hooks'
 import { DarkGlobalStyle, LightGlobalStyle } from '@/app/styles'
+import { NetworkToastProvider } from '@/shared/pwa/NetworkToastProvider'
 
 /** Theme = `html[data-theme]` + CSS variables (ui-kit tokens); no styled-components ThemeProvider. */
 function TP({ children }: React.PropsWithChildren) {
@@ -21,7 +23,9 @@ function TP({ children }: React.PropsWithChildren) {
 export function App({ children }: React.PropsWithChildren) {
   return (
     <Provider store={store}>
-      <TP>{children}</TP>
+      <TP>
+        <NetworkToastProvider>{children}</NetworkToastProvider>
+      </TP>
     </Provider>
   )
 }

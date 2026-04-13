@@ -1,12 +1,13 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import type { FileMeta } from '../utils/uploadPhotoMeta'
-import { uploadPhotosInBatches, type UploadPhotosOptions } from '../services/uploadPhotos'
+import { uploadPhotosInBatches } from '../services/uploadPhotos'
 import type { RootState } from '@/app/store/store'
+import type { PerFileOptions } from '../utils/perFileOptions'
 
 export interface UploadPhotosThunkArg {
   files: File[]
   meta: FileMeta[]
-  options: UploadPhotosOptions
+  perFileOptions: PerFileOptions[]
 }
 
 export const uploadPhotosThunk = createAsyncThunk<
@@ -19,7 +20,7 @@ export const uploadPhotosThunk = createAsyncThunk<
     await uploadPhotosInBatches(
       arg.files,
       arg.meta,
-      arg.options,
+      arg.perFileOptions,
       dispatch,
       getState,
     )

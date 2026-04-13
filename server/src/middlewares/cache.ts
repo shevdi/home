@@ -45,8 +45,9 @@ function parseDuration(duration: string | number): number {
   return value * ms
 }
 
-function getCacheKey(req: Request): string {
-  return req.originalUrl || req.url || req.path || '/'
+function getCacheKey(req: Request, keySuffix?: (req: Request) => string): string {
+  const base = req.originalUrl || req.url || req.path || '/'
+  return keySuffix ? `${base}|${keySuffix(req)}` : base
 }
 
 function addToGroup(key: string, group: string): void {
@@ -72,6 +73,7 @@ function sendCached(res: Response, entry: CacheEntry, ttlSeconds: number): void 
   }
 }
 
+/** Clears all entries in a named group (e.g. `photos`), including every viewer-specific cache key suffix. */
 export function cacheClear(target?: string): void {
   if (!target) {
     store.entries.clear()
@@ -90,14 +92,15 @@ export function cacheClear(target?: string): void {
 
 export function cacheMiddleware(
   duration: string | number,
-  group?: string
+  group?: string,
+  keySuffix?: (req: Request) => string,
 ): (req: Request, res: Response, next: NextFunction) => void {
   const ttlMs = parseDuration(duration)
 
   return (req: Request, res: Response, next: NextFunction) => {
     if (req.method !== 'GET') return next()
 
-    const key = getCacheKey(req)
+    const key = getCacheKey(req, keySuffix)
     const cached = store.entries.get(key)
 
     if (cached && cached.expiresAt > Date.now()) {

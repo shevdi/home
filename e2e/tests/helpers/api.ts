@@ -27,6 +27,34 @@ async function withTransientRetry<T>(fn: () => Promise<T>, attempts = 4): Promis
   throw lastError;
 }
 
+export async function apiLoginAs(
+  request: APIRequestContext,
+  username: string,
+  password: string,
+): Promise<string> {
+  const response = await request.post(`${API_URL}/auth`, {
+    data: { username, password },
+    timeout: TEST_API_TIMEOUT_MS,
+  });
+  if (!response.ok()) {
+    throw new Error(`Login failed: ${response.status()} ${await response.text()}`);
+  }
+  const body = await response.json();
+  return body.accessToken as string;
+}
+
+export async function getPhotosWithToken(request: APIRequestContext, accessToken: string): Promise<ILink[]> {
+  const response = await request.get(`${API_URL}/photos`, {
+    headers: { Authorization: `Bearer ${accessToken}` },
+    timeout: TEST_API_TIMEOUT_MS,
+  });
+  if (!response.ok()) {
+    throw new Error(`Get photos failed: ${response.status()} ${await response.text()}`);
+  }
+  const body = await response.json();
+  return body.photos as ILink[];
+}
+
 export async function apiLogin(request: APIRequestContext): Promise<string> {
   const username = process.env.E2E_LOGIN;
   const password = process.env.E2E_PASSWORD;
@@ -110,7 +138,7 @@ export function extractUrlVersion(url: string): string | null {
   }
 }
 
-export async function seedUser(request: APIRequestContext): Promise<void> {
+export async function seedUser(request: APIRequestContext): Promise<{ userId: string }> {
   const username = process.env.E2E_LOGIN;
   const password = process.env.E2E_PASSWORD;
 
@@ -123,4 +151,31 @@ export async function seedUser(request: APIRequestContext): Promise<void> {
   if (!response.ok()) {
     throw new Error(`Seed user failed: ${response.status()} ${await response.text()}`);
   }
+  const body = (await response.json()) as { userId?: string };
+  if (!body.userId) {
+    throw new Error('Seed user response missing userId');
+  }
+  return { userId: body.userId };
+}
+
+/** Non-admin user for private-photo share tests (same password as admin seed for simplicity). */
+export async function seedGranteeUser(request: APIRequestContext): Promise<{ userId: string }> {
+  const password = process.env.E2E_PASSWORD;
+  if (!password) {
+    throw new Error('E2E_PASSWORD must be set');
+  }
+  const response = await withTransientRetry(() =>
+    request.post(`${API_URL}/__test/seed-user`, {
+      data: { username: 'e2e_grantee', password, roles: ['user'] },
+      timeout: TEST_API_TIMEOUT_MS,
+    }),
+  );
+  if (!response.ok()) {
+    throw new Error(`Seed grantee failed: ${response.status()} ${await response.text()}`);
+  }
+  const body = (await response.json()) as { userId?: string };
+  if (!body.userId) {
+    throw new Error('Seed grantee response missing userId');
+  }
+  return { userId: body.userId };
 }

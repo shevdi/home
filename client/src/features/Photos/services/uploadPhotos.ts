@@ -13,6 +13,7 @@ import {
 } from '../model/uploadSlice'
 import { createThumbnailDataUrl } from '../utils/createThumbnailDataUrl'
 import type { FileMeta } from '../utils/uploadPhotoMeta'
+import type { PerFileOptions } from '../utils/perFileOptions'
 import type { UploadProgressEvent, UploadCompleteEvent } from '@shevdi-home/shared'
 import { getBackendUrl } from '@/shared/utils/getBackendUrl'
 
@@ -29,25 +30,41 @@ const buildMetaPayload = ({ gps, make, model, takenAt }: FileMeta) => ({
 
 const buildUploadFormData = (
   files: File[],
-  isPrivate: boolean,
   meta: FileMeta[],
-  country: string[],
-  city: string[],
-  tags: string[],
-  title?: string,
-  priority?: number,
+  perFileOptions: PerFileOptions[],
 ) => {
   const formData = new FormData()
-  formData.append('private', isPrivate.toString())
   formData.append('meta', JSON.stringify(meta.map(buildMetaPayload)))
-  if (country.length > 0) formData.append('country', country.join(','))
-  if (city.length > 0) formData.append('city', city.join(','))
-  if (tags.length > 0) formData.append('tags', tags.join(','))
-  const trimmedTitle = title?.trim()
-  if (trimmedTitle) formData.append('title', trimmedTitle)
-  if (priority !== undefined && priority !== null && !Number.isNaN(priority)) {
-    formData.append('priority', String(priority))
-  }
+  const perFileJson = JSON.stringify(
+    perFileOptions.map((opts) => ({
+      title: opts.title || undefined,
+      priority: opts.priority,
+      private: opts.private,
+      tags: opts.tags,
+      country: opts.country,
+      city: opts.city,
+      accessedBy: opts.accessedBy.map((userId) => ({ userId })),
+    })),
+  )
+  formData.append('perFileOptions', perFileJson)
+  // #region agent log
+  fetch('http://127.0.0.1:7915/ingest/9992f24d-00f6-41c9-bc27-a45102f4306c', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': 'd2a394' },
+    body: JSON.stringify({
+      sessionId: 'd2a394',
+      location: 'uploadPhotos.ts:buildUploadFormData',
+      message: 'formData perFileOptions',
+      data: {
+        filesLen: files.length,
+        perFileLen: perFileOptions.length,
+        jsonLen: perFileJson.length,
+      },
+      timestamp: Date.now(),
+      hypothesisId: 'H2',
+    }),
+  }).catch(() => {})
+  // #endregion
   files.forEach((file) => {
     formData.append('files', file)
   })
@@ -66,14 +83,7 @@ function parseSSEEvent(line: string): UploadProgressEvent | UploadCompleteEvent 
 async function uploadBatch(
   files: File[],
   meta: FileMeta[],
-  options: {
-    isPrivate: boolean
-    country: string[]
-    city: string[]
-    tags: string[]
-    title?: string
-    priority?: number
-  },
+  perFileOptions: PerFileOptions[],
   baseUrl: string,
   token: string | undefined,
   dispatch: Dispatch,
@@ -82,12 +92,8 @@ async function uploadBatch(
 ): Promise<void> {
   const formData = buildUploadFormData(
     files,
-    options.isPrivate,
     meta,
-    options.country,
-    options.city,
-    options.tags,
-    options.title,
+    perFileOptions,
   )
 
   for (let i = 0; i < files.length; i++) {
@@ -172,19 +178,10 @@ async function uploadBatch(
   }
 }
 
-export interface UploadPhotosOptions {
-  isPrivate: boolean
-  country: string[]
-  city: string[]
-  tags: string[]
-  title?: string
-  priority?: number
-}
-
 export async function uploadPhotosInBatches(
   files: File[],
   meta: FileMeta[],
-  options: UploadPhotosOptions,
+  perFileOptions: PerFileOptions[],
   dispatch: Dispatch,
   getState: () => RootState,
 ): Promise<void> {
@@ -215,10 +212,11 @@ export async function uploadPhotosInBatches(
     for (let i = 0; i < files.length; i += BATCH_SIZE) {
       const batchFiles = files.slice(i, i + BATCH_SIZE)
       const batchMeta = meta.slice(i, i + BATCH_SIZE)
+      const batchPerFileOptions = perFileOptions.slice(i, i + BATCH_SIZE)
       await uploadBatch(
         batchFiles,
         batchMeta,
-        options,
+        batchPerFileOptions,
         baseUrl,
         token,
         dispatch,

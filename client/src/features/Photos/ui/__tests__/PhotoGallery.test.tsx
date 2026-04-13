@@ -1,25 +1,12 @@
 import { act, render, screen } from '@testing-library/react'
+import type { ILink } from '@shevdi-home/shared'
 import { MemoryRouter } from 'react-router'
 import { PhotoGallery } from '../PhotoGallery'
-import { useSelector } from 'react-redux'
-import { selectFilter, selectSearch, useGetInfinitePhotoWithMaxInfiniteQuery } from '../../model'
-
-jest.mock('react-redux', () => ({
-  useSelector: jest.fn(),
-}))
-
-jest.mock('../../model', () => ({
-  useGetInfinitePhotoWithMaxInfiniteQuery: jest.fn(),
-}))
 
 jest.mock('../PhotoLink', () => ({
   PhotoLink: ({ photo }: { photo: { _id: string; title?: string } }) => (
     <div data-testid='photo-link'>{photo.title ?? photo._id}</div>
   ),
-}))
-
-jest.mock('../Search', () => ({
-  Search: () => <div data-testid='search'>search</div>,
 }))
 
 jest.mock('@/shared/ui', () => ({
@@ -29,9 +16,6 @@ jest.mock('@/shared/ui', () => ({
 type ObserverCallback = IntersectionObserverCallback
 
 let observerCallback: ObserverCallback | null = null
-
-const mockUseSelector = useSelector as unknown as jest.Mock
-const mockUseGetInfinitePhotoWithMaxInfiniteQuery = useGetInfinitePhotoWithMaxInfiniteQuery as unknown as jest.Mock
 
 class MockIntersectionObserver {
   static lastInstance: MockIntersectionObserver | null = null
@@ -55,63 +39,25 @@ afterEach(() => {
   jest.clearAllMocks()
 })
 
-const baseSearch = {
-  dateFrom: null,
-  dateTo: null,
-  order: 'orderDownByTakenAt',
-  tags: [],
-  country: [],
-  city: [],
-}
-
 const basePhotos = [
-  { _id: 'photo-1', title: 'Photo One', private: false },
-  { _id: 'photo-2', title: 'Photo Two', private: true },
-]
+  { _id: 'photo-1', title: 'Photo One', private: false, location: { value: { country: [], city: [] } } },
+  { _id: 'photo-2', title: 'Photo Two', private: true, location: { value: { country: [], city: [] } } },
+] as unknown as ILink[]
 
-const buildHookResult = (
-  overrides: Partial<{
-    data: { pages: Array<{ photos: typeof basePhotos }> }
-    isLoading: boolean
-    fetchNextPage: jest.Mock
-    hasNextPage: boolean
-    isFetchingNextPage: boolean
-  }> = {},
-) => ({
-  data: { pages: [{ photos: basePhotos }] },
+const defaultProps = {
+  photos: basePhotos,
   isLoading: false,
-  fetchNextPage: jest.fn(),
-  hasNextPage: false,
+  isFetching: false,
   isFetchingNextPage: false,
-  ...overrides,
-})
-
-const mockInfiniteQuery = (overrides?: Parameters<typeof buildHookResult>[0]) => {
-  mockUseGetInfinitePhotoWithMaxInfiniteQuery.mockImplementation((_params, options) => {
-    const result = buildHookResult(overrides)
-    if (options?.selectFromResult) {
-      return options.selectFromResult(result)
-    }
-    return result
-  })
+  hasNextPage: false,
+  fetchNextPage: jest.fn(),
 }
 
 describe('PhotoGallery', () => {
   it('shows loader when fetching', () => {
-    mockUseSelector.mockImplementation((selector) => {
-      if (selector === selectFilter) {
-        return { private: false }
-      }
-      if (selector === selectSearch) {
-        return baseSearch
-      }
-      return undefined
-    })
-    mockInfiniteQuery({ isLoading: true, hasNextPage: true })
-
     render(
       <MemoryRouter>
-        <PhotoGallery />
+        <PhotoGallery {...defaultProps} isLoading />
       </MemoryRouter>,
     )
 
@@ -120,20 +66,10 @@ describe('PhotoGallery', () => {
 
   it('observes sentinel and loads more when intersecting', async () => {
     const fetchNextPage = jest.fn().mockResolvedValue(undefined)
-    mockUseSelector.mockImplementation((selector) => {
-      if (selector === selectFilter) {
-        return { private: false }
-      }
-      if (selector === selectSearch) {
-        return baseSearch
-      }
-      return undefined
-    })
-    mockInfiniteQuery({ fetchNextPage, hasNextPage: true })
 
     render(
       <MemoryRouter>
-        <PhotoGallery />
+        <PhotoGallery {...defaultProps} fetchNextPage={fetchNextPage} hasNextPage />
       </MemoryRouter>,
     )
 

@@ -1,7 +1,20 @@
 import { test, expect } from '@playwright/test';
 import type { ILink } from '@shevdi-home/shared';
-import { seedPhotos, resetPhotos, getPhotosFromApi, resetMock, seedUser } from './helpers/api';
-import { loginAsAdmin } from './helpers/auth';
+import {
+  seedPhotos,
+  resetPhotos,
+  getPhotosFromApi,
+  resetMock,
+  seedUser,
+  seedGranteeUser,
+  apiLoginAs,
+  getPhotosWithToken,
+  apiLogin,
+} from './helpers/api';
+import { loginAsAdmin, loginAsGrantee } from './helpers/auth';
+
+/** `User.name` from `__test/seed-user` for the grantee account. */
+const E2E_GRANTEE_DISPLAY_NAME = 'e2e_grantee';
 import { mockPhotos } from './fixtures/photo-mocks';
 
 const GALLERY_PHOTO = 'figure a[href^="/photos/"]';
@@ -74,13 +87,15 @@ test.describe('Photo flows', () => {
       });
     });
 
-    test('fails to open upload photo page', async ({ page }) => {
+    test('upload route is hidden for guests (not-found, URL unchanged)', async ({ page }) => {
       await test.step('Navigate to /photos/new', async () => {
         await page.goto('/photos/new');
       });
 
-      await test.step('Not-found message is shown', async () => {
+      await test.step('Guest sees not-found for upload URL', async () => {
+        await expect(page).toHaveURL(/\/photos\/new$/, { timeout: 10000 });
         await expect(page.getByText('Такого фото нет')).toBeVisible({ timeout: 10000 });
+        await expect(page.getByRole('link', { name: 'К фотографиям' })).toBeVisible();
       });
     });
 
@@ -100,7 +115,7 @@ test.describe('Photo flows', () => {
     });
   });
 
-  test.describe.skip('authenticated user', () => {
+  test.describe('authenticated user', () => {
     test.beforeEach(async ({ page }) => {
       await loginAsAdmin(page);
     });
@@ -303,7 +318,7 @@ test.describe('Photo flows', () => {
       });
     });
 
-    test.skip('photo detail without metadata hides date and tags', async ({ page, request }) => {
+    test('photo detail without metadata hides date and tags', async ({ page, request }) => {
       const photo = await test.step('Get photo without metadata from API', async () => {
         const photos = await getPhotosFromApi(request);
         return photos.find(
@@ -321,5 +336,140 @@ test.describe('Photo flows', () => {
         await expect(page.locator('a[href*="dateFrom="]')).not.toBeVisible();
       });
     });
+  });
+});
+
+const SHARED_E2E_PRIVATE: Partial<ILink> = {
+  name: 'E2E_SHARED_PRIVATE.jpg',
+  fileName: 'E2E_SHARED_PRIVATE.jpg',
+  smSizeUrl: 'http://placeholder/sm/e2e-share',
+  mdSizeUrl: 'http://placeholder/md/e2e-share',
+  fullSizeUrl: 'http://placeholder/full/e2e-share',
+  smSizeEntryId: '499010001',
+  mdSizeEntryId: '499010002',
+  fullSizeEntryId: '499010003',
+  private: true,
+  tags: ['e2e-private-share'],
+  title: 'E2E shared private',
+  priority: 0,
+  meta: { takenAt: '2022-06-01T12:00:00.000Z' },
+  location: { value: { country: [], city: [] } },
+};
+
+test.describe('Private photo share (accessedBy)', () => {
+  let granteeUserId = '';
+
+  test.beforeAll(async ({ request }) => {
+    await seedUser(request);
+    const g = await seedGranteeUser(request);
+    granteeUserId = g.userId;
+    await resetMock(request);
+  });
+
+  test.beforeEach(async ({ request }) => {
+    await resetPhotos(request);
+    await seedPhotos(request, [
+      ...mockPhotos,
+      { ...SHARED_E2E_PRIVATE, accessedBy: [{ userId: granteeUserId }] },
+    ]);
+  });
+
+  test.afterEach(async ({ request }) => {
+    await resetPhotos(request);
+  });
+
+  test('grantee sees shared private photo in gallery', async ({ page, request }) => {
+    const password = process.env.E2E_PASSWORD;
+    if (!password) {
+      test.skip();
+      return;
+    }
+    const token = await apiLoginAs(request, 'e2e_grantee', password);
+    const photos = await getPhotosWithToken(request, token);
+    const shared = photos.find((p) => p.tags?.includes('e2e-private-share'));
+    expect(shared?._id).toBeTruthy();
+
+    await loginAsGrantee(page);
+    // Client-side nav keeps the access token in Redux; full reload would drop it and
+    // refresh cookie is Secure (not sent on http://localhost in e2e).
+    await page.getByRole('link', { name: 'Фото' }).click();
+    await expect(page).toHaveURL(/\/photos/);
+    await expect(page.locator(`figure a[href^="/photos/${shared?._id}"]`).first()).toBeVisible({
+      timeout: 20000,
+    });
+  });
+
+  test('guest cannot open shared private photo by direct link', async ({ page, request }) => {
+    const password = process.env.E2E_PASSWORD;
+    if (!password) {
+      test.skip();
+      return;
+    }
+    const adminToken = await apiLogin(request);
+    const photos = await getPhotosWithToken(request, adminToken);
+    const shared = photos.find((p) => p.tags?.includes('e2e-private-share'));
+    expect(shared?._id).toBeTruthy();
+
+    await page.goto(`/photos/${shared?._id}`);
+    await expect(page.getByText('Такого фото нет')).toBeVisible({ timeout: 10000 });
+  });
+
+  test('edit page shows accessedBy chip with grantee display name, not user id', async ({ page, request }) => {
+    const password = process.env.E2E_PASSWORD;
+    if (!password) {
+      test.skip();
+      return;
+    }
+    await loginAsAdmin(page);
+    const adminToken = await apiLogin(request);
+    const photos = await getPhotosWithToken(request, adminToken);
+    const shared = photos.find((p) => p.tags?.includes('e2e-private-share'));
+    expect(shared?._id).toBeTruthy();
+
+    // Client-side nav keeps the access token in Redux; full reload would drop it and
+    // refresh cookie is Secure (not sent on http://localhost in e2e).
+    await waitForPhotosAndGalleryViaNav(page);
+    await page.getByText('Приватные').click();
+    await expect(page.locator(`a[href^="/photos/${shared?._id}"]`).first()).toBeVisible({ timeout: 10000 });
+    await page.locator(`a[href^="/photos/${shared?._id}"]`).first().click();
+    await page.getByRole('link', { name: 'Редактировать' }).click();
+    await expect(page.locator('input[name="title"]')).toBeVisible({ timeout: 15000 });
+
+    const accessedByTaggedInput = page.locator('#photo-form-accessed-by').locator('..').locator('..');
+    await expect(accessedByTaggedInput.getByText(E2E_GRANTEE_DISPLAY_NAME)).toBeVisible();
+    await expect(accessedByTaggedInput.getByText(granteeUserId)).toHaveCount(0);
+  });
+
+  test('edit page can re-add grantee from suggestions; chip shows display name', async ({ page, request }) => {
+    const password = process.env.E2E_PASSWORD;
+    if (!password) {
+      test.skip();
+      return;
+    }
+    await loginAsAdmin(page);
+    const adminToken = await apiLogin(request);
+    const photos = await getPhotosWithToken(request, adminToken);
+    const shared = photos.find((p) => p.tags?.includes('e2e-private-share'));
+    expect(shared?._id).toBeTruthy();
+
+    await waitForPhotosAndGalleryViaNav(page);
+    await page.getByText('Приватные').click();
+    await expect(page.locator(`a[href^="/photos/${shared?._id}"]`).first()).toBeVisible({ timeout: 10000 });
+    await page.locator(`a[href^="/photos/${shared?._id}"]`).first().click();
+    await page.getByRole('link', { name: 'Редактировать' }).click();
+    await expect(page.locator('input[name="title"]')).toBeVisible({ timeout: 15000 });
+
+    const accessedByTaggedInput = page.locator('#photo-form-accessed-by').locator('..').locator('..');
+    await expect(accessedByTaggedInput.getByText(E2E_GRANTEE_DISPLAY_NAME)).toBeVisible();
+
+    await accessedByTaggedInput.getByRole('button', { name: new RegExp(`Удалить тег ${granteeUserId}`) }).click();
+    await expect(accessedByTaggedInput.getByText(E2E_GRANTEE_DISPLAY_NAME)).toHaveCount(0);
+
+    await page.locator('#photo-form-accessed-by').fill('e2e_gr');
+    await expect(page.getByRole('option', { name: E2E_GRANTEE_DISPLAY_NAME })).toBeVisible({ timeout: 10000 });
+    await page.getByRole('option', { name: E2E_GRANTEE_DISPLAY_NAME }).click();
+
+    await expect(accessedByTaggedInput.getByText(E2E_GRANTEE_DISPLAY_NAME)).toBeVisible();
+    await expect(accessedByTaggedInput.getByText(granteeUserId)).toHaveCount(0);
   });
 });

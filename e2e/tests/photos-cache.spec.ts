@@ -63,7 +63,7 @@ test.describe('Photo gallery caching', () => {
     await resetPhotos(request);
   });
 
-  test.only('cache lifecycle: response cache and urlCache', async ({ page, request, }) => {
+  test('cache lifecycle: response cache and urlCache', async ({ page, request, }) => {
     await loginAsAdmin(page);
 
     const { response1, versions1 } = await test.step('Load gallery — cache MISS, urlCache MISS', async () => {

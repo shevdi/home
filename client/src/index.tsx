@@ -4,6 +4,9 @@ import { createRoot } from 'react-dom/client'
 import { App } from '@/app/entry/App'
 import { RoutesList } from '@/app/routes'
 import { hydrateAuth } from '@/app/bootstrap'
+import { registerServiceWorker } from '@/pwa/registerServiceWorker'
+
+registerServiceWorker()
 
 const rootElement = document.getElementById('root')
 if (rootElement) {

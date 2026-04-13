@@ -28,7 +28,6 @@ RUN cp -r client/. .
 # Emit ui-kit .d.ts + JS before webpack/ts-loader (avoids TS7016 when dev starts)
 RUN npm run build --prefix ./ui-kit
 
-EXPOSE 3000
-EXPOSE 8080
+EXPOSE 80
 
 CMD ["npm", "run", "dev"]

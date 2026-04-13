@@ -1,11 +1,15 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useId } from 'react'
 import { Input } from '../Input'
 import inputStyles from '../Input/Input.module.css'
-import { useLabeledFieldOutsideClick } from '../LabeledInput'
 import { TagChips } from '../TagChips'
 import type { TagChipsProps } from '../TagChips'
 import styles from './TaggedInput.module.css'
 import { addCommittedToken, splitPaste } from './taggedInputTokens'
+import type { TaggedSuggestion } from './taggedInputTypes'
+import { useTaggedInputFieldRef } from './useTaggedInputFieldRef'
+import { useTaggedInputSuggestions } from './useTaggedInputSuggestions'
+
+export type { TaggedSuggestion } from './taggedInputTypes'
 
 export interface TaggedInputProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'value' | 'defaultValue' | 'onChange' | 'type' | 'size'> {
@@ -23,6 +27,15 @@ export interface TaggedInputProps
   /** When the draft is empty, Backspace removes the last tag. */
   backspaceRemovesLast?: boolean
   onOutsideClick?: () => void
+  /**
+   * When set, enables autocomplete: after `suggestionDebounceMs` the query is passed here and results are shown in a dropdown.
+   * Domain-specific fetching (e.g. user search) lives in the parent.
+   */
+  fetchSuggestions?: (query: string) => Promise<TaggedSuggestion[]>
+  /** Debounce before calling `fetchSuggestions` (default 250). */
+  suggestionDebounceMs?: number
+  /** When the user commits a row from the suggestion list (mouse or keyboard). */
+  onCommitSuggestion?: (suggestion: TaggedSuggestion) => void
 }
 
 export const TaggedInput = React.forwardRef<HTMLInputElement, TaggedInputProps>(function TaggedInput(
@@ -41,11 +54,32 @@ export const TaggedInput = React.forwardRef<HTMLInputElement, TaggedInputProps>(
     className,
     onKeyDown,
     onPaste,
+    fetchSuggestions,
+    suggestionDebounceMs = 250,
+    onCommitSuggestion,
     ...rest
   },
   ref,
 ) {
-  const wrapperRef = useLabeledFieldOutsideClick(onOutsideClick)
+  const listboxId = useId()
+  const {
+    suggestions,
+    loading,
+    highlightIndex,
+    setHighlightIndex,
+    menuDismissed,
+    setMenuDismissed,
+    closeMenu,
+    showPanel,
+    autocompleteEnabled,
+  } = useTaggedInputSuggestions({
+    inputValue,
+    fetchSuggestions,
+    suggestionDebounceMs,
+    disabled,
+  })
+
+  const wrapperRef = useTaggedInputFieldRef(onOutsideClick, closeMenu)
 
   const commitDraft = useCallback(
     (draft: string) => {
@@ -65,12 +99,59 @@ export const TaggedInput = React.forwardRef<HTMLInputElement, TaggedInputProps>(
     [insertAt, onInputValueChange, onTagsChange, tags],
   )
 
+  const pickSuggestion = useCallback(
+    (value: string) => {
+      const picked = suggestions.find((s) => s.value === value)
+      if (picked) onCommitSuggestion?.(picked)
+      const { next, duplicate } = addCommittedToken(tags, value, insertAt)
+      if (!duplicate) {
+        onTagsChange(next)
+      }
+      onInputValueChange('')
+      closeMenu()
+    },
+    [insertAt, onInputValueChange, onTagsChange, tags, closeMenu, suggestions, onCommitSuggestion],
+  )
+
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     onKeyDown?.(event)
     if (event.defaultPrevented) return
     if (event.nativeEvent.isComposing) return
 
+    const listLen = suggestions.length
+    const hasHighlight = highlightIndex >= 0 && highlightIndex < listLen
+
+    if (event.key === 'Escape' && showPanel) {
+      event.preventDefault()
+      closeMenu()
+      return
+    }
+
+    if (showPanel && (event.key === 'ArrowDown' || event.key === 'ArrowUp')) {
+      event.preventDefault()
+      if (event.key === 'ArrowDown') {
+        if (listLen === 0) return
+        setMenuDismissed(false)
+        setHighlightIndex((i) => (i < listLen - 1 ? i + 1 : i))
+      } else {
+        setHighlightIndex((i) => (i > 0 ? i - 1 : -1))
+      }
+      return
+    }
+
+    if (menuDismissed && (event.key === 'ArrowDown' || event.key === 'ArrowUp') && listLen > 0) {
+      event.preventDefault()
+      setMenuDismissed(false)
+      setHighlightIndex(event.key === 'ArrowDown' ? 0 : listLen - 1)
+      return
+    }
+
     if (event.key === 'Enter') {
+      if (showPanel && hasHighlight) {
+        event.preventDefault()
+        pickSuggestion(suggestions[highlightIndex]!.value)
+        return
+      }
       event.preventDefault()
       commitDraft(inputValue)
       return
@@ -79,6 +160,7 @@ export const TaggedInput = React.forwardRef<HTMLInputElement, TaggedInputProps>(
     if (event.key === ',') {
       event.preventDefault()
       commitDraft(inputValue)
+      closeMenu()
       return
     }
 
@@ -107,28 +189,80 @@ export const TaggedInput = React.forwardRef<HTMLInputElement, TaggedInputProps>(
       onTagsChange(next)
     }
     onInputValueChange('')
+    closeMenu()
   }
 
   const handleRemove = (tag: string) => {
     onTagsChange(tags.filter((t) => t !== tag))
   }
 
+  const activeDescendantId =
+    showPanel && highlightIndex >= 0 && highlightIndex < suggestions.length
+      ? `${listboxId}-opt-${highlightIndex}`
+      : undefined
+
   const rootClass = [styles.root, className].filter(Boolean).join(' ')
 
   return (
     <div ref={wrapperRef} className={rootClass}>
-      <Input
-        ref={ref}
-        type="text"
-        disabled={disabled}
-        className={inputStyles.input}
-        size={size}
-        value={inputValue}
-        onChange={(e) => onInputValueChange(e.target.value)}
-        onKeyDown={handleKeyDown}
-        onPaste={handlePaste}
-        {...rest}
-      />
+      <div className={styles.inputWrap}>
+        <Input
+          ref={ref}
+          type='text'
+          disabled={disabled}
+          className={inputStyles.input}
+          size={size}
+          value={inputValue}
+          onChange={(e) => onInputValueChange(e.target.value)}
+          onKeyDown={handleKeyDown}
+          onPaste={handlePaste}
+          {...rest}
+          {...(autocompleteEnabled
+            ? {
+                role: 'combobox' as const,
+                'aria-expanded': showPanel,
+                'aria-controls': showPanel ? listboxId : undefined,
+                'aria-autocomplete': 'list' as const,
+                'aria-activedescendant': activeDescendantId,
+              }
+            : {})}
+        />
+        {showPanel && (
+          <ul
+            id={listboxId}
+            className={styles.suggestions}
+            role='listbox'
+            aria-label='Suggestions'
+          >
+            {loading && suggestions.length === 0 ? (
+              <li className={styles.suggestionMuted} role='presentation'>
+                …
+              </li>
+            ) : null}
+            {suggestions.map((s, index) => (
+              <li
+                key={`${s.value}-${index}`}
+                id={`${listboxId}-opt-${index}`}
+                role='option'
+                aria-selected={highlightIndex === index}
+                className={[
+                  styles.suggestion,
+                  highlightIndex === index ? styles.suggestionActive : '',
+                ]
+                  .filter(Boolean)
+                  .join(' ')}
+                onMouseDown={(e) => {
+                  e.preventDefault()
+                  pickSuggestion(s.value)
+                }}
+                onMouseEnter={() => setHighlightIndex(index)}
+              >
+                {s.label}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
       <TagChips
         tags={tags}
         position={position}

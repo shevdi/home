@@ -1,5 +1,6 @@
 import express from 'express'
 import { login, refresh, logout } from '../services/auth'
+import { telegramVerify, telegramCompleteName } from '../services/auth/telegramAuth.js'
 import requestLimiter from '../middlewares/requestLimiter'
 
 const loginLimiter = requestLimiter({
@@ -17,5 +18,11 @@ router.route('/refresh')
 
 router.route('/logout')
   .post(logout)
+
+router.route('/telegram/verify')
+  .post(loginLimiter, telegramVerify)
+
+router.route('/telegram/complete')
+  .post(loginLimiter, telegramCompleteName)
 
 export default router

@@ -1,10 +1,11 @@
 import styled from 'styled-components'
 import { useChangePageMutation, useGetPageQuery } from '../model/pageSlice'
 import { useLocation, useNavigate } from 'react-router'
-import { Button, ErrMessage, Field, Input, useLabeledFieldOutsideClick } from '@/shared/ui'
-import { useState } from 'react'
+import { Button, ErrMessage, Error, Field, Input, Loader, useLabeledFieldOutsideClick } from '@/shared/ui'
+import { useEffect, useState } from 'react'
 import z from 'zod'
-import { SubmitHandler, useForm } from 'react-hook-form'
+import type { SubmitHandler} from 'react-hook-form';
+import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { getErrorMessage } from '@/shared/utils'
 
@@ -13,6 +14,12 @@ interface IPageProps {
 }
 
 const PageContainer = styled.div``
+
+const LoadingWrap = styled.div`
+  display: flex;
+  justify-content: center;
+  padding: 3rem 1rem;
+`
 
 const PageHeader = styled.h1`
   text-align: center;
@@ -48,7 +55,7 @@ export function EditPage({ url }: IPageProps) {
 
   const pageName = url || location.pathname.split('/')[1]
 
-  const { data } = useGetPageQuery(pageName)
+  const { data, isLoading, refetch } = useGetPageQuery(pageName)
   const [changePage] = useChangePageMutation()
 
   const [isTitleEdited, setIsTitleEdited] = useState(false)
@@ -75,11 +82,18 @@ export function EditPage({ url }: IPageProps) {
     handleSubmit,
     setError,
     getValues,
+    reset,
     formState: { isSubmitting, errors },
   } = useForm<FormFields>({
     resolver: zodResolver(schema),
-    defaultValues: data,
+    defaultValues: data ?? { title: '', text: '' },
   })
+
+  useEffect(() => {
+    if (data) {
+      reset(data)
+    }
+  }, [data, reset])
 
   const { title, text } = getValues()
 
@@ -97,6 +111,30 @@ export function EditPage({ url }: IPageProps) {
         message,
       })
     }
+  }
+
+  if (isLoading && !data) {
+    return (
+      <PageContainer>
+        <LoadingWrap>
+          <Loader inline />
+        </LoadingWrap>
+      </PageContainer>
+    )
+  }
+
+  if (!data) {
+    return (
+      <PageContainer>
+        <Error
+          title='Ошибка'
+          message='Не удалось загрузить страницу'
+          onRetry={() => {
+            void refetch()
+          }}
+        />
+      </PageContainer>
+    )
   }
 
   return (

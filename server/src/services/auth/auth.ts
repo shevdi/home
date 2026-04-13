@@ -3,6 +3,7 @@ import { Request, Response } from 'express'
 import jwt from 'jsonwebtoken'
 import { env } from '../../config/env.js'
 import { getUserByName } from '../../db/services/users.js'
+import { issueSessionForUser } from './issueSession.js'
 
 export const login = async (req: Request, res: Response) => {
   const { username, password } = req.body
@@ -17,35 +18,19 @@ export const login = async (req: Request, res: Response) => {
     return res.status(401).json({ message: 'Неверный логин или пароль' })
   }
 
+  if (!foundUser.password) {
+    return res.status(401).json({ message: 'Неверный логин или пароль' })
+  }
+
   const match = await bcrypt.compare(password, foundUser.password)
 
   if (!match) return res.status(401).json({ message: 'Неверный логин или пароль' })
 
-  const accessToken = jwt.sign(
-    {
-      UserInfo: {
-        username: foundUser.name,
-        roles: foundUser.roles
-      }
-    },
-    env.ACCESS_TOKEN_SECRET,
-    { expiresIn: '15m' }
-  )
-
-  const refreshToken = jwt.sign(
-    { username: foundUser.name },
-    env.REFRESH_TOKEN_SECRET,
-    { expiresIn: '7d' }
-  )
-
-  res.cookie('jwt', refreshToken, {
-    httpOnly: false,
-    secure: true,
-    sameSite: 'none',
-    maxAge: 7 * 24 * 60 * 60 * 1000
+  issueSessionForUser(res, {
+    name: foundUser.name,
+    roles: foundUser.roles,
+    userId: foundUser._id?.toString(),
   })
-
-  res.json({ accessToken })
 }
 
 export const refresh = (req: Request, res: Response) => {
@@ -73,14 +58,15 @@ export const refresh = (req: Request, res: Response) => {
         {
           UserInfo: {
             username: foundUser.name,
-            roles: foundUser.roles
-          }
+            roles: foundUser.roles,
+            ...(foundUser._id ? { userId: foundUser._id.toString() } : {}),
+          },
         },
         env.ACCESS_TOKEN_SECRET,
-        { expiresIn: '15m' }
+        { expiresIn: '15m' },
       )
 
-      res.json({ accessToken })
+      res.json({ accessToken, name: foundUser.name })
     }
   )
 }

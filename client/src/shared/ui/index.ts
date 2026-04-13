@@ -45,6 +45,7 @@ export type {
   DotsProgressIndicatorProps,
   TagChipsProps,
   TaggedInputProps,
+  TaggedSuggestion,
   CalendarViewProps,
   PopoverContentProps,
 } from '@shevdi-home/ui-kit'

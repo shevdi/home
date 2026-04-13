@@ -7,7 +7,7 @@ import { authApiSlice } from '@/features/Auth/model/authApiSlice'
  */
 export async function hydrateAuth(): Promise<void> {
   try {
-    await store.dispatch(authApiSlice.endpoints.refresh.initiate({})).unwrap()
+    await store.dispatch(authApiSlice.endpoints.refresh.initiate()).unwrap()
   } catch {
     // No refresh token, network error, or expired — proceed with null token
   }

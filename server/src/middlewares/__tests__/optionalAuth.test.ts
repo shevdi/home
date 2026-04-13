@@ -8,16 +8,18 @@ let optionalAuth: typeof import('../optionalAuth.js').optionalAuth
 let jwtModule: Awaited<typeof import('jsonwebtoken')>
 
 beforeAll(async () => {
-  const mod = await import('jsonwebtoken')
-  jwtModule = mod
-  ;({ optionalAuth } = await import('../optionalAuth.js'))
+  jwtModule = await import('jsonwebtoken')
 })
 
 const getJwt = () => (jwtModule as { default?: typeof jwtModule }).default ?? jwtModule
 
-beforeEach(() => {
+beforeEach(async () => {
   jest.restoreAllMocks()
+  jest.resetModules()
   process.env.ACCESS_TOKEN_SECRET = 'access-secret'
+  process.env.REFRESH_TOKEN_SECRET = 'refresh-secret'
+  jwtModule = await import('jsonwebtoken')
+  ; ({ optionalAuth } = await import('../optionalAuth.js'))
 })
 
 afterEach(() => {

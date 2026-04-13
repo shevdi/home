@@ -3,10 +3,10 @@ import path from 'path'
 import { merge } from 'webpack-merge'
 import webpack from 'webpack'
 import commonConfig from './webpack.common'
-import { Configuration } from 'webpack';
-import { Configuration as DevServerConfiguration } from 'webpack-dev-server';
+import type { Configuration } from 'webpack'
+import type { Configuration as DevServerConfiguration } from 'webpack-dev-server'
 
-const DEV_PORT = 3000
+const DEV_PORT = 80
 
 /** Linked workspace package output; must be watched so client rebuilds when ui-kit watch rebuilds. */
 const uiKitDistGlob = path
@@ -51,6 +51,7 @@ const devConfig: CustomConfiguration = merge(commonConfig, {
   plugins: [
     new webpack.EnvironmentPlugin({
       YANDEX_METRIKA_ID: '',
+      TELEGRAM_BOT_USERNAME: '',
     }),
   ],
   output: {
