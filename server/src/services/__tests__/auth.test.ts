@@ -121,7 +121,7 @@ describe('auth service', () => {
       sameSite: 'none',
       maxAge: 7 * 24 * 60 * 60 * 1000
     })
-    expect(res.json).toHaveBeenCalledWith({ accessToken: 'access-token' })
+    expect(res.json).toHaveBeenCalledWith({ accessToken: 'access-token', name: 'user' })
   })
 
   it('returns 401 when refresh cookie missing', () => {
@@ -178,7 +178,7 @@ describe('auth service', () => {
 
     await refresh(req, res)
 
-    expect(res.json).toHaveBeenCalledWith({ accessToken: 'new-access-token' })
+    expect(res.json).toHaveBeenCalledWith({ accessToken: 'new-access-token', name: 'user' })
   })
 
   it('returns 204 when logout without cookie', () => {

@@ -7,6 +7,7 @@ import {
   PhotosPage,
   PhotoPage,
   EditPhotoPage,
+  EditPhotosPage,
   UploadPhotoPage,
 } from '@/pages'
 import { Layout } from '@/widgets/Layout'
@@ -29,13 +30,14 @@ export function RoutesList() {
             </Route>
             <Route path='photos'>
               <Route index element={<PhotosPage />} />
+              <Route path='new' element={<UploadPhotoPage />} />
+              <Route path='edit' element={<EditPhotosPage />} />
               <Route path=':id'>
                 <Route index element={<PhotoPage />} />
-                <Route element={<RequireAuth allowedRoles={['user', 'admin']} />}>
+                <Route element={<RequireAuth allowedRoles={['admin']} />}>
                   <Route path='edit' element={<EditPhotoPage />} />
                 </Route>
               </Route>
-              <Route path='new' element={<UploadPhotoPage />} />
             </Route>
             <Route path='login'>
               <Route index element={<LoginPage />} />

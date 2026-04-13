@@ -14,6 +14,9 @@ export interface AuthState {
 
 export interface Credentials { token: string; user: User }
 
-export interface AccessToken { accessToken: string }
+export interface AccessToken {
+  accessToken: string
+  name: string
+}
 
 export interface LoginInputRequest { username: string, password: string }

@@ -8,6 +8,7 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { getErrorMessage } from '@/shared/utils'
+import styled from 'styled-components'
 
 const passwordSchema = z.object({
   username: z.string().min(1, { error: 'Поле должно быть заполнено' }),
@@ -42,7 +43,7 @@ export function PasswordLogin() {
       <ErrMessage {...(rootMessage ? { 'data-testid': 'password-login-error', role: 'alert' } : {})}>
         {rootMessage}
       </ErrMessage>
-      <form className='form' onSubmit={passwordForm.handleSubmit(onPasswordSubmit)}>
+      <Form className='form' onSubmit={passwordForm.handleSubmit(onPasswordSubmit)}>
         <Field label='Имя пользователя' error={passwordForm.formState.errors.username?.message} required>
           <Input focus {...passwordForm.register('username')} disabled={passwordForm.formState.isSubmitting} />
         </Field>
@@ -56,7 +57,13 @@ export function PasswordLogin() {
         <Button display='block' type='submit' margin='1.25rem auto 0' disabled={passwordForm.formState.isSubmitting}>
           Войти
         </Button>
-      </form>
+      </Form>
     </>
   )
 }
+
+const Form = styled.form`
+  & > * {
+    margin-bottom: 1.25rem;
+  }
+`

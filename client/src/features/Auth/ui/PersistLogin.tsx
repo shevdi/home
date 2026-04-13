@@ -6,7 +6,7 @@ export const PersistLogin = () => {
   const [refresh] = useRefreshMutation()
 
   useEffect(() => {
-    refresh({})
+    refresh()
   }, [refresh])
 
   return <Outlet />

@@ -28,5 +28,5 @@ export function issueSessionForUser(
     maxAge: 7 * 24 * 60 * 60 * 1000,
   })
 
-  res.json({ accessToken })
+  res.json({ accessToken, name: user.name })
 }

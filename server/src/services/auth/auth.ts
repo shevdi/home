@@ -66,7 +66,7 @@ export const refresh = (req: Request, res: Response) => {
         { expiresIn: '15m' },
       )
 
-      res.json({ accessToken })
+      res.json({ accessToken, name: foundUser.name })
     }
   )
 }
