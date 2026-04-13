@@ -21,6 +21,7 @@ export default merge(common, {
     new webpack.EnvironmentPlugin({
       YANDEX_METRIKA_ID: process.env.YANDEX_METRIKA_ID ?? '',
       TELEGRAM_BOT_USERNAME: process.env.TELEGRAM_BOT_USERNAME ?? '',
+      BACKEND_URL: process.env.BACKEND_URL ?? 'https://home-server-shevdi.amvera.io/api/v1',
     }),
     new CopyPlugin({
       patterns: [{
@@ -32,28 +33,28 @@ export default merge(common, {
     }),
     ...(isOneShotProductionBuild
       ? [
-          // Precache: Workbox-managed revisioned cache for webpack-emitted assets.
-          // Photos: separate runtime cache `pwa-photo-runtime-v1` (expiration: 200 entries, 30d) — see runtimeCaching.
-          new GenerateSW({
-            clientsClaim: true,
-            skipWaiting: true,
-            navigateFallback: '/index.html',
-            navigateFallbackDenylist: [/^\/api\//],
-            runtimeCaching: [
-              {
-                urlPattern: ({ request }: { request: Request }) => request.destination === 'image',
-                handler: 'StaleWhileRevalidate',
-                options: {
-                  cacheName: 'pwa-photo-runtime-v1',
-                  expiration: {
-                    maxEntries: 200,
-                    maxAgeSeconds: 60 * 60 * 24 * 30,
-                  },
+        // Precache: Workbox-managed revisioned cache for webpack-emitted assets.
+        // Photos: separate runtime cache `pwa-photo-runtime-v1` (expiration: 200 entries, 30d) — see runtimeCaching.
+        new GenerateSW({
+          clientsClaim: true,
+          skipWaiting: true,
+          navigateFallback: '/index.html',
+          navigateFallbackDenylist: [/^\/api\//],
+          runtimeCaching: [
+            {
+              urlPattern: ({ request }: { request: Request }) => request.destination === 'image',
+              handler: 'StaleWhileRevalidate',
+              options: {
+                cacheName: 'pwa-photo-runtime-v1',
+                expiration: {
+                  maxEntries: 200,
+                  maxAgeSeconds: 60 * 60 * 24 * 30,
                 },
               },
-            ],
-          }),
-        ]
+            },
+          ],
+        }),
+      ]
       : []),
   ],
   entry: path.resolve(__dirname, "src", "index.tsx"),
