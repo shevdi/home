@@ -25,6 +25,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Agent debug log (context)
+        env:
+          TAG: ${{ github.ref_name }}
+        run: node scripts/agent-release-debug.mjs context
+
       - name: Lint
         run: npm run lint
 
@@ -77,6 +82,11 @@ jobs:
           [Allure report](./allure-report/) – screenshots, videos, and test timeline.
           EOF
 
+      - name: Agent debug log (postdocs)
+        env:
+          TAG: ${{ github.ref_name }}
+        run: node scripts/agent-release-debug.mjs postdocs
+
       - name: Update CHANGELOG
         env:
           TAG: ${{ github.ref_name }}
@@ -108,18 +118,41 @@ jobs:
 
       - name: Commit and push docs
         run: |
+          set -e
           TAG="${{ github.ref_name }}"
-          RELEASE_BRANCH="release/${TAG#v}"
+          export TAG
+          RELEASE_TAG_SHA="${{ github.sha }}"
+          # #region agent log
+          node scripts/agent-release-debug.mjs probe || true
+          # #endregion
           cp -r docs docs-backup
           cp package.json package.json-backup
-          git fetch origin main "$RELEASE_BRANCH"
+          git fetch origin main
+          # #region agent log
+          node scripts/agent-release-debug.mjs after-fetch || true
+          # #endregion
           git checkout -f main
-          git merge "origin/$RELEASE_BRANCH" -m "Merge $RELEASE_BRANCH into main (release $TAG)"
+          git reset --hard origin/main
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git merge "$RELEASE_TAG_SHA" -m "Merge release ${TAG} (${RELEASE_TAG_SHA}) into main"
+          # #region agent log
+          node scripts/agent-release-debug.mjs after-merge || true
+          # #endregion
           rm -rf docs
           mv docs-backup docs
           mv package.json-backup package.json
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
           git add docs/ package.json
           git diff --staged --quiet || git commit -m "docs: add release ${TAG} [skip ci]"
           git push origin HEAD:main
+          # #region agent log
+          node scripts/agent-release-debug.mjs after-push || true
+          # #endregion
+
+      - name: Upload agent debug log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: debug-87ff80-log
+          path: debug-87ff80.log
+          if-no-files-found: warn
