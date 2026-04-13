@@ -1,31 +1,30 @@
 import mongoose from "mongoose";
 
-/** Atlas and most cloud MongoDB expect mongodb+srv:// + TLS, not mongodb://host:27017. */
 function resolveMongoUri(): string {
-  const raw = (process.env.MONGODB_URI || process.env.DATABASE_URL || "").trim();
+  const DATABASE_URL = process.env.DATABASE_URL || ""
+  const isFullUri =
+    DATABASE_URL.startsWith("mongodb://") || DATABASE_URL.startsWith("mongodb+srv://")
 
-  if (raw.startsWith("mongodb://") || raw.startsWith("mongodb+srv://")) {
-    return raw;
+  // Docker / typical env: full URI (e.g. mongodb://home-database:27017/home)
+  if (isFullUri) {
+    return DATABASE_URL
   }
 
-  const user = process.env.DATABASE_USER;
-  const pass = process.env.DATABASE_PASS;
-  const dbName = process.env.DATABASE_NAME;
-  const host = raw;
-
+  // Legacy: hostname in DATABASE_URL + credentials in separate vars
+  const DATABASE_USER = process.env.DATABASE_USER
+  const DATABASE_PASS = process.env.DATABASE_PASS
+  const DATABASE_NAME = process.env.DATABASE_NAME
   if (
     process.env.NODE_ENV === "production" &&
-    user &&
-    pass !== undefined &&
-    host &&
-    dbName
+    DATABASE_USER &&
+    DATABASE_PASS &&
+    DATABASE_NAME &&
+    DATABASE_URL
   ) {
-    const u = encodeURIComponent(user);
-    const p = encodeURIComponent(pass);
-    return `mongodb+srv://${u}:${p}@${host}/${dbName}?retryWrites=true&w=majority`;
+    return `mongodb://${DATABASE_USER}:${DATABASE_PASS}@${DATABASE_URL}:27017/${DATABASE_NAME}`
   }
 
-  return raw;
+  return DATABASE_URL || "mongodb://127.0.0.1:27017/home"
 }
 
 export function initDatabase() {
@@ -33,10 +32,11 @@ export function initDatabase() {
     mongoose.set("debug", true);
   }
 
-  const databaseURL = resolveMongoUri();
+  const DATABASE_URL = process.env.DATABASE_URL || ""
+  const databaseURL = resolveMongoUri()
 
   mongoose.connection.once("open", () => {
-    console.info("successfully connected to database");
+    console.info("successfully connected to database:", DATABASE_URL || databaseURL);
   });
 
   mongoose.connection.on("error", (err) => {
