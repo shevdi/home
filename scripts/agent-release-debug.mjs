@@ -63,8 +63,13 @@ if (cmd === 'context') {
   append({
     hypothesisId: 'H1',
     location: 'scripts/agent-release-debug.mjs:probe',
-    message: 'release branch on origin (ls-remote)',
-    data: { tag, releaseBranch: rb, lsRemote: out.trim().slice(0, 2000) },
+    message: 'merge uses tag SHA; optional release branch probe',
+    data: {
+      tag,
+      tagSha: process.env.GITHUB_SHA,
+      releaseBranch: rb,
+      lsRemote: out.trim().slice(0, 2000),
+    },
   });
   // #endregion
 } else if (cmd === 'after-fetch') {

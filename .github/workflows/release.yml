@@ -121,18 +121,19 @@ jobs:
           set -e
           TAG="${{ github.ref_name }}"
           export TAG
-          RELEASE_BRANCH="release/${TAG#v}"
+          RELEASE_TAG_SHA="${{ github.sha }}"
           # #region agent log
           node scripts/agent-release-debug.mjs probe || true
           # #endregion
           cp -r docs docs-backup
           cp package.json package.json-backup
-          git fetch origin main "$RELEASE_BRANCH"
+          git fetch origin main
           # #region agent log
           node scripts/agent-release-debug.mjs after-fetch || true
           # #endregion
           git checkout -f main
-          git merge "origin/$RELEASE_BRANCH" -m "Merge $RELEASE_BRANCH into main (release $TAG)"
+          git reset --hard origin/main
+          git merge "$RELEASE_TAG_SHA" -m "Merge release ${TAG} (${RELEASE_TAG_SHA}) into main"
           # #region agent log
           node scripts/agent-release-debug.mjs after-merge || true
           # #endregion
