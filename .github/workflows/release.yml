@@ -133,6 +133,8 @@ jobs:
           # #endregion
           git checkout -f main
           git reset --hard origin/main
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
           git merge "$RELEASE_TAG_SHA" -m "Merge release ${TAG} (${RELEASE_TAG_SHA}) into main"
           # #region agent log
           node scripts/agent-release-debug.mjs after-merge || true
@@ -140,8 +142,6 @@ jobs:
           rm -rf docs
           mv docs-backup docs
           mv package.json-backup package.json
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
           git add docs/ package.json
           git diff --staged --quiet || git commit -m "docs: add release ${TAG} [skip ci]"
           git push origin HEAD:main
