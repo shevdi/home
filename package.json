@@ -1,6 +1,6 @@
 {
   "name": "shevdi-home",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "shevdi home",
   "packageManager": "npm@11.4.2",
   "type": "module",
