@@ -13,15 +13,18 @@ process.on('uncaughtException', (err) => {
   process.exit(1);
 });
 
-const PORT = Number(process.env.PORT) || 3001;
+import dotenv from "dotenv";
+dotenv.config();
+
+const port = Number(process.env.PORT) || 3001;
 
 async function startServer(): Promise<void> {
   try {
     await initDatabase();
 
     // Bind 0.0.0.0 so Amvera / Docker ingress can reach the process (not only localhost).
-    app.listen(PORT, "0.0.0.0", () => {
-      console.info(`Express listening on 0.0.0.0:${PORT}`);
+    app.listen(port, "0.0.0.0", () => {
+      console.info(`Express listening on 0.0.0.0:${port}`);
       console.info(`Environment: ${process.env.NODE_ENV || "development"}`);
     });
   } catch (err) {
