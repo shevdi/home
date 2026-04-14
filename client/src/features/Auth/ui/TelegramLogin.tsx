@@ -81,10 +81,12 @@ export function TelegramLogin({ chooseNameActive, onChooseNameActiveChange }: Te
 
   useLayoutEffect(() => {
     if (!botUsername || telegramScriptAttached.current) {
+      console.log('Telegram login widget not attached', botUsername, !!telegramScriptAttached.current)
       return
     }
     const container = telegramMountRef.current
     if (!container) {
+      console.log('Telegram bot container not found')
       return
     }
     telegramScriptAttached.current = true
@@ -126,11 +128,7 @@ export function TelegramLogin({ chooseNameActive, onChooseNameActiveChange }: Te
   return (
     <>
       {!chooseNameActive && widgetError ? <ErrMessage>{widgetError}</ErrMessage> : null}
-      <TelegramHost
-        ref={telegramMountRef}
-        data-testid='telegram-login-widget-host'
-        $hidden={chooseNameActive}
-      />
+      <TelegramHost ref={telegramMountRef} data-testid='telegram-login-widget-host' $hidden={chooseNameActive} />
       {chooseNameActive ? (
         <>
           <NameHead>Имя пользователя</NameHead>
