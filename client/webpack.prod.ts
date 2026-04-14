@@ -19,9 +19,9 @@ export default merge(common, {
   mode: 'production',
   plugins: [
     new webpack.EnvironmentPlugin({
-      YANDEX_METRIKA_ID: process.env.YANDEX_METRIKA_ID ?? '',
-      TELEGRAM_BOT_USERNAME: process.env.TELEGRAM_BOT_USERNAME ?? '',
-      BACKEND_URL: process.env.BACKEND_URL ?? 'https://home-server-shevdi.amvera.io/api/v1',
+      YANDEX_METRIKA_ID: '106882796',
+      TELEGRAM_BOT_USERNAME: 'ShevdiHomeBot',
+      BACKEND_URL: 'https://home-server-shevdi.amvera.io/api/v1',
     }),
     new CopyPlugin({
       patterns: [{
